@@ -12,6 +12,7 @@
 #include "core/series.h"
 #include "core/titration.h"
 
+#include <QAbstractSpinBox>
 #include <QButtonGroup>
 #include <QCheckBox>
 #include <QClipboard>
@@ -86,6 +87,17 @@ void showError(QLabel *l, const QString &text)
 {
     l->setText(text.isEmpty() ? QString() : u"⚠ "_s + text);
     l->setVisible(!text.isEmpty());
+    // la boîte grandit pour le message (qui passe à la ligne) : sans cela, Qt prenait la place aux
+    // champs, écrasés ; elle ne rapetisse pas (l'utilisateur a pu l'agrandir)
+    QWidget *w = l->window();
+    if (text.isEmpty() || !w || !w->isVisible() || !w->layout())
+        return;
+    QLayout *layout = w->layout();
+    layout->activate();
+    const int need = std::max(layout->totalMinimumSize().height(),
+                              layout->hasHeightForWidth() ? layout->totalHeightForWidth(w->width()) : layout->totalSizeHint().height());
+    if (w->height() < need)
+        w->resize(w->width(), need);
 }
 
 QLabel *warnLabel(const QString &text, QWidget *parent)
@@ -149,15 +161,35 @@ struct Box {
         QDialog *d = dlg;
         QObject::connect(ok, &QPushButton::clicked, dlg, [apply, err, d] {
             const QString e = apply();
-            showError(err, e);
-            if (e.isEmpty())
+            if (e.isEmpty()) {
                 d->accept();
+                return;
+            }
+            showError(err, e);
         });
     }
     void show()
     {
         layout->addWidget(error);
         layout->addWidget(buttons);
+        // le message d'erreur s'efface dès que l'on corrige un champ (il ne doit pas parler d'une
+        // saisie qui n'est plus là)
+        QLabel *err = error;
+        QDialog *d = dlg;
+        auto clear = [err, d] {
+            if (err->isVisible()) {
+                showError(err, QString());
+                d->adjustSize();
+            }
+        };
+        for (QLineEdit *e : dlg->findChildren<QLineEdit *>())
+            QObject::connect(e, &QLineEdit::textEdited, dlg, clear);
+        for (QComboBox *c : dlg->findChildren<QComboBox *>())
+            QObject::connect(c, &QComboBox::currentIndexChanged, dlg, clear);
+        for (QAbstractSpinBox *sp : dlg->findChildren<QAbstractSpinBox *>())
+            QObject::connect(sp, &QAbstractSpinBox::editingFinished, dlg, clear);
+        for (QAbstractButton *b : dlg->findChildren<QCheckBox *>())
+            QObject::connect(b, &QAbstractButton::toggled, dlg, clear);
         dlg->open();
     }
 };
@@ -639,7 +671,7 @@ void newColumn(MainWindow &win, ViewId table)
         fill->setVisible(on);
         d->adjustSize();
     });
-    box.layout->addWidget(weakLabel(u"Pour une grandeur calculée par une formule : bouton « f(x) » du tableur."_s, box.dlg));
+    box.layout->addWidget(weakLabel(u"Pour une grandeur calculée par une formule : bouton « Calculée » du tableur."_s, box.dlg));
     box.cancel();
     box.onOk([&win, table, name, unit, fill, withFill]() -> QString {
         std::vector<double> values;

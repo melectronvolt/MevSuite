@@ -1299,6 +1299,38 @@ private Q_SLOTS:
         QVERIFY(std::abs(grid->columnWidth(0) - grid->columnWidth(1)) <= 1);
         QVERIFY(grid->columnWidth(2) <= theme::px(48));
         QCOMPARE(grid->horizontalScrollBar()->maximum(), 0);
+        // le bord entre les deux colonnes se tire à la souris (même à quelques points du trait) : la
+        // première garde sa nouvelle largeur, la seconde prend le reste ; rien ne part en glisser
+        {
+            const int before = grid->columnWidth(0), total = grid->columnWidth(0) + grid->columnWidth(1);
+            const int border = header->sectionViewportPosition(0) + before;
+            const QPoint from(border - 5, header->height() / 2), to(border - 205, header->height() / 2);
+            QCOMPARE(header->handleAt(from), 0);
+            QTest::mousePress(header->viewport(), Qt::LeftButton, {}, from);
+            QVERIFY(header->resizing());
+            for (int k = 1; k <= 10; ++k) {
+                QMouseEvent move(QEvent::MouseMove, QPointF(from + (to - from) * k / 10), header->viewport()->mapToGlobal(QPointF(from + (to - from) * k / 10)),
+                                 Qt::NoButton, Qt::LeftButton, Qt::NoModifier);
+                QApplication::sendEvent(header->viewport(), &move);
+            }
+            QTest::mouseRelease(header->viewport(), Qt::LeftButton, {}, to);
+            settle(300);
+            QVERIFY(!header->resizing());
+            QVERIFY2(std::abs(grid->columnWidth(0) - (before - 200)) <= 2, qPrintable(u"%1 px au lieu de %2"_s.arg(grid->columnWidth(0)).arg(before - 200)));
+            QVERIFY2(std::abs(grid->columnWidth(0) + grid->columnWidth(1) - total) <= 2, qPrintable(u"%1 + %2 px"_s.arg(grid->columnWidth(0)).arg(grid->columnWidth(1))));
+            QVERIFY(!openDialog(win));
+            // la largeur choisie résiste à un changement de taille de la fenêtre
+            win.resize(1200, 800);
+            settle(200);
+            QVERIFY(std::abs(grid->columnWidth(0) - (before - 200)) <= 2);
+            win.resize(1300, 800);
+            settle(200);
+            // double-clic sur la poignée : retour au partage égal
+            const QPoint handle(header->sectionViewportPosition(0) + grid->columnWidth(0) - 2, header->height() / 2);
+            QTest::mouseDClick(header->viewport(), Qt::LeftButton, {}, handle);
+            settle(200);
+            QVERIFY2(std::abs(grid->columnWidth(0) - grid->columnWidth(1)) <= 1, qPrintable(u"%1 et %2 px"_s.arg(grid->columnWidth(0)).arg(grid->columnWidth(1))));
+        }
         // beaucoup de colonnes : une largeur minimale, puis la barre de défilement
         for (int k = 0; k < 24; ++k)
             addColumn(u"c%1"_s.arg(k));
@@ -1716,6 +1748,41 @@ private Q_SLOTS:
             QVERIFY2(d, qPrintable(name));
             shot(d, u"dialogue-"_s + name);
             d->reject();
+            settle(20);
+        }
+        // nom refusé : le message (sur deux lignes) agrandit la boîte sans écraser les champs, et
+        // s'efface dès que le nom est corrigé
+        {
+            dialogs::newColumn(win, store.ws.tables.front().id);
+            settle(40);
+            QDialog *col = openDialog(win);
+            QVERIFY(col);
+            const QList<QLineEdit *> edits = col->findChildren<QLineEdit *>();
+            QVERIFY(!edits.isEmpty());
+            QLineEdit *nameEdit = edits.front();
+            const int fieldHeight = nameEdit->height();
+            nameEdit->setText(u"54j"_s);
+            QPushButton *create = nullptr;
+            for (QPushButton *b : col->findChildren<QPushButton *>())
+                if (b->text() == u"Créer"_s)
+                    create = b;
+            QVERIFY(create);
+            create->click();
+            settle(60);
+            QLabel *error = nullptr;
+            for (QLabel *l : col->findChildren<QLabel *>())
+                if (l->isVisible() && l->text().startsWith(u"⚠"_s))
+                    error = l;
+            QVERIFY2(error, "message d'erreur absent");
+            QVERIFY(error->text().contains(u"54j"_s));
+            QVERIFY2(nameEdit->height() >= fieldHeight, qPrintable(u"champ de %1 px au lieu de %2"_s.arg(nameEdit->height()).arg(fieldHeight)));
+            QVERIFY(nameEdit->height() >= nameEdit->sizeHint().height());
+            QVERIFY(error->height() >= error->heightForWidth(error->width()));
+            shot(col, u"dialogue-colonne-erreur"_s);
+            QTest::keyClicks(nameEdit, u"x"_s);
+            settle(40);
+            QVERIFY(!error->isVisible());
+            col->reject();
             settle(20);
         }
         // une incertitude créée par la boîte de dialogue s'affiche en barres sur le graphe

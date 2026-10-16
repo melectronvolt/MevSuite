@@ -2,7 +2,7 @@
 
 Quatre logiciels libres pour les TP de physique-chimie au lycée, par Rémi MEVAERE. Ils sont
 écrits en C++ avec Qt 6 et fonctionnent sous Linux et Windows. Version actuelle :
-0.2.0.
+0.2.0 ; les changements de chaque version sont notés dans [`CHANGELOG.md`](CHANGELOG.md).
 
 | Logiciel | Rôle | Langues | Licence | Dossier |
 |----------|------|---------|---------|---------|

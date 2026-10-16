@@ -325,6 +325,11 @@ void TableHeader::paintSection(QPainter *p, const QRect &rect, int logical) cons
     p->setPen(colors.grid);
     p->drawLine(rect.topRight(), rect.bottomRight());
     p->drawLine(rect.bottomLeft(), rect.bottomRight());
+    // poignée de largeur sous la souris (ou tirée) : le bord droit est souligné
+    if (logical == m_hoverHandle || logical == m_resizeSection) {
+        const int w = std::max(2, theme::px(3));
+        p->fillRect(QRect(rect.right() - w + 1, rect.top(), w, rect.height()), colors.cursor);
+    }
     if (logical == m_dropSection) {
         p->setPen(QPen(colors.cursor, 2));
         p->drawRect(rect.adjusted(1, 1, -2, -2));
@@ -359,9 +364,10 @@ void TableHeader::paintSection(QPainter *p, const QRect &rect, int logical) cons
 
 int TableHeader::handleAt(QPoint pos) const
 {
-    // même marge que QHeaderView, qui prend alors la main ; poignée de la colonne de gauche quand
-    // le point est juste au début d'une colonne
-    const int grip = style()->pixelMetric(QStyle::PM_HeaderGripMargin, nullptr, this);
+    // zone de la poignée : quelques points de part et d'autre du bord droit d'une colonne (plus
+    // large que celle de Qt, difficile à attraper) ; au début d'une colonne, c'est la poignée de la
+    // colonne de gauche. La colonne « + » n'en a pas.
+    const int grip = std::max(style()->pixelMetric(QStyle::PM_HeaderGripMargin, nullptr, this), theme::px(6));
     const int s = logicalIndexAt(pos);
     if (s < 0)
         return -1;
@@ -371,7 +377,8 @@ int TableHeader::handleAt(QPoint pos) const
         return s == last ? -1 : s;
     if (std::abs(pos.x() - left) <= grip) {
         const int v = visualIndex(s);
-        return v > 0 ? logicalIndex(v - 1) : -1;
+        const int previous = v > 0 ? logicalIndex(v - 1) : -1;
+        return previous == last ? -1 : previous;
     }
     return -1;
 }
@@ -381,10 +388,21 @@ void TableHeader::mousePressEvent(QMouseEvent *e)
     m_press = e->pos();
     m_pressSection = logicalIndexAt(e->pos());
     m_dragging = false;
-    // poignée de largeur de colonne (au bord de la colonne « + » aussi) : laissée à QHeaderView
-    m_onResizeHandle = handleAt(e->pos()) >= 0;
-    if (m_onResizeHandle || e->button() != Qt::LeftButton)
-        QHeaderView::mousePressEvent(e);
+    // poignée de largeur : la colonne se règle ici, sans passer par QHeaderView (sa zone, plus
+    // étroite, ne coïncidait pas toujours avec celle-ci : la colonne partait en glisser-déposer)
+    if (e->button() == Qt::LeftButton) {
+        if (const int h = handleAt(e->pos()); h >= 0) {
+            m_resizeSection = h;
+            m_resizeStartX = e->pos().x();
+            m_resizeStartWidth = sectionSize(h);
+            viewport()->setCursor(Qt::SplitHCursor);
+            viewport()->update();
+            e->accept();
+            return;
+        }
+        return;
+    }
+    QHeaderView::mousePressEvent(e);
 }
 
 QPixmap TableHeader::dragPixmap(const std::vector<int> &columns) const
@@ -407,13 +425,25 @@ QPixmap TableHeader::dragPixmap(const std::vector<int> &columns) const
 
 void TableHeader::mouseMoveEvent(QMouseEvent *e)
 {
-    if (m_onResizeHandle || !(e->buttons() & Qt::LeftButton)) {
+    if (m_resizeSection >= 0) {
+        // la largeur suit la souris ; TableGrid la retient (sectionResized)
+        const int width = std::max(minimumSectionSize(), m_resizeStartWidth + e->pos().x() - m_resizeStartX);
+        if (width != sectionSize(m_resizeSection))
+            resizeSection(m_resizeSection, width);
+        return;
+    }
+    if (!(e->buttons() & Qt::LeftButton)) {
         QHeaderView::mouseMoveEvent(e);
-        // survol : main ouverte sur l'en-tête d'une grandeur (elle se glisse), flèches de Qt sur
-        // la poignée de largeur
-        const int s = logicalIndexAt(e->pos());
-        const bool handle = handleAt(e->pos()) >= 0;
-        if (!(e->buttons() & Qt::LeftButton) && !handle && m_model->quantityAt(s))
+        // survol : flèches sur la poignée de largeur (bord souligné), main ouverte sur l'en-tête
+        // d'une grandeur (elle se glisse)
+        const int handle = handleAt(e->pos());
+        if (handle != m_hoverHandle) {
+            m_hoverHandle = handle;
+            viewport()->update();
+        }
+        if (handle >= 0)
+            viewport()->setCursor(Qt::SplitHCursor);
+        else if (m_model->quantityAt(logicalIndexAt(e->pos())))
             viewport()->setCursor(Qt::OpenHandCursor);
         else
             viewport()->unsetCursor();
@@ -434,9 +464,13 @@ void TableHeader::mouseMoveEvent(QMouseEvent *e)
 
 void TableHeader::mouseReleaseEvent(QMouseEvent *e)
 {
-    if (m_onResizeHandle) {
-        QHeaderView::mouseReleaseEvent(e);
-        m_onResizeHandle = false;
+    if (m_resizeSection >= 0) {
+        m_resizeSection = -1;
+        m_pressSection = -1;
+        viewport()->update();
+        // les autres colonnes se répartissent la largeur restante
+        if (auto *grid = qobject_cast<TableGrid *>(parentWidget()))
+            grid->distributeColumns();
         return;
     }
     if (!m_dragging && e->button() == Qt::LeftButton && m_pressSection >= 0) {
@@ -449,6 +483,15 @@ void TableHeader::mouseReleaseEvent(QMouseEvent *e)
     }
     m_dragging = false;
     m_pressSection = -1;
+}
+
+void TableHeader::leaveEvent(QEvent *e)
+{
+    QHeaderView::leaveEvent(e);
+    if (m_hoverHandle >= 0 && m_resizeSection < 0) {
+        m_hoverHandle = -1;
+        viewport()->update();
+    }
 }
 
 void TableHeader::mouseDoubleClickEvent(QMouseEvent *e)

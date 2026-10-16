@@ -22,8 +22,13 @@ public:
     /// Menu d'une grandeur (aussi proposé ailleurs).
     static void fillMenu(QMenu *menu, MainWindow &win, QId id, QWidget *owner);
 
+protected:
+    bool eventFilter(QObject *watched, QEvent *event) override;
+
 private:
     void refresh();
+    /// Colonne du nom : la largeur laissée par les autres, tant qu'elle n'a pas été réglée à la main.
+    void fitName();
     void itemChanged(QTreeWidgetItem *item, int column);
 
     MainWindow &m_win;
@@ -33,6 +38,7 @@ private:
     QLabel *m_dragHint;
     /// Largeur des colonnes Unité ou Valeurs changée à la main : gardée.
     bool m_userSized = false;
+    bool m_nameSized = false;
     bool m_filling = false;
     bool m_pending = false;
 };

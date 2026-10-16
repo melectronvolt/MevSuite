@@ -13,6 +13,7 @@
 #include <QMenu>
 #include <QMimeData>
 #include <QToolButton>
+#include <QEvent>
 #include <QTreeWidget>
 #include <QVBoxLayout>
 
@@ -77,14 +78,23 @@ QuantitiesPanel::QuantitiesPanel(MainWindow &win, QWidget *parent) : QWidget(par
     m_tree->setSelectionMode(QAbstractItemView::SingleSelection);
     m_tree->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed);
     m_tree->setContextMenuPolicy(Qt::CustomContextMenu);
-    m_tree->header()->setSectionResizeMode(Name, QHeaderView::Stretch);
-    // unité et valeurs : à la largeur de leur contenu, puis à la main (le nom prend le reste)
+    // toutes les colonnes se règlent à la main (poignée entre deux en-têtes) ; unité et valeurs
+    // partent de la largeur de leur contenu, le nom prend le reste tant qu'il n'a pas été réglé
+    m_tree->header()->setSectionResizeMode(Name, QHeaderView::Interactive);
     m_tree->header()->setSectionResizeMode(Unit, QHeaderView::Interactive);
     m_tree->header()->setSectionResizeMode(Count, QHeaderView::Interactive);
+    m_tree->header()->setMinimumSectionSize(theme::px(30));
     connect(m_tree->header(), &QHeaderView::sectionResized, this, [this](int c) {
-        if (!m_filling && (c == Unit || c == Count))
+        if (m_filling)
+            return;
+        if (c == Unit || c == Count)
             m_userSized = true;
+        if (c == Name)
+            m_nameSized = true;
+        else
+            fitName();
     });
+    m_tree->viewport()->installEventFilter(this);
     m_tree->header()->setSectionResizeMode(Menu, QHeaderView::Fixed);
     m_tree->header()->resizeSection(Menu, theme::px(30));
     m_tree->header()->setStretchLastSection(false);
@@ -182,9 +192,32 @@ void QuantitiesPanel::refresh()
         m_tree->resizeColumnToContents(Count);
     }
     m_filling = false;
+    fitName();
     m_empty->setVisible(ws.doc.quantities.empty());
     m_dragHint->setVisible(!ws.doc.quantities.empty());
     m_tree->setVisible(!ws.doc.quantities.empty());
+}
+
+void QuantitiesPanel::fitName()
+{
+    // le nom prend la largeur laissée par les autres colonnes, sauf s'il a été réglé à la main
+    if (m_nameSized)
+        return;
+    const QHeaderView *h = m_tree->header();
+    const int others = h->sectionSize(Unit) + h->sectionSize(Count) + h->sectionSize(Menu);
+    const int width = std::max(theme::px(60), m_tree->viewport()->width() - others);
+    if (h->sectionSize(Name) != width) {
+        m_filling = true;
+        m_tree->header()->resizeSection(Name, width);
+        m_filling = false;
+    }
+}
+
+bool QuantitiesPanel::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == m_tree->viewport() && event->type() == QEvent::Resize)
+        fitName();
+    return QWidget::eventFilter(watched, event);
 }
 
 void QuantitiesPanel::itemChanged(QTreeWidgetItem *item, int column)

@@ -264,4 +264,10 @@ jobs:
           ls -l dist
           (cd dist && sha256sum * > SHA256SUMS.txt)
           sed "s/{{version}}/$VERSION/g" packaging/notes-de-version.md > notes.md
+          # les changements de la version, tirés de CHANGELOG.md
+          {
+            printf '\n### Changements\n'
+            awk -v v="$VERSION" '$0 ~ "^## \\[" v "\\]" { f = 1; next } /^## \[/ { f = 0 } f' CHANGELOG.md \
+              | sed 's/^### /#### /'
+          } >> notes.md
           gh release create "v$VERSION" dist/* --title "MevSuite $VERSION" --notes-file notes.md --verify-tag

@@ -68,7 +68,7 @@ public:
     /// Image des en-têtes des colonnes glissées, côte à côte.
     QPixmap dragPixmap(const std::vector<int> &columns) const;
     /// Largeur d'une colonne changée à la main en ce moment (poignée tirée).
-    bool resizing() const { return m_onResizeHandle; }
+    bool resizing() const { return m_resizeSection >= 0; }
     /// Colonne dont la poignée de largeur (bord droit) est sous le point, -1 sinon ; la colonne
     /// « + » n'en a pas.
     int handleAt(QPoint pos) const;
@@ -80,6 +80,7 @@ protected:
     void mouseMoveEvent(QMouseEvent *e) override;
     void mouseReleaseEvent(QMouseEvent *e) override;
     void mouseDoubleClickEvent(QMouseEvent *e) override;
+    void leaveEvent(QEvent *e) override;
     void contextMenuEvent(QContextMenuEvent *e) override;
     void dragEnterEvent(QDragEnterEvent *e) override;
     void dragMoveEvent(QDragMoveEvent *e) override;
@@ -92,8 +93,13 @@ private:
     QPoint m_press;
     int m_pressSection = -1;
     bool m_dragging = false;
-    bool m_onResizeHandle = false;
     int m_dropSection = -1;
+    /// Largeur tirée à la main : colonne, position et largeur au départ.
+    int m_resizeSection = -1;
+    int m_resizeStartX = 0;
+    int m_resizeStartWidth = 0;
+    /// Poignée sous la souris (bord droit de cette colonne, souligné), -1 sinon.
+    int m_hoverHandle = -1;
 };
 
 class TableGrid : public QTableView {
