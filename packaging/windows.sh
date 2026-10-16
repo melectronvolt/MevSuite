@@ -157,7 +157,7 @@ if [ "$APP" = mevreg ]; then
     PATH=$ESSAI_PATH "$DOSSIER/mevreg.exe" --selftest
 fi
 statut=0
-PATH=$ESSAI_PATH QT_QPA_PLATFORM=offscreen timeout 5 "$DOSSIER/$APP.exe" || statut=$?
+PATH=$ESSAI_PATH QT_QPA_PLATFORM=offscreen /usr/bin/timeout 5 "$DOSSIER/$APP.exe" || statut=$?
 if [ "$statut" != 124 ]; then
     echo "$APP.exe s'est arrêté au démarrage (code $statut)" >&2
     exit 1

@@ -94,6 +94,16 @@ jobs:
           cmake --build build
       - name: Tests
         run: ctest --test-dir build --output-on-failure
+      - name: Détail des essais en échec
+        if: failure()
+        # un essai qui s'arrête net ne laisse rien voir par ctest : relancé seul, avec sa sortie
+        run: |
+          export QT_QPA_PLATFORM=offscreen
+          for t in build/*test*.exe; do
+            echo "== $t"
+            "$t" -o -,txt 2>&1 | tail -n 80
+            echo "== code de sortie : ${PIPESTATUS[0]}"
+          done
       - uses: actions/upload-artifact@v7
         if: always()
         with:

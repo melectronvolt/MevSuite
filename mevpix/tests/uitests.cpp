@@ -518,14 +518,21 @@ private slots:
             // barre d'état agrandie elle aussi, toujours d'une ligne
             const QLabel *message = w->findChild<QLabel *>(u"statusMessage"_s);
             const bool statusZoomed = std::abs(message->font().pointSizeF() - uiPointSize()) < 0.01;
-            const bool statusOneLine = w->statusBar()->height() < 2 * message->fontMetrics().height() + 4;
+            // une ligne de texte, ses marges (4 + 4) et celles de la barre (6) : deux lignes en
+            // ajouteraient une de plus
+            const int lineHeight = message->fontMetrics().height();
+            // (sauf si le message ne tient pas dans la largeur : il passe alors à la ligne, selon la
+            // police du système)
+            const bool messageFits = message->fontMetrics().horizontalAdvance(message->text()) <= message->contentsRect().width();
+            const bool statusOneLine = w->statusBar()->height() < 2 * lineHeight + 14 || !messageFits;
+            const QString statusHeights = u"%1 px pour une ligne de %2 px : « %3 »"_s.arg(w->statusBar()->height()).arg(lineHeight).arg(message->text());
             if (lang == Lang::En)
                 capture(w.get(), u"14_en_agrandi"_s);
             // Ctrl 0 : la police de l'application revient à sa taille, pour les essais suivants
             shortcut(*w, QKeySequence(Qt::CTRL | Qt::Key_0));
             QVERIFY2(fitsZoomed, qPrintable(zoomedWidths));
             QVERIFY(statusZoomed);
-            QVERIFY(statusOneLine);
+            QVERIFY2(statusOneLine, qPrintable(statusHeights));
         }
     }
 };

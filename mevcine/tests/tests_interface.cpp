@@ -522,7 +522,9 @@ private slots:
         App &a = *app;
         QStatusBar *barre = a.statusBar();
         const int ligne = a.m_statut->fontMetrics().height();
-        QVERIFY2(barre->height() < 2 * ligne, qUtf8Printable(u"%1 pour une ligne de %2"_s.arg(barre->height()).arg(ligne)));
+        // une ligne de texte, ses marges (4 + 4) et celles de la barre (6) : deux lignes en ajouteraient
+        // une de plus
+        QVERIFY2(barre->height() < 2 * ligne + 14, qUtf8Printable(u"%1 pour une ligne de %2"_s.arg(barre->height()).arg(ligne)));
         for (QLabel *l : {a.m_info_video, a.m_info_image, a.m_info_mode})
             QVERIFY(l->isVisible());
         QVERIFY(a.m_info_video->text().startsWith(u"Principe_inertie.avi · 400 × 300 px"_s));
@@ -542,7 +544,7 @@ private slots:
                          icones::Statut::Erreur);
         a.rafraichit();
         attend();
-        QVERIFY2(barre->height() >= 2 * ligne, qUtf8Printable(QString::number(barre->height())));
+        QVERIFY2(barre->height() >= 2 * ligne + 14, qUtf8Printable(QString::number(barre->height())));
         QVERIFY(a.m_statut->height() >= a.m_statut->heightForWidth(a.m_statut->width()));
         QCOMPARE(a.m_statut->palette().color(QPalette::WindowText), dessin::couleur_erreur(QApplication::palette()));
         rendu(a, u"64_barre_d_etat_longue"_s);
@@ -550,7 +552,7 @@ private slots:
         a.affiche_statut(u"Prêt."_s, icones::Statut::Reussite);
         a.rafraichit();
         attend();
-        QVERIFY2(barre->height() < 2 * ligne, qUtf8Printable(QString::number(barre->height())));
+        QVERIFY2(barre->height() < 2 * ligne + 14, qUtf8Printable(QString::number(barre->height())));
         QCOMPARE(a.m_statut->palette().color(QPalette::WindowText), dessin::couleur_reussite(QApplication::palette()));
     }
 

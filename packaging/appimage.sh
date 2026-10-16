@@ -106,6 +106,11 @@ linuxdeploy-x86_64.AppImage --appdir "$APPDIR" \
 # linuxdeploy-plugin-qt ne connaît pas les exclusions : elles sont retirées après coup
 rm -f "$APPDIR"/usr/lib/libsystemd.so* "$APPDIR"/usr/lib/libgcrypt.so* "$APPDIR"/usr/lib/libgpg-error.so* \
     "$APPDIR"/usr/lib/libdbus-1.so* "$APPDIR"/usr/lib/libcap.so*
+# Kerberos (demandé par Qt Network) est copié, mais pas libcom_err, que linuxdeploy croit présente
+# partout : elle manque sur un Debian minimal
+if [ -f "$APPDIR/usr/lib/libkrb5.so.3" ] && [ ! -f "$APPDIR/usr/lib/libcom_err.so.2" ]; then
+    cp -L "$(ldconfig -p | awk '/libcom_err\.so\.2 .*x86-64/ { print $NF; exit }')" "$APPDIR/usr/lib/"
+fi
 
 SORTIE=$DIST/$NOM-$VERSION-x86_64.AppImage
 rm -f "$SORTIE"
