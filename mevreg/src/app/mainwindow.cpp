@@ -37,21 +37,24 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QLabel>
+#include <QLayout>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QMouseEvent>
 #include <QPainter>
 #include <QPdfWriter>
 #include <QPrintDialog>
 #include <QPrinter>
 #include <QPushButton>
-#include <QMouseEvent>
+#include <QSaveFile>
 #include <QScreen>
 #include <QStandardPaths>
 #include <QStatusBar>
 #include <QStyle>
-#include <QStyleOptionDockWidget>
 #include <QStyleOption>
+#include <QStyleOptionDockWidget>
+#include <QStyleOptionMenuItem>
 #include <QStylePainter>
 #include <QSvgGenerator>
 #include <QTabBar>
@@ -59,9 +62,7 @@
 #include <QTimer>
 #include <QToolBar>
 #include <QToolButton>
-#include <QLayout>
 #include <QVBoxLayout>
-#include <QStyleOptionMenuItem>
 #include <QWidgetAction>
 
 #include <climits>
@@ -2063,13 +2064,14 @@ bool MainWindow::save(bool saveAs, const QString &to)
         if (QFileInfo(path).suffix().isEmpty())
             path += u".phy"_s;
     }
-    const QString text = phy::save(m_store.ws, layoutJson());
-    QFile f(path);
-    if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate) || f.write(text.toUtf8()) < 0 || !f.flush()) {
-        m_store.message(u"Enregistrement impossible : %1"_s.arg(f.errorString()), icons::Status::Error);
+    const QByteArray bytes = phy::save(m_store.ws, layoutJson()).toUtf8();
+    // écrit à côté, puis mis à la place de l'ancien fichier : un échec (disque plein, clé USB
+    // retirée) laisse le document précédent intact
+    QSaveFile f(path);
+    if (!f.open(QIODevice::WriteOnly) || f.write(bytes) != bytes.size() || !f.commit()) {
+        m_store.message(u"Enregistrement impossible : %1 ; le fichier précédent n'a pas été modifié"_s.arg(f.errorString()), icons::Status::Error);
         return false;
     }
-    f.close();
     m_path = QFileInfo(path).absoluteFilePath();
     m_store.setDirty(false);
     addRecent(m_path);
@@ -2104,9 +2106,9 @@ QString MainWindow::askCsvPath()
 
 bool MainWindow::writeCsv(const QString &path, const std::vector<QId> &ids, const csv::ExportOptions &opts, csv::Encoding encoding)
 {
-    const QString text = csv::exportText(m_store.ws.doc, ids, opts);
-    QFile f(path);
-    if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate) || f.write(csv::encodeText(text, encoding)) < 0) {
+    const QByteArray bytes = csv::encodeText(csv::exportText(m_store.ws.doc, ids, opts), encoding);
+    QSaveFile f(path);
+    if (!f.open(QIODevice::WriteOnly) || f.write(bytes) != bytes.size() || !f.commit()) {
         m_store.message(u"Export impossible : %1"_s.arg(f.errorString()), icons::Status::Error);
         return false;
     }

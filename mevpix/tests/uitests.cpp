@@ -9,6 +9,7 @@
 #include "plot.h"
 #include "style.h"
 
+#include <QAbstractButton>
 #include <QAction>
 #include <QApplication>
 #include <QDir>
@@ -16,12 +17,14 @@
 #include <QLineEdit>
 #include <QMenu>
 #include <QMenuBar>
+#include <QMessageBox>
 #include <QMouseEvent>
 #include <QPushButton>
 #include <QScrollArea>
 #include <QStackedWidget>
 #include <QStatusBar>
 #include <QTest>
+#include <QTimer>
 #include <QToolBar>
 #include <QToolButton>
 
@@ -321,6 +324,37 @@ private slots:
             QVERIFY(!delta->font().bold());
             QVERIFY(std::abs(delta->font().pointSizeF() - QApplication::font().pointSizeF()) < 0.01);
         }
+    }
+
+    /// Fermer la fenêtre avec des mesures (rien n'est enregistré) : on demande ; « Annuler » garde la
+    /// fenêtre ouverte, et c'est le bouton par défaut.
+    void closingWithMeasuresAsks()
+    {
+        auto w = harness(Lang::Fr);
+        QVERIFY(load(*w, EXAMPLE));
+        calibrateAndMeasure(*w, u"99_fr_fermeture"_s);
+        QCOMPARE(w->session().measures.size(), size_t(1));
+        auto answer = [](const QString &button, bool *asked) {
+            QTimer::singleShot(150, [button, asked] {
+                auto *box = qobject_cast<QMessageBox *>(QApplication::activeModalWidget());
+                if (!box || box->objectName() != u"confirmQuit"_s)
+                    return;
+                *asked = true;
+                QVERIFY(box->defaultButton() && box->defaultButton()->text() == u"Annuler"_s);
+                for (QAbstractButton *b : box->buttons())
+                    if (b->text() == button)
+                        b->click();
+            });
+        };
+        bool asked = false;
+        answer(u"Annuler"_s, &asked);
+        QVERIFY(!w->close());
+        QVERIFY(asked);
+        QVERIFY(w->isVisible());
+        asked = false;
+        answer(u"Quitter"_s, &asked);
+        QVERIFY(w->close());
+        QVERIFY(asked);
     }
 
     /// En haut à droite de la barre de menus, dans cet ordre : thème (soleil ou lune), langue

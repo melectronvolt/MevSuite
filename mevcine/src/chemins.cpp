@@ -3,6 +3,8 @@
 #include <QCoreApplication>
 #include <QDesktopServices>
 #include <QDir>
+#include <QDirIterator>
+#include <QFile>
 #include <QFileInfo>
 #include <QStandardPaths>
 #include <QUrl>
@@ -56,6 +58,27 @@ QString data_dir()
 QString help_dir()
 {
     return QDir(data_dir()).filePath(u"help"_s);
+}
+
+QString copie_aide(QString *erreur)
+{
+    // la notice est refaite à chaque ouverture dans le dossier temporaire du système : les liens
+    // restent valables après la fermeture du programme (AppImage : son dossier disparaît alors)
+    const QDir source(help_dir());
+    const QString cible = QDir(QDir::tempPath()).filePath(u"mevcine-help"_s);
+    QDirIterator it(source.path(), QDir::Files, QDirIterator::Subdirectories);
+    while (it.hasNext()) {
+        const QString f = it.next();
+        const QString dest = QDir(cible).filePath(source.relativeFilePath(f));
+        QDir().mkpath(QFileInfo(dest).absolutePath());
+        QFile::remove(dest);
+        if (!QFile::copy(f, dest)) {
+            if (erreur)
+                *erreur = QDir::toNativeSeparators(dest);
+            return {};
+        }
+    }
+    return cible;
 }
 
 QString dossier_videos_utilisateur()

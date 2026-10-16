@@ -21,6 +21,11 @@ namespace {
 
 /// taille maximale du cache d'images, en octets
 constexpr qsizetype CACHE_MAX = qsizetype(512) * 1024 * 1024;
+/// attente maximale d'un programme de ffmpeg (ms) : au-delà, la vidéo est jugée illisible plutôt
+/// que de figer la fenêtre sans fin (fichier abîmé, support très lent)
+constexpr int ATTENTE_MAX = 120000;
+/// attente maximale d'une image décodée (ms)
+constexpr int ATTENTE_IMAGE = 60000;
 /// au-delà de ce nombre d'images d'avance, on relance ffmpeg plutôt que de décoder toutes les images
 /// intermédiaires
 constexpr int SAUT_MAX = 25;
@@ -126,7 +131,11 @@ std::expected<QJsonObject, QString> lance_ffprobe(const QString &chemin, bool co
     auto p = lance(u"ffprobe"_s, args);
     if (!p->waitForStarted(-1))
         return std::unexpected(erreur_lancement(u"ffprobe"_s, *p));
-    p->waitForFinished(-1);
+    if (!p->waitForFinished(ATTENTE_MAX)) {
+        p->kill();
+        p->waitForFinished(5000);
+        return std::unexpected(trad("ffprobe ne répond pas : la vidéo est peut-être abîmée, ou sur un support trop lent"));
+    }
     if (p->exitStatus() != QProcess::NormalExit || p->exitCode() != 0)
         return std::unexpected(QString::fromUtf8(p->readAllStandardError()).trimmed());
     QJsonParseError erreur;
@@ -144,7 +153,12 @@ std::vector<double> dates_des_trames(const QString &chemin)
                                             << u"csv=p=0"_s << chemin);
     if (!p->waitForStarted(-1))
         return {};
-    p->waitForFinished(-1);
+    // trop long : les dates restent inconnues (cadence régulière supposée)
+    if (!p->waitForFinished(ATTENTE_MAX)) {
+        p->kill();
+        p->waitForFinished(5000);
+        return {};
+    }
     if (p->exitStatus() != QProcess::NormalExit || p->exitCode() != 0)
         return {};
     std::vector<double> dates;
@@ -271,8 +285,18 @@ int VideoInfo::trame_de_date(double t) const
 
 std::optional<std::vector<double>> VideoInfo::instants() const
 {
-    if (dates.empty() || !cadence_variable)
+    if (dates.size() < 2)
         return std::nullopt;
+    // cadence presque régulière (téléphones : 40 puis 44 ms…) : les dates réelles des images, plus
+    // justes qu'une cadence moyenne ; une vidéo à cadence fixe garde des dates régulières (les
+    // arrondis des horodatages restent sous 2 % d'un intervalle)
+    if (!cadence_variable) {
+        double ecart = 0.0;
+        for (size_t k = 0; k < dates.size(); ++k)
+            ecart = std::max(ecart, std::abs((dates[k] - dates[0]) * fps - double(k)));
+        if (ecart < 0.02)
+            return std::nullopt;
+    }
     std::vector<double> res;
     res.reserve(dates.size());
     for (double d : dates)
@@ -455,7 +479,7 @@ struct VideoReader::Flux {
         QProcess &p = *processus;
         p.setReadChannel(QProcess::StandardOutput);
         while (p.bytesAvailable() == 0) {
-            if (!p.waitForReadyRead(-1))
+            if (!p.waitForReadyRead(ATTENTE_IMAGE))
                 break;
         }
         return p.read(dest, n);
@@ -468,7 +492,7 @@ struct VideoReader::Flux {
         p.setReadChannel(QProcess::StandardError);
         std::optional<QByteArray> l;
         while (!p.canReadLine()) {
-            if (!p.waitForReadyRead(-1))
+            if (!p.waitForReadyRead(ATTENTE_IMAGE))
                 break;
         }
         if (p.canReadLine())

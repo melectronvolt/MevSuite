@@ -95,6 +95,8 @@ struct Tr {
     /// (nom, « 44,1 kHz · stéréo · 3,2 s »)
     QString (*loaded)(const QString &, const QString &);
     QString truncated;
+    /// Son lu en partie : le décodage s'est arrêté sur une erreur.
+    QString damaged;
     QString mono;
     QString stereo;
     QString (*channelsN)(size_t);
@@ -209,6 +211,10 @@ struct Tr {
 
     // Exports
     QString chooseSave;
+    /// Le fichier complété de « .csv » existe déjà : le remplacer ?
+    QString (*replaceFile)(const QString &);
+    QString replaceButton;
+    QString cancel;
     QString dialogExportSpectrum;
     QString dialogExportExtract;
     QString csvSpectrumName;

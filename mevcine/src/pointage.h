@@ -27,6 +27,9 @@ public:
     /// intervalles habituels (voir `VideoInfo::instants`) ; les dates en seconde s'en déduisent avec
     /// `delta_t`, qui tient compte d'un ralenti
     std::optional<std::vector<double>> instants;
+    /// la cadence de la vidéo est variable (images perdues, ralentis) : elle est signalée à l'élève
+    /// (des dates presque régulières sont gardées sans le dire)
+    bool cadence_irreguliere = false;
     /// position de l'origine du repère sur l'image
     Vecteur origine;
     Echelle echelle;
@@ -48,7 +51,7 @@ public:
     /// date de l'image d'index `index` (à partir de 0), depuis la première image de la vidéo
     double date(int index) const;
     /// vrai si les images ne sont pas régulièrement espacées dans le temps
-    bool cadence_variable() const { return instants.has_value(); }
+    bool cadence_variable() const { return cadence_irreguliere; }
     /// date de l'image d'index `index` (à partir de 0) depuis la première image pointée : c'est la
     /// date zéro des tableaux et des exports
     double date_relative(int index) const;

@@ -150,8 +150,8 @@ DataFrame ; <code>mr.importer(df)</code> fait l'inverse.</p>
 <section id="mr-grandeurs">
 <h2>6. mevreg : grandeurs</h2>
 <p><code>import mevreg as mr</code>. Les lectures (valeurs, unités) se font tout de suite ; les
-changements du document, des graphes et des fenêtres sont faits <strong>à la fin du script</strong>,
-dans l'ordre où ils ont été demandés.</p>
+changements du document et des graphes sont faits <strong>à la fin du script</strong>, dans l'ordre
+où ils ont été demandés, puis ceux des fenêtres et des fichiers (ouvrir, enregistrer, exporter).</p>
 <table>
 <thead><tr><th>Fonction</th><th>Effet</th></tr></thead>
 <tbody>
@@ -197,13 +197,16 @@ mr.incertitude("x", 0.005)</code></pre>
 <thead><tr><th>Fonction</th><th>Effet</th></tr></thead>
 <tbody>
 <tr><td><code>mr.graphe(nom, x=None, y=None, incertitudes=None)</code></td><td>graphe nommé (créé, ou retrouvé) ; avec x et y, la courbe y(x), y pouvant être une liste de grandeurs. <code>incertitudes</code> : <code>"barres"</code>, <code>"deux"</code>, <code>"rectangles"</code> ou <code>"aucune"</code></td></tr>
-<tr><td><code>mr.courbe(graphe, x, y, couleur=None, marqueur=None, trait=None, incertitudes=None)</code></td><td>ajoute la courbe y(x). <code>couleur</code> : <code>"rouge"</code>, <code>"#ff0000"</code>… ; <code>marqueur</code> : <code>"croix"</code>, <code>"plus"</code>, <code>"rond"</code>, <code>"point"</code>, <code>"carre"</code>, <code>"aucun"</code> ; <code>trait</code> : <code>"aucun"</code>, <code>"droit"</code>, <code>"lisse"</code></td></tr>
+<tr><td><code>mr.courbe(graphe, x, y, couleur=None, marqueur=None, trait=None, incertitudes=None, x_bas=None, x_haut=None, y_bas=None, y_haut=None)</code></td><td>ajoute la courbe y(x). <code>couleur</code> : <code>"rouge"</code>, <code>"#ff0000"</code>… ; <code>marqueur</code> : <code>"croix"</code>, <code>"plus"</code>, <code>"rond"</code>, <code>"point"</code>, <code>"carre"</code>, <code>"aucun"</code> ; <code>trait</code> : <code>"aucun"</code>, <code>"droit"</code>, <code>"lisse"</code> ; <code>x_bas</code>… <code>y_haut</code> : une grandeur d'incertitude pour chaque côté (barres dissymétriques)</td></tr>
 <tr><td><code>mr.retirer_courbe(graphe, y)</code></td><td>retire les courbes de la grandeur y</td></tr>
 <tr><td><code>mr.axes(graphe, xmin=None, xmax=None, ymin=None, ymax=None, titre=None, x_titre=None, y_titre=None)</code></td><td>bornes des axes (les autres restent automatiques), titre du graphe, titres des axes</td></tr>
-<tr><td><code>mr.verticale(graphe, x, texte="")</code></td><td>droite verticale, avec une étiquette</td></tr>
-<tr><td><code>mr.horizontale(graphe, y)</code></td><td>droite horizontale</td></tr>
-<tr><td><code>mr.oblique(graphe, x1, y1, x2, y2, texte="")</code></td><td>droite passant par (x1, y1) et (x2, y2)</td></tr>
-<tr><td><code>mr.texte(graphe, x, y, texte, taille=12)</code></td><td>texte placé en (x, y)</td></tr>
+<tr><td><code>mr.verticale(graphe, x, texte="", verrou=False)</code></td><td>droite verticale, avec une étiquette ; <code>verrou=True</code> : la souris ne la déplace pas</td></tr>
+<tr><td><code>mr.horizontale(graphe, y, texte="", verrou=False)</code></td><td>droite horizontale</td></tr>
+<tr><td><code>mr.oblique(graphe, x1, y1, x2, y2, texte="", verrou=False)</code></td><td>droite passant par (x1, y1) et (x2, y2)</td></tr>
+<tr><td><code>mr.texte(graphe, x, y, texte, taille=12, verrou=False)</code></td><td>texte placé en (x, y)</td></tr>
+<tr><td><code>mr.effacer_annotations(graphe)</code></td><td>retire toutes les droites et tous les textes du graphe</td></tr>
+<tr><td><code>mr.tangentes(graphe, x, y, contact=None, verrou=False)</code></td><td>méthode des tangentes sur la courbe y(x) (dosage) ; <code>contact</code> : abscisse du contact de la première tangente (sinon choisie par le logiciel)</td></tr>
+<tr><td><code>mr.retirer_tangentes(graphe)</code></td><td>retire la méthode des tangentes</td></tr>
 <tr><td><code>mr.exporter_graphe(nom, chemin)</code></td><td>image du graphe : PNG, SVG ou PDF selon l'extension</td></tr>
 </tbody>
 </table>

@@ -895,6 +895,163 @@ private Q_SLOTS:
         }
     }
 
+    /// Formules saisies : virgule décimale ou séparateur d'arguments.
+    void formulaCommas()
+    {
+        QCOMPARE(dialogs::formulaText(u"0,05*x"_s), u"0.05*x"_s);
+        QCOMPARE(dialogs::formulaText(u"sin(0,5)"_s), u"sin(0.5)"_s);
+        QCOMPARE(dialogs::formulaText(u"min(2,3)"_s), u"min(2,3)"_s);
+        QCOMPARE(dialogs::formulaText(u"pow(2,3)"_s), u"pow(2,3)"_s);
+        QCOMPARE(dialogs::formulaText(u"atan2(1,2) + 1,5"_s), u"atan2(1,2) + 1.5"_s);
+        QCOMPARE(dialogs::formulaText(u"max (sin(0,5),1)"_s), u"max (sin(0.5),1)"_s);
+        QCOMPARE(dialogs::formulaText(u"integ(y, t)"_s), u"integ(y, t)"_s);
+    }
+
+    /// Scripts : ordres de mevreg dans l'ordre du script, scripts liés qui lisent par mr.valeurs,
+    /// « Arrêter » sur un script en attente, scripts de l'ancien document oubliés.
+    void pythonOrderAndJobs()
+    {
+        Store store;
+        MainWindow win(store);
+        win.resize(1300, 800);
+        win.show();
+        win.newTable({});
+        settle();
+        store.edit([](Workspace &ws) { ws.doc.addExperimental(u"x"_s, QString(), {1.0}); });
+        settle();
+        auto run = [&](const QString &code) -> ViewId {
+            win.newScript(code);
+            settle(20);
+            const ViewId sid = store.ws.scripts.back().id;
+            QSignalSpy spy(&store, &Store::scriptApplied);
+            store.runScript(sid);
+            spy.wait(10000);
+            settle(40);
+            return sid;
+        };
+        // supprimer puis recréer : la grandeur existe, avec ses nouvelles valeurs
+        run(u"import mevreg as mr\nmr.supprimer(\"x\")\nmr.creer(\"x\", [2, 3])\n"_s);
+        QVERIFY(store.ws.doc.byName(u"x"_s));
+        QCOMPARE(store.ws.doc.byName(u"x"_s)->values, (std::vector<double>{2.0, 3.0}));
+        // script lié qui lit x par mr.valeurs : relancé quand x change
+        const ViewId linked = run(u"import mevreg as mr\nmr.creer(\"y\", mr.valeurs(\"x\") * 10)\n"_s);
+        QCOMPARE(store.ws.doc.byName(u"y"_s)->values, (std::vector<double>{20.0, 30.0}));
+        store.edit([&](Workspace &ws) { ws.scriptMut(linked)->linked = true; });
+        settle(100);
+        QSignalSpy relaunched(&store, &Store::scriptApplied);
+        store.edit([&](Workspace &ws) { ws.doc.setValues(ws.doc.byName(u"x"_s)->id, {5.0}); });
+        QVERIFY(relaunched.wait(10000));
+        settle(40);
+        QCOMPARE(store.ws.doc.byName(u"y"_s)->values, (std::vector<double>{50.0}));
+        store.edit([&](Workspace &ws) { ws.scriptMut(linked)->linked = false; });
+        settle(40);
+        // « Arrêter » sur un script qui attend son tour : il ne tourne pas
+        win.newScript(u"import time\ntime.sleep(1.5)\n"_s);
+        const ViewId slow = store.ws.scripts.back().id;
+        win.newScript(u"import mevreg as mr\nmr.creer(\"jamais\", [1])\n"_s);
+        const ViewId queued = store.ws.scripts.back().id;
+        settle(20);
+        store.runScript(slow);
+        store.runScript(queued);
+        store.stopScript(queued);
+        QTRY_VERIFY_WITH_TIMEOUT(!store.isRunning(slow) && !store.isRunning(queued), 10000);
+        settle(100);
+        QVERIFY(!store.ws.doc.byName(u"jamais"_s));
+        QVERIFY(store.runs.at(queued).error && store.runs.at(queued).error->interrupted);
+        // un script encore en cours quand un autre document s'ouvre : ses résultats sont oubliés
+        win.newScript(u"import time\nimport mevreg as mr\ntime.sleep(1)\nmr.creer(\"ancienne\", [42])\n"_s);
+        const ViewId old = store.ws.scripts.back().id;
+        settle(20);
+        store.runScript(old);
+        settle(100);
+        // le nouveau document a un script de même numéro : c'est à lui que l'ancien résultat
+        // était appliqué
+        Workspace fresh;
+        while (fresh.scripts.empty() || fresh.scripts.back().id < old)
+            fresh.addScript(u"print(1)"_s);
+        QCOMPARE(fresh.scripts.back().id, old);
+        store.reset(std::move(fresh));
+        QTest::qWait(1800);
+        settle(100);
+        QVERIFY(!store.ws.doc.byName(u"ancienne"_s));
+    }
+
+    /// Module mevreg : grandeurs aux noms protégés (np…) lisibles, une seule borne d'axe, incertitudes
+    /// côté par côté, annotations verrouillées puis effacées, méthode des tangentes.
+    void pythonMevregCompleteness()
+    {
+        Store store;
+        MainWindow win(store);
+        win.resize(1300, 800);
+        win.show();
+        win.newTable({});
+        settle();
+        store.edit([](Workspace &ws) {
+            QVERIFY(ws.doc.addExperimental(u"np"_s, QString(), {1.0, 2.0}));
+            ws.doc.addExperimental(u"t"_s, u"s"_s, {0.0, 1.0, 2.0, 3.0});
+            ws.doc.addExperimental(u"x"_s, u"m"_s, {1.0, 2.0, 3.0, 4.0});
+            ws.doc.addExperimental(u"bas"_s, u"m"_s, {0.1, 0.1, 0.1, 0.1});
+            ws.doc.addExperimental(u"haut"_s, u"m"_s, {0.3, 0.3, 0.3, 0.3});
+        });
+        settle();
+        win.newScript(uR"py(import mevreg as mr
+mr.creer("double", mr.valeurs("np") * 2)
+print(min(3, 4), "np" in mr.grandeurs())
+mr.graphe("G", x="t", y="x")
+mr.courbe("G", "t", "x", y_bas="bas", y_haut="haut")
+mr.axes("G", ymin=0)
+mr.verticale("G", 1.5, texte="E", verrou=True)
+mr.texte("G", 0, 4, "note")
+)py"_s);
+        settle(20);
+        const ViewId sid = store.ws.scripts.back().id;
+        QSignalSpy spy(&store, &Store::scriptApplied);
+        store.runScript(sid);
+        QVERIFY(spy.wait(10000));
+        settle(60);
+        QVERIFY2(!store.runs.at(sid).error, store.runs.at(sid).error ? qPrintable(store.runs.at(sid).error->traceback) : "");
+        QCOMPARE(store.runs.at(sid).stdoutText.trimmed(), u"3 True"_s);
+        QCOMPARE(store.ws.doc.byName(u"double"_s)->values, (std::vector<double>{2.0, 4.0}));
+        const GraphView *g = nullptr;
+        for (const auto &gv : store.ws.graphs)
+            if (gv.name == u"G")
+                g = &gv;
+        QVERIFY(g);
+        const Plot &p = g->plots[0];
+        // une seule borne : l'autre est prise sur les valeurs, avec une marge
+        QVERIFY(!p.y.autoScale);
+        QCOMPARE(p.y.min, 0.0);
+        QVERIFY2(p.y.max > 4.0 && p.y.max < 4.5, qPrintable(QString::number(p.y.max)));
+        QCOMPARE(p.curves.size(), size_t(1));
+        QCOMPARE(p.curves[0].errYLow, store.ws.doc.byName(u"bas"_s)->id);
+        QCOMPARE(p.curves[0].errYHigh, store.ws.doc.byName(u"haut"_s)->id);
+        QVERIFY(p.curves[0].errors != ErrorBars::None);
+        QCOMPARE(p.annotations.size(), size_t(2));
+        QVERIFY(p.annotations[0].locked && !p.annotations[1].locked);
+        // tangentes, puis tout effacer
+        win.newScript(uR"py(import numpy as np
+import mevreg as mr
+mr.creer("V", np.linspace(0, 20, 41), "mL")
+mr.creer("pH", 7 + 4 * np.tanh(1.5 * (mr.valeurs("V") - 12)))
+mr.graphe("D", x="V", y="pH")
+mr.tangentes("D", "V", "pH")
+mr.effacer_annotations("G")
+)py"_s);
+        settle(20);
+        const ViewId sid2 = store.ws.scripts.back().id;
+        QSignalSpy spy2(&store, &Store::scriptApplied);
+        store.runScript(sid2);
+        QVERIFY(spy2.wait(10000));
+        settle(60);
+        QVERIFY(!store.runs.at(sid2).error);
+        for (const auto &gv : store.ws.graphs) {
+            if (gv.name == u"D")
+                QCOMPARE(gv.plots[0].tangents.size(), size_t(1));
+            if (gv.name == u"G")
+                QVERIFY(gv.plots[0].annotations.empty());
+        }
+    }
+
     void pythonExamplesRun()
     {
         // chaque exemple du menu Python → Exemples s'exécute sans erreur, et le module mevreg fait
@@ -1268,6 +1425,28 @@ private Q_SLOTS:
         win.closeTab(TabKey{TabKey::Script, sid});
         settle();
         QCOMPARE(store.ws.script(sid)->code, u"x = 1  # pas encore rangé"_s);
+    }
+
+    /// Coller un tableau dont une case n'est pas un nombre : la case est laissée vide, et la barre
+    /// d'état le dit (avec la valeur en cause).
+    void pasteReportsUnreadableCells()
+    {
+        Store store;
+        MainWindow win(store);
+        win.resize(1300, 800);
+        win.show();
+        win.newTable({});
+        settle();
+        TableGrid *grid = firstGrid(win);
+        QVERIFY(grid);
+        QSignalSpy messages(&store, &Store::messageRequested);
+        grid->setCurrentIndex(grid->model()->index(0, 0));
+        grid->paste(u"1\t2\n3\toops"_s);
+        settle();
+        QVERIFY(!messages.isEmpty());
+        const QString last = messages.last().at(0).toString();
+        QVERIFY2(last.contains(u"1 case illisible laissée vide (« oops »)"_s), qPrintable(last));
+        QCOMPARE(messages.last().at(1).value<icons::Status>(), icons::Status::Warning);
     }
 
     void tableColumns()

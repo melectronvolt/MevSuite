@@ -437,6 +437,12 @@ private slots:
         QVERIFY(!bouton(*app, u"📖 Notice complète…"_s));
         QCOMPARE(app->page_d_aide(), u"index.html"_s);
         QVERIFY(QFileInfo(QDir(chemins::help_dir()).filePath(u"fr/index.html"_s)).isFile());
+        // la notice ouverte est une copie, dans le dossier temporaire du système, avec ses images
+        const QString copie = chemins::copie_aide();
+        QVERIFY(copie.startsWith(QDir::tempPath()));
+        QVERIFY(QFileInfo(QDir(copie).filePath(u"fr/index.html"_s)).isFile());
+        QVERIFY(QFileInfo(QDir(copie).filePath(u"en/images/pointage.jpg"_s)).isFile());
+        QVERIFY(QFileInfo(QDir(copie).filePath(u"help.css"_s)).isFile());
         rendu(*app, u"00_accueil"_s);
         QVERIFY(clique(*app, u"Mode simplifié"_s));
         QCOMPARE(app->mode, Mode::Simplifie);
@@ -1347,6 +1353,45 @@ private slots:
         const Vecteur m = a.pointage.point_en_metre(*a.pointage.position(1, 1));
         QVERIFY2(std::abs(m.x - 0.5) < 1e-9 && std::abs(m.y - 0.25) < 1e-9, qUtf8Printable(m.texte()));
         QCOMPARE(a.guide.etape, Etape::Tableau);
+    }
+
+    /// Avec deux objets, une image pointée à moitié n'est pas dans l'export : elle compte pourtant
+    /// comme travail à protéger. Une sauvegarde de secours impossible est signalée, une fois.
+    void ligne_incomplete_et_secours()
+    {
+        auto app = fenetre(outils::video(u"g1.avi"_s), Mode::Expert);
+        App &a = *app;
+        a.nb_obj = 2;
+        a.redimensionne_data();
+        a.rafraichit();
+        QVERIFY(clique(a, u"Démarrer le pointage"_s));
+        clic_image(a, {100, 150});
+        clic_image(a, {200, 150});
+        QCOMPARE(a.pointage.nb_images_pointees(), 1);
+        a.note_travail_sauve();
+        QVERIFY(a.travail_en_securite());
+        // l'objet 1 seul sur l'image suivante : en danger
+        clic_image(a, {110, 150});
+        QVERIFY(a.pointage.position(1, a.index).has_value() || a.pointage.position(1, a.index - 1).has_value());
+        QVERIFY(!a.travail_en_securite());
+        // secours impossible (un dossier à la place du fichier) : un avertissement
+        const QString secours = prefs::fichier_secours();
+        QFile::remove(secours);
+        QVERIFY(QDir().mkpath(secours));
+        clic_image(a, {210, 150}); // un pointage de plus : le secours a changé
+        a.sauvegarde_de_secours();
+        attend();
+        QVERIFY(affiche(a, u"Sauvegarde automatique impossible"_s));
+        QVERIFY(clique(a, u"OK"_s) || clique(a, u"Fermer"_s));
+        attend();
+        // pas une seconde fois
+        clic_image(a, {120, 150});
+        a.sauvegarde_de_secours();
+        attend();
+        QVERIFY(!affiche(a, u"Sauvegarde automatique impossible"_s));
+        QVERIFY(QDir(secours).removeRecursively());
+        a.sauvegarde_de_secours();
+        QVERIFY(QFileInfo(secours).isFile());
     }
 
     /// Rien ne se perd sans prévenir : quitter, tout recommencer ou ouvrir un autre fichier avec des

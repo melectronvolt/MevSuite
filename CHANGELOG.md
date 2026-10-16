@@ -18,6 +18,82 @@ version. Les plus récents en haut ; « Non publié » : ce qui sera dans la pro
   saisie, et il s'efface dès qu'un champ est corrigé (il parlait encore de l'ancienne saisie).
 - **Nouvelle grandeur** (bouton « + » du tableur) : l'indication renvoie au bouton « Calculée » du
   tableur (elle citait un bouton « f(x) » qui n'existe pas).
+- **Formules** : la virgule entre les arguments d'une fonction est gardée (`min(2,3)` donnait 2,3) ;
+  ailleurs, une virgule entre deux chiffres reste une virgule décimale (`0,05*x`, `sin(0,5)`).
+- **Enregistrer** : le document est écrit à côté puis mis à la place de l'ancien ; un échec (disque
+  plein, clé USB retirée) laisse le fichier précédent intact au lieu de le vider. De même pour les
+  exports CSV et Python.
+- **Python** :
+  - les ordres de `mevreg` sont faits dans l'ordre du script, créations de grandeurs comprises
+    (`mr.supprimer("x")` puis `mr.creer("x", …)` supprimait x) ;
+  - un script lié qui lit les grandeurs par `mevreg` (`mr.valeurs("x")`) est relancé quand elles
+    changent ;
+  - « Arrêter » retire aussi un script qui attendait son tour ;
+  - un script encore en cours à l'ouverture d'un autre document est arrêté, et ses résultats ne vont
+    pas dans le nouveau document.
+- **Export vers Python (Capytale)** :
+  - un script qui utilise `mevreg` ou `fenetre` (propres à MeVReg) est mis en commentaire : le fichier
+    exporté ne s'arrête plus sur une erreur ;
+  - avec des cases vides, dérivées et primitives les sautent comme dans MeVReg (fonctions `deriv` et
+    `integ` ajoutées au script) ; `integ (y, t)` écrit avec une espace est reconnu ;
+  - deux grandeurs aux noms proches d'un mot réservé (`class`, `class_`) restent deux variables ;
+  - les graphes gardent les incertitudes choisies côté par côté, les droites et les textes, la méthode
+    des tangentes, l'étendue de la courbe des modèles et leur nom dans la légende.
+- **Coller dans le tableur** : les cases qui ne sont pas des nombres (laissées vides) sont signalées,
+  avec la première valeur en cause.
+- **Export CSV** : un nom ou une unité qui contient le séparateur (« V, crête ») est mis entre
+  guillemets ; l'en-tête garde ses colonnes.
+- **Module `mevreg`** :
+  - une grandeur nommée comme un nom de Python (`np`, `plt`…) reste lisible par `mr.valeurs` ;
+  - `mr.axes(…, ymin=0)` : une seule borne suffit, l'autre suit les valeurs tracées ;
+  - `mr.courbe(…, x_bas=, x_haut=, y_bas=, y_haut=)` : une grandeur d'incertitude pour chaque côté ;
+  - droites et textes verrouillables (`verrou=True`), `mr.effacer_annotations`, `mr.tangentes` et
+    `mr.retirer_tangentes` ; deux exemples de plus dans Python → Exemples.
+- **Notice** : dans le tableau des raccourcis, Entrée (descendre) et Tab (passer à droite) sont
+  séparés.
+
+### MeVCine
+
+- Avec plusieurs objets, une image pointée à moitié compte comme travail non enregistré : la
+  confirmation avant de perdre des mesures la protège aussi.
+- Une sauvegarde automatique impossible est signalée (une fois) : le travail n'est plus protégé.
+- Cadence presque régulière (certains téléphones : 40 puis 44 ms) : les dates réelles des images sont
+  utilisées, au lieu d'une cadence moyenne.
+- Ouverture d'une vidéo : curseur d'attente ; une vidéo dont l'examen ne finit pas est déclarée
+  illisible au bout de deux minutes, au lieu de figer la fenêtre.
+- La notice s'ouvre depuis une copie dans le dossier temporaire du système, comme dans les autres
+  logiciels : ses liens restent valables après la fermeture de MeVCine (AppImage).
+- Grapheur : grille et graduations aux couleurs communes de la suite.
+
+### MeVSono
+
+- Fichier WAV suivi de métadonnées (fréquent avec les enregistreurs) : elles ne sont plus lues comme
+  des échantillons (bruit à la fin du son).
+- Pendant le calcul du spectre d'un nouvel extrait, l'export du spectre et la copie du tableau des
+  harmoniques attendent la fin du calcul (ils donnaient l'ancien extrait).
+- L'agrandissement des textes demandé est retenu : réduit quand la fenêtre rétrécit, il revient quand
+  elle s'élargit, et c'est lui qui est enregistré.
+- Tableau des harmoniques : affiché même sans pic à la fondamentale (tiret au rang 1, rapports à sa
+  fréquence).
+- Un fichier abîmé lu en partie, et un son coupé à 30 minutes quand ffmpeg le lit, sont signalés.
+- Export CSV : un nom tapé sans « .csv » ne crée plus un fichier sans extension ; si le fichier
+  « .csv » existe déjà, le programme demande avant de le remplacer.
+
+### MeVPix
+
+- Fermer la fenêtre avec des mesures ou une coupe demande confirmation (rien n'est enregistré) ;
+  « Annuler » est le bouton par défaut.
+- Étalonnage : déplacer un étalon court, même d'une fraction de pixel, demande de le valider à
+  nouveau (la tolérance est maintenant proportionnelle à sa longueur).
+- Étiquettes sur l'image : police de l'interface (elles suivent l'agrandissement), noms des curseurs
+  A et B en demi-gras.
+- Export CSV : comme dans MeVSono, plus de fichier sans extension.
+- Notice : le format TIFF n'est pas lu par la version AppImage.
+
+### Toute la suite
+
+- Les README de chaque logiciel renvoient aux versions distribuables (ils disaient qu'il n'y en avait
+  pas).
 
 ## [0.2.0] — 2026-10-16
 

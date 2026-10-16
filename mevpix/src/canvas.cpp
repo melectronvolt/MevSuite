@@ -254,7 +254,7 @@ void ImageCanvas::paintOverlays(QPainter &painter) const
     // avec Mesurer, la ligne de coupe (rose) avec Profil d'intensité.
     if (const auto &seg = m_session.calibSeg; seg && m_session.tool == Tool::Calibrate) {
         paintSegment(painter, screen(seg->a), screen(seg->b), COLOR_CALIB, true, s);
-        const QString value = calib && std::abs(seg->lenPx() - calib->refPx) < 0.5
+        const QString value = calib && calib->matches(Calibration{calib->realLen, seg->lenPx(), calib->unit})
                                   ? fmtNum(calib->realLen, 3, d) + u' ' + unitSymbol(calib->unit)
                                   : fmtNum(seg->lenPx(), 4, d) + u" px"_s;
         paintLabel(painter, labelAnchor(m_view, *seg, s), tr.calibTag(value), COLOR_CALIB, s);
@@ -285,7 +285,7 @@ void ImageCanvas::paintOverlays(QPainter &painter) const
             painter.setBrush(cursors[i].second);
             painter.drawEllipse(p, 6.0 * s, 6.0 * s);
             painter.restore();
-            paintLabel(painter, p + QPointF(0.0, -10.0 * s), cursors[i].first, cursors[i].second, s);
+            paintLabel(painter, p + QPointF(0.0, -10.0 * s), cursors[i].first, cursors[i].second, s, true);
         }
     }
 

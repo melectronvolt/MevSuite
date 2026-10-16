@@ -174,6 +174,14 @@ msgstr "Keep object 1"
 msgid "Mode simplifié : seules les mesures de l'objet 1 sont gardées"
 msgstr "Simple mode: only the measurements of object 1 are kept"
 
+#: src/app/app.cpp:1196
+msgid "Sauvegarde automatique impossible"
+msgstr "Automatic backup impossible"
+
+#: src/app/app.cpp:1197
+msgid "La sauvegarde automatique est impossible ({}) : enregistrez le projet (menu Fichier)."
+msgstr "The automatic backup is impossible ({}): save the project (File menu)."
+
 #: src/app/app.cpp:357
 msgid "Suivi automatique"
 msgstr "Automatic tracking"
@@ -1397,3 +1405,7 @@ msgstr "Choose, above, the quantity to plot and what to plot it against."
 #: src/app/onglet_graph.cpp
 msgid "Pas encore de valeur à tracer : pointez d'autres images."
 msgstr "No value to plot yet: mark more frames."
+
+#: src/video.cpp:139
+msgid "ffprobe ne répond pas : la vidéo est peut-être abîmée, ou sur un support trop lent"
+msgstr "ffprobe does not respond: the video may be damaged, or on too slow a medium"

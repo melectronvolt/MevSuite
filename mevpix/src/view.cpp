@@ -159,11 +159,13 @@ void paintBand(QPainter &painter, QPointF a, QPointF b, QPointF halfWidth, QColo
     painter.restore();
 }
 
-void paintLabel(QPainter &painter, QPointF pos, const QString &text, const QColor &color, double scale)
+void paintLabel(QPainter &painter, QPointF pos, const QString &text, const QColor &color, double scale, bool name)
 {
     painter.save();
+    // police de l'interface (elle suit l'agrandissement) ; nom d'un curseur en demi-gras
     QFont font = painter.font();
-    font.setPixelSize(std::max(1, static_cast<int>(std::lround(15.0 * scale))));
+    if (name)
+        font.setWeight(QFont::DemiBold);
     painter.setFont(font);
     const QFontMetricsF metrics(font);
     const double margin = 4.0 * scale;

@@ -28,6 +28,7 @@
 #include <QLabel>
 #include <QLibraryInfo>
 #include <QMenuBar>
+#include <QMessageBox>
 #include <QMimeData>
 #include <QPainter>
 #include <QProgressBar>
@@ -951,7 +952,8 @@ void MainWindow::refresh()
     m_sepExports->setVisible(expert);
     m_actExportSpectrum->setVisible(expert);
     m_actExportExtract->setVisible(expert);
-    m_actExportSpectrum->setEnabled(analysis() && !busy());
+    // pendant le calcul d'un nouvel extrait, le spectre affiché est encore l'ancien : pas d'export
+    m_actExportSpectrum->setEnabled(analysis() && !busy() && !m_analyzer.pending());
     m_actExportExtract->setEnabled(loaded && !busy());
     m_actFitAll->setEnabled(loaded);
     const bool frequencies = m_session.tool == Tool::Extract;
@@ -1058,10 +1060,13 @@ void MainWindow::refreshSidePanel()
     m_f0Auto->setVisible(f0 && !m_session.manualF0);
     m_f0None->setVisible(!f0);
     const std::vector<dsp::Harmonic> h = harmonics();
-    const bool table = !h.empty() && h.front().peak;
+    // le tableau dès qu'un rang a un pic : sans pic à la fondamentale (fondamentale absente), un tiret
+    // au rang 1 et les autres rangs mesurés
+    const bool table = std::any_of(h.begin(), h.end(), [](const dsp::Harmonic &x) { return x.peak.has_value(); });
     m_harmonicsTable->setVisible(table);
     m_copyTable->setVisible(table);
-    m_f0NoPeak->setVisible(!table && f0);
+    m_copyTable->setEnabled(!m_analyzer.pending());
+    m_f0NoPeak->setVisible(f0 && (h.empty() || !h.front().peak));
     if (table)
         refreshHarmonics(h);
 }
@@ -1115,7 +1120,9 @@ void MainWindow::fitSidePanel()
 void MainWindow::refreshHarmonics(const std::vector<dsp::Harmonic> &harmonics)
 {
     const QChar d = tr().decimal;
-    const dsp::Peak first = *harmonics.front().peak;
+    // rapports à la fondamentale : son pic, ou sa fréquence attendue s'il n'y en a pas
+    const std::optional<dsp::Peak> &first = harmonics.front().peak;
+    const double f1 = first ? first->freq : harmonics.front().expected;
     const int rows = int(harmonics.size());
     m_harmonicsTable->setRowCount(rows);
     const QColor placeholder = palette().color(QPalette::PlaceholderText);
@@ -1134,9 +1141,12 @@ void MainWindow::refreshHarmonics(const std::vector<dsp::Harmonic> &harmonics)
         cell(r, 0, QString::number(h.rank), harmonicColor(palette()));
         if (const auto &p = h.peak) {
             cell(r, 1, fmtDec(p->freq, 1, d));
-            cell(r, 2, fmtDec(p->freq / first.freq, 3, d));
+            cell(r, 2, fmtDec(p->freq / f1, 3, d));
             cell(r, 3, fmtDec(toDb(p->amplitude), 1, d));
-            cell(r, 4, fmtDec(100.0 * p->amplitude / first.amplitude, 1, d) + u" %"_s);
+            if (first)
+                cell(r, 4, fmtDec(100.0 * p->amplitude / first->amplitude, 1, d) + u" %"_s);
+            else
+                cell(r, 4, u"—"_s, placeholder);
         } else {
             for (int c = 1; c < 5; ++c)
                 cell(r, c, u"—"_s, placeholder);
@@ -1372,11 +1382,13 @@ void MainWindow::onLoaded()
     m_appliedParams.lastDir = m_session.params.lastDir;
     settingsChanged();
     QString status = t.loaded(result.audio->name, soundInfo(t, *result.audio));
-    const bool truncated = result.audio->truncated;
+    const bool truncated = result.audio->truncated, damaged = result.audio->damaged;
     if (truncated)
         status += u" — "_s + t.truncated;
+    if (damaged)
+        status += u" — "_s + t.damaged;
     setAudio(std::move(*result.audio));
-    setStatus(status, truncated ? icons::Status::Warning : icons::Status::Success);
+    setStatus(status, truncated || damaged ? icons::Status::Warning : icons::Status::Success);
 }
 
 void MainWindow::loadExample(audio::Example example)
@@ -1447,7 +1459,8 @@ const dsp::Analysis *MainWindow::analysis() const
 
 void MainWindow::analysisUpdated()
 {
-    m_actExportSpectrum->setEnabled(analysis() && !busy());
+    // pendant le calcul d'un nouvel extrait, le spectre affiché est encore l'ancien : pas d'export
+    m_actExportSpectrum->setEnabled(analysis() && !busy() && !m_analyzer.pending());
     refreshSidePanel();
     fitSidePanel();
     m_spectrum->analysisChanged();
@@ -1546,7 +1559,7 @@ void MainWindow::updatePlayback()
 void MainWindow::exportSpectrum()
 {
     const dsp::Analysis *a = analysis();
-    if (!a)
+    if (!a || m_analyzer.pending())
         return;
     saveCsv(spectrumCsv(tr(), a->spectrum), tr().dialogExportSpectrum, tr().csvSpectrumName);
 }
@@ -1576,7 +1589,21 @@ void MainWindow::saveCsv(const QString &csv, const QString &title, const QString
         setStatus(m_idleStatus);
         return;
     }
+    const bool completed = QFileInfo(path).suffix().isEmpty();
     path = withCsvExtension(path);
+    // nom tapé sans extension : le dialogue n'a pas vu que le fichier .csv existait déjà
+    if (completed && QFileInfo::exists(path)) {
+        QMessageBox box(QMessageBox::Question, about::NAME, t.replaceFile(QFileInfo(path).fileName()), QMessageBox::NoButton, this);
+        QPushButton *replace = box.addButton(t.replaceButton, QMessageBox::AcceptRole);
+        QPushButton *cancel = box.addButton(t.cancel, QMessageBox::RejectRole);
+        box.setDefaultButton(cancel);
+        box.setEscapeButton(cancel);
+        box.exec();
+        if (box.clickedButton() != replace) {
+            setStatus(m_idleStatus);
+            return;
+        }
+    }
     QSaveFile file(path);
     if (file.open(QIODevice::WriteOnly) && file.write(csv.toUtf8()) >= 0 && file.commit())
         setStatus(t.exported(QDir::toNativeSeparators(path)), icons::Status::Success);
@@ -1587,9 +1614,9 @@ void MainWindow::saveCsv(const QString &csv, const QString &title, const QString
 void MainWindow::copyTable()
 {
     const std::vector<dsp::Harmonic> h = harmonics();
-    if (h.empty() || !h.front().peak)
+    if (std::none_of(h.begin(), h.end(), [](const dsp::Harmonic &x) { return x.peak.has_value(); }))
         return;
-    QApplication::clipboard()->setText(harmonicsTable(tr(), h, *h.front().peak));
+    QApplication::clipboard()->setText(harmonicsTable(tr(), h));
     setStatus(tr().tableCopied, icons::Status::Success);
 }
 
@@ -1606,7 +1633,16 @@ double MainWindow::maxUiZoom() const
 
 void MainWindow::setUiZoom(double zoom)
 {
-    m_uiZoom = std::clamp(zoom, UI_ZOOM_MIN, maxUiZoom());
+    // L'agrandissement demandé est retenu ; celui qui s'affiche est borné par la largeur de la
+    // fenêtre, et revient à la demande quand la fenêtre s'élargit (au démarrage, la fenêtre n'a pas
+    // encore sa taille : l'agrandissement enregistré se retrouve au premier redimensionnement).
+    m_uiZoomWanted = std::clamp(zoom, UI_ZOOM_MIN, UI_ZOOM_MAX);
+    applyUiZoom();
+}
+
+void MainWindow::applyUiZoom()
+{
+    m_uiZoom = std::clamp(m_uiZoomWanted, UI_ZOOM_MIN, maxUiZoom());
     QFont font = m_baseFont;
     if (m_baseFont.pointSizeF() > 0.0)
         font.setPointSizeF(m_baseFont.pointSizeF() * m_uiZoom);
@@ -1654,7 +1690,7 @@ void MainWindow::applyFonts()
 Settings MainWindow::currentSettings() const
 {
     Settings s = m_session.params;
-    s.uiZoom = m_uiZoom;
+    s.uiZoom = m_uiZoomWanted;
     s.windowSize = m_windowSize;
     s.maximized = m_maximized;
     return s;
@@ -1693,8 +1729,8 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     refreshStatusInfo();
     if (m_dropOverlay->isVisible())
         m_dropOverlay->setGeometry(rect());
-    if (m_uiZoom > maxUiZoom())
-        setUiZoom(m_uiZoom);
+    if (std::clamp(m_uiZoomWanted, UI_ZOOM_MIN, maxUiZoom()) != m_uiZoom)
+        applyUiZoom();
     settingsChanged();
 }
 

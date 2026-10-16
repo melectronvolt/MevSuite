@@ -394,6 +394,19 @@ QString exportText(const Document &doc, const std::vector<QId> &ids, ExportOptio
         }
         n = std::max(n, q->values.size());
     }
+    // un nom ou une unité qui contient le séparateur (« V, crête »), un guillemet ou un saut de ligne :
+    // entre guillemets, comme le veut le format CSV
+    const auto field = [&sep](const QString &f) {
+        if (!f.contains(sep) && !f.contains(u'"') && !f.contains(u'\n') && !f.contains(u'\r'))
+            return f;
+        QString q = f;
+        q.replace(u'"', u"\"\""_s);
+        return u'"' + q + u'"';
+    };
+    for (QString &h : header)
+        h = field(h);
+    for (QString &u : units)
+        u = field(u);
     QString out = header.join(sep) + u"\r\n"_s;
     if (opts.header == ExportOptions::Header::TwoLines)
         out += units.join(sep) + u"\r\n"_s;

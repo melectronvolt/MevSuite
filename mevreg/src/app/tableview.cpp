@@ -865,16 +865,28 @@ void TableGrid::paste(const QString &text)
         parsed = csv::parse(text, &err);
     }
     std::vector<csv::Column> blocks;
+    // cases qui ne sont pas des nombres : collées vides, et signalées (la première est citée)
+    int unreadable = 0;
+    QString firstUnreadable;
     if (parsed) {
         blocks = parsed->columns;
+        unreadable = parsed->ignored;
     } else {
         qsizetype w = 0;
         for (const auto &r : cells)
             w = std::max(w, r.size());
         for (qsizetype j = 0; j < w; ++j) {
             csv::Column c;
-            for (const auto &r : cells)
-                c.values.push_back(parseNumber(r.value(j)).value_or(NAN));
+            for (const auto &r : cells) {
+                const QString cell = r.value(j).trimmed();
+                const auto v = parseNumber(cell);
+                if (!v && !cell.isEmpty()) {
+                    ++unreadable;
+                    if (firstUnreadable.isEmpty())
+                        firstUnreadable = cell;
+                }
+                c.values.push_back(v.value_or(NAN));
+            }
             blocks.push_back(c);
         }
     }
@@ -928,7 +940,10 @@ void TableGrid::paste(const QString &text)
     QString msg = u"%1 colonne%2 collée%2"_s.arg(n).arg(plural(n));
     if (created > 0)
         msg += u" dont %1 nouvelle%2"_s.arg(created).arg(plural(created));
-    // un seul message dans la barre d'état : les colonnes ignorées à la suite
+    if (unreadable > 0)
+        errors << (firstUnreadable.isEmpty() ? u"%1 case%2 illisible%2 laissée%2 vide%2"_s.arg(unreadable).arg(plural(unreadable))
+                                             : u"%1 case%2 illisible%2 laissée%2 vide%2 (« %3 »)"_s.arg(unreadable).arg(plural(unreadable)).arg(firstUnreadable));
+    // un seul message dans la barre d'état : les colonnes et cases ignorées à la suite
     if (!errors.isEmpty())
         store.message(msg + u" ; "_s + errors.join(u" ; "_s), icons::Status::Warning);
     else

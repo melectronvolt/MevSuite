@@ -10,7 +10,13 @@
 
 class MainWindow;
 
+#include <QString>
+
 namespace dialogs {
+
+/// Formule saisie : une virgule entre deux chiffres est une virgule décimale (« 0,05 », « sin(0,5) »),
+/// sauf entre les arguments d'une fonction qui en a plusieurs (« min(2,3) », « pow(x,2) »).
+QString formulaText(const QString &s);
 
 /// Nouvelle grandeur (mesure ou calculée), ajoutée au tableur donné ou au premier tableur.
 void newQuantity(MainWindow &win, bool calculated, std::optional<ViewId> table = std::nullopt);

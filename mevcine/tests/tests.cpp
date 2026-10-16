@@ -428,6 +428,29 @@ private slots:
         QVERIFY(!p.cadence_variable());
     }
 
+    /// cadence presque régulière (40 puis 44 ms, comme certains téléphones) : les dates réelles des
+    /// images sont gardées, sans signaler une cadence variable ; une cadence fixe, même avec des
+    /// horodatages arrondis à la milliseconde, garde des dates régulières
+    void cadence_presque_reguliere()
+    {
+        VideoInfo v;
+        v.fps = 1.0 / 0.042;
+        v.dates = {0.0, 0.040, 0.084, 0.124, 0.168};
+        QVERIFY(!cadence_variable(v.dates));
+        const auto instants = v.instants();
+        QVERIFY(instants);
+        QVERIFY(proche((*instants)[1] / v.fps, 0.040, 1e-9) && proche((*instants)[2] / v.fps, 0.084, 1e-9));
+        VideoInfo fixe;
+        fixe.fps = 30.0;
+        fixe.dates = {0.0, 0.033, 0.067, 0.100, 0.133, 0.167, 0.200};
+        QVERIFY(!fixe.instants());
+        Pointage p;
+        p.dimensionne(1, 1.0 / v.fps, 5);
+        p.instants = instants;
+        QVERIFY(proche(p.date(2), 0.084, 1e-9));
+        QVERIFY(!p.cadence_variable());
+    }
+
     void premiere_et_derniere()
     {
         Pointage p;

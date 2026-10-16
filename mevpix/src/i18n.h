@@ -85,6 +85,9 @@ struct Tr {
     QString (*replaceImage)(const QString &);
     QString openAnyway;
     QString cancel;
+    /// Confirmation avant de fermer la fenêtre avec des mesures ou une coupe (rien n'est enregistré).
+    QString quitWithMeasures;
+    QString quitAnyway;
 
     // Page d'accueil (aucune image ouverte), zone image
     /// Ligne discrète sous le bouton Ouvrir.
@@ -140,6 +143,9 @@ struct Tr {
     QString axisY;
     QString exportCsv;
     QString chooseSave;
+    /// Le fichier complété de « .csv » existe déjà : le remplacer ?
+    QString (*replaceFile)(const QString &);
+    QString replaceButton;
     QString dialogExport;
     QString csvName;
     QString (*exported)(const QString &);

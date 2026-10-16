@@ -178,6 +178,7 @@ std::optional<LoadResult> readWav(QFile &file, const QString &name)
     quint16 tag = 0;
     int channelCount = 0, bits = 0, blockAlign = 0;
     quint32 rate = 0;
+    quint32 dataSize = 0;
     bool haveFormat = false;
     while (true) {
         const QByteArray header = file.read(8);
@@ -203,6 +204,7 @@ std::optional<LoadResult> readWav(QFile &file, const QString &name)
         } else if (id == "data") {
             if (!haveFormat)
                 return std::nullopt;
+            dataSize = size;
             break;
         } else {
             file.skip(qint64(size) + (size % 2));
@@ -213,8 +215,11 @@ std::optional<LoadResult> readWav(QFile &file, const QString &name)
     if (!decode || channelCount < 1 || rate == 0 || bits % 8 || blockAlign < channelCount * bytes)
         return std::nullopt;
 
-    // taille des données absente ou fausse (fichier écrit en continu) : jusqu'à la fin du fichier
-    const qint64 available = file.size() - file.pos();
+    // le bloc des données seulement : des métadonnées (LIST, id3…) suivent souvent le son. Taille
+    // absente ou fausse (fichier écrit en continu, coupé) : jusqu'à la fin du fichier
+    qint64 available = file.size() - file.pos();
+    if (dataSize != 0 && dataSize != 0xFFFFFFFFu && qint64(dataSize) < available)
+        available = dataSize;
     const qint64 frames = available / blockAlign;
     const double maxFrames = std::ceil(MAX_SECONDS * rate);
     const bool truncated = double(frames) > maxFrames;
@@ -314,9 +319,12 @@ LoadResult decodeWithQt(const QString &path, const QString &name)
     if (!failure && !finished)
         loop.exec();
     const bool empty = channels.empty() || channels[0].empty() || !(rate > 0.0);
-    // fin de fichier abîmée : on garde ce qui a été lu
-    if (!empty)
-        return {Audio::make(name, rate, std::move(channels), truncated), LoadError::Other, {}};
+    // fin de fichier abîmée : on garde ce qui a été lu, en le signalant
+    if (!empty) {
+        Audio audio = Audio::make(name, rate, std::move(channels), truncated);
+        audio.damaged = failure.has_value() && !truncated;
+        return {std::move(audio), LoadError::Other, {}};
+    }
     if (!failure)
         return {std::nullopt, LoadError::NoAudio, {}};
     const QString message = decoder.errorString();
@@ -362,8 +370,9 @@ std::optional<Converted> convertWithFfmpeg(const QString &path)
                             .filePath(u"mevsono-%1-%2.wav"_s.arg(QCoreApplication::applicationPid()).arg(next++));
     QProcess process;
     process.setProgram(ffmpegProgram());
+    // une seconde de plus que la limite : le lecteur WAV voit alors que le son a été coupé et le signale
     process.setArguments({u"-nostdin"_s, u"-v"_s, u"error"_s, u"-y"_s, u"-i"_s, path, u"-map"_s, u"0:a:0"_s, u"-vn"_s,
-                          u"-c:a"_s, u"pcm_f32le"_s, u"-t"_s, QString::number(MAX_SECONDS), wav});
+                          u"-c:a"_s, u"pcm_f32le"_s, u"-t"_s, QString::number(MAX_SECONDS + 1), wav});
     process.setStandardInputFile(QProcess::nullDevice());
     process.start();
     if (!process.waitForStarted())

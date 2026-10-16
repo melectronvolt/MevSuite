@@ -152,9 +152,11 @@ void Graphe::paintEvent(QPaintEvent *)
     const QRectF z = zone();
     p.fillRect(z, pal.color(QPalette::Base));
     const QFontMetricsF fm(font());
-    // les couleurs des graphiques de la suite : fond Base, cadre et grille Mid, textes WindowText
-    const QColor grille = pal.color(QPalette::Mid);
-    const QColor texte = pal.color(QPalette::WindowText);
+    // les couleurs des graphiques de la suite : fond Base, cadre Mid, grille Text à 30/255
+    // d'opacité, graduations et titres Text
+    QColor grille = pal.color(QPalette::Text);
+    grille.setAlpha(30);
+    const QColor texte = pal.color(QPalette::Text);
 
     // le titre, en demi-gras comme ceux de la suite, au-dessus du graphique
     if (!m_titre.isEmpty()) {

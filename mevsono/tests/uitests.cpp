@@ -571,6 +571,53 @@ private slots:
         capture(w.get(), u"04_tuyau_bouche"_s);
     }
 
+    /// L'agrandissement demandé est retenu : borné quand la fenêtre se rétrécit, il revient quand elle
+    /// s'élargit (et c'est lui qui est enregistré).
+    void savedZoomComesBack()
+    {
+        const double base = QApplication::font().pointSizeF();
+        Settings settings;
+        settings.lang = Lang::Fr;
+        settings.maximized = false;
+        settings.uiZoom = 1.5;
+        auto w = std::make_unique<MainWindow>(settings, SettingsFiles{}, QString());
+        w->resize(1400, 800);
+        w->show();
+        QVERIFY(QTest::qWaitForWindowExposed(w.get()));
+        QTest::qWait(50);
+        const auto ratio = [&] { return QApplication::font().pointSizeF() / base; };
+        QVERIFY2(std::abs(ratio() - 1.5) < 0.01, qPrintable(QString::number(ratio())));
+        // 1000 points de large : au plus 1000 / 860
+        w->resize(1000, 800);
+        QTest::qWait(50);
+        QVERIFY2(std::abs(ratio() - 1000.0 / 860.0) < 0.01, qPrintable(QString::number(ratio())));
+        w->resize(1400, 800);
+        QTest::qWait(50);
+        QVERIFY2(std::abs(ratio() - 1.5) < 0.01, qPrintable(QString::number(ratio())));
+        // Ctrl 0 : la police de l'application revient à sa taille, pour les essais suivants
+        for (QAction *a : w->actions())
+            if (a->shortcut() == QKeySequence(Qt::CTRL | Qt::Key_0))
+                a->trigger();
+        QTest::qWait(30);
+        QVERIFY(std::abs(QApplication::font().pointSizeF() - base) < 0.01);
+    }
+
+    void spectrumExportWaitsForTheNewExtract()
+    {
+        // pendant le calcul du spectre d'un nouvel extrait, l'export (qui donnerait l'ancien
+        // spectre) est désactivé ; il revient une fois le calcul fini
+        auto w = harness(Lang::Fr, true);
+        load(*w, audio::Example::String);
+        showTab(*w, Tool::Extract);
+        QVERIFY(waitAnalysis(*w));
+        QAction *exportAction = action(*w, u"💾 Exporter le spectre (CSV)…"_s);
+        QVERIFY(exportAction && exportAction->isEnabled());
+        drag(w->signalPlot(), signalAt(*w, 0.4), signalAt(*w, 2.6));
+        QVERIFY(!w->analyzer().pending() || !exportAction->isEnabled());
+        QVERIFY(waitAnalysis(*w));
+        QVERIFY(exportAction->isEnabled());
+    }
+
     void draggingOnTheSignalChoosesTheExtract()
     {
         auto w = harness(Lang::Fr, false);

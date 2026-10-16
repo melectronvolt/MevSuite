@@ -98,6 +98,9 @@ private slots:
         QVERIFY(!c.matches(*Calibration::make(251.0, 10.0, Unit::Millimetre)));
         QVERIFY(!c.matches(*Calibration::make(250.0, 20.0, Unit::Millimetre)));
         QVERIFY(!c.matches(*Calibration::make(250.0, 10.0, Unit::Centimetre)));
+        // étalon court : 1 px porté à 1,4 px change l'échelle de 40 % : à revalider
+        const auto shortRef = *Calibration::make(1.0, 1.0, Unit::Millimetre);
+        QVERIFY(!shortRef.matches(*Calibration::make(1.4, 1.0, Unit::Millimetre)));
     }
 
     void measuresAsTable()
@@ -230,9 +233,9 @@ private slots:
         QCOMPARE(withCsvExtension(dir.filePath(u"profil"_s)), dir.filePath(u"profil.csv"_s));
         QCOMPARE(withCsvExtension(dir.filePath(u"profil.csv"_s)), dir.filePath(u"profil.csv"_s));
         QCOMPARE(withCsvExtension(dir.filePath(u"profil.txt"_s)), dir.filePath(u"profil.txt"_s));
-        // Ne remplace pas en silence un fichier existant.
+        // un fichier existant garde son extension (le programme demande avant de le remplacer)
         writeFile(dir.filePath(u"ancien.csv"_s), "x");
-        QCOMPARE(withCsvExtension(dir.filePath(u"ancien"_s)), dir.filePath(u"ancien"_s));
+        QCOMPARE(withCsvExtension(dir.filePath(u"ancien"_s)), dir.filePath(u"ancien.csv"_s));
     }
 
     // ------------------------------------------------------------ settings

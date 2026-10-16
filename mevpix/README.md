@@ -112,10 +112,14 @@ Une traduction incomplète est refusée à la compilation, comme en Rust : les t
 
 Sous Windows, les mêmes commandes se lancent dans le terminal UCRT64 de MSYS2 (MinGW-w64) ;
 `platform/mevpix.rc.in` ajoute à l'exécutable son icône et ses informations de version. Pour copier
-le programme sur un autre poste, il faut mettre les DLL de Qt à côté (`windeployqt`).
+le programme sur un autre poste, il faut mettre les DLL de Qt à côté (c'est ce que fait
+`../packaging/windows.sh`).
 
 La CI ([`ci.yml`](../.github/workflows/ci.yml)) compile MeVPix et lance ses tests sous Fedora 45,
-Ubuntu 26.04 et Windows. Il n'y a pas encore de paquets à télécharger.
+Ubuntu 26.04 et Windows. Les versions distribuables (version portable et installateur pour Windows, AppImage, `.deb`,
+`.rpm`) sont fabriquées par `../packaging/` et publiées dans les
+[Releases](https://github.com/melectronvolt/MevSuite/releases) du dépôt (voir le `README.md` de la
+racine).
 
 ## Organisation du code
 

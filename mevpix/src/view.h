@@ -70,7 +70,8 @@ private:
 void paintSegment(QPainter &painter, QPointF a, QPointF b, const QColor &color, bool handles, double scale);
 /// Bande de moyennage autour de la ligne de coupe (en coordonnées écran).
 void paintBand(QPainter &painter, QPointF a, QPointF b, QPointF halfWidth, QColor color);
-/// Texte sur fond sombre semi-transparent, centré horizontalement au-dessus de `pos`.
-void paintLabel(QPainter &painter, QPointF pos, const QString &text, const QColor &color, double scale);
+/// Texte sur fond sombre semi-transparent, centré horizontalement au-dessus de `pos`, dans la police
+/// de l'interface ; `name` : nom d'un curseur (demi-gras).
+void paintLabel(QPainter &painter, QPointF pos, const QString &text, const QColor &color, double scale, bool name = false);
 /// Position écran conseillée pour l'étiquette d'un segment : au milieu, décalée sur le côté.
 QPointF labelAnchor(const ImageView &view, const Segment &seg, double scale);

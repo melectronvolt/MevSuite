@@ -131,10 +131,28 @@ mr.axes("Position", xmin=0, xmax=6, ymin=0, ymax=14, titre="Mouvement rectiligne
 )py"_s},
         {GRAPHES, u"Droites et texte sur le graphe"_s, MESURES + uR"py(
 mr.graphe("Position", x="t", y="x")
-mr.verticale("Position", 2.5, texte="t = 2,5 s")
+mr.verticale("Position", 2.5, texte="t = 2,5 s", verrou=True)   # verrou : la souris ne la déplace pas
 mr.horizontale("Position", 6)
 mr.oblique("Position", 0, 1, 5, 11)        # droite passant par (0 ; 1) et (5 ; 11)
 mr.texte("Position", 0.5, 10, "x = 2·t + 1", taille=14)
+# mr.effacer_annotations("Position") retire toutes les droites et les textes
+)py"_s},
+        {GRAPHES, u"Incertitudes différentes de chaque côté"_s, MESURES + uR"py(
+# une grandeur d'incertitude pour chaque côté de la barre
+mr.creer("bas", 0.2 + 0 * mr.valeurs("x"), "m")
+mr.creer("haut", 0.5 + 0 * mr.valeurs("x"), "m")
+mr.graphe("Position", x="t", y="x")
+mr.courbe("Position", "t", "x", y_bas="bas", y_haut="haut")
+)py"_s},
+        {GRAPHES, u"Méthode des tangentes (dosage)"_s, uR"py(import numpy as np
+import mevreg as mr
+
+# un dosage pour l'exemple : remplacez-le par vos mesures
+mr.creer("V", np.linspace(0, 20, 41), "mL")
+mr.creer("pH", 7 + 4 * np.tanh(1.5 * (mr.valeurs("V") - 12)))
+mr.graphe("Dosage", x="V", y="pH")
+mr.tangentes("Dosage", "V", "pH")
+# mr.retirer_tangentes("Dosage") la retire
 )py"_s},
         {GRAPHES, u"Retirer une courbe"_s, MESURES + uR"py(
 mr.calculer("x2", "x + 1", "m")

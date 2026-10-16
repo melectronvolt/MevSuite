@@ -915,6 +915,8 @@ PyObject *grandeur(PyObject *, PyObject *args)
     auto &q = hostOutput().quantities;
     std::erase_if(q, [&](const NamedValues &v) { return v.name == name; });
     q.push_back({name, QString::fromUtf8(unit), a.re});
+    // repère dans la suite des ordres : la grandeur est mise dans le document à cette place
+    hostOutput().commands.append(QJsonObject{{u"ordre"_s, u"grandeur"_s}, {u"nom"_s, name}});
     Py_RETURN_NONE;
 }
 

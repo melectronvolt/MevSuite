@@ -109,9 +109,12 @@ z = z * 2
                 QVERIFY(q.unit.isEmpty());
             }
         }
-        QCOMPARE(out.commands.size(), 1);
-        QCOMPARE(out.commands[0].toObject().value(u"ordre"_s).toString(), u"avertir"_s);
-        QVERIFY(out.commands[0].toObject().value(u"texte"_s).toString().contains(u"« z »"_s));
+        // grandeur() laisse un repère à sa place parmi les ordres ; z, changée, est signalée
+        QCOMPARE(out.commands.size(), 2);
+        QCOMPARE(out.commands[0].toObject().value(u"ordre"_s).toString(), u"grandeur"_s);
+        QCOMPARE(out.commands[0].toObject().value(u"nom"_s).toString(), u"c"_s);
+        QCOMPARE(out.commands[1].toObject().value(u"ordre"_s).toString(), u"avertir"_s);
+        QVERIFY(out.commands[1].toObject().value(u"texte"_s).toString().contains(u"« z »"_s));
     }
 
     void pandasReadCsvAndMevreg()
@@ -149,7 +152,7 @@ mr.ouvrir("G")
         QStringList orders;
         for (const QJsonValue v : out.commands)
             orders << v.toObject().value(u"ordre"_s).toString();
-        QCOMPARE(orders, (QStringList{u"tableur"_s, u"modeliser"_s, u"graphe"_s, u"ouvrir"_s}));
+        QCOMPARE(orders, (QStringList{u"grandeur"_s, u"grandeur"_s, u"tableur"_s, u"modeliser"_s, u"graphe"_s, u"ouvrir"_s}));
         // une erreur claire pour une grandeur absente
         const ScriptOutput bad = run(u"import mevreg as mr\nmr.valeurs(\"absente\")  # erreur attendue\n"_s, in);
         QVERIFY(bad.error && bad.error->message.contains(u"absente"_s));

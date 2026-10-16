@@ -2,10 +2,13 @@
 
 #include "core/csv.h"
 #include "core/fit.h"
+#include "plot/resolve.h"
 
 #include <QColor>
 #include <QJsonObject>
+#include <QSet>
 
+#include <algorithm>
 #include <array>
 #include <cmath>
 
@@ -384,6 +387,22 @@ void addCurve(Workspace &ws, Plot &plot, QId x, QId y, const QJsonObject &o, QSt
     const Quantity *xq = ws.doc.get(x), *yq = ws.doc.get(y);
     if (yq && yq->uncertainty && c->errors == ErrorBars::None)
         c->errors = (xq && xq->uncertainty) ? ErrorBars::Both : ErrorBars::Vertical;
+    // incertitudes côté par côté : une grandeur pour chaque côté
+    bool sided = false;
+    for (const auto &[key, side] : {std::pair(u"x_bas"_s, &c->errXLow), std::pair(u"x_haut"_s, &c->errXHigh),
+                                    std::pair(u"y_bas"_s, &c->errYLow), std::pair(u"y_haut"_s, &c->errYHigh)}) {
+        const QString n = o.value(key).toString();
+        if (n.isEmpty())
+            continue;
+        if (const Quantity *q = ws.doc.byName(n)) {
+            *side = q->id;
+            sided = true;
+        } else {
+            messages << u"mevreg : pas de grandeur « %1 »"_s.arg(n);
+        }
+    }
+    if (sided && c->errors == ErrorBars::None)
+        c->errors = (c->errXLow || c->errXHigh) ? ErrorBars::Both : ErrorBars::Vertical;
     if (const QString e = o.value(u"incertitudes"_s).toString(); !e.isEmpty()) {
         if (const auto eb = errorsFrom(e))
             c->errors = *eb;
@@ -411,10 +430,26 @@ void addCurve(Workspace &ws, Plot &plot, QId x, QId y, const QJsonObject &o, QSt
     plot.x.autoScale = plot.y.autoScale = true;
 }
 
-/// Ordres du module `mevreg` : ceux qui touchent le document sont faits ici, les autres
-/// (fenêtres, fichiers, messages) passent à la fenêtre principale.
-void applyCommands(Workspace &ws, const QJsonArray &commands, Applied &res)
+/// Grandeur du script (`grandeur()`, `mr.creer`) mise dans le document ; `newIds` reçoit celles
+/// qui n'existaient pas.
+void applyQuantity(Workspace &ws, ViewId script, const python::NamedValues &q, Applied &res, std::vector<QId> &newIds)
 {
+    const bool existed = ws.doc.byName(q.name) != nullptr;
+    QString err;
+    if (auto id = upsert(ws, script, q.name, q.unit, q.values, &err)) {
+        if (!existed)
+            newIds.push_back(*id);
+    } else {
+        res.messages << err;
+    }
+}
+
+/// Ordres du module `mevreg`, dans l'ordre du script : ceux qui touchent le document sont faits
+/// ici (les grandeurs données par `grandeur()` ou `mr.creer` à leur place, repère « grandeur »), les
+/// autres (fenêtres, fichiers, messages) passent à la fenêtre principale.
+void applyCommands(Workspace &ws, ViewId script, const python::ScriptOutput &out, Applied &res, std::vector<QId> &newIds)
+{
+    const QJsonArray &commands = out.commands;
     auto quantity = [&](const QJsonObject &o, const QString &key) -> std::optional<QId> {
         const QString n = o.value(key).toString();
         if (const Quantity *q = ws.doc.byName(n))
@@ -426,7 +461,12 @@ void applyCommands(Workspace &ws, const QJsonArray &commands, Applied &res)
         const QJsonObject o = v.toObject();
         const QString order = o.value(u"ordre"_s).toString();
         const QString name = o.value(u"nom"_s).toString();
-        if (order == u"calculer") {
+        if (order == u"grandeur") {
+            // dernières valeurs données sous ce nom
+            for (const auto &q : out.quantities)
+                if (q.name == name)
+                    applyQuantity(ws, script, q, res, newIds);
+        } else if (order == u"calculer") {
             const QString formula = o.value(u"formule"_s).toString(), unit = o.value(u"unite"_s).toString();
             if (const Quantity *q = ws.doc.byName(name)) {
                 const QId id = q->id;
@@ -521,17 +561,46 @@ void applyCommands(Workspace &ws, const QJsonArray &commands, Applied &res)
                 continue;
             }
             Plot &p = g->plots[0];
-            auto bounds = [&](AxisSpec &a, const QString &lo, const QString &hi) {
-                if (o.contains(lo) && o.contains(hi)) {
-                    a.autoScale = false;
-                    a.min = o.value(lo).toDouble();
-                    a.max = o.value(hi).toDouble();
-                } else if (o.contains(lo) || o.contains(hi)) {
-                    res.messages << u"mevreg : axes, donnez les deux bornes (%1 et %2)"_s.arg(lo, hi);
+            // étendue des valeurs tracées sur un axe (y : les courbes de l'axe de gauche)
+            const auto extent = [&](bool xAxis) -> std::optional<std::pair<double, double>> {
+                double low = INFINITY, high = -INFINITY;
+                for (const auto &c : p.curves) {
+                    if (!c.visible || (!xAxis && c.side != YSide::Left))
+                        continue;
+                    for (double v : ws.doc.values(xAxis ? c.x : c.y))
+                        if (std::isfinite(v)) {
+                            low = std::min(low, v);
+                            high = std::max(high, v);
+                        }
                 }
+                return low <= high ? std::optional(std::pair(low, high)) : std::nullopt;
             };
-            bounds(p.x, u"xmin"_s, u"xmax"_s);
-            bounds(p.y, u"ymin"_s, u"ymax"_s);
+            // une seule borne donnée : l'autre est prise sur les valeurs tracées, avec une marge
+            auto bounds = [&](AxisSpec &a, const QString &lo, const QString &hi, bool xAxis) {
+                if (!o.contains(lo) && !o.contains(hi))
+                    return;
+                double min = o.value(lo).toDouble(), max = o.value(hi).toDouble();
+                if (!o.contains(lo) || !o.contains(hi)) {
+                    const auto e = extent(xAxis);
+                    if (!e) {
+                        res.messages << u"mevreg : axes, rien n'est tracé : donnez les deux bornes (%1 et %2)"_s.arg(lo, hi);
+                        return;
+                    }
+                    if (o.contains(lo))
+                        max = e->second + 0.05 * (e->second - min);
+                    else
+                        min = e->first - 0.05 * (max - e->first);
+                }
+                if (!(min < max)) {
+                    res.messages << u"mevreg : axes, %1 doit être plus petit que %2"_s.arg(lo, hi);
+                    return;
+                }
+                a.autoScale = false;
+                a.min = min;
+                a.max = max;
+            };
+            bounds(p.x, u"xmin"_s, u"xmax"_s, true);
+            bounds(p.y, u"ymin"_s, u"ymax"_s, false);
             if (o.contains(u"titre"_s))
                 p.title.text = o.value(u"titre"_s).toString();
             if (o.contains(u"x_titre"_s))
@@ -561,7 +630,42 @@ void applyCommands(Workspace &ws, const QJsonArray &commands, Applied &res)
                 if (a.kind == Annotation::Line)
                     a.dash = Dash::Solid;
             }
+            a.locked = o.value(u"verrou"_s).toBool();
             g->plots[0].annotations.push_back(a);
+        } else if (order == u"effacer_annotations" || order == u"retirer_tangentes") {
+            GraphView *g = graphNamed(ws, o.value(u"graphe"_s).toString(), false);
+            if (!g) {
+                res.messages << u"mevreg : pas de graphe « %1 »"_s.arg(o.value(u"graphe"_s).toString());
+                continue;
+            }
+            if (order == u"effacer_annotations")
+                g->plots[0].annotations.clear();
+            else
+                g->plots[0].tangents.clear();
+        } else if (order == u"tangentes") {
+            const auto x = quantity(o, u"x"_s), y = quantity(o, u"y"_s);
+            GraphView *g = graphNamed(ws, o.value(u"graphe"_s).toString(), false);
+            if (!g) {
+                res.messages << u"mevreg : pas de graphe « %1 »"_s.arg(o.value(u"graphe"_s).toString());
+                continue;
+            }
+            if (!x || !y)
+                continue;
+            Plot &p = g->plots[0];
+            if (std::none_of(p.curves.begin(), p.curves.end(), [&](const CurveSpec &c) { return c.x == *x && c.y == *y; }))
+                addCurve(ws, p, *x, *y, {}, res.messages);
+            // une seule méthode par courbe : la nouvelle remplace l'ancienne
+            std::erase_if(p.tangents, [&](const TangentSpec &t) { return t.x == *x && t.y == *y; });
+            TangentSpec t;
+            t.x = *x;
+            t.y = *y;
+            if (o.contains(u"contact"_s) && !o.value(u"contact"_s).isNull())
+                t.contact = o.value(u"contact"_s).toDouble();
+            t.locked = o.value(u"verrou"_s).toBool();
+            QString error;
+            if (!computeTangents(t, ws.doc, &error))
+                res.messages << u"mevreg : méthode des tangentes impossible : %1"_s.arg(error);
+            p.tangents.push_back(t);
         } else if (order == u"modeliser") {
             const auto x = quantity(o, u"x"_s), y = quantity(o, u"y"_s);
             if (!x || !y)
@@ -608,16 +712,24 @@ Applied applyOutput(Workspace &ws, ViewId script, const python::ScriptOutput &ou
     Applied res;
     const QString scriptName = ws.script(script) ? ws.script(script)->name : QString();
     std::vector<QId> newIds;
-    for (const auto &q : out.quantities) {
-        const bool existed = ws.doc.byName(q.name) != nullptr;
-        QString err;
-        if (auto id = upsert(ws, script, q.name, q.unit, q.values, &err)) {
-            if (!existed)
-                newIds.push_back(*id);
-        } else {
-            res.messages << err;
-        }
+    // variables du script devenues grandeurs à sa fin (listes, tableaux) : d'abord, pour que les
+    // ordres puissent s'en servir ; celles données par grandeur() ou mr.creer le sont à leur place
+    // parmi les ordres
+    QSet<QString> ordered;
+    for (const QJsonValue &v : out.commands)
+        if (v.toObject().value(u"ordre"_s).toString() == u"grandeur")
+            ordered.insert(v.toObject().value(u"nom"_s).toString());
+    for (const auto &q : out.quantities)
+        if (!ordered.contains(q.name))
+            applyQuantity(ws, script, q, res, newIds);
+    for (const auto &fig : out.figures) {
+        const auto [gid, created] = upsertFigure(ws, script, fig, res.messages);
+        if (fig.savefig)
+            res.savefig.emplace_back(gid, *fig.savefig);
+        else if (created)
+            res.openGraphs.push_back(gid);
     }
+    applyCommands(ws, script, out, res, newIds);
     // nouvelles grandeurs : dans le tableur des résultats du script
     std::vector<QId> orphans;
     for (QId id : newIds) {
@@ -645,14 +757,6 @@ Applied applyOutput(Workspace &ws, ViewId script, const python::ScriptOutput &ou
         auto &cols = ws.tableMut(tid)->columns;
         cols.insert(cols.end(), orphans.begin(), orphans.end());
     }
-    for (const auto &fig : out.figures) {
-        const auto [gid, created] = upsertFigure(ws, script, fig, res.messages);
-        if (fig.savefig)
-            res.savefig.emplace_back(gid, *fig.savefig);
-        else if (created)
-            res.openGraphs.push_back(gid);
-    }
-    applyCommands(ws, out.commands, res);
     ws.doc.recompute();
     return res;
 }

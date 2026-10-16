@@ -426,7 +426,10 @@ bool App::ouvre_video(const QString &chemin_donne, int rotation)
     dbg_p(2, u"rentre dans 'ouvre_video' %1"_s.arg(chemin_donne));
     // chemin absolu, pour les préférences et les fichiers de projet
     const QString chemin = chemins::absolu(chemin_donne);
+    // l'examen d'une grande vidéo peut prendre quelques secondes : curseur d'attente
+    QApplication::setOverrideCursor(Qt::WaitCursor);
     auto lecteur = VideoReader::ouvre(chemin);
+    QApplication::restoreOverrideCursor();
     if (!lecteur) {
         dbg_p(1, u"erreur de lecture de %1 : %2"_s.arg(chemin, lecteur.error()));
         message(trad("Vidéo illisible"), trad("MeVCine n'arrive pas à lire la vidéo :\n{}\n\n{}", natif(chemin), lecteur.error()));
@@ -481,6 +484,7 @@ void App::redimensionne_data()
     if (image_max > 0 && fps > 0.0) {
         pointage.dimensionne(nb_obj, 1.0 / fps, image_max);
         pointage.instants = video ? video->info.instants() : std::nullopt;
+        pointage.cadence_irreguliere = video && video->info.cadence_variable;
     }
 }
 
@@ -1109,7 +1113,15 @@ void App::openfile_dossier_prefere()
 
 QString App::empreinte_mesures() const
 {
-    return nom_video().value_or(QString()) + u'\n' + texte_csv(pointage);
+    // l'export (il dépend aussi du repère et de l'échelle), puis chaque pointage en pixels, lignes
+    // incomplètes comprises : avec plusieurs objets, l'export ne garde que les lignes complètes
+    QString s = nom_video().value_or(QString()) + u'\n' + texte_csv(pointage);
+    for (int i = 0; i < pointage.len(); ++i) {
+        for (const Position &p : pointage.ligne(i))
+            s += p ? u"%1 %2;"_s.arg(p->x, 0, 'g', 17).arg(p->y, 0, 'g', 17) : u"-;"_s;
+        s += u'\n';
+    }
+    return s;
 }
 
 bool App::travail_en_securite() const
@@ -1176,10 +1188,19 @@ bool App::sauvegarde_de_secours()
     const QString texte = texte_projet();
     if (texte == secours_texte)
         return true;
-    if (const QString e = prefs::ecrit_secours(texte); e.isEmpty())
+    if (const QString e = prefs::ecrit_secours(texte); e.isEmpty()) {
         secours_texte = texte;
-    else
+        secours_en_echec = false;
+    } else {
         dbg_p(1, u"sauvegarde de secours impossible : %1"_s.arg(e));
+        // dit une fois (pas à chaque essai), dans une boîte : le message de la barre d'état serait
+        // aussitôt remplacé par la consigne suivante, et le travail n'est plus protégé
+        if (!secours_en_echec) {
+            secours_en_echec = true;
+            message(trad("Sauvegarde automatique impossible"),
+                    trad("La sauvegarde automatique est impossible ({}) : enregistrez le projet (menu Fichier).", e));
+        }
+    }
     return true;
 }
 
@@ -1460,7 +1481,9 @@ void App::enregistre_image(QWidget *zone, const QString &titre_dialogue, const Q
 
 void App::aide_page(const QString &page)
 {
-    const QDir dossier(chemins::help_dir());
+    // copie dans le dossier temporaire (sinon, la notice d'origine)
+    const QString copie = chemins::copie_aide();
+    const QDir dossier(copie.isEmpty() ? chemins::help_dir() : copie);
     for (const QString &code : {i18n::code(i18n::langue()), u"en"_s, u"fr"_s}) {
         const QString f = dossier.filePath(code + u'/' + page);
         if (QFileInfo(f).isFile() && chemins::ouvre_avec_le_bureau(f))

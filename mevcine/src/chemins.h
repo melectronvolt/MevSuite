@@ -14,6 +14,9 @@ namespace chemins {
 QString data_dir();
 /// la notice (un site HTML, une page par sujet et par langue)
 QString help_dir();
+/// Copie la notice dans le dossier temporaire du système (mevcine-help) et renvoie ce dossier ; vide
+/// en cas d'échec (`erreur` : le fichier en cause).
+QString copie_aide(QString *erreur = nullptr);
 
 /// le dossier où l'utilisateur range ses vidéos (Vidéos, sinon Téléchargements, sinon son dossier
 /// personnel)

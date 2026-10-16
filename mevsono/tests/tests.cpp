@@ -306,6 +306,31 @@ private slots:
         QVERIFY(std::abs(a.peak() - 0.5) < 0.01);
     }
 
+    void wavMetadataAfterDataIsNotSound()
+    {
+        // bloc LIST (métadonnées) après les échantillons, comme l'écrivent beaucoup d'enregistreurs :
+        // seuls les échantillons déclarés sont lus
+        QTemporaryDir dir;
+        const QString path = dir.filePath(u"avec-list.wav"_s);
+        QVERIFY(audio::writeWav(path, 8000, {std::vector<float>(100, 0.0f)}));
+        QFile f(path);
+        QVERIFY(f.open(QIODevice::ReadWrite));
+        QByteArray bytes = f.readAll();
+        bytes += QByteArray("LIST", 4);
+        const quint32 listSize = 8;
+        bytes += QByteArray(reinterpret_cast<const char *>(&listSize), 4);
+        bytes += QByteArray("INFOABCD", 8);
+        const quint32 riffSize = quint32(bytes.size() - 8);
+        bytes.replace(4, 4, QByteArray(reinterpret_cast<const char *>(&riffSize), 4));
+        f.seek(0);
+        f.write(bytes);
+        f.close();
+        const audio::LoadResult r = audio::load(path);
+        QVERIFY(r.audio);
+        QCOMPARE(r.audio->len(), size_t(100));
+        QCOMPARE(r.audio->peak(), 0.0f);
+    }
+
     void readsFloatAnd24BitWav()
     {
         // 24 bits et flottant 32 bits : fabriqués par ffmpeg s'il est installé
@@ -783,9 +808,15 @@ private slots:
         csv = extractCsv(texts(Lang::En), std::vector<float>{0.25f, -0.5f}, 44100, RATE);
         QCOMPARE(csv, u"t (s),signal\n1.000000,0.250000\n1.000023,-0.500000\n"_s);
         const std::vector<Harmonic> h = {{1, 440.0, Peak{440.0, 0.5}}, {2, 880.0, std::nullopt}};
-        const QStringList table = harmonicsTable(tr, h, {440.0, 0.5}).split(u'\n');
+        const QStringList table = harmonicsTable(tr, h).split(u'\n');
         QCOMPARE(table[1], u"1\t440,00\t1,0000\t-6,02\t100,00"_s);
         QCOMPARE(table[2], u"2\t\t\t\t"_s);
+        // fondamentale absente (220 Hz, sans pic) : rapports à sa fréquence, pas d'amplitude relative
+        const std::vector<Harmonic> sans = {{1, 220.0, std::nullopt}, {2, 440.0, Peak{440.0, 0.5}}, {3, 660.0, Peak{660.0, 0.25}}};
+        const QStringList t2 = harmonicsTable(tr, sans).split(u'\n');
+        QCOMPARE(t2[1], u"1\t\t\t\t"_s);
+        QCOMPARE(t2[2], u"2\t440,00\t2,0000\t-6,02\t"_s);
+        QCOMPARE(t2[3], u"3\t660,00\t3,0000\t-12,04\t"_s);
     }
 
     void csvExtensionAddedWhenMissing()
@@ -796,7 +827,8 @@ private slots:
         QFile old(dir.filePath(u"ancien.csv"_s));
         QVERIFY(old.open(QIODevice::WriteOnly));
         old.close();
-        QCOMPARE(withCsvExtension(dir.filePath(u"ancien"_s)), dir.filePath(u"ancien"_s));
+        // un fichier existant garde son extension (le programme demande avant de le remplacer)
+        QCOMPARE(withCsvExtension(dir.filePath(u"ancien"_s)), dir.filePath(u"ancien.csv"_s));
     }
 
     void sessionExtractDependsOnTheMode()

@@ -14,6 +14,7 @@ void Pointage::dimensionne(int n_suivis, double delta_t_, int n_images)
     m_nb_obj = std::max(n_suivis, 1);
     delta_t = delta_t_;
     instants.reset();
+    cadence_irreguliere = false;
     m_data.assign(std::max(n_images, 0), std::vector<Position>(m_nb_obj));
     m_defaits.clear();
 }

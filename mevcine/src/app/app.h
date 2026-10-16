@@ -169,6 +169,8 @@ public:
     bool fermeture_confirmee = false;
     /// la sauvegarde automatique : dernier texte écrit
     QString secours_texte;
+    /// la dernière sauvegarde de secours a échoué (l'élève en a été averti)
+    bool secours_en_echec = false;
     /// les dialogues à montrer ; le premier est affiché
     std::deque<Dialogue> dialogues;
 

@@ -6,6 +6,7 @@
 #include "app/theme.h"
 #include "app/widgets.h"
 #include "core/csv.h"
+#include "core/expr.h"
 #include "core/fft.h"
 #include "core/numeric.h"
 #include "core/pyexport.h"
@@ -32,6 +33,7 @@
 #include <QPushButton>
 #include <QRadioButton>
 #include <QRegularExpression>
+#include <QSaveFile>
 #include <QSpinBox>
 #include <QVBoxLayout>
 
@@ -60,16 +62,6 @@ QString unitProduct(const QString &a, const QString &b)
     if (y.isEmpty())
         return x;
     return x + u'.' + y;
-}
-
-/// Virgule décimale saisie dans une formule (« 0,05 ») : remplacée par le point, sans toucher
-/// aux virgules qui séparent les arguments d'une fonction.
-QString formulaText(const QString &s)
-{
-    static const QRegularExpression re(u"(\\d),(\\d)"_s);
-    QString t = s.trimmed();
-    t.replace(re, u"\\1.\\2"_s);
-    return t;
 }
 
 QLabel *errorLabel(QWidget *parent)
@@ -363,6 +355,38 @@ QLineEdit *formulaEdit(const QString &text, const QString &placeholder, QWidget 
 } // namespace
 
 namespace dialogs {
+
+QString formulaText(const QString &s)
+{
+    // fonctions dont les arguments sont séparés par une virgule : min(2,3) garde sa virgule ;
+    // ailleurs, une virgule entre deux chiffres est une virgule décimale : sin(0,5), 0,05*x
+    static const QStringList multi = {u"min"_s, u"max"_s, u"pow"_s, u"atan2"_s, u"deriv"_s, u"integ"_s};
+    const QString t = s.trimmed();
+    QString out;
+    out.reserve(t.size());
+    std::vector<bool> calls; // pour chaque parenthèse ouverte : appel d'une fonction à plusieurs arguments
+    for (qsizetype i = 0; i < t.size(); ++i) {
+        const QChar c = t[i];
+        if (c == u'(') {
+            qsizetype end = out.size();
+            while (end > 0 && out[end - 1].isSpace())
+                --end;
+            qsizetype start = end;
+            while (start > 0 && expr::isIdentChar(out[start - 1]))
+                --start;
+            calls.push_back(multi.contains(out.mid(start, end - start)));
+        } else if (c == u')') {
+            if (!calls.empty())
+                calls.pop_back();
+        } else if (c == u',' && i > 0 && i + 1 < t.size() && t[i - 1].isDigit() && t[i + 1].isDigit()
+                   && (calls.empty() || !calls.back())) {
+            out += u'.';
+            continue;
+        }
+        out += c;
+    }
+    return out;
+}
 
 void newQuantity(MainWindow &win, bool calculated, std::optional<ViewId> table)
 {
@@ -1224,8 +1248,9 @@ void pythonExport(MainWindow &win)
             return;
         if (QFileInfo(path).suffix().isEmpty())
             path += u".py"_s;
-        QFile file(path);
-        if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate) || file.write(text.toUtf8()) < 0) {
+        const QByteArray bytes = text.toUtf8();
+        QSaveFile file(path);
+        if (!file.open(QIODevice::WriteOnly) || file.write(bytes) != bytes.size() || !file.commit()) {
             win.store().message(u"Écriture impossible : %1"_s.arg(file.errorString()), icons::Status::Error);
             return;
         }

@@ -1262,7 +1262,21 @@ void MainWindow::exportCsv()
         setStatus(m_idleStatus);
         return;
     }
+    const bool completed = QFileInfo(path).suffix().isEmpty();
     path = withCsvExtension(path);
+    // nom tapé sans extension : le dialogue n'a pas vu que le fichier .csv existait déjà
+    if (completed && QFileInfo::exists(path)) {
+        QMessageBox box(QMessageBox::Question, about::NAME, t.replaceFile(QFileInfo(path).fileName()), QMessageBox::NoButton, this);
+        QPushButton *replace = box.addButton(t.replaceButton, QMessageBox::AcceptRole);
+        QPushButton *cancel = box.addButton(t.cancel, QMessageBox::RejectRole);
+        box.setDefaultButton(cancel);
+        box.setEscapeButton(cancel);
+        box.exec();
+        if (box.clickedButton() != replace) {
+            setStatus(m_idleStatus);
+            return;
+        }
+    }
     QSaveFile file(path);
     if (file.open(QIODevice::WriteOnly) && file.write(csv.toUtf8()) >= 0 && file.commit())
         setStatus(t.exported(QDir::toNativeSeparators(path)), icons::Status::Success);
@@ -1419,6 +1433,21 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    // mesures ou coupe : rien n'est enregistré, on demande avant de les perdre (Entrée annule)
+    if (!m_session.measures.empty() || m_session.cut) {
+        const Tr &t = tr();
+        QMessageBox box(QMessageBox::Question, about::NAME, t.quitWithMeasures, QMessageBox::NoButton, this);
+        box.setObjectName(u"confirmQuit"_s);
+        QPushButton *quit = box.addButton(t.quitAnyway, QMessageBox::AcceptRole);
+        QPushButton *cancel = box.addButton(t.cancel, QMessageBox::RejectRole);
+        box.setDefaultButton(cancel);
+        box.setEscapeButton(cancel);
+        box.exec();
+        if (box.clickedButton() != quit) {
+            event->ignore();
+            return;
+        }
+    }
     writeSettings();
     event->accept();
 }

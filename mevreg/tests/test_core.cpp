@@ -16,7 +16,12 @@
 #include "core/workspace.h"
 #include "plot/resolve.h"
 
+#include <QDir>
+#include <QFile>
 #include <QJsonDocument>
+#include <QProcess>
+#include <QStandardPaths>
+#include <QTemporaryDir>
 #include <QTest>
 
 #include <cmath>
@@ -945,6 +950,12 @@ private Q_SLOTS:
         QCOMPARE(doc.name(ids[0]), u"t2"_s);
         QCOMPARE(doc.values(ids[0])[3], 0.3);
         QVERIFY(std::isnan(doc.values(ids[0])[2]));
+        // une unité qui contient le séparateur, ou un guillemet : le champ est entre guillemets
+        const QId w = *doc.addExperimental(u"w"_s, u"V; crête"_s, {1});
+        const QString q = csv::exportText(doc, {t, w}, csv::FRENCH);
+        const QString head = q.section(u"\r\n"_s, 0, 0);
+        QCOMPARE(head, u"t (s);\"w (V; crête)\""_s);
+        QCOMPARE(csv::splitLine(head, u';'), (QStringList{u"t (s)"_s, u"w (V; crête)"_s}));
     }
 
     // --- export vers Python ---
@@ -990,11 +1001,89 @@ private Q_SLOTS:
         QVERIFY(s.contains(u"plt.clf()"_s) && s.indexOf(u"plt.clf()"_s) < s.indexOf(u"plt.figure("_s));
         QVERIFY(s.contains(u"import numpy as np"_s));
         QVERIFY2(s.contains(u"t = np.array([0.0, 0.1, 0.2, np.nan])"_s), qPrintable(s));
-        QVERIFY(s.indexOf(u"v = np.gradient(x, t)"_s) < s.indexOf(u"Ec = 0.5*m*v**2"_s));
+        // t a une case vide : la dérivée de l'export la saute, comme MeVReg
+        QVERIFY(s.contains(u"def deriv(y, x):"_s));
+        QVERIFY(s.indexOf(u"v = deriv(x, t)"_s) < s.indexOf(u"Ec = 0.5*m*v**2"_s));
         QVERIFY(s.contains(u"ax.errorbar(t, x, yerr=u_x"_s));
         QVERIFY(s.contains(u"ax2 = ax.twinx()"_s));
         QVERIFY(s.contains(u"xm = np.linspace("_s));
         QVERIFY(s.contains(u"plt.show()"_s));
+    }
+
+    /// Le script exporté, exécuté par le vrai numpy (matplotlib remplacé par un module muet), donne
+    /// les valeurs de MeVReg : cases vides des dérivées et primitives, noms réservés, et garde les
+    /// réglages des graphes (incertitudes côté par côté, droites, textes, étendue et nom des modèles).
+    void pythonScriptKeepsResults()
+    {
+        Workspace ws;
+        const QId t = *ws.doc.addExperimental(u"t"_s, u"s"_s, {0, 1, 2});
+        const QId y = *ws.doc.addExperimental(u"y"_s, QString(), {1, NAN, 1});
+        ws.doc.addCalculated(u"I"_s, QString(), u"integ (y, t)"_s);
+        ws.doc.addCalculated(u"D"_s, QString(), u"deriv(y, t)"_s);
+        ws.doc.addExperimental(u"class"_s, QString(), {1});
+        ws.doc.addExperimental(u"class_"_s, QString(), {2});
+        ws.doc.addCalculated(u"d"_s, QString(), u"class_ - class"_s);
+        const QId lo = *ws.doc.addExperimental(u"lo"_s, QString(), {0.1, 0.1, 0.1});
+        const QId hi = *ws.doc.addExperimental(u"hi"_s, QString(), {0.3, 0.3, 0.3});
+        ws.doc.recompute();
+        const ViewId g = ws.addGraph();
+        Plot &p = ws.graphMut(g)->plots[0];
+        CurveSpec &c = p.addCurve(t, y);
+        c.errors = ErrorBars::Vertical;
+        c.errYLow = lo;
+        c.errYHigh = hi;
+        fit::ModelKind affine;
+        affine.type = fit::ModelKind::Affine;
+        FitSpec f = FitSpec::make(affine, t, y, PALETTE[3]);
+        f.label = u"mon modèle"_s;
+        f.draw = FitDraw::Custom;
+        f.drawRange = {0.5, 1.5};
+        p.fits.push_back(f);
+        Annotation v;
+        v.kind = Annotation::VLine;
+        v.x = 1.0;
+        v.label = u"E"_s;
+        Annotation line;
+        line.kind = Annotation::Line;
+        Annotation text;
+        text.kind = Annotation::Text;
+        text.text = u"note"_s;
+        p.annotations = {v, line, text};
+        updateFits(p, ws.doc);
+        ws.addScript(u"import mevreg as mr\nmr.creer(\"z\", [3])\n"_s);
+        const QString s = pyexport::exportScript(ws);
+        QVERIFY2(s.contains(u"yerr=[lo, hi]"_s), qPrintable(s));
+        QVERIFY(s.contains(u"label=\"mon modèle\""_s));
+        QVERIFY(s.contains(u"xm = np.linspace(0.5, 1.5, 300)"_s));
+        QVERIFY(s.contains(u".axvline(1.0"_s) && s.contains(u".axline((0.0, 0.0), (1.0, 1.0)"_s) && s.contains(u".text(0.0, 0.0, \"note\""_s));
+        QVERIFY(s.contains(u"# Ce script utilise le module mevreg"_s) && s.contains(u"# import mevreg as mr"_s));
+        QVERIFY(s.contains(u"class_ = "_s) && s.contains(u"class__ = "_s));
+        // exécution : numpy réel, matplotlib muet
+        const QString python = QStandardPaths::findExecutable(u"python3"_s).isEmpty() ? u"python"_s : u"python3"_s;
+        if (QProcess::execute(python, {u"-c"_s, u"import numpy"_s}) != 0)
+            QSKIP("python3 avec numpy absent");
+        QTemporaryDir dir;
+        QDir(dir.path()).mkpath(u"matplotlib"_s);
+        const auto write = [&](const QString &name, const QString &text) {
+            QFile file(dir.filePath(name));
+            QVERIFY(file.open(QIODevice::WriteOnly));
+            file.write(text.toUtf8());
+        };
+        write(u"matplotlib/__init__.py"_s, QString());
+        write(u"matplotlib/pyplot.py"_s, u"class _Muet:\n"
+                                         "    def __getattr__(self, nom):\n"
+                                         "        return lambda *a, **k: (0.0, 1.0) if nom == 'get_xlim' else _Muet()\n"
+                                         "def __getattr__(nom):\n"
+                                         "    return getattr(_Muet(), nom)\n"_s);
+        write(u"export.py"_s, s + u"\nprint(repr([float(v) for v in I]), repr([float(v) for v in D]), repr([float(v) for v in d]))\n"_s);
+        QProcess run;
+        run.setWorkingDirectory(dir.path());
+        run.start(python, {u"export.py"_s});
+        QVERIFY(run.waitForFinished(30000));
+        const QString out = QString::fromUtf8(run.readAllStandardOutput()).trimmed();
+        QVERIFY2(run.exitCode() == 0, qPrintable(QString::fromUtf8(run.readAllStandardError())));
+        // primitive [0, vide, 2] et dérivée [0, vide, 0] comme MeVReg ; class_ - class = 1
+        QCOMPARE(out, u"[0.0, nan, 2.0] [0.0, nan, 0.0] [1.0]"_s);
     }
 
     // --- annotations, incertitudes côté par côté, étendue et nom des modèles ---

@@ -225,6 +225,11 @@ void Store::reset(Workspace w)
     m_snapshot = ws;
     ++m_revision;
     m_snapshotRevision = m_revision;
+    // scripts de l'ancien document encore en cours ou en attente : arrêtés, et leurs résultats
+    // ne seront pas appliqués au nouveau (`onScriptFinished` ne les connaît plus)
+    for (const auto &[job, script] : m_jobs)
+        python::Engine::instance().interrupt(job);
+    m_jobs.clear();
     runs.clear();
     drawings.clear();
     setDirty(false);
@@ -253,8 +258,11 @@ QByteArray inputHash(const Workspace &ws, ViewId script)
     QCryptographicHash h(QCryptographicHash::Sha1);
     h.addData(s->code.toUtf8());
     const QStringList ids = python::identifiers(s->code);
+    // le module mevreg lit les grandeurs par leur nom, dans une chaîne (mr.valeurs("x"), mr.tableau()) :
+    // un script qui s'en sert dépend de toutes les grandeurs
+    const bool all = ids.contains(u"mevreg"_s);
     for (const auto &q : ws.doc.quantities) {
-        if (q.origin != script && ids.contains(q.name)) {
+        if (q.origin != script && (all || ids.contains(q.name))) {
             h.addData(q.name.toUtf8());
             h.addData(QByteArrayView(reinterpret_cast<const char *>(q.values.data()), static_cast<qsizetype>(q.values.size() * sizeof(double))));
         }

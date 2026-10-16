@@ -4,8 +4,10 @@
 #include "core/workspace.h"
 #include "plot/resolve.h"
 
+#include <QRegularExpression>
 #include <QSet>
 
+#include <algorithm>
 #include <cmath>
 
 using namespace Qt::StringLiterals;
@@ -18,8 +20,39 @@ const QStringList KEYWORDS = {
     u"False"_s, u"None"_s, u"True"_s, u"and"_s, u"as"_s, u"assert"_s, u"async"_s, u"await"_s, u"break"_s, u"class"_s,
     u"continue"_s, u"def"_s, u"del"_s, u"elif"_s, u"else"_s, u"except"_s, u"finally"_s, u"for"_s, u"from"_s, u"global"_s,
     u"if"_s, u"import"_s, u"in"_s, u"is"_s, u"lambda"_s, u"nonlocal"_s, u"not"_s, u"or"_s, u"pass"_s, u"raise"_s,
-    u"return"_s, u"try"_s, u"while"_s, u"with"_s, u"yield"_s, u"np"_s, u"plt"_s, u"integ"_s,
+    u"return"_s, u"try"_s, u"while"_s, u"with"_s, u"yield"_s, u"np"_s, u"plt"_s, u"integ"_s, u"deriv"_s,
 };
+
+/// Document en cours d'export : noms Python uniques (`pyName`), et dérivées qui sautent les cases
+/// vides, comme dans MeVReg, quand le document en a (`toNumpy`).
+struct Context {
+    const Document *doc = nullptr;
+    bool skipMissing = false;
+};
+
+Context &context()
+{
+    static Context c;
+    return c;
+}
+
+/// Contexte posé le temps d'un export.
+struct Scope {
+    Scope(const Document *doc, bool skipMissing) { context() = {doc, skipMissing}; }
+    ~Scope() { context() = {}; }
+};
+
+/// Style de trait de matplotlib.
+QString lineStyle(Dash d)
+{
+    switch (d) {
+    case Dash::Solid: return u"-"_s;
+    case Dash::Dashed: return u"--"_s;
+    case Dash::Dotted: return u":"_s;
+    case Dash::DashDot: return u"-."_s;
+    }
+    return u"-"_s;
+}
 
 int prec(const expr::Node *e)
 {
@@ -159,7 +192,17 @@ QString unitComment(const QString &unit)
 
 QString pyName(const QString &name)
 {
-    return KEYWORDS.contains(name) ? name + u'_' : name;
+    if (!KEYWORDS.contains(name))
+        return name;
+    // mot réservé : suffixé de « _ », autant de fois qu'il faut pour ne pas prendre le nom d'une
+    // autre grandeur ou d'un paramètre du document (« class » et « class_ »)
+    QString n = name + u'_';
+    while (const Document *doc = context().doc) {
+        if (!doc->byName(n) && !doc->paramByName(n))
+            break;
+        n += u'_';
+    }
+    return n;
 }
 
 QString pyNum(double v)
@@ -240,7 +283,7 @@ QString toNumpy(const expr::Node *e)
         if (f == u"mean") return u"np.nanmean("_s + j + u')';
         if (f == u"std") return u"np.nanstd("_s + j + u')';
         if (f == u"len") return u"len("_s + j + u')';
-        if (f == u"deriv") return u"np.gradient("_s + j + u')';
+        if (f == u"deriv") return (context().skipMissing ? u"deriv("_s : u"np.gradient("_s) + j + u')';
         if (f == u"integ") return u"integ("_s + j + u')';
         if (f == u"index") return u"np.arange(len("_s + j + u"))"_s;
         return u"np."_s + f + u'(' + j + u')';
@@ -259,12 +302,46 @@ QString exportScript(const Workspace &ws)
     s += u"import numpy as np\nimport matplotlib.pyplot as plt\n\n"_s;
     // relancé (Capytale), le script redessinerait par-dessus la figure précédente
     s += u"plt.clf()  # figure vide : relancé, le script ne redessine pas par-dessus\n\n"_s;
-    bool usesInteg = false;
+    // cases vides dans le document : dérivées et primitives les sautent, comme dans MeVReg
+    const bool missing = std::any_of(doc.quantities.begin(), doc.quantities.end(), [](const Quantity &q) {
+        return std::any_of(q.values.begin(), q.values.end(), [](double v) { return !std::isfinite(v); });
+    });
+    const Scope scope(&doc, missing);
+    static const QRegularExpression integCall(u"\\binteg\\s*\\("_s), derivCall(u"\\bderiv\\s*\\("_s);
+    bool usesInteg = false, usesDeriv = false;
     for (const auto &q : doc.quantities) {
-        if (q.formula && q.formula->contains(u"integ("_s))
-            usesInteg = true;
+        if (q.formula) {
+            usesInteg = usesInteg || q.formula->contains(integCall);
+            usesDeriv = usesDeriv || q.formula->contains(derivCall);
+        }
     }
-    if (usesInteg) {
+    if (missing && (usesInteg || usesDeriv)) {
+        s += u"def _valides(y, x):\n"
+             u"    \"\"\"Mêmes longueurs, et les couples sans case vide.\"\"\"\n"
+             u"    y, x = np.asarray(y, dtype=float), np.asarray(x, dtype=float)\n"
+             u"    n = max(len(y), len(x))\n"
+             u"    y = np.concatenate((y, np.full(n - len(y), np.nan)))\n"
+             u"    x = np.concatenate((x, np.full(n - len(x), np.nan)))\n"
+             u"    return y, x, np.isfinite(y) & np.isfinite(x)\n\n"_s;
+        if (usesDeriv)
+            s += u"def deriv(y, x):\n"
+                 u"    \"\"\"Dérivée dy/dx ; les cases vides sont sautées, comme dans MeVReg.\"\"\"\n"
+                 u"    y, x, ok = _valides(y, x)\n"
+                 u"    out = np.full(len(y), np.nan)\n"
+                 u"    if ok.sum() >= 2:\n"
+                 u"        out[ok] = np.gradient(y[ok], x[ok])\n"
+                 u"    return out\n\n"_s;
+        if (usesInteg)
+            s += u"def integ(y, x):\n"
+                 u"    \"\"\"Primitive par la méthode des trapèzes, nulle au premier point ; les cases vides sont\n"
+                 u"    sautées, comme dans MeVReg.\"\"\"\n"
+                 u"    y, x, ok = _valides(y, x)\n"
+                 u"    out = np.full(len(y), np.nan)\n"
+                 u"    if ok.any():\n"
+                 u"        yv, xv = y[ok], x[ok]\n"
+                 u"        out[ok] = np.concatenate(([0.0], np.cumsum((yv[1:] + yv[:-1]) / 2 * np.diff(xv))))\n"
+                 u"    return out\n\n"_s;
+    } else if (usesInteg) {
         s += u"def integ(y, x):\n    \"\"\"Primitive par la méthode des trapèzes, nulle au premier point.\"\"\"\n"
              u"    return np.concatenate(([0.0], np.cumsum((y[1:] + y[:-1]) / 2 * np.diff(x))))\n\n"_s;
     }
@@ -326,11 +403,29 @@ QString exportScript(const Workspace &ws)
                 if (c.errors == ErrorBars::None) {
                     s += u"%1.plot(%2, %3, %4%5)\n"_s.arg(target, xn, yn, quote(fmt), extra);
                 } else {
+                    // incertitude d'un axe : la même des deux côtés, ou choisie côté par côté
+                    // (barres dissymétriques : [vers le bas, vers le haut])
+                    const auto errorOf = [&](const Quantity *q, std::optional<QId> low, std::optional<QId> high) -> QString {
+                        const auto nameOf = [&](std::optional<QId> side) -> QString {
+                            if (side && doc.get(*side))
+                                return pyName(doc.name(*side));
+                            if (q->uncertainty && doc.get(*q->uncertainty))
+                                return pyName(doc.name(*q->uncertainty));
+                            return QString();
+                        };
+                        const bool sided = (low && doc.get(*low)) || (high && doc.get(*high));
+                        if (!sided)
+                            return q->uncertainty && doc.get(*q->uncertainty) ? pyName(doc.name(*q->uncertainty)) : QString();
+                        const QString zero = u"np.zeros(len("_s + pyName(q->name) + u"))"_s;
+                        const QString lo = nameOf(low), hi = nameOf(high);
+                        return u"["_s + (lo.isEmpty() ? zero : lo) + u", "_s + (hi.isEmpty() ? zero : hi) + u"]"_s;
+                    };
                     QString err;
-                    if (yq->uncertainty && doc.get(*yq->uncertainty))
-                        err += u", yerr="_s + pyName(doc.name(*yq->uncertainty));
-                    if (c.errors != ErrorBars::Vertical && xq->uncertainty && doc.get(*xq->uncertainty))
-                        err += u", xerr="_s + pyName(doc.name(*xq->uncertainty));
+                    if (const QString e = errorOf(yq, c.errYLow, c.errYHigh); !e.isEmpty())
+                        err += u", yerr="_s + e;
+                    if (c.errors != ErrorBars::Vertical)
+                        if (const QString e = errorOf(xq, c.errXLow, c.errXHigh); !e.isEmpty())
+                            err += u", xerr="_s + e;
                     s += u"%1.errorbar(%2, %3%4, fmt=%5, capsize=3%6)\n"_s.arg(target, xn, yn, err, quote(fmt), extra);
                 }
             }
@@ -352,8 +447,23 @@ QString exportScript(const Workspace &ws)
                         params << u"%1 = %2"_s.arg(model->params()[i], QString::number(v, 'f', 6));
                 }
                 s += u"# Modèle %1 : %2\n"_s.arg(f.kind.label().toLower(), params.join(u" ; "_s));
+                // étendue de la courbe : tout le graphe, les points utilisés, ou de a à b
                 QString lo, hi;
-                if (f.range) {
+                bool keepLimits = false;
+                if (f.draw == FitDraw::Custom) {
+                    lo = pyNum(std::min(f.drawRange.first, f.drawRange.second));
+                    hi = pyNum(std::max(f.drawRange.first, f.drawRange.second));
+                } else if (f.draw == FitDraw::Graph) {
+                    if (!p.x.autoScale) {
+                        lo = pyNum(p.x.min);
+                        hi = pyNum(p.x.max);
+                    } else {
+                        s += u"xl = ax.get_xlim()\n"_s;
+                        lo = u"xl[0]"_s;
+                        hi = u"xl[1]"_s;
+                        keepLimits = true;
+                    }
+                } else if (f.range) {
                     lo = pyNum(std::min(f.range->first, f.range->second));
                     hi = pyNum(std::max(f.range->first, f.range->second));
                 } else {
@@ -362,9 +472,56 @@ QString exportScript(const Workspace &ws)
                 }
                 s += u"xm = np.linspace(%1, %2, 300)\n"_s.arg(lo, hi);
                 const QString target = f.side == YSide::Right && right ? u"ax2"_s : u"ax"_s;
-                s += u"%1.plot(xm, %2, \"-\", color=%3, label=\"modèle\")\n"_s.arg(target, formulaToNumpy(model->formula(f.result->params, u"xm"_s)),
-                                                                                   quote(f.color.hex()));
+                const QString label = f.label.value_or(u"Modèle : "_s + f.kind.label().toLower());
+                s += u"%1.plot(xm, %2, \"-\", color=%3, label=%4)\n"_s.arg(target, formulaToNumpy(model->formula(f.result->params, u"xm"_s)),
+                                                                         quote(f.color.hex()), quote(label));
+                if (keepLimits)
+                    s += u"ax.set_xlim(xl)\n"_s;
                 hasLabel = true;
+            }
+            // méthode des tangentes : les deux tangentes, la médiane et le point d'équivalence
+            for (const auto &tg : p.tangents) {
+                const auto r = computeTangents(tg, doc);
+                if (!r)
+                    continue;
+                const titration::Tangents &t = r->second;
+                const QString target = tg.side == YSide::Right && right ? u"ax2"_s : u"ax"_s;
+                const QString col = quote(tg.color.hex());
+                s += u"# Méthode des tangentes : équivalence en (%1 ; %2)\n"_s.arg(pyNum(t.equivalence.first), pyNum(t.equivalence.second));
+                s += u"%1.axline((%2, %3), slope=%4, color=%5, linestyle=\"--\")\n"_s.arg(target, pyNum(t.p1.first), pyNum(t.line1(t.p1.first)), pyNum(t.slope), col);
+                s += u"%1.axline((%2, %3), slope=%4, color=%5, linestyle=\"--\")\n"_s.arg(target, pyNum(t.p2.first), pyNum(t.line2(t.p2.first)), pyNum(t.slope), col);
+                s += u"%1.axline((0, %2), slope=%3, color=%4, linestyle=\":\")\n"_s.arg(target, pyNum(t.bMedian), pyNum(t.slope), col);
+                s += u"%1.plot(%2, %3, \"o\", color=%4)\n"_s.arg(target, pyNum(t.equivalence.first), pyNum(t.equivalence.second), col);
+            }
+            // droites et textes
+            for (const auto &a : p.annotations) {
+                const QString target = a.side == YSide::Right && right ? u"ax2"_s : u"ax"_s;
+                const QString col = quote(a.color.hex());
+                const QString ls = quote(lineStyle(a.dash));
+                switch (a.kind) {
+                case Annotation::VLine:
+                    s += u"%1.axvline(%2, color=%3, linestyle=%4)\n"_s.arg(target, pyNum(a.x), col, ls);
+                    if (!a.label.isEmpty())
+                        s += u"%1.text(%2, 1, %3, color=%4, transform=%1.get_xaxis_transform(), ha=\"left\", va=\"top\")\n"_s.arg(
+                            target, pyNum(a.x), quote(u" "_s + a.label), col);
+                    break;
+                case Annotation::HLine:
+                    s += u"%1.axhline(%2, color=%3, linestyle=%4)\n"_s.arg(target, pyNum(a.y), col, ls);
+                    if (!a.label.isEmpty())
+                        s += u"%1.text(1, %2, %3, color=%4, transform=%1.get_yaxis_transform(), ha=\"right\", va=\"bottom\")\n"_s.arg(
+                            target, pyNum(a.y), quote(a.label), col);
+                    break;
+                case Annotation::Line:
+                    s += u"%1.axline((%2, %3), (%4, %5), color=%6, linestyle=%7)\n"_s.arg(target, pyNum(a.x), pyNum(a.y), pyNum(a.x2), pyNum(a.y2), col, ls);
+                    if (!a.label.isEmpty())
+                        s += u"%1.text(%2, %3, %4, color=%5)\n"_s.arg(target, pyNum(a.x2), pyNum(a.y2), quote(a.label), col);
+                    break;
+                case Annotation::Text:
+                    // taille en pixels dans MeVReg, en points pour matplotlib
+                    s += u"%1.text(%2, %3, %4, color=%5, fontsize=%6)\n"_s.arg(target, pyNum(a.x), pyNum(a.y), quote(a.text), col,
+                                                                               QString::number(a.size * 0.75, 'g', 3));
+                    break;
+                }
             }
             // axes
             const PlotData data = resolve(p, doc, NumberStyle{false});
@@ -397,9 +554,10 @@ QString exportScript(const Workspace &ws)
         for (const auto &sc : ws.scripts) {
             s += u"\n# --- "_s + sc.name + u" ---\n"_s;
             const QString code = sc.code.trimmed().isEmpty() ? QString() : sc.code;
-            if (code.contains(u"import fenetre"_s)) {
-                // le module fenetre n'existe pas dans Capytale : script mis en commentaire
-                s += u"# Ce script utilise le module fenetre, propre à MeVReg : il est mis en commentaire.\n"_s;
+            static const QRegularExpression ownModule(u"\\b(import|from)\\s+(mevreg|fenetre)\\b"_s);
+            if (const auto m = ownModule.match(code); m.hasMatch()) {
+                // les modules mevreg et fenetre n'existent pas dans Capytale : script mis en commentaire
+                s += u"# Ce script utilise le module %1, propre à MeVReg : il est mis en commentaire.\n"_s.arg(m.captured(2));
                 QString body = code;
                 while (body.endsWith(u'\n') || body.endsWith(u' '))
                     body.chop(1);

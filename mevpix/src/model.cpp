@@ -61,7 +61,10 @@ std::optional<Calibration> Calibration::make(double refPx, double realLen, Unit 
 
 bool Calibration::matches(const Calibration &other) const
 {
-    return std::abs(refPx - other.refPx) < 0.5 && realLen == other.realLen && unit == other.unit;
+    // tolérance relative (0,2 % de la longueur de l'étalon) : un simple clic sur une poignée ne
+    // demande pas de revalider, mais un déplacement d'un étalon court se voit (un demi-pixel de
+    // tolérance fixe changeait l'échelle d'un étalon de quelques pixels sans le dire)
+    return std::abs(refPx - other.refPx) <= 0.002 * std::max(refPx, other.refPx) && realLen == other.realLen && unit == other.unit;
 }
 
 namespace {

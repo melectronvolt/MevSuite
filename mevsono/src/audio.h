@@ -45,6 +45,8 @@ struct Audio {
     Samples mix;
     /// La lecture s'est arrêtée à `MAX_SECONDS`.
     bool truncated = false;
+    /// Le décodage s'est arrêté sur une erreur (fichier abîmé) : seul le début du son est là.
+    bool damaged = false;
 
     /// Voies de même longueur (les plus longues sont raccourcies) et leur moyenne.
     static Audio make(QString name, double rate, std::vector<std::vector<float>> channels, bool truncated);

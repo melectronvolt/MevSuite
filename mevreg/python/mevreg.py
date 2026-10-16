@@ -10,8 +10,8 @@
     mr.enregistrer()
 
 Les lectures (valeurs, unité, liste des grandeurs) se font tout de suite. Les changements du
-document, des graphes et des fenêtres sont faits à la fin du script, dans l'ordre où ils ont été
-demandés. Menu Python → Exemples : un exemple court pour chaque fonction.
+document et des graphes sont faits à la fin du script, dans l'ordre où ils ont été demandés, puis
+ceux des fenêtres et des fichiers. Menu Python → Exemples : un exemple court pour chaque fonction.
 """
 
 import json as _json
@@ -214,10 +214,15 @@ def graphe(nom, x=None, y=None, incertitudes=None):
     _ordre("graphe", nom=str(nom), x=None if x is None else _nom(x), y=None if y is None else _noms(y), incertitudes=incertitudes)
 
 
-def courbe(graphe, x, y, couleur=None, marqueur=None, trait=None, incertitudes=None):
+def courbe(graphe, x, y, couleur=None, marqueur=None, trait=None, incertitudes=None,
+           x_bas=None, x_haut=None, y_bas=None, y_haut=None):
     """Ajoute la courbe y(x) au graphe. couleur : "rouge", "#ff0000"… ; marqueur : "croix",
-    "plus", "rond", "point", "carre", "aucun" ; trait : "aucun", "droit", "lisse"."""
-    _ordre("courbe", graphe=str(graphe), x=_nom(x), y=_nom(y), couleur=couleur, marqueur=marqueur, trait=trait, incertitudes=incertitudes)
+    "plus", "rond", "point", "carre", "aucun" ; trait : "aucun", "droit", "lisse". x_bas, x_haut,
+    y_bas, y_haut : une grandeur d'incertitude pour chaque côté (barres dissymétriques)."""
+    cotes = {k: (None if v is None else _nom(v)) for k, v in
+             (("x_bas", x_bas), ("x_haut", x_haut), ("y_bas", y_bas), ("y_haut", y_haut))}
+    _ordre("courbe", graphe=str(graphe), x=_nom(x), y=_nom(y), couleur=couleur, marqueur=marqueur, trait=trait,
+           incertitudes=incertitudes, **cotes)
 
 
 def retirer_courbe(graphe, y):
@@ -230,24 +235,43 @@ def axes(graphe, xmin=None, xmax=None, ymin=None, ymax=None, titre=None, x_titre
     _ordre("axes", graphe=str(graphe), xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, titre=titre, x_titre=x_titre, y_titre=y_titre)
 
 
-def verticale(graphe, x, texte=""):
-    """Droite verticale x = …, avec une étiquette."""
-    _ordre("annotation", graphe=str(graphe), type="verticale", x=float(x), texte=texte)
+def verticale(graphe, x, texte="", verrou=False):
+    """Droite verticale x = …, avec une étiquette ; verrou=True : la souris ne la déplace pas."""
+    _ordre("annotation", graphe=str(graphe), type="verticale", x=float(x), texte=texte, verrou=bool(verrou))
 
 
-def horizontale(graphe, y):
-    """Droite horizontale y = …"""
-    _ordre("annotation", graphe=str(graphe), type="horizontale", y=float(y))
+def horizontale(graphe, y, texte="", verrou=False):
+    """Droite horizontale y = …, avec une étiquette."""
+    _ordre("annotation", graphe=str(graphe), type="horizontale", y=float(y), texte=texte, verrou=bool(verrou))
 
 
-def oblique(graphe, x1, y1, x2, y2, texte=""):
+def oblique(graphe, x1, y1, x2, y2, texte="", verrou=False):
     """Droite oblique passant par (x1, y1) et (x2, y2)."""
-    _ordre("annotation", graphe=str(graphe), type="oblique", x=float(x1), y=float(y1), x2=float(x2), y2=float(y2), texte=texte)
+    _ordre("annotation", graphe=str(graphe), type="oblique", x=float(x1), y=float(y1), x2=float(x2), y2=float(y2),
+           texte=texte, verrou=bool(verrou))
 
 
-def texte(graphe, x, y, texte, taille=12):
+def texte(graphe, x, y, texte, taille=12, verrou=False):
     """Texte placé en (x, y) sur le graphe."""
-    _ordre("annotation", graphe=str(graphe), type="texte", x=float(x), y=float(y), texte=str(texte), taille=float(taille))
+    _ordre("annotation", graphe=str(graphe), type="texte", x=float(x), y=float(y), texte=str(texte), taille=float(taille),
+           verrou=bool(verrou))
+
+
+def effacer_annotations(graphe):
+    """Retire du graphe toutes ses droites et tous ses textes."""
+    _ordre("effacer_annotations", graphe=str(graphe))
+
+
+def tangentes(graphe, x, y, contact=None, verrou=False):
+    """Méthode des tangentes sur la courbe y(x) du graphe (dosage) ; contact : abscisse du point de
+    contact de la première tangente (sinon choisie par le logiciel)."""
+    _ordre("tangentes", graphe=str(graphe), x=_nom(x), y=_nom(y), contact=None if contact is None else float(contact),
+           verrou=bool(verrou))
+
+
+def retirer_tangentes(graphe):
+    """Retire du graphe la méthode des tangentes."""
+    _ordre("retirer_tangentes", graphe=str(graphe))
 
 
 # --- modélisation --------------------------------------------------------------------------

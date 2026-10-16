@@ -134,8 +134,7 @@ QString toCsv(const Profile &profile, const std::optional<Calibration> &calib, Q
 
 QString withCsvExtension(const QString &path)
 {
-    if (!QFileInfo(path).suffix().isEmpty())
-        return path;
-    const QString csv = path + u".csv"_s;
-    return QFileInfo::exists(csv) ? path : csv;
+    // « .csv » ajouté au nom tapé sans extension ; si ce fichier existe déjà, le programme demande
+    // avant de le remplacer (le dialogue a confirmé le nom tapé, pas celui-ci)
+    return QFileInfo(path).suffix().isEmpty() ? path + u".csv"_s : path;
 }

@@ -7,7 +7,9 @@
 #include <QMetaObject>
 #include <QStringList>
 
+#include <algorithm>
 #include <future>
+#include <optional>
 
 using namespace Qt::StringLiterals;
 
@@ -91,9 +93,11 @@ def _mevreg_run(code, quantities, parameters, folder):
             plt._reset()
             g = {"__name__": "__main__", "__builtins__": builtins, "grandeur": _mevreg.grandeur, "input": _pas_d_input}
             arrays = {}
-            for name, buf, unit in quantities:
+            for name, buf, unit, variable in quantities:
                 a = np._wrap(buf)
-                g[name] = a
+                # un nom protégé (min, np…) n'est pas une variable du script, mais mr la connaît
+                if variable:
+                    g[name] = a
                 arrays[name] = (a, unit)
             for name, value in parameters:
                 g[name] = value
@@ -205,10 +209,10 @@ ScriptOutput execute(PyObject *runner, std::uint64_t id, const QString &code, co
     ScriptOutput out;
     PyObject *quantities = PyList_New(0);
     for (const auto &q : input.quantities) {
-        if (PROTECTED.contains(q.name))
-            continue;
+        // nom protégé : la grandeur reste lisible par mr.valeurs, sans masquer la fonction Python
         PyObject *buf = wrapBuf(arr::Arr::flt(q.values));
-        PyObject *item = Py_BuildValue("(sNs)", q.name.toUtf8().constData(), buf, q.unit.toUtf8().constData());
+        PyObject *item = Py_BuildValue("(sNsN)", q.name.toUtf8().constData(), buf, q.unit.toUtf8().constData(),
+                                       PyBool_FromLong(!PROTECTED.contains(q.name)));
         PyList_Append(quantities, item);
         Py_DECREF(item);
     }
@@ -360,7 +364,28 @@ ScriptOutput Engine::runSync(const QString &code, const ScriptInput &input)
 
 void Engine::interrupt(std::uint64_t id)
 {
-    if (id == 0 || m_current.load() != id)
+    if (id == 0)
+        return;
+    // script qui attend son tour : retiré de la file, terminé comme interrompu
+    std::optional<Job> queued;
+    {
+        std::lock_guard lock(m_mutex);
+        const auto it = std::find_if(m_jobs.begin(), m_jobs.end(), [id](const Job &j) { return j.id == id; });
+        if (it != m_jobs.end()) {
+            queued = std::move(*it);
+            m_jobs.erase(it);
+        }
+    }
+    if (queued) {
+        ScriptOutput out;
+        ScriptError e;
+        e.message = u"Script interrompu"_s;
+        e.interrupted = true;
+        out.error = e;
+        queued->done(queued->id, std::move(out));
+        return;
+    }
+    if (m_current.load() != id)
         return;
     g_interruptFor = id;
     // sans le verrou global : l'appel est exécuté par l'interpréteur à la prochaine instruction

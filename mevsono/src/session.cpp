@@ -246,15 +246,21 @@ QString soundInfo(const Tr &tr, const audio::Audio &audio)
     return u"%1 kHz · %2 · %3"_s.arg(fmtNum(audio.rate / 1000.0, 3, d), channels, fmtDuration(audio.duration(), d));
 }
 
-QString harmonicsTable(const Tr &tr, std::span<const dsp::Harmonic> harmonics, const dsp::Peak &first)
+QString harmonicsTable(const Tr &tr, std::span<const dsp::Harmonic> harmonics)
 {
     const QChar d = tr.decimal;
     QString out = QStringList{tr.colRank, tr.colFreq, tr.colRatio, tr.colAmp, tr.colRel}.join(u'\t') + u'\n';
+    if (harmonics.empty())
+        return out;
+    // rapport à la fondamentale : son pic s'il y en a un, sinon sa fréquence attendue (fondamentale
+    // absente) ; amplitude relative seulement avec le pic de la fondamentale
+    const std::optional<dsp::Peak> &first = harmonics.front().peak;
+    const double f1 = first ? first->freq : harmonics.front().expected;
     for (const dsp::Harmonic &h : harmonics) {
         if (const auto &p = h.peak) {
-            out += u"%1\t%2\t%3\t%4\t%5\n"_s.arg(QString::number(h.rank), csvNum(p->freq, 2, d),
-                                                 csvNum(p->freq / first.freq, 4, d), csvNum(toDb(p->amplitude), 2, d),
-                                                 csvNum(100.0 * p->amplitude / first.amplitude, 2, d));
+            out += u"%1\t%2\t%3\t%4\t%5\n"_s.arg(QString::number(h.rank), csvNum(p->freq, 2, d), csvNum(p->freq / f1, 4, d),
+                                                 csvNum(toDb(p->amplitude), 2, d),
+                                                 first ? csvNum(100.0 * p->amplitude / first->amplitude, 2, d) : QString());
         } else {
             out += u"%1\t\t\t\t\n"_s.arg(h.rank);
         }
@@ -288,8 +294,7 @@ QString extractCsv(const Tr &tr, std::span<const float> samples, size_t start, d
 
 QString withCsvExtension(const QString &path)
 {
-    if (!QFileInfo(path).suffix().isEmpty())
-        return path;
-    const QString csv = path + u".csv"_s;
-    return QFileInfo::exists(csv) ? path : csv;
+    // « .csv » ajouté au nom tapé sans extension ; si ce fichier existe déjà, le programme demande
+    // avant de le remplacer (le dialogue a confirmé le nom tapé, pas celui-ci)
+    return QFileInfo(path).suffix().isEmpty() ? path + u".csv"_s : path;
 }

@@ -124,8 +124,9 @@ std::vector<double> logGridMarks(double lo, double hi);
 /// « 44,1 kHz · stéréo · 3,20 s »
 QString soundInfo(const Tr &tr, const audio::Audio &audio);
 
-/// Tableau des harmoniques, colonnes séparées par des tabulations, à coller dans un tableur.
-QString harmonicsTable(const Tr &tr, std::span<const dsp::Harmonic> harmonics, const dsp::Peak &first);
+/// Tableau des harmoniques, colonnes séparées par des tabulations, à coller dans un tableur ; rapports
+/// à la fondamentale (rang 1), même si elle n'a pas de pic.
+QString harmonicsTable(const Tr &tr, std::span<const dsp::Harmonic> harmonics);
 /// Spectre (fréquence, amplitude, amplitude en dB) au format CSV.
 QString spectrumCsv(const Tr &tr, const dsp::Spectrum &sp);
 /// Échantillons de l'extrait (instant, valeur) au format CSV ; `start` : indice du premier.

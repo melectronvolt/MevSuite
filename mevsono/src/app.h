@@ -161,6 +161,8 @@ private:
 
     // Réglages
     void setUiZoom(double zoom);
+    /// Applique l'agrandissement demandé, borné par la largeur de la fenêtre.
+    void applyUiZoom();
     double maxUiZoom() const;
     /// Polices des titres et des valeurs, proportionnelles à celle de l'interface.
     void styleFont(QWidget *widget, double factor, QFont::Weight weight = QFont::Normal);
@@ -213,7 +215,9 @@ private:
     std::optional<QSize> m_windowSize;
     std::optional<QSize> m_previousWindowSize;
     bool m_maximized = false;
+    /// Agrandissement affiché (borné par la largeur de la fenêtre) et agrandissement demandé (retenu).
     double m_uiZoom = 1.0;
+    double m_uiZoomWanted = 1.0;
     QFont m_baseFont;
 
     struct ScaledFont {
