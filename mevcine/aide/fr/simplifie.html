@@ -1,0 +1,112 @@
+<header class="title">
+<h1>Le mode simplifié, pas à pas</h1>
+<p>Six étapes guidées, pour un seul objet</p>
+</header>
+
+<p>À gauche, en haut, la <strong>loupe</strong> et les coordonnées du point visé ; en dessous, la
+<strong>consigne</strong> de l'étape ; tout en bas, <span class="btn">◀ Précédent</span> et
+<span class="btn">Suivant ▶</span>. Au centre, l'image de la vidéo, et sous l'image le choix de l'image. À
+droite, à partir de l'étape 4, le <strong>tableau des mesures</strong>. La fenêtre entière est décrite sur la
+page <a href="index.html#fenetre">Présentation</a>.</p>
+<p>Le bandeau du haut montre les six étapes : une coche ✔ marque celles qui sont faites. On n'avance que si
+l'étape est faite (<span class="btn">Suivant ▶</span> reste grisé sinon). On peut revenir aux étapes 1 à 3
+même après le pointage : <strong>les mesures sont gardées, et recalculées</strong>.</p>
+
+<h2 id="origine">Étape 1 : l'origine du repère</h2>
+<figure>
+<img src="images/origine.jpg" alt="L'étape 1 : la consigne à gauche, l'image de la vidéo au centre">
+<figcaption>La vidéo <code>Principe_inertie.avi</code> : un palet glisse sur une table ; la règle
+jaune mesure 85 cm.</figcaption>
+</figure>
+<p><strong>Cliquez sur l'image</strong> à l'endroit choisi pour l'origine O : souvent la position de départ de
+l'objet, ou un point facile à repérer (le bout d'une règle, le sol…). L'origine apparaît en vert. Pour la
+déplacer, cliquez ailleurs, ou <strong>faites-la glisser</strong> : bouton enfoncé, la souris l'emmène.</p>
+<p>La vidéo est couchée ? Les boutons <span class="btn">⟲ vers la gauche</span> et
+<span class="btn">⟳ vers la droite</span> la tournent d'un quart de tour (seulement avant l'échelle et le
+pointage).</p>
+<p class="tip">Profitez-en pour parcourir la vidéo avec la glissière sous l'image : repérez où le mouvement
+commence et où il finit.</p>
+
+<h2 id="axes">Étape 2 : l'orientation des axes</h2>
+<figure>
+<img src="images/axes.jpg" alt="L'étape 2 : quatre boutons dessinent les quatre orientations possibles des axes">
+<figcaption>Quatre repères possibles ; aucun n'est choisi d'avance.</figcaption>
+</figure>
+<p>Choisissez le sens de l'axe des abscisses x (vers la droite ou vers la gauche) et celui de l'axe des
+ordonnées y (vers le haut ou vers le bas). Le repère est aussitôt dessiné sur l'image. Pour une chute, on prend
+souvent y vers le bas ; pour un lancer, y vers le haut : c'est à vous de décider, d'après ce que vous voulez
+calculer ensuite.</p>
+<p>À cette étape aussi, l'origine se déplace en la faisant glisser : approchez la souris du point vert (le
+curseur devient une main), puis glissez.</p>
+
+<h2 id="echelle">Étape 3 : l'échelle</h2>
+<figure>
+<img src="images/echelle.jpg" alt="L'étape 3 : l'étalon tracé sur la règle, et sa longueur saisie, 85 cm">
+<figcaption>L'étalon est tracé d'un bout à l'autre de la règle ; sa longueur est 85, en cm.</figcaption>
+</figure>
+<ol>
+  <li>Cliquez sur <span class="btn">Sélectionner l'étalon</span>. Sur l'image, cliquez sur une extrémité d'un
+  objet de longueur connue (une règle, une porte, une distance mesurée), puis sur l'autre extrémité. Vous pouvez
+  aussi glisser d'une extrémité à l'autre. Clic droit ou <kbd>Échap</kbd> : annuler.</li>
+  <li>Tapez sa <strong>longueur réelle</strong>, choisissez l'<strong>unité</strong> dans la liste
+  (<code>mm</code>, <code>cm</code> ou <code>m</code>), puis <span class="btn">Valider</span> (ou
+  <kbd>Entrée</kbd>). On peut aussi écrire l'unité après le nombre : <code>85 cm</code>.</li>
+</ol>
+<p>« ✔ Échelle : 85 cm pour 353 pixels » confirme ; l'étalon reste dessiné sur l'image, avec sa longueur. Les
+positions sont ensuite données <strong>en mètre</strong>, quelle que soit l'unité de l'étalon. Comment choisir un
+bon étalon, et toutes les écritures permises : <a href="echelle.html">L'échelle</a>.</p>
+
+<h2 id="pointage">Étape 4 : le pointage</h2>
+<figure>
+<img src="images/pointage.jpg" alt="L'étape 4 : quatre points marqués sur le palet, et le tableau des mesures à droite">
+<figcaption>Chaque clic sur l'objet ajoute une ligne au tableau, et passe à l'image suivante.</figcaption>
+</figure>
+<ol>
+  <li>Avec la glissière (ou les flèches <kbd>←</kbd> <kbd>→</kbd>), placez-vous sur la <strong>première image
+  utile</strong> : celle où le mouvement commence. Ce sera la date t = 0.</li>
+  <li><strong>Cliquez sur l'objet.</strong> L'image suivante s'affiche toute seule, et le tableau gagne une
+  ligne. Recommencez, image après image.</li>
+  <li>Regardez la <strong>loupe</strong>, en haut à gauche, au moment de cliquer, et visez <strong>toujours le
+  même point</strong> de l'objet : son centre, ou son bord avant.</li>
+</ol>
+<ul>
+  <li><span class="btn">↶ Annuler le dernier point</span> (<kbd>Ctrl</kbd>+<kbd>Z</kbd>) efface le dernier
+  point et revient sur son image ; ↷ (<kbd>Ctrl</kbd>+<kbd>Y</kbd>) le rétablit.</li>
+  <li>Inutile de pointer toute la vidéo : arrêtez-vous quand le mouvement est fini. En revanche, on ne saute pas
+  d'image.</li>
+  <li><span class="btn">Plein écran</span>, sous l'image (<kbd>F11</kbd>) : l'image occupe tout l'écran, la loupe
+  reste affichée. <kbd>Échap</kbd> revient à la fenêtre.</li>
+  <li><strong>Vidéo au ralenti ?</strong> Ouvrez cette rubrique si la vidéo a été filmée au ralenti, et indiquez
+  la cadence de prise de vue (par exemple 240 images par seconde). Voir
+  <a href="video.html#ralenti">Les ralentis</a>.</li>
+</ul>
+<p>Quand c'est fini : <span class="btn">Terminer le pointage ▶</span>.</p>
+
+<h2 id="tableau">Étape 5 : le tableau des mesures</h2>
+<p>Pour chaque image pointée : la date <code>t</code> en seconde, et les coordonnées <code>x</code> et
+<code>y</code> en mètre, dans votre repère. La première image pointée est à t = 0 ; avec une vidéo à
+25 images par seconde, les dates avancent de 0,040 s en 0,040 s.</p>
+<p><strong>Une mesure est fausse ?</strong> Cliquez sur <strong>⌖</strong> dans sa ligne : son image s'affiche,
+le point à refaire est entouré d'orange ; cliquez sur l'objet. MeVCine revient ensuite où vous en étiez.
+<span class="btn">Annuler (Échap)</span> renonce.</p>
+<p><span class="btn">◀ Reprendre le pointage</span> revient à l'étape 4. Revenir aux étapes 1 à 3 (déplacer
+l'origine, changer les axes, refaire l'échelle) recalcule toutes les mesures, sans rien perdre : essayez, et
+regardez comment les coordonnées changent.</p>
+
+<h2 id="export">Étape 6 : l'export</h2>
+<figure>
+<img src="images/export.jpg" alt="L'étape 6 : les boutons Copier pour Python et Enregistrer en CSV, et l'aperçu du texte copié">
+<figcaption>L'aperçu montre exactement le texte qui sera collé dans Python.</figcaption>
+</figure>
+<ul>
+  <li><span class="btn">📋 Copier pour Python</span> : les mesures vont dans le presse-papiers, sous forme de
+  trois tableaux <code>lst_t</code>, <code>lst_x</code>, <code>lst_y</code>. Collez-les avec
+  <kbd>Ctrl</kbd>+<kbd>V</kbd> dans votre programme Python ou votre notebook. « ✔ Copié ! » confirme.</li>
+  <li><span class="btn">💾 Enregistrer en CSV…</span> : un fichier pour un tableur ou un programme.</li>
+  <li><span class="btn">Enregistrer le projet, pour continuer plus tard…</span> : un fichier
+  <code>.mevcine</code> qui garde tout.</li>
+</ul>
+<p>Comment utiliser ces fichiers : <a href="exports.html">Exporter les mesures</a>. Un exemple complet, jusqu'au
+programme Python : <a href="tp.html">Un TP pas à pas</a>.</p>
+<p class="warn">Avant de partir, copiez ou enregistrez vos mesures. Si vous l'oubliez, MeVCine vous le
+rappelle ; et le travail en cours est de toute façon sauvegardé automatiquement.</p>

@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=MeVCine
+GenericName=Étude cinématique de vidéos
+GenericName[en]=Kinematics from videos
+Comment=Pointer un mouvement filmé : repère, échelle, export CSV et Python
+Comment[en]=Track a filmed motion: axes, scale, CSV and Python export
+Exec=mevcine %f
+Icon=mevcine
+Terminal=false
+Categories=Education;Physics;Qt;
+MimeType=video/mp4;video/quicktime;video/x-msvideo;video/x-matroska;video/webm;video/3gpp;
+Keywords=physique;mécanique;pointage;vidéo;physics;video;

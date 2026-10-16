@@ -1,0 +1,109 @@
+<header class="title">
+<h1>Simple mode, step by step</h1>
+<p>Six guided steps, for a single object</p>
+</header>
+
+<p>On the left, at the top, the <strong>magnifier</strong> and the coordinates of the point under the cursor;
+below, the <strong>instruction</strong> of the step; at the very bottom, <span class="btn">◀ Previous</span> and
+<span class="btn">Next ▶</span>. In the middle, the video frame, and under it the choice of the frame. On the
+right, from step 4 on, the <strong>table of measurements</strong>. The whole window is described on the
+<a href="index.html#fenetre">Overview</a> page.</p>
+<p>The top band shows the six steps: a tick ✔ marks those that are done. You only move on once the step is done
+(<span class="btn">Next ▶</span> stays greyed out otherwise). Steps 1 to 3 can be revisited even after marking:
+<strong>the measurements are kept, and recomputed</strong>.</p>
+
+<h2 id="origine">Step 1: the origin of the axes</h2>
+<figure>
+<img src="images/origine.jpg" alt="Step 1: the instruction on the left, the video frame in the middle">
+<figcaption>The video <code>Principe_inertie.avi</code>: a puck slides on a table; the yellow ruler is
+85 cm long.</figcaption>
+</figure>
+<p><strong>Click on the frame</strong> where you want the origin O: often the starting position of the object, or
+a point easy to find (the end of a ruler, the ground…). The origin appears in green. To move it, click elsewhere,
+or <strong>drag it</strong>: with the button held down, the mouse carries it along.</p>
+<p>Is the video lying on its side? The <span class="btn">⟲ to the left</span> and
+<span class="btn">⟳ to the right</span> buttons rotate it by a quarter turn (only before the scale and the
+marking).</p>
+<p class="tip">Use this moment to browse the video with the slider under the frame: find where the motion
+starts and where it ends.</p>
+
+<h2 id="axes">Step 2: the direction of the axes</h2>
+<figure>
+<img src="images/axes.jpg" alt="Step 2: four buttons draw the four possible directions of the axes">
+<figcaption>Four possible sets of axes; none is chosen in advance.</figcaption>
+</figure>
+<p>Choose the direction of the x axis (to the right or to the left) and that of the y axis (upward or downward).
+The axes are drawn on the frame at once. For a fall, y downward is often chosen; for a throw, y upward: it is up
+to you, depending on what you want to compute next.</p>
+<p>At this step too, the origin can be dragged: bring the mouse close to the green dot (the cursor becomes a
+hand), then drag.</p>
+
+<h2 id="echelle">Step 3: the scale</h2>
+<figure>
+<img src="images/echelle.jpg" alt="Step 3: the reference drawn along the ruler, and its length entered, 85 cm">
+<figcaption>The reference is drawn from one end of the ruler to the other; its length is 85, in cm.</figcaption>
+</figure>
+<ol>
+  <li>Click on <span class="btn">Select the reference</span>. On the frame, click on one end of an object of known
+  length (a ruler, a door, a measured distance), then on the other end. You can also drag from one end to the
+  other. Right-click or <kbd>Esc</kbd>: cancel.</li>
+  <li>Type its <strong>real length</strong>, choose the <strong>unit</strong> in the list (<code>mm</code>,
+  <code>cm</code> or <code>m</code>), then <span class="btn">Confirm</span> (or <kbd>Enter</kbd>). You can also
+  write the unit after the number: <code>85 cm</code>.</li>
+</ol>
+<p>“✔ Scale: 85 cm for 353 pixels.” confirms; the reference stays drawn on the frame, with its length. Positions
+are then given <strong>in metres</strong>, whatever the unit of the reference. How to choose a good reference, and
+all the allowed ways to write it: <a href="echelle.html">The scale</a>.</p>
+
+<h2 id="pointage">Step 4: marking</h2>
+<figure>
+<img src="images/pointage.jpg" alt="Step 4: four points marked on the puck, and the table of measurements on the right">
+<figcaption>Each click on the object adds a row to the table, and moves to the next frame.</figcaption>
+</figure>
+<ol>
+  <li>With the slider (or the <kbd>←</kbd> <kbd>→</kbd> arrows), go to the <strong>first useful frame</strong>: the
+  one where the motion starts. That will be time t = 0.</li>
+  <li><strong>Click on the object.</strong> The next frame shows up by itself, and the table gains a row. Do it
+  again, frame after frame.</li>
+  <li>Look at the <strong>magnifier</strong>, top left, when you click, and always aim at <strong>the same
+  point</strong> of the object: its centre, or its front edge.</li>
+</ol>
+<ul>
+  <li><span class="btn">↶ Undo the last point</span> (<kbd>Ctrl</kbd>+<kbd>Z</kbd>) erases the last point and goes
+  back to its frame; ↷ (<kbd>Ctrl</kbd>+<kbd>Y</kbd>) brings it back.</li>
+  <li>No need to mark the whole video: stop when the motion is over. However, you cannot skip a frame.</li>
+  <li><span class="btn">Full screen</span>, under the image (<kbd>F11</kbd>): the image fills the whole screen, the
+  magnifier stays visible. <kbd>Esc</kbd> goes back to the window.</li>
+  <li><strong>Slow-motion video?</strong> Open this section if the video was filmed in slow motion, and enter the
+  capture frame rate (for instance 240 frames per second). See <a href="video.html#ralenti">Slow motion</a>.</li>
+</ul>
+<p>When you are done: <span class="btn">Finish marking ▶</span>.</p>
+
+<h2 id="tableau">Step 5: the table of measurements</h2>
+<p>For each marked frame: the time <code>t</code> in seconds, and the coordinates <code>x</code> and <code>y</code>
+in metres, in your axes. The first marked frame is at t = 0; with a video at 25 frames per second, the times go up
+by 0.040 s each time.</p>
+<p><strong>A measurement is wrong?</strong> Click on <strong>⌖</strong> in its row: its frame shows up, the point to
+redo is circled in orange; click on the object. MeVCine then goes back to where you were.
+<span class="btn">Cancel (Esc)</span> gives up.</p>
+<p><span class="btn">◀ Resume marking</span> goes back to step 4. Going back to steps 1 to 3 (moving the origin,
+changing the axes, redoing the scale) recomputes all the measurements, without losing anything: try it, and watch
+how the coordinates change.</p>
+
+<h2 id="export">Step 6: export</h2>
+<figure>
+<img src="images/export.jpg" alt="Step 6: the Copy for Python and Save as CSV buttons, and the preview of the copied text">
+<figcaption>The preview shows exactly the text that will be pasted into Python.</figcaption>
+</figure>
+<ul>
+  <li><span class="btn">📋 Copy for Python</span>: the measurements go to the clipboard, as three arrays
+  <code>lst_t</code>, <code>lst_x</code>, <code>lst_y</code>. Paste them with <kbd>Ctrl</kbd>+<kbd>V</kbd> into your
+  Python program or notebook. “✔ Copied!” confirms.</li>
+  <li><span class="btn">💾 Save as CSV…</span>: a file for a spreadsheet or a program.</li>
+  <li><span class="btn">Save the project, to continue later…</span>: a <code>.mevcine</code> file that keeps
+  everything.</li>
+</ul>
+<p>How to use these files: <a href="exports.html">Exporting the measurements</a>. A complete example, up to the
+Python program: <a href="tp.html">A lab, step by step</a>.</p>
+<p class="warn">Before leaving, copy or save your measurements. If you forget, MeVCine reminds you; and the
+work in progress is saved automatically anyway.</p>

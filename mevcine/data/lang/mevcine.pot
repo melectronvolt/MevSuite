@@ -1,0 +1,1321 @@
+# Modèle des traductions de MeVCine (C++, Qt)
+# Rémi MEVAERE
+msgid ""
+msgstr ""
+"Project-Id-Version: MeVCine\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/app/a_propos.cpp:34
+msgid "du code adapté (pointage, suivi automatique, trajectoires, grapheur)"
+msgstr ""
+
+#: src/app/a_propos.cpp:37
+msgid "l'interface graphique, la lecture et l'écriture des images, les calculs en parallèle du suivi automatique"
+msgstr ""
+
+#: src/app/a_propos.cpp:40
+msgid "la lecture des vidéos ; la version livrée (BtbN) contient aussi dav1d, libaom, libvpx, SVT-AV1, zimg, libplacebo…"
+msgstr ""
+
+#: src/app/a_propos.cpp:43
+msgid "le compilateur C++ et sa bibliothèque standard"
+msgstr ""
+
+#: src/app/a_propos.cpp:45
+msgid "les bibliothèques d'exécution de la version Windows"
+msgstr ""
+
+#: src/app/a_propos.cpp:86
+msgid "À propos de MeVCine"
+msgstr ""
+
+#: src/app/a_propos.cpp:112
+msgid "version {}"
+msgstr ""
+
+#: src/app/a_propos.cpp:113
+msgid "Étude cinématique de vidéos"
+msgstr ""
+
+#: src/app/a_propos.cpp:115
+msgid "Auteur :"
+msgstr ""
+
+#: src/app/a_propos.cpp:121
+msgid "Contact :"
+msgstr ""
+
+#: src/app/a_propos.cpp:126
+msgid "Licence"
+msgstr ""
+
+#: src/app/a_propos.cpp:127
+msgid "MeVCine est un logiciel libre : vous pouvez le redistribuer et le modifier selon les termes de la licence GPL (GNU General Public License) publiée par la Free Software Foundation, version 3 ou (à votre choix) toute version ultérieure. Il est distribué dans l'espoir qu'il sera utile, mais SANS AUCUNE GARANTIE."
+msgstr ""
+
+#: src/app/a_propos.cpp:144
+msgid "Composants libres utilisés"
+msgstr ""
+
+#: src/app/a_propos.cpp:155
+msgid "Le bouton « À propos de Qt » donne la licence de Qt et ses composants."
+msgstr ""
+
+#: src/app/a_propos.cpp:167
+msgid "À propos de Qt"
+msgstr ""
+
+#: src/app/a_propos.cpp:168
+msgid "Fermer"
+msgstr ""
+
+#: src/app/accueil.cpp:195
+msgid "Mode simplifié"
+msgstr ""
+
+#: src/app/accueil.cpp:195
+msgid "Pas à pas, pour débuter"
+msgstr ""
+
+#: src/app/accueil.cpp:196
+msgid "Mode expert"
+msgstr ""
+
+#: src/app/accueil.cpp:196
+msgid "Toutes les fonctions"
+msgstr ""
+
+#: src/app/accueil.cpp:197
+msgid "Le mode se change à tout moment, sans perdre les mesures."
+msgstr ""
+
+#: src/app/accueil.cpp:231
+msgid "📂 Ouvrir une vidéo…"
+msgstr ""
+
+#: src/app/accueil.cpp:232
+msgid ""
+"Vidéos de téléphone (iPhone, Android) et d'appareil photo : MP4, MOV, AVI, MKV, WebM…\n"
+"H.264, HEVC, AV1, VP9, ProRes ; HDR, vidéos en portrait, ralenti."
+msgstr ""
+
+#: src/app/accueil.cpp:237
+msgid "ou glissez une vidéo (ou un projet) sur la fenêtre"
+msgstr ""
+
+#: src/app/app.cpp:101
+msgid "Déposez la vidéo ici"
+msgstr ""
+
+#: src/app/app.cpp:193
+msgid "Erreur de lecture de la configuration"
+msgstr ""
+
+#: src/app/app.cpp:194
+msgid "Le fichier de configuration est illisible : MeVCine repart d'une configuration neuve."
+msgstr ""
+
+#: src/app/app.cpp:226
+msgid "Définissez l'échelle, ou démarrez le pointage"
+msgstr ""
+
+#: src/app/app.cpp:228
+msgid "Préparation du suivi automatique : tracez un cadre autour de chaque objet à suivre ({} en tout)"
+msgstr ""
+
+#: src/app/app.cpp:230
+msgid "Suivi automatique en cours : le bouton STOP l'interrompt"
+msgstr ""
+
+#: src/app/app.cpp:233
+msgid "Pointage"
+msgstr ""
+
+#: src/app/app.cpp:241
+msgid "Choisissez votre mode de travail : simplifié (pas à pas) ou expert"
+msgstr ""
+
+#: src/app/app.cpp:245
+msgid "Étape {} sur {} : {}"
+msgstr ""
+
+#: src/app/app.cpp:252
+msgid "Cliquez sur l'autre extrémité de l'étalon (clic droit ou Échap : annuler)"
+msgstr ""
+
+#: src/app/app.cpp:253
+msgid "Cliquez sur une extrémité de l'étalon, puis sur l'autre, ou faites un tirer-glisser (clic droit ou Échap : annuler)"
+msgstr ""
+
+#: src/app/app.cpp:274
+msgid "Passer en mode simplifié ?"
+msgstr ""
+
+#: src/app/app.cpp:275
+msgid ""
+"Le mode simplifié ne suit qu'un seul objet, et vos mesures en comptent {}. Seules les mesures de l'objet 1 seront gardées.\n"
+"\n"
+"Pour garder tous les objets, annulez et restez en mode expert."
+msgstr ""
+
+#: src/app/app.cpp:278
+msgid "Garder l'objet 1"
+msgstr ""
+
+#: src/app/app.cpp:316
+msgid "Mode simplifié : seules les mesures de l'objet 1 sont gardées"
+msgstr ""
+
+#: src/app/app.cpp:357
+msgid "Suivi automatique"
+msgstr ""
+
+#: src/app/app.cpp:358
+msgid ""
+"Tracez un cadre autour de chaque objet à suivre.\n"
+"\n"
+"Le bouton STOP arrête le suivi à tout moment."
+msgstr ""
+
+#: src/app/app.cpp:408
+msgid "Vidéo illisible"
+msgstr ""
+
+#: src/app/app.cpp:408
+msgid ""
+"MeVCine n'arrive pas à lire la vidéo :\n"
+"{}\n"
+"\n"
+"{}"
+msgstr ""
+
+#: src/app/app.cpp:427
+msgid "Vidéo au ralenti"
+msgstr ""
+
+#: src/app/app.cpp:428
+msgid ""
+"Cette vidéo au ralenti a été filmée à {} images par seconde, et se lit à {} images par seconde.\n"
+"\n"
+"Les dates sont calculées avec la cadence de prise de vue : {} images par seconde. On peut la corriger dans le champ « images par seconde »."
+msgstr ""
+
+#: src/app/app.cpp:433
+msgid "Vidéo en accéléré"
+msgstr ""
+
+#: src/app/app.cpp:434
+msgid ""
+"Cette vidéo en accéléré a été filmée à {} images par seconde, et se lit à {} images par seconde.\n"
+"\n"
+"Les dates sont calculées avec la cadence de prise de vue : {} images par seconde. On peut la corriger dans le champ « images par seconde »."
+msgstr ""
+
+#: src/app/app.cpp:492
+msgid "Image {} illisible : {}"
+msgstr ""
+
+#: src/app/app.cpp:536
+msgid "Cliquez sur l'objet pour refaire la mesure de l'image {} (Échap : annuler)"
+msgstr ""
+
+#: src/app/app.cpp:538
+msgid "Cliquez sur l'objet {}"
+msgstr ""
+
+#: src/app/app.cpp:540
+msgid "Cliquez sur l'objet"
+msgstr ""
+
+#: src/app/app.cpp:558
+msgid "Mesure refaite"
+msgstr ""
+
+#: src/app/app.cpp:668
+msgid "Le nombre d'images par seconde doit être un nombre positif"
+msgstr ""
+
+#: src/app/app.cpp:697
+msgid "Indiquez la longueur réelle de l'étalon et son unité, puis validez"
+msgstr ""
+
+#: src/app/app.cpp:719
+msgid "Échelle définie"
+msgstr ""
+
+#: src/app/app.cpp:728
+msgid "Échelle inchangée"
+msgstr ""
+
+#: src/app/app.cpp:751
+msgid "Origine déplacée : les mesures sont recalculées"
+msgstr ""
+
+#: src/app/app.cpp:759
+msgid "indéfinie"
+msgstr ""
+
+#: src/app/app.cpp:778
+msgid "Origine du repère"
+msgstr ""
+
+#: src/app/app.cpp:783
+msgid "Mesure à refaire"
+msgstr ""
+
+#: src/app/app.cpp:785
+msgid "Pointage de l'objet {}"
+msgstr ""
+
+#: src/app/app.cpp:787
+msgid "Zone à suivre n° {}"
+msgstr ""
+
+#: src/app/app.cpp:788
+msgid "Étalon"
+msgstr ""
+
+#: src/app/app.cpp:789
+msgid "Loupe"
+msgstr ""
+
+#: src/app/app.cpp:996
+msgid "Vidéos (mp4, mov, avi, mkv, webm...)"
+msgstr ""
+
+#: src/app/app.cpp:997
+msgid "Tous les fichiers"
+msgstr ""
+
+#: src/app/app.cpp:998
+msgid "Ouvrir une vidéo"
+msgstr ""
+
+#: src/app/app.cpp:1036
+msgid "Pour les garder, annulez, puis copiez-les pour Python ou enregistrez-les (fichier CSV, ou projet MeVCine)."
+msgstr ""
+
+#: src/app/app.cpp:1041
+msgid "Quitter MeVCine ?"
+msgstr ""
+
+#: src/app/app.cpp:1042
+msgid "Vos mesures n'ont été ni copiées ni enregistrées : elles seront perdues."
+msgstr ""
+
+#: src/app/app.cpp:1043
+msgid "Quitter sans enregistrer"
+msgstr ""
+
+#: src/app/app.cpp:1046
+msgid "Tout recommencer ?"
+msgstr ""
+
+#: src/app/app.cpp:1047
+msgid "Les mesures, l'échelle et le repère seront effacés."
+msgstr ""
+
+#: src/app/app.cpp:1048
+msgid "Tout effacer"
+msgstr ""
+
+#: src/app/app.cpp:1051
+msgid "Abandonner les mesures ?"
+msgstr ""
+
+#: src/app/app.cpp:1052
+msgid "Vos mesures n'ont été ni copiées ni enregistrées : ouvrir un autre fichier les effacera."
+msgstr ""
+
+#: src/app/app.cpp:1054
+msgid "Continuer sans enregistrer"
+msgstr ""
+
+#: src/app/app.cpp:1093
+msgid "Ouvrir un projet MeVCine"
+msgstr ""
+
+#: src/app/app.cpp:1094
+msgid "Projet MeVCine"
+msgstr ""
+
+#: src/app/app.cpp:1101
+msgid "mesures"
+msgstr ""
+
+#: src/app/app.cpp:1116
+msgid "Enregistrer le projet MeVCine"
+msgstr ""
+
+#: src/app/app.cpp:1174
+msgid "Projet enregistré : {}"
+msgstr ""
+
+#: src/app/app.cpp:1176
+msgid "Erreur lors de l'enregistrement"
+msgstr ""
+
+#: src/app/app.cpp:1177
+msgid ""
+"Le projet n'a pas pu être enregistré :\n"
+"{}\n"
+"\n"
+"{}"
+msgstr ""
+
+#: src/app/app.cpp:1186
+msgid "Projet illisible"
+msgstr ""
+
+#: src/app/app.cpp:1203
+msgid "Vidéo introuvable"
+msgstr ""
+
+#: src/app/app.cpp:1204
+msgid ""
+"La vidéo de ce projet est introuvable :\n"
+"{}\n"
+"\n"
+"Placez-la à côté du fichier de projet, puis rouvrez-le."
+msgstr ""
+
+#: src/app/app.cpp:1247
+msgid "Ce projet suit plusieurs objets : il s'ouvre en mode expert."
+msgstr ""
+
+#: src/app/app.cpp:1263
+msgid "Fichier trop ancien"
+msgstr ""
+
+#: src/app/app.cpp:1264
+msgid "Ce fichier a été écrit par une version trop ancienne ({}, antérieure à {}) : il ne peut pas être pris en compte."
+msgstr ""
+
+#: src/app/app.cpp:1280
+msgid "Fichier introuvable"
+msgstr ""
+
+#: src/app/app.cpp:1280
+msgid "Le fichier {} n'existe pas."
+msgstr ""
+
+#: src/app/app.cpp:1296
+msgid "Aucune mesure"
+msgstr ""
+
+#: src/app/app.cpp:1296
+msgid "Pointez d'abord l'objet sur quelques images."
+msgstr ""
+
+#: src/app/app.cpp:1300
+msgid "Enregistrer les mesures en CSV"
+msgstr ""
+
+#: src/app/app.cpp:1301
+msgid "Fichier CSV"
+msgstr ""
+
+#: src/app/app.cpp:1310
+msgid "Mesures enregistrées : {}"
+msgstr ""
+
+#: src/app/app.cpp:1313
+msgid ""
+"Le fichier CSV n'a pas pu être enregistré :\n"
+"{}\n"
+"\n"
+"{}"
+msgstr ""
+
+#: src/app/app.cpp:1332
+msgid "Mesures copiées dans le presse-papiers : collez-les (Ctrl+V) dans votre programme Python"
+msgstr ""
+
+#: src/app/app.cpp:1358
+msgid ""
+"L'image n'a pas pu être enregistrée :\n"
+"{}\n"
+"\n"
+"{}"
+msgstr ""
+
+#: src/app/app.cpp:1358
+msgid "image vide"
+msgstr ""
+
+#: src/app/app.cpp:1373
+msgid "Aide"
+msgstr ""
+
+#: src/app/app.cpp:1373
+msgid "La notice est introuvable : le dossier {} manque à côté du programme."
+msgstr ""
+
+#: src/app/app.cpp:1716
+msgid "{} im/s"
+msgstr ""
+
+#: src/app/app.cpp:1719
+msgid "Image {} sur {}"
+msgstr ""
+
+#: src/app/app.cpp:1722
+msgid "Pour changer de mode : boutons Simplifié et Expert de la barre d'outils, ou menu Mode."
+msgstr ""
+
+#: src/app/app.cpp:1773
+msgid "Fichier"
+msgstr ""
+
+#: src/app/app.cpp:1774
+msgid "Ouvrir une vidéo…"
+msgstr ""
+
+#: src/app/app.cpp:1777
+msgid "Ouvrir un projet…"
+msgstr ""
+
+#: src/app/app.cpp:1778
+msgid "Récupérer le travail précédent…"
+msgstr ""
+
+#: src/app/app.cpp:1779
+msgid "Rouvre la sauvegarde automatique du travail en cours, faite toutes les deux secondes : après un plantage ou une fermeture malencontreuse"
+msgstr ""
+
+#: src/app/app.cpp:1782
+msgid "Enregistrer le projet…"
+msgstr ""
+
+#: src/app/app.cpp:1783
+msgid "Enregistre la vidéo utilisée, le repère, l'échelle et les mesures, pour continuer plus tard"
+msgstr ""
+
+#: src/app/app.cpp:1785
+msgid "Copier pour Python"
+msgstr ""
+
+#: src/app/app.cpp:1786
+msgid "Copie lst_t, lst_x, lst_y (tableaux numpy), à coller dans un programme Python"
+msgstr ""
+
+#: src/app/app.cpp:1788
+msgid "Enregistrer en CSV…"
+msgstr ""
+
+#: src/app/app.cpp:1790
+msgid "Quitter"
+msgstr ""
+
+#: src/app/app.cpp:1792
+msgid "Édition"
+msgstr ""
+
+#: src/app/app.cpp:1793
+msgid "Annuler le dernier point"
+msgstr ""
+
+#: src/app/app.cpp:1795
+msgid "Rétablir le point"
+msgstr ""
+
+#: src/app/app.cpp:1797
+msgid "Tout recommencer"
+msgstr ""
+
+#: src/app/app.cpp:1798
+msgid "Efface les mesures, l'échelle et le repère"
+msgstr ""
+
+#: src/app/app.cpp:1801
+msgid "Mode"
+msgstr ""
+
+#: src/app/app.cpp:1802
+msgid "Mode simplifié (pas à pas)"
+msgstr ""
+
+#: src/app/app.cpp:1803
+msgid "Mode expert (toutes les fonctions)"
+msgstr ""
+
+#: src/app/app.cpp:1816
+msgid "Notice d'utilisation…"
+msgstr ""
+
+#: src/app/app.cpp:1817
+msgid "À propos de MeVCine…"
+msgstr ""
+
+#: src/app/app.cpp:1818
+msgid "À propos de Qt…"
+msgstr ""
+
+#: src/app/app.cpp:1823
+msgid "Ouvrir une vidéo (Ctrl+O)"
+msgstr ""
+
+#: src/app/app.cpp:1827
+msgid "💾 Enregistrer…"
+msgstr ""
+
+#: src/app/app.cpp:1828
+msgid "Mode :"
+msgstr ""
+
+#: src/app/app.cpp:1829
+msgid "Simplifié"
+msgstr ""
+
+#: src/app/app.cpp:1830
+msgid "Mode simplifié : pas à pas, un seul objet. Les mesures sont gardées."
+msgstr ""
+
+#: src/app/app.cpp:1831
+msgid "Expert"
+msgstr ""
+
+#: src/app/app.cpp:1832
+msgid "Mode expert : toutes les fonctions. Les mesures sont gardées."
+msgstr ""
+
+#: src/app/app.cpp:1833
+msgid "📖 Notice"
+msgstr ""
+
+#: src/app/app.cpp:1834
+msgid "Ouvrir la notice d'utilisation dans le navigateur, à la page de ce que vous faites (F1)"
+msgstr ""
+
+#: src/app/app.cpp:1837
+msgid "Thème sombre. Cliquer pour passer au thème clair."
+msgstr ""
+
+#: src/app/app.cpp:1838
+msgid "Thème clair. Cliquer pour passer au thème sombre."
+msgstr ""
+
+#: src/app/app.cpp:1841
+msgid "Langue : français. Cliquer pour passer en anglais (English)."
+msgstr ""
+
+#: src/app/app.cpp:1883
+msgid "Coordonnées"
+msgstr ""
+
+#: src/app/app.cpp:1883
+msgid "Trajectoires"
+msgstr ""
+
+#: src/app/app.cpp:1883
+msgid "Grapheur"
+msgstr ""
+
+#: src/app/app.cpp:1930
+msgid "OK"
+msgstr ""
+
+#: src/app/app.cpp:1936
+msgid "Annuler"
+msgstr ""
+
+#: src/app/dialogues.cpp:20
+msgid "Longueur de l'étalon"
+msgstr ""
+
+#: src/app/dialogues.cpp:25
+msgid "Quelle est la longueur réelle de l'étalon ? Choisissez aussi l'unité."
+msgstr ""
+
+#: src/app/dialogues.cpp:39
+msgid "Exemples : 0,85 · 8,5E-1 · 2,5×10^-3 · 85 cm"
+msgstr ""
+
+#: src/app/guide.cpp:30
+msgid "Origine"
+msgstr ""
+
+#: src/app/guide.cpp:31
+msgid "Axes"
+msgstr ""
+
+#: src/app/guide.cpp:32
+msgid "Échelle"
+msgstr ""
+
+#: src/app/guide.cpp:34
+msgid "Tableau"
+msgstr ""
+
+#: src/app/guide.cpp:35
+msgid "Export"
+msgstr ""
+
+#: src/app/guide.cpp:54
+msgid "x vers la droite"
+msgstr ""
+
+#: src/app/guide.cpp:54
+msgid "x vers la gauche"
+msgstr ""
+
+#: src/app/guide.cpp:55
+msgid "y vers le haut"
+msgstr ""
+
+#: src/app/guide.cpp:55
+msgid "y vers le bas"
+msgstr ""
+
+#: src/app/guide.cpp:632
+msgid "Cliquez sur l'objet pour refaire la mesure de l'image {}."
+msgstr ""
+
+#: src/app/guide.cpp:633
+msgid "Annuler (Échap)"
+msgstr ""
+
+#: src/app/guide.cpp:645
+msgid "Étape 1 : l'origine du repère"
+msgstr ""
+
+#: src/app/guide.cpp:646
+msgid "Cliquez sur l'image à l'endroit choisi pour l'origine O du repère."
+msgstr ""
+
+#: src/app/guide.cpp:647
+msgid "Origine placée. Pour la déplacer, cliquez ailleurs ou faites-la glisser."
+msgstr ""
+
+#: src/app/guide.cpp:649
+msgid "Vous pourrez la changer plus tard, sans perdre vos mesures."
+msgstr ""
+
+#: src/app/guide.cpp:651
+msgid "La vidéo est couchée ? Tournez-la :"
+msgstr ""
+
+#: src/app/guide.cpp:652
+msgid "⟲ vers la gauche"
+msgstr ""
+
+#: src/app/guide.cpp:653
+msgid "⟳ vers la droite"
+msgstr ""
+
+#: src/app/guide.cpp:656
+msgid "Étape 2 : l'orientation des axes"
+msgstr ""
+
+#: src/app/guide.cpp:657
+msgid "Choisissez le sens de l'axe des abscisses (x) et celui de l'axe des ordonnées (y) :"
+msgstr ""
+
+#: src/app/guide.cpp:665
+msgid "Axes choisis : le repère est dessiné sur l'image."
+msgstr ""
+
+#: src/app/guide.cpp:667
+msgid "L'origine se déplace encore en la faisant glisser sur l'image. Vous pourrez tout changer plus tard, sans perdre vos mesures."
+msgstr ""
+
+#: src/app/guide.cpp:671
+msgid "Étape 3 : l'échelle"
+msgstr ""
+
+#: src/app/guide.cpp:672
+msgid "a) Sélectionnez l'étalon : un objet de longueur connue, visible sur l'image."
+msgstr ""
+
+#: src/app/guide.cpp:680
+msgid "Refaire la sélection de l'étalon"
+msgstr ""
+
+#: src/app/guide.cpp:680
+msgid "Sélectionner l'étalon"
+msgstr ""
+
+#: src/app/guide.cpp:681
+msgid "b) Indiquez sa longueur réelle, et choisissez l'unité :"
+msgstr ""
+
+#: src/app/guide.cpp:688
+msgid "longueur"
+msgstr ""
+
+#: src/app/guide.cpp:696
+msgid "L'unité de la longueur : millimètre, centimètre ou mètre"
+msgstr ""
+
+#: src/app/guide.cpp:701
+msgid "Valider"
+msgstr ""
+
+#: src/app/guide.cpp:702
+msgid "Exemples d'écriture : 0,85 · 8,5E-1 · 2,5×10^-3. L'unité peut aussi s'écrire après le nombre : 85 cm."
+msgstr ""
+
+#: src/app/guide.cpp:708
+msgid "L'étalon est sélectionné : indiquez sa longueur, puis validez."
+msgstr ""
+
+#: src/app/guide.cpp:713
+msgid "Échelle : {} pour {} pixels."
+msgstr ""
+
+#: src/app/guide.cpp:723
+msgid "Étape 4 : le pointage"
+msgstr ""
+
+#: src/app/guide.cpp:724
+msgid "Avec la glissière sous l'image, placez-vous sur la première image utile."
+msgstr ""
+
+#: src/app/guide.cpp:725
+msgid "Cliquez ensuite sur l'objet : l'image suivante s'affiche toute seule."
+msgstr ""
+
+#: src/app/guide.cpp:726
+msgid "La loupe, en haut à gauche, aide à viser précisément."
+msgstr ""
+
+#: src/app/guide.cpp:727
+msgid "Points mesurés : {}"
+msgstr ""
+
+#: src/app/guide.cpp:728
+msgid "C'est la dernière image de la vidéo."
+msgstr ""
+
+#: src/app/guide.cpp:730
+msgid "↶ Annuler le dernier point"
+msgstr ""
+
+#: src/app/guide.cpp:732
+msgid "Vidéo au ralenti ?"
+msgstr ""
+
+#: src/app/guide.cpp:733
+msgid "Les dates sont calculées avec la cadence de la vidéo. Pour une vidéo au ralenti, indiquez la cadence de prise de vue (par exemple 240 images par seconde)."
+msgstr ""
+
+#: src/app/guide.cpp:735
+msgid "Images par seconde :"
+msgstr ""
+
+#: src/app/guide.cpp:740
+msgid "Cadence variable : les dates réelles des images sont utilisées."
+msgstr ""
+
+#: src/app/guide.cpp:744
+msgid "Étape 5 : le tableau des mesures"
+msgstr ""
+
+#: src/app/guide.cpp:746
+msgid "Vérifiez vos mesures dans le tableau, à droite : la date t et les coordonnées x et y de l'objet."
+msgstr ""
+
+#: src/app/guide.cpp:747
+msgid "Une mesure est fausse ? Cliquez sur ⌖ dans sa ligne, puis sur l'objet dans l'image."
+msgstr ""
+
+#: src/app/guide.cpp:748
+msgid "◀ Reprendre le pointage"
+msgstr ""
+
+#: src/app/guide.cpp:751
+msgid "Vous pouvez aussi revenir aux étapes 1 à 3 (origine, axes, échelle) : les mesures sont recalculées."
+msgstr ""
+
+#: src/app/guide.cpp:754
+msgid "Étape 6 : l'export"
+msgstr ""
+
+#: src/app/guide.cpp:755
+msgid "Copiez vos mesures, puis collez-les (Ctrl+V) dans votre programme Python :"
+msgstr ""
+
+#: src/app/guide.cpp:756
+msgid "📋 Copier pour Python"
+msgstr ""
+
+#: src/app/guide.cpp:757
+msgid "Copié ! Collez avec Ctrl+V dans votre programme Python."
+msgstr ""
+
+#: src/app/guide.cpp:759
+msgid "Ou enregistrez-les dans un fichier CSV (tableur, Python…) :"
+msgstr ""
+
+#: src/app/guide.cpp:760
+msgid "💾 Enregistrer en CSV…"
+msgstr ""
+
+#: src/app/guide.cpp:761
+msgid "Enregistrer le projet, pour continuer plus tard…"
+msgstr ""
+
+#: src/app/guide.cpp:762
+msgid "Aperçu du texte copié :"
+msgstr ""
+
+#: src/app/guide.cpp:773
+msgid "◀ Précédent"
+msgstr ""
+
+#: src/app/guide.cpp:776
+msgid "Terminer le pointage ▶"
+msgstr ""
+
+#: src/app/guide.cpp:776
+msgid "Suivant ▶"
+msgstr ""
+
+#: src/app/guide.cpp:784
+msgid "Tableau des mesures"
+msgstr ""
+
+#: src/app/onglet_coord.cpp:73
+msgid "Exporter les mesures"
+msgstr ""
+
+#: src/app/onglet_coord.cpp:76
+msgid "Copie lst_t, lst_x, lst_y (tableaux numpy) dans le presse-papiers, à coller dans un programme Python"
+msgstr ""
+
+#: src/app/onglet_coord.cpp:77
+msgid "✔ Copié"
+msgstr ""
+
+#: src/app/onglet_coord.cpp:80
+msgid "Fichier CSV standard : virgule entre les champs, point décimal"
+msgstr ""
+
+#: src/app/onglet_graph.cpp:309
+msgid "Enregistrer le graphique"
+msgstr ""
+
+#: src/app/onglet_graph.cpp:309
+msgid "Image PNG"
+msgstr ""
+
+#: src/app/onglet_graph.cpp:324
+msgid "Tracer :"
+msgstr ""
+
+#: src/app/onglet_graph.cpp:325
+msgid "en fonction de :"
+msgstr ""
+
+#: src/app/onglet_graph.cpp:326
+msgid "Style :"
+msgstr ""
+
+#: src/app/onglet_graph.cpp:327
+msgid "Enregistrer"
+msgstr ""
+
+#: src/app/onglet_graph.cpp:328
+msgid "Enregistrer le graphique comme image"
+msgstr ""
+
+#: src/app/onglet_graph.cpp:342
+msgid "Choisir…"
+msgstr ""
+
+#: src/app/onglet_graph.cpp:345
+msgid "Points seuls"
+msgstr ""
+
+#: src/app/onglet_graph.cpp:345
+msgid "Points et lignes"
+msgstr ""
+
+#: src/app/onglet_graph.cpp:345
+msgid "Lignes seules"
+msgstr ""
+
+#: src/app/onglet_graph.cpp:353
+msgid "molette : zoom · glisser : se déplacer · double-clic : tout voir"
+msgstr ""
+
+#: src/app/onglet_graph.cpp:380
+msgid "{} en fonction de {}"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:68
+msgid "Ouvrez une vidéo"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:405
+msgid "Coordonnées du point visé dans le repère choisi : en pixel, et en mètre une fois l'échelle définie"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:473
+msgid "Tourner la vidéo d'un quart de tour vers la gauche"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:474
+msgid "Tourner la vidéo d'un quart de tour vers la droite"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:475
+msgid "Image n°"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:476
+msgid "Choix de l'image dans la vidéo"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:488
+msgid "sur {}"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:491
+msgid "Annuler le dernier point (Ctrl+Z)"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:493
+msgid "Rétablir le point (Ctrl+Y)"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:590
+msgid "1. Origine"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:591
+msgid "Placer l'origine"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:592
+msgid "Cliquez ensuite sur l'image ; l'origine se déplace aussi en la faisant glisser. Les mesures sont recalculées."
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:597
+msgid "2. Axes"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:616
+msgid "Les mesures sont recalculées à chaque changement"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:620
+msgid "3. Échelle"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:622
+msgid "Refaire l'échelle"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:622
+msgid "Définir l'échelle"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:623
+msgid "Sélectionnez un étalon sur l'image, puis indiquez sa longueur"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:626
+msgid "{} pour {} px"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:628
+msgid "{} pixels par mètre"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:631
+msgid "non définie : les mesures sont en pixel"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:639
+msgid "Cliquez sur l'image pour placer l'origine (Échap : annuler)"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:739
+msgid "Objets suivis"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:740
+msgid "Objets à suivre :"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:741
+msgid "Nombre d'objets à suivre"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:750
+msgid "Le programme retrouve les objets sur chaque image : tracez d'abord un cadre autour de chacun"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:752
+msgid "Démarrer le pointage"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:753
+msgid "Commencer le suivi des objets (manuel ou automatique)"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:758
+msgid "Arrêter le suivi automatique"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:760
+msgid "Vidéo"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:765
+msgid "{} × {} px · {} images · {} s"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:768
+msgid "Le nombre d'images par seconde est détecté automatiquement. Pour une vidéo au ralenti, indiquez la cadence de prise de vue (par exemple 240)."
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:780
+msgid "Cadence variable"
+msgstr ""
+
+#: src/app/onglet_pointage.cpp:781
+msgid "Les images de cette vidéo ne sont pas régulièrement espacées dans le temps (téléphone, images perdues) : les dates réelles des images sont utilisées. Le nombre d'images par seconde est la cadence habituelle de la caméra."
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:154
+msgid "Δt habituel"
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:167
+msgid "échelle non précisée"
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:352
+msgid "Enregistrer comme image"
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:352
+msgid "Images (png, jpg)"
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:368
+msgid "Trajectoire"
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:369
+msgid "Chronophotographie"
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:370
+msgid "Chronogramme"
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:374
+msgid "Vecteurs vitesse"
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:375
+msgid "Montrer les vecteurs vitesse"
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:381
+msgid "Près de la souris"
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:382
+msgid "Partout"
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:385
+msgid "Échelle de vitesses"
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:388
+msgid "px pour 1 {}/s"
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:391
+msgid "Longueur des flèches, en pixels de l'image pour une vitesse de 1 {}/s"
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:394
+msgid "Laissez la case vide pour une échelle automatique. La légende est en bas à gauche du dessin."
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:396
+msgid "Valeur incorrecte : un nombre positif"
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:407
+msgid "Changement de référentiel :"
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:414
+msgid "caméra"
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:414
+msgid "objet n° {}"
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:417
+msgid "Voir la vidéo"
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:431
+msgid "Vidéo dans le référentiel de l'objet"
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:433
+msgid "Échap pour fermer"
+msgstr ""
+
+#: src/app/onglet_trajectoire.cpp:445
+msgid "Ralenti : 1/{}"
+msgstr ""
+
+#: src/app/tableau.cpp:49
+msgid "Les mesures s'afficheront ici, au fur et à mesure du pointage."
+msgstr ""
+
+#: src/app/tableau.cpp:62
+msgid "Refaire"
+msgstr ""
+
+#: src/app/tableau.cpp:89
+msgid "Refaire la mesure de l'image {}"
+msgstr ""
+
+#: src/erreurs.cpp:83
+msgid ""
+"MeVCine a rencontré une erreur interne et doit s'arrêter.\n"
+"\n"
+"{}\n"
+"\n"
+"Le détail est dans le fichier :\n"
+"{}"
+msgstr ""
+
+#: src/erreurs.cpp:88
+msgid "Le travail en cours a été sauvegardé automatiquement : relancez MeVCine, puis Fichier › Récupérer le travail précédent…"
+msgstr ""
+
+#: src/erreurs.cpp:94
+msgid "Erreur interne de MeVCine"
+msgstr ""
+
+#: src/export.cpp:62
+msgid "Mesures MeVCine — vidéo : {}"
+msgstr ""
+
+#: src/export.cpp:62
+msgid "Mesures MeVCine"
+msgstr ""
+
+#: src/export.cpp:68
+msgid "objet {}"
+msgstr ""
+
+#: src/export.cpp:69
+msgid "{} : positions de {}"
+msgstr ""
+
+#: src/export.cpp:71
+msgid "x, y : positions"
+msgstr ""
+
+#: src/export.cpp:74
+msgid "t : temps en s ; {} en m"
+msgstr ""
+
+#: src/export.cpp:75
+msgid "t : temps en s ; {} en pixels (l'échelle n'est pas définie)"
+msgstr ""
+
+#: src/format.cpp:51
+msgid "Exemples : 0,85 ou 8,5E-1 ou 1E-10"
+msgstr ""
+
+#: src/format.cpp:206
+msgid "Indiquez la longueur de l'étalon. {}"
+msgstr ""
+
+#: src/format.cpp:221
+msgid "« {} » : l'unité doit être le millimètre (mm), le centimètre (cm) ou le mètre (m). {}"
+msgstr ""
+
+#: src/format.cpp:227
+msgid "« {} » n'est pas un nombre. {}"
+msgstr ""
+
+#: src/format.cpp:229
+msgid "La longueur doit être un nombre positif, non nul."
+msgstr ""
+
+#: src/main.cpp:38
+msgid ""
+"Usage : mevcine [--simple | --expert] [-d (1-3) | --debug=(1-3)] [vidéo | projet]\n"
+"   lance MeVCine, pour l'étude cinématique de vidéos\n"
+"   --simple, -s : démarre directement en mode simplifié (pas à pas)\n"
+"   --expert, -e : démarre directement en mode expert\n"
+"   -d ou --debug= : messages de débogage plus ou moins bavards (de 1 à 3)\n"
+"   argument facultatif : une vidéo, ou un projet (.mevcine, .cinemev, .mecavideo)"
+msgstr ""
+
+#: src/main.cpp:94
+msgid "Le débogage a pour verbosité {}"
+msgstr ""
+
+#: src/video.cpp:37
+msgid "le programme {} est introuvable : ffmpeg doit être installé pour lire les vidéos"
+msgstr ""
+
+#: src/video.cpp:38
+msgid "impossible de lancer {} : {}"
+msgstr ""
+
+#: src/video.cpp:73
+msgid "fin du flux vidéo"
+msgstr ""
+
+#: src/video.cpp:88
+msgid "en-tête PPM invalide"
+msgstr ""
+
+#: src/video.cpp:181
+msgid "ce fichier n'est pas une vidéo"
+msgstr ""
+
+#: src/video.cpp:184
+msgid "ce fichier ne contient pas de vidéo"
+msgstr ""
+
+#: src/video.cpp:224
+msgid "impossible de déterminer le nombre d'images"
+msgstr ""
+
+#: src/video.cpp:293
+msgid "le flux de ffmpeg n'est pas au format PPM"
+msgstr ""
+
+#: src/video.cpp:305
+msgid "format PPM non pris en charge"
+msgstr ""
+
+#: src/video.cpp:311
+msgid "image PPM tronquée"
+msgstr ""
+
+#: src/video.cpp:407
+msgid "MPEG-4 partie 2"
+msgstr ""
+
+#: src/video.cpp:409
+msgid "inconnu"
+msgstr ""
+
+#: src/video.cpp:523
+msgid ""
+"La vidéo est au format {}, que ffmpeg n'a pas su décoder : {}.\n"
+"\n"
+"Utilisez la version de MeVCine livrée avec son propre ffmpeg (dossier « ffmpeg » à côté du programme), ou installez une version complète de ffmpeg."
+msgstr ""

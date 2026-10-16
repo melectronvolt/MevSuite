@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="{{code}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{titre_page}}</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="{{sommaire}}">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">{{titre_site}} · version {{version}}</p>
+{{liens_pages}}
+  <p class="lang">{{liens_langues}}</p>
+</nav>
+
+<main>
+{{contenu}}
+<nav class="voisins">
+{{voisins}}
+</nav>
+<footer>{{pied}}</footer>
+</main>
+</div>
+</body>
+</html>

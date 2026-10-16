@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — The scale</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="Contents">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">User guide · version 0.2.0</p>
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="index.html">1. Overview</a></li>
+    <li><a href="demarrer.html">2. Getting started</a></li>
+    <li><a href="simplifie.html">3. Simple mode</a></li>
+    <li><a href="echelle.html" class="current">4. The scale</a></li>
+    <li><a href="expert.html">5. Expert mode</a></li>
+    <li><a href="exports.html">6. Exporting the measurements</a></li>
+    <li><a href="tp.html">7. A lab, step by step</a></li>
+    <li><a href="video.html">8. Filming a motion</a></li>
+    <li><a href="clavier.html">9. Keyboard and mouse</a></li>
+    <li><a href="faq.html">10. Frequently asked questions</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="professeurs.html">11. In the classroom</a></li>
+    <li><a href="installer.html">12. Installing</a></li>
+    <li><a href="reglages.html">13. Settings</a></li>
+    <li><a href="depannage.html">14. Troubleshooting</a></li>
+  </ol>
+  <p class="lang"><a href="../fr/echelle.html" lang="fr" hreflang="fr">Français</a></p>
+</nav>
+
+<main>
+<header class="title">
+<h1>The scale</h1>
+<p>A reference drawn on the frame, and its real length</p>
+</header>
+
+<p>On the frame, MeVCine measures <strong>pixels</strong>. To get <strong>metres</strong>, it needs a reference: an
+object of known length, visible on the frame. You draw it, you give its length, and MeVCine deduces the number of
+pixels per metre. All the measurements, already made or to come, are then in metres.</p>
+
+<h2 id="choisir">Choosing a good reference</h2>
+<ul>
+  <li><strong>In the plane of the motion</strong>: a ruler placed where the object moves, not in front of it nor
+  behind it. What is closer to the camera looks bigger!</li>
+  <li><strong>As long as possible</strong> on the frame: a one-pixel error on a 20-pixel reference means a 5 %
+  error on every measurement; on a 350-pixel reference, less than 0.3 %.</li>
+  <li><strong>Ends that are easy to aim at</strong>: the two ends of a ruler, the edges of a door, two marks on the
+  ground measured with a tape.</li>
+  <li><strong>Facing the camera</strong>, like the motion itself.</li>
+</ul>
+<p>In the video of the puck (<code>Principe_inertie.avi</code>), the yellow ruler is 85 cm long.</p>
+
+<h2 id="tracer">Drawing the reference</h2>
+<p>Simple mode: step 3, <span class="btn">Select the reference</span>. Expert mode: at the top of the
+<em>Marking</em> tab, <span class="btn">Set the scale</span>. Then, on the frame:</p>
+<ul>
+  <li><strong>two clicks</strong>, one on each end (in between, the line follows the mouse);</li>
+  <li>or a <strong>drag</strong> from one end to the other, with the button held down.</li>
+</ul>
+<p>Aim with the magnifier. Right-click or <kbd>Esc</kbd> cancels: the previous scale stays. You may change frame
+before drawing the reference: it does not need to be on the marked frame.</p>
+
+<h2 id="longueur">Writing the length, and its unit</h2>
+<p>Type the number, and choose the unit in the list: <code>mm</code>, <code>cm</code> or <code>m</code>. A decimal
+point or comma, as you like; powers of 10 are allowed.</p>
+<table>
+  <tr><th>You type</th><th>Unit in the list</th><th>Length</th></tr>
+  <tr><td><code>85</code></td><td>cm</td><td>85 cm = 0.85 m</td></tr>
+  <tr><td><code>0.85</code> or <code>0,85</code></td><td>m</td><td>0.85 m</td></tr>
+  <tr><td><code>850</code></td><td>mm</td><td>850 mm = 0.85 m</td></tr>
+  <tr><td><code>8.5E-1</code></td><td>m</td><td>0.85 m</td></tr>
+  <tr><td><code>2.5×10^-3</code> or <code>2.5*10**-3</code></td><td>m</td><td>0.0025 m</td></tr>
+  <tr><td><code>85 cm</code>, <code>850mm</code>, <code>0.85 m</code></td><td>(does not matter)</td><td>the written
+  unit wins, and the list follows it</td></tr>
+</table>
+<p class="warn">Another unit (<code>1 km</code>, <code>8 dm</code>…), a zero or negative length, or text that
+is not a number, is refused, with a message that says why.</p>
+<p>Simple mode: the length is typed in the instruction of step 3. Expert mode: in a small window that opens as soon
+as the reference is drawn; <span class="btn">Cancel</span> or <kbd>Esc</kbd> abandons the reference.</p>
+
+<h2 id="verifier">Checking, changing the scale</h2>
+<ul>
+  <li>The reference stays drawn in green on the frame, with its length, in the chosen unit. Simple mode shows
+  “Scale: 85 cm for 353 pixels.”; expert mode, “85 cm for 353 px” at the top of the <em>Marking</em> tab.</li>
+  <li><strong>Check your scale</strong>: aim at both ends of another object of known length, and read the
+  coordinates in metres next to the magnifier.</li>
+  <li>The scale can be redone at any time, <strong>even after marking</strong>: all the measurements are
+  recomputed.</li>
+  <li>Without a scale, positions stay in pixels (<code>x (px)</code>): useful to look at the shape of a trajectory,
+  but not to compute a speed in m/s.</li>
+</ul>
+<nav class="voisins">
+<a class="precedent" href="simplifie.html"><small>◀ Previous page</small>Simple mode</a>
+<a class="suivant" href="expert.html"><small>Next page ▶</small>Expert mode</a>
+</nav>
+<footer>MeVCine 0.2.0 · user guide · Rémi MEVAERE · free software, GPL 3 or later</footer>
+</main>
+</div>
+</body>
+</html>

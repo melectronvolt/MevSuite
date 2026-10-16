@@ -1,0 +1,75 @@
+<header class="title">
+<h1>Frequently asked questions</h1>
+<p>The small problems of the lab, and how to solve them</p>
+</header>
+
+<h2 id="pointage">Marking</h2>
+<dl class="faq">
+  <dt>I click on the object, and nothing happens.</dt>
+  <dd>In simple mode, marking happens only at step 4 (or to redo a measurement with ⌖). In expert mode, first
+  <span class="btn">Start marking</span>, and the frame must follow those already marked: no gaps are allowed.
+  Also check that drawing the reference or choosing the origin is not in progress: the status bar says so;
+  <kbd>Esc</kbd> cancels it.</dd>
+  <dt>I clicked next to the object.</dt>
+  <dd>Right after: <span class="btn">↶ Undo the last point</span> (<kbd>Ctrl</kbd>+<kbd>Z</kbd>). Later: the ⌖
+  button of the row, in the table of measurements, then a click on the object.</dd>
+  <dt>My points zigzag.</dt>
+  <dd>Always aim at the same point of the object (its centre, or its front edge), looking at the magnifier. A
+  blurred object in the video is hard to aim at: film with more light (see <a href="video.html">Filming a
+  motion</a>).</dd>
+</dl>
+
+<h2 id="echelle">The scale</h2>
+<dl class="faq">
+  <dt>My length is refused.</dt>
+  <dd>Type a number, and choose the unit in the list: <code>mm</code>, <code>cm</code> or <code>m</code>. Another unit
+  (km, dm…) is not accepted. See <a href="echelle.html#longueur">Writing the length</a>.</dd>
+  <dt>My positions are in pixels (<code>x (px)</code>).</dt>
+  <dd>The scale is not set. Set it, even after marking: the measurements are recomputed.</dd>
+  <dt>My distances are far too large, or too small.</dt>
+  <dd>Check the unit of the reference: 85 in <code>m</code> instead of <code>cm</code> gives distances 100 times too
+  large. Correct the unit, then <span class="btn">Confirm</span> again.</dd>
+</dl>
+
+<h2 id="dates">Times</h2>
+<dl class="faq">
+  <dt>The motion looks too slow, the times seem wrong.</dt>
+  <dd>The video is probably in slow motion: enter the capture frame rate (for instance 240) in <em>Slow-motion
+  video?</em> (step 4) or <em>Frames per second</em> (expert mode). See <a href="video.html#ralenti">In slow
+  motion</a>.</dd>
+  <dt>The time intervals in the table are not all equal.</dt>
+  <dd>The video has a variable frame rate (phone): MeVCine uses the real time of each frame. That is normal, and more
+  accurate.</dd>
+  <dt>Why is the first time 0?</dt>
+  <dd>Time zero is that of the first marked frame: you choose the origin of time by choosing where to start
+  marking.</dd>
+</dl>
+
+<h2 id="modes">Modes, the window</h2>
+<dl class="faq">
+  <dt>How do I switch to expert mode, or back to simple mode?</dt>
+  <dd>With the <em>Mode</em> menu, at any time. The measurements are kept.</dd>
+  <dt>“Switch to simple mode?”: MeVCine wants to keep only object 1.</dt>
+  <dd>Simple mode follows only one object. <span class="btn">Keep object 1</span> forgets the others;
+  <span class="btn">Cancel</span> stays in expert mode, with all the objects.</dd>
+  <dt>The texts are in French. / The screen is too dark, or too light.</dt>
+  <dd>The flag, at the top right, changes the language; the sun (or the moon), next to it, changes the theme.</dd>
+  <dt>The velocity vectors are too long, or too short.</dt>
+  <dd><em>Trajectories</em> tab: type another value in <em>Velocity scale</em> (pixels for 1 m/s), or empty the box to
+  go back to the automatic scale.</dd>
+</dl>
+
+<h2 id="export">Export</h2>
+<dl class="faq">
+  <dt>The text pasted into Python gives an error.</dt>
+  <dd>Paste all the copied text, including the first line <code>import numpy as np</code>, at the beginning of the
+  program. If numpy is not installed on the computer, ask your teacher.</dd>
+  <dt>The spreadsheet shows odd numbers.</dt>
+  <dd>The CSV file uses a decimal point: see <a href="exports.html#csv">The CSV file</a>.</dd>
+  <dt>I closed MeVCine without saving.</dt>
+  <dd>Start it again, then <em>File › Recover previous work…</em>: the automatic backup gives back the video, the
+  axes, the scale and the measurements.</dd>
+  <dt>“Video not found” when reopening my project.</dt>
+  <dd>The project does not contain the video: put it next to the <code>.mevcine</code> file, then reopen it.</dd>
+</dl>
+<p>Another message? See <a href="depannage.html">Troubleshooting</a>, or ask your teacher.</p>

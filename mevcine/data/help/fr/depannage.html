@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — Dépannage</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="Sommaire">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">Notice d&#x27;utilisation · version 0.2.0</p>
+  <p class="group">Pour les élèves</p>
+  <ol>
+    <li><a href="index.html">1. Présentation</a></li>
+    <li><a href="demarrer.html">2. Démarrer</a></li>
+    <li><a href="simplifie.html">3. Mode simplifié</a></li>
+    <li><a href="echelle.html">4. L&#x27;échelle</a></li>
+    <li><a href="expert.html">5. Mode expert</a></li>
+    <li><a href="exports.html">6. Exporter les mesures</a></li>
+    <li><a href="tp.html">7. Un TP pas à pas</a></li>
+    <li><a href="video.html">8. Filmer un mouvement</a></li>
+    <li><a href="clavier.html">9. Clavier et souris</a></li>
+    <li><a href="faq.html">10. Questions fréquentes</a></li>
+  </ol>
+  <p class="group">Pour les professeurs</p>
+  <ol>
+    <li><a href="professeurs.html">11. En classe</a></li>
+    <li><a href="installer.html">12. Installer</a></li>
+    <li><a href="reglages.html">13. Réglages</a></li>
+    <li><a href="depannage.html" class="current">14. Dépannage</a></li>
+  </ol>
+  <p class="lang"><a href="../en/depannage.html" lang="en" hreflang="en">English</a></p>
+</nav>
+
+<main>
+<header class="title">
+<h1>Dépannage</h1>
+<p>Pour les professeurs : les messages de MeVCine, et quoi faire</p>
+</header>
+<p>Les petits problèmes du TP (pointage, longueur refusée, dates, export) sont dans les
+<a href="faq.html">questions fréquentes</a>. Voici les problèmes techniques.</p>
+
+<h2 id="video">La vidéo ne s'ouvre pas</h2>
+<dl class="faq">
+  <dt>« Vidéo illisible : la vidéo est au format HEVC (H.265), que ffmpeg n'a pas su décoder »</dt>
+  <dd>Le ffmpeg utilisé ne connaît pas ce format. Vérifiez que le dossier <code>ffmpeg</code> est bien à côté du
+  programme, ou installez un ffmpeg complet. Sinon, convertissez la vidéo en H.264 :
+  <pre>ffmpeg -i video.mov -c:v libx264 -pix_fmt yuv420p -an video.mp4</pre>
+  (ou avec HandBrake, VLC…). Une conversion peut perdre la cadence d'un ralenti.</dd>
+  <dt>« le programme ffprobe est introuvable : ffmpeg doit être installé pour lire les vidéos »</dt>
+  <dd>Ni le dossier <code>ffmpeg</code> à côté du programme, ni un ffmpeg installé. Recopiez le dossier complet de
+  MeVCine, ou installez ffmpeg (<code>sudo apt install ffmpeg</code>, <code>sudo dnf install ffmpeg</code>…).</dd>
+  <dt>« ce fichier n'est pas une vidéo », « ce fichier ne contient pas de vidéo »</dt>
+  <dd>Le fichier est autre chose (une image, un son), ou il est abîmé. Essayez de le lire avec VLC.</dd>
+  <dt>« impossible de déterminer le nombre d'images »</dt>
+  <dd>Le fichier est incomplet (transfert interrompu). Refaites le transfert, ou réencodez-le avec la commande
+  ci-dessus.</dd>
+  <dt>« Image 57 illisible » dans la barre d'état</dt>
+  <dd>Une image de la vidéo n'a pas pu être décodée (fichier abîmé). Les autres restent utilisables.</dd>
+  <dt>MeVCine est lent avec une vidéo 4K</dt>
+  <dd>Le décodage d'une image 4K prend du temps, surtout en revenant en arrière. Réduisez la vidéo :
+  <code>ffmpeg -i video.mp4 -vf scale=1920:-2 -c:v libx264 petite.mp4</code>.</dd>
+</dl>
+
+<h2 id="affichage">La fenêtre ne s'ouvre pas</h2>
+<dl class="faq">
+  <dt>« This application failed to start because no Qt platform plugin could be initialized »</dt>
+  <dd>Les bibliothèques de Qt sont incomplètes. Sous Windows, le dossier <code>platforms</code> (avec
+  <code>qwindows.dll</code>) doit être à côté de <code>mevcine.exe</code> : recopiez le dossier complet. Sous Linux,
+  installez le paquet de MeVCine, ou prenez l'AppImage (voir <a href="installer.html#linux">Installer</a>).</dd>
+  <dt>Rien ne se passe au double-clic (Windows)</dt>
+  <dd>SmartScreen a peut-être bloqué le programme : relancez-le, puis <em>Informations complémentaires › Exécuter
+  quand même</em>. Vérifiez aussi que l'antivirus ne l'a pas mis en quarantaine.</dd>
+  <dt>Les flèches des boutons (◀ ▶ ↶ ⟳) sont des carrés</dt>
+  <dd>Aucune police du système ne contient ces symboles. Sous Linux, installez les polices DejaVu
+  (<code>fonts-dejavu</code> ou <code>dejavu-sans-fonts</code>).</dd>
+</dl>
+
+<h2 id="fichiers">Les fichiers</h2>
+<dl class="faq">
+  <dt>Aucune fenêtre ne s'ouvre avec <em>Ouvrir une vidéo…</em> (Linux)</dt>
+  <dd>MeVCine utilise les dialogues du bureau, sinon ceux de Qt. En attendant, glissez la vidéo sur la fenêtre, ou
+  lancez <code>./mevcine video.mp4</code>.</dd>
+  <dt>« Fichier trop ancien »</dt>
+  <dd>Un ancien fichier <code>.mecavideo</code> antérieur à la version 7.3 : son format n'est pas lisible.</dd>
+  <dt>« Projet illisible »</dt>
+  <dd>Le fichier n'est pas un projet MeVCine, ou il est abîmé.</dd>
+  <dt>« Erreur lors de l'enregistrement »</dt>
+  <dd>Le dossier n'est pas accessible en écriture (clé protégée, dossier réseau plein, droits). Choisissez un autre
+  dossier, par exemple <em>Documents</em>.</dd>
+</dl>
+
+<h2 id="interne">Une erreur interne, un plantage</h2>
+<dl class="faq">
+  <dt>« Erreur interne de MeVCine »</dt>
+  <dd>Le programme a rencontré une erreur imprévue et s'arrête. Le détail est dans <code>mevcine-erreurs.log</code>
+  (<a href="reglages.html#configuration">dossier de configuration</a>) : envoyez-le à
+  <a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>, avec la vidéo si possible.</dd>
+  <dt>Récupérer le travail en cours</dt>
+  <dd>Relancez MeVCine, puis <em>Fichier › Récupérer le travail précédent…</em> : la sauvegarde automatique (au plus
+  deux secondes avant l'arrêt) revient.</dd>
+  <dt>« Erreur de lecture de la configuration »</dt>
+  <dd>Le fichier <code>mevcine.ini</code> est abîmé : MeVCine repart d'une configuration neuve. Rien de grave.</dd>
+</dl>
+<nav class="voisins">
+<a class="precedent" href="reglages.html"><small>◀ Page précédente</small>Réglages</a>
+</nav>
+<footer>MeVCine 0.2.0 · notice du logiciel · Rémi MEVAERE · logiciel libre, licence GPL 3 ou ultérieure</footer>
+</main>
+</div>
+</body>
+</html>

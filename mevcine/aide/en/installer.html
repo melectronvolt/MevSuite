@@ -1,0 +1,57 @@
+<header class="title">
+<h1>Installing MeVCine</h1>
+<p>For teachers: a folder to copy or an installer on Windows, a package or an AppImage on Linux</p>
+</header>
+
+<h2 id="dossier">The MeVCine folder (Windows)</h2>
+<p>On Windows, MeVCine comes as a folder (<code>.zip</code> archive), with no installation, to copy as it is (USB
+stick, shared folder, disk of each computer). It contains:</p>
+<table>
+  <tr><th><code>mevcine.exe</code></th><td>the program, with the Qt libraries (the <code>*.dll</code> files and the
+  <code>platforms</code> folder)</td></tr>
+  <tr><th><code>ffmpeg/</code></th><td>the ffmpeg and ffprobe programs, which read the videos (including the HEVC of
+  phones). Do not separate these files from the folder.</td></tr>
+  <tr><th><code>data/</code></th><td>this guide (<code>help</code>)</td></tr>
+  <tr><th><code>COPYING.txt</code>, <code>NOTICE.txt</code></th><td>the licence</td></tr>
+</table>
+
+<h2 id="installateur">Installer (Windows)</h2>
+<p><code>MeVCine-<i>version</i>-windows-x64-setup.exe</code> installs the same folder for all users in
+<code>Program Files\MeVSuite\MeVCine</code>, with a Start menu shortcut; it is uninstalled from the Windows
+Settings. Deployment on many computers (WAPT, GPO), with no window or question:</p>
+<pre><code>MeVCine-<i>version</i>-windows-x64-setup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART</code></pre>
+
+<h2 id="windows">On Windows</h2>
+<p>Double-click on <code>mevcine.exe</code>. On first launch, Windows may show “Windows protected your PC”, because
+the program is not signed: <em>More info</em>, then <em>Run anyway</em>.</p>
+<p>Display needs no graphics acceleration: MeVCine also works in a virtual machine or a remote desktop. If the window
+does not open, see <a href="depannage.html#affichage">Troubleshooting</a>.</p>
+
+<h2 id="linux">On Linux</h2>
+<ul>
+  <li><strong>Package</strong>: <code>.deb</code> for Ubuntu and Debian, <code>.rpm</code> for Fedora. It installs
+  MeVCine in the applications menu, with ffmpeg (on Fedora, the ffmpeg of RPM Fusion decodes the H.264 and HEVC of
+  phones; Fedora's own, <code>ffmpeg-free</code>, does not decode them all).</li>
+  <li><strong>AppImage</strong>, with no installation: a single file, ffmpeg included, to make executable
+  (right-click › <em>Properties</em>, or <code>chmod +x</code>) and then start.</li>
+</ul>
+<p>A graphical desktop is needed (Wayland or X11). File dialogs are those of the desktop (GNOME, KDE…), and the
+desktop's dark theme is followed as long as the student has not chosen one.</p>
+
+<h2 id="premier">On first launch</h2>
+<ul>
+  <li>MeVCine uses the system language if it is French, otherwise English; and the light or dark theme of the
+  desktop. The flag and the sun (or moon), at the top right of the window, change them; the choice is remembered.</li>
+  <li>The window opens at its normal size (1200 × 700, smaller if the screen is smaller), never maximised by
+  itself; it then keeps the size the user gave it (and stays maximised if it was maximised).</li>
+  <li>MeVCine never reopens the last video: it only remembers the last video folder.</li>
+</ul>
+
+<h2 id="commande">The command line</h2>
+<pre>mevcine                        home screen: choice of mode
+mevcine --simple fall.mp4      simple mode, with a video
+mevcine --expert project.mevcine
+mevcine -d 2 ...               debug messages (1 to 3) in the terminal</pre>
+<p>A shortcut to <code>mevcine.exe --simple</code> opens simple mode directly. A project (<code>.mevcine</code>,
+<code>.cinemev</code>, old <code>.mecavideo</code>) can also be given on the command line, or dropped onto the window.
+See <a href="professeurs.html#deploiement">Deploying MeVCine in a computer room</a>.</p>

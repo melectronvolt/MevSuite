@@ -1,0 +1,104 @@
+# Compile chaque logiciel et lance ses tests, à chaque modification, sur les
+# systèmes visés : Fedora 45 et Ubuntu 26.04 (conteneurs, Qt du système) et
+# Windows x64 (MSYS2 UCRT64 : MinGW-w64, Qt, Python et ffmpeg de MSYS2). Les versions
+# distribuables sont fabriquées par release.yml.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    name: ${{ matrix.systeme.nom }} (${{ matrix.app }})
+    runs-on: ubuntu-24.04
+    container: ${{ matrix.systeme.image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [mevpix, mevcine, mevreg, mevsono]
+        systeme:
+          - { nom: "Fedora 45", cle: fedora, image: "fedora:45" }
+          - { nom: "Ubuntu 26.04", cle: ubuntu, image: "ubuntu:26.04" }
+    env:
+      # captures de contrôle des tests de MeVReg (les autres écrivent dans build/captures
+      # ou build/rendus-tests d'eux-mêmes)
+      MEVREG_SHOTS: ${{ github.workspace }}/build/captures
+    steps:
+      - uses: actions/checkout@v7
+      - name: Outils (Fedora)
+        if: matrix.systeme.cle == 'fedora'
+        # ffmpeg de RPM Fusion : celui de Fedora (ffmpeg-free) ne décode le H.264 des
+        # vidéos des essais de MeVCine que par openh264
+        run: |
+          dnf install -y -q "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
+          dnf install -y -q --allowerasing \
+            cmake ninja-build gcc-c++ \
+            qt6-qtbase-devel qt6-qtsvg-devel qt6-qtmultimedia-devel qt6-qtimageformats \
+            python3-devel python3-numpy ffmpeg dejavu-sans-fonts
+      - name: Outils (Ubuntu)
+        if: matrix.systeme.cle == 'ubuntu'
+        run: |
+          apt-get update -qq
+          DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
+            cmake ninja-build g++ \
+            qt6-base-dev qt6-svg-dev qt6-multimedia-dev qt6-image-formats-plugins \
+            python3-dev python3-numpy ffmpeg fonts-dejavu-core
+      - name: Compilation
+        run: |
+          cmake -S ${{ matrix.app }} -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+      - name: Tests
+        run: ctest --test-dir build --output-on-failure
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: captures-${{ matrix.app }}-${{ matrix.systeme.cle }}
+          path: |
+            build/captures
+            build/rendus-tests
+          if-no-files-found: ignore
+
+  windows:
+    name: Windows x64 (${{ matrix.app }})
+    runs-on: windows-2025
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [mevpix, mevcine, mevreg, mevsono]
+    defaults:
+      run:
+        shell: msys2 {0}
+    env:
+      MEVREG_SHOTS: ${{ github.workspace }}/build/captures
+    steps:
+      - uses: actions/checkout@v7
+      - name: Outils (MSYS2 UCRT64)
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          cache: true
+          pacboy: >-
+            toolchain:p cmake:p ninja:p
+            qt6-base:p qt6-svg:p qt6-multimedia:p qt6-imageformats:p
+            python:p python-numpy:p ffmpeg:p
+      - name: Compilation
+        run: |
+          cmake -S ${{ matrix.app }} -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+      - name: Tests
+        run: ctest --test-dir build --output-on-failure
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: captures-${{ matrix.app }}-windows
+          path: |
+            build/captures
+            build/rendus-tests
+          if-no-files-found: ignore

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — Exporting the measurements</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="Contents">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">User guide · version 0.2.0</p>
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="index.html">1. Overview</a></li>
+    <li><a href="demarrer.html">2. Getting started</a></li>
+    <li><a href="simplifie.html">3. Simple mode</a></li>
+    <li><a href="echelle.html">4. The scale</a></li>
+    <li><a href="expert.html">5. Expert mode</a></li>
+    <li><a href="exports.html" class="current">6. Exporting the measurements</a></li>
+    <li><a href="tp.html">7. A lab, step by step</a></li>
+    <li><a href="video.html">8. Filming a motion</a></li>
+    <li><a href="clavier.html">9. Keyboard and mouse</a></li>
+    <li><a href="faq.html">10. Frequently asked questions</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="professeurs.html">11. In the classroom</a></li>
+    <li><a href="installer.html">12. Installing</a></li>
+    <li><a href="reglages.html">13. Settings</a></li>
+    <li><a href="depannage.html">14. Troubleshooting</a></li>
+  </ol>
+  <p class="lang"><a href="../fr/exports.html" lang="fr" hreflang="fr">Français</a></p>
+</nav>
+
+<main>
+<header class="title">
+<h1>Exporting the measurements</h1>
+<p>The table, copying for Python, the CSV file, projects</p>
+</header>
+
+<h2 id="tableau">The table of measurements</h2>
+<p>The table (on the right in simple mode, <em>Coordinates</em> tab in expert mode) has one row per marked
+frame:</p>
+<ul>
+  <li><code>t (s)</code>: the time of the frame, <strong>counted from the first marked frame</strong>, which is at
+  t = 0;</li>
+  <li><code>x (m)</code>, <code>y (m)</code>: the coordinates of the object in your axes. With several objects:
+  <code>x1</code>, <code>y1</code>, <code>x2</code>, <code>y2</code>… Without a scale, they are in pixels:
+  <code>x (px)</code>;</li>
+  <li><strong>⌖</strong>: redo this measurement.</li>
+</ul>
+<p>On screen, numbers follow the language of the interface. The exports always use a decimal point, which Python
+and spreadsheets understand. Only the frames where <strong>all</strong> the objects are marked are exported: all
+the lists have the same length.</p>
+
+<h2 id="python">Copy for Python</h2>
+<p><span class="btn">📋 Copy for Python</span> (step 6, <em>Coordinates</em> tab, <em>File</em> menu, or
+<kbd>Ctrl</kbd>+<kbd>C</kbd>) puts a text ready to paste on the clipboard:</p>
+<pre>import numpy as np
+
+# MeVCine measurements — video: fall.mp4
+# t: time in s; x, y: positions in m
+lst_t = np.array([0.0, 0.04, 0.08, 0.12])
+lst_x = np.array([0.1, 0.2, 0.3, 0.4])
+lst_y = np.array([0.5, 0.48, 0.42, 0.33])</pre>
+<p>Paste it with <kbd>Ctrl</kbd>+<kbd>V</kbd> at the beginning of your Python program (or in a notebook cell), then
+write your calculations after it, for instance:</p>
+<pre>import matplotlib.pyplot as plt
+
+# horizontal speed between two successive frames
+vx = (lst_x[1:] - lst_x[:-1]) / (lst_t[1:] - lst_t[:-1])
+print(vx)
+
+plt.plot(lst_t, lst_y, "o-")
+plt.xlabel("t (s)")
+plt.ylabel("y (m)")
+plt.show()</pre>
+<p>Numbers have 6 significant digits. With several objects, the lists are named <code>lst_x1</code>,
+<code>lst_y1</code>, <code>lst_x2</code>… “✔ Copied” stays shown as long as the measurements have not changed since
+the copy.</p>
+
+<h2 id="csv">The CSV file</h2>
+<p><span class="btn">💾 Save as CSV…</span> writes a standard file: a comma between columns, a decimal point, a
+header row.</p>
+<pre>t (s),x (m),y (m)
+0,0.1,0.5
+0.04,0.2,0.48
+0.08,0.3,0.42</pre>
+<p>To read it in Python:</p>
+<pre>import numpy as np
+lst_t, lst_x, lst_y = np.loadtxt("fall.csv", delimiter=",", skiprows=1, unpack=True)</pre>
+<p>A spreadsheet set to a language that uses a decimal comma may need to be told that the file uses a decimal
+point: choose “English (USA)” as the language of the import.</p>
+
+<h2 id="images">Saving an image</h2>
+<p>In expert mode, <span class="btn">Save</span> in the <em>Trajectories</em> tab writes the drawing
+(trajectory, chronophotography, motion diagram) as PNG or JPEG; the one of the <em>Grapher</em> writes the graph as
+PNG: handy for a report.</p>
+
+<h2 id="projets">Projects</h2>
+<p><em>File › Save the project…</em> (<kbd>Ctrl</kbd>+<kbd>S</kbd>) writes a <code>.mevcine</code>
+file: the path of the video, the axes, the scale (and its unit), the frame rate and all the measurements.
+<em>File › Open a project…</em> reopens it, at the frame after the last marked one.</p>
+<p class="warn">The project does not contain the video: <strong>keep the video next to the project</strong>
+(copy both files together onto your USB stick). Otherwise, the “Video not found” message tells which file is
+missing.</p>
+
+<h2 id="securite">Nothing is lost without warning</h2>
+<figure>
+<img src="images/confirmation.jpg" alt="The confirmation before quitting: your measurements have been neither copied nor saved">
+<figcaption>Before quitting with unsaved measurements, MeVCine asks for confirmation.</figcaption>
+</figure>
+<ul>
+  <li><strong>Confirmation</strong>: quitting, starting over or opening another video while the measurements have
+  been neither copied, nor exported, nor saved: MeVCine asks first. <kbd>Enter</kbd> does not confirm;
+  <kbd>Esc</kbd> cancels.</li>
+  <li><strong>Automatic backup</strong>: the work in progress is saved by itself, every two seconds if it has
+  changed.</li>
+  <li><strong>Recovering</strong>: after a crash or an accidental closing, start MeVCine again, then <em>File ›
+  Recover previous work…</em>. The video must still be in its place.</li>
+</ul>
+<nav class="voisins">
+<a class="precedent" href="expert.html"><small>◀ Previous page</small>Expert mode</a>
+<a class="suivant" href="tp.html"><small>Next page ▶</small>A lab, step by step</a>
+</nav>
+<footer>MeVCine 0.2.0 · user guide · Rémi MEVAERE · free software, GPL 3 or later</footer>
+</main>
+</div>
+</body>
+</html>

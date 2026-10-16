@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVSono — Notice d'utilisation</title>
+<link rel="stylesheet" href="help.css">
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="Sommaire">
+  <p class="brand">MeVSono</p>
+  <p class="version">Notice d'utilisation · version {{version}}</p>
+  <p class="group">Pour les élèves</p>
+  <ol>
+    <li><a href="#presentation">1. À quoi sert MeVSono ?</a></li>
+    <li><a href="#fenetre">2. La fenêtre</a></li>
+    <li><a href="#ouvrir">3. Ouvrir un son</a></li>
+    <li><a href="#ecouter">4. Écouter le son</a></li>
+    <li><a href="#mesure">5. Mesurer une période</a></li>
+    <li><a href="#spectre">6. Lire le spectre</a></li>
+    <li><a href="#extrait">7. Choisir l'extrait analysé</a></li>
+    <li><a href="#exemple">8. Exemple : un signal carré</a></li>
+    <li><a href="#raccourcis">9. Souris et clavier</a></li>
+    <li><a href="#problemes">10. En cas de problème</a></li>
+  </ol>
+  <p class="group">Pour les professeurs</p>
+  <ol>
+    <li><a href="#modes">11. Mode simplifié, mode expert</a></li>
+    <li><a href="#expert">12. Le mode expert</a></li>
+    <li><a href="#reglages">13. Réglages de l'analyse</a></li>
+    <li><a href="#conseils">14. Idées pour la classe</a></li>
+    <li><a href="#installer">15. Installer et configurer</a></li>
+    <li><a href="#apropos">16. Erreurs, contact et licence</a></li>
+  </ol>
+  <p class="lang"><a href="en.html">English version</a></p>
+</nav>
+
+<main>
+<header class="title">
+  <h1>MeVSono — Notice d'utilisation</h1>
+  <p>Décomposition spectrale des sons · version {{version}}</p>
+</header>
+
+<section id="presentation">
+<h2>1. À quoi sert MeVSono ?</h2>
+<p>MeVSono sert à <strong>étudier un son</strong> : celui d'un instrument, d'une voix, d'un diapason…
+Il le montre de deux façons :</p>
+<ul>
+  <li>le <strong>signal</strong>, en haut : comment le son varie au cours du temps, comme sur un
+  oscilloscope. On y mesure la <strong>période</strong> du son ;</li>
+  <li>le <strong>spectre</strong>, en bas : les fréquences qui composent le son, chacune avec son
+  amplitude. On y lit la <strong>fondamentale</strong>, qui fixe la hauteur de la note, et les
+  <strong>harmoniques</strong>, qui font le timbre de l'instrument.</li>
+</ul>
+<p>MeVSono est un instrument de mesure : il donne des instants, des durées et des fréquences. Les
+calculs (période, fréquence, rapports entre les harmoniques) sont <strong>votre travail</strong>.</p>
+</section>
+
+<section id="fenetre">
+<h2>2. La fenêtre</h2>
+<figure class="ecran">
+<svg viewBox="0 0 1280 800" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, sans-serif">
+  <image href="fenetre-fr.jpg" width="1280" height="800"/>
+  <g font-weight="700" font-size="22" text-anchor="middle">
+    <circle cx="355" cy="38" r="16" fill="#0b5cad"/><text x="355" y="46" fill="#fff">1</text>
+    <circle cx="185" cy="104" r="16" fill="#0b5cad"/><text x="185" y="112" fill="#fff">2</text>
+    <circle cx="1195" cy="16" r="16" fill="#0b5cad"/><text x="1195" y="24" fill="#fff">3</text>
+    <circle cx="205" cy="152" r="16" fill="#0b5cad"/><text x="205" y="160" fill="#fff">4</text>
+    <circle cx="200" cy="240" r="16" fill="#0b5cad"/><text x="200" y="248" fill="#fff">5</text>
+    <circle cx="1215" cy="140" r="16" fill="#0b5cad"/><text x="1215" y="148" fill="#fff">6</text>
+    <circle cx="1225" cy="460" r="16" fill="#0b5cad"/><text x="1225" y="468" fill="#fff">7</text>
+    <circle cx="880" cy="784" r="16" fill="#0b5cad"/><text x="880" y="792" fill="#fff">8</text>
+  </g>
+</svg>
+<figcaption>MeVSono avec un son de flûte (<a href="fenetre-fr.jpg">image en grand</a>).</figcaption>
+</figure>
+<ol class="legend">
+  <li><span class="num">1</span><strong>Les deux onglets</strong> : <span class="btn">Mesure de la période</span> (le signal seul, et les
+  curseurs t₁ et t₂) et <span class="btn">Étude des fréquences</span> (l'extrait choisi entre A et B, et son spectre).</li>
+  <li><span class="num">2</span><strong>En haut du panneau de gauche</strong> : ouvrir un son, revoir
+  tout le signal (<span class="btn">🔍 Tout voir</span>) ou seulement l'extrait
+  (<span class="btn">Zoom sur l'extrait</span>).</li>
+  <li><span class="num">3</span><strong>Thème et langue</strong>, à droite des menus : le soleil (thème
+  clair) ou la lune (thème sombre), et le drapeau de la langue. Un clic passe à l'autre thème ou à
+  l'autre langue.</li>
+  <li><span class="num">4</span><strong>Le son ouvert</strong> et ses boutons d'écoute
+  <span class="btn">▶</span> <span class="btn">⏸</span> <span class="btn">⏹</span>.</li>
+  <li><span class="num">5</span><strong>Les mesures de l'onglet</strong> : ici, l'extrait analysé, entre
+  A et B ; dans l'autre onglet, les instants t₁ et t₂ et leur écart Δt.</li>
+  <li><span class="num">6</span><strong>Le signal</strong>. Glisser dessus choisit l'extrait (ou, dans
+  l'autre onglet, place t₁ et t₂).</li>
+  <li><span class="num">7</span><strong>Le spectre</strong> de l'extrait. Le réticule donne la valeur
+  sous la souris et celle du pic le plus proche.</li>
+  <li><span class="num">8</span><strong>Barre d'état</strong> : à gauche, ce qui vient de se passer
+  (en vert, une réussite ; en rouge, un problème) ; à droite, le son ouvert et le mode.</li>
+</ol>
+<div class="tip"><p><strong>Une aide à portée de souris.</strong> Au-dessus de chaque graphique, une
+ligne grise rappelle les gestes possibles. Dans le panneau de gauche, les textes gris disent quoi
+faire.</p></div>
+</section>
+
+<section id="ouvrir">
+<h2>3. Ouvrir un son</h2>
+<p>Au lancement, MeVSono propose d'ouvrir un son.</p>
+<figure class="ecran">
+<a href="accueil-fr.jpg"><img src="accueil-fr.jpg" alt="Page d'accueil de MeVSono : le bouton Ouvrir un son" width="1024" height="640"></a>
+<figcaption>La page d'accueil : ouvrir un son.</figcaption>
+</figure>
+<p>Bouton <span class="btn">📂 Ouvrir un son…</span> (ou <kbd>Ctrl</kbd>+<kbd>O</kbd>), ou glissez
+le fichier sur la fenêtre. MeVSono lit les sons (WAV, MP3, M4A, OGG, FLAC…) et la piste son des
+vidéos (MP4, MOV…) : l'enregistrement d'un téléphone convient très bien.</p>
+<p>Dès qu'un son est ouvert, MeVSono choisit un <strong>extrait</strong> (au départ, presque tout le
+son, entre les curseurs A et B) et affiche son spectre.</p>
+</section>
+
+<section id="ecouter">
+<h2>4. Écouter le son</h2>
+<p>Les boutons d'écoute sont sous le nom du son, dans le panneau de gauche. Dans l'onglet
+<span class="btn">Mesure de la période</span>, ils jouent <strong>tout le son</strong> ; dans l'onglet <span class="btn">Étude des fréquences</span>, l'<strong>extrait</strong>, entre A
+et B.</p>
+<ul>
+  <li><span class="btn">▶</span> lance l'écoute : un trait rouge avance sur le signal, à l'instant
+  entendu.</li>
+  <li><span class="btn">⏸</span> met en pause ; <span class="btn">▶</span> reprend au même endroit.</li>
+  <li><span class="btn">⏹</span> arrête : la prochaine écoute repart du début.</li>
+</ul>
+<p>La touche <kbd>Espace</kbd> lance l'écoute ou la met en pause.</p>
+<div class="tip"><p>Écoutez l'extrait avant de le mesurer : il doit contenir la note tenue, sans
+silence.</p></div>
+</section>
+
+<section id="mesure">
+<h2>5. Mesurer une période</h2>
+<p>Un son musical est <strong>périodique</strong> : le même motif se répète. Sa durée est la période
+<em>T</em>, et la fréquence est <em>f</em> = 1 / <em>T</em>.</p>
+<figure class="ecran">
+<a href="mesure-fr.jpg"><img src="mesure-fr.jpg" alt="Mesure sur le signal carré : les curseurs t₁ et t₂, en turquoise, encadrent deux périodes ; le panneau indique t₁, t₂ et Δt = 10,00 ms" width="1024" height="640"></a>
+<figcaption>Un signal carré : t₁ et t₂ encadrent deux motifs, Δt = 10,00 ms.</figcaption>
+</figure>
+<ol class="steps">
+  <li>Cliquez sur l'onglet <span class="btn">Mesure de la période</span>, en haut de la fenêtre.</li>
+  <li><strong>Zoomez</strong> sur le signal avec la molette de la souris, jusqu'à voir quelques motifs
+  bien nets.</li>
+  <li><strong>Glissez</strong> (clic gauche maintenu) d'un point du motif jusqu'au même point d'un motif
+  suivant : les curseurs turquoise <strong>t₁</strong> et <strong>t₂</strong> s'y placent. Ils
+  « s'aimantent » sur le passage par zéro montant le plus proche : inutile de viser au pixel près.
+  Attrapez-les pour les déplacer.</li>
+  <li>Lisez dans le panneau de gauche <strong>t₁</strong>, <strong>t₂</strong> et la durée
+  <strong>Δt = t₂ − t₁</strong>.</li>
+  <li>Comptez le nombre <em>n</em> de motifs entre t₁ et t₂, puis calculez
+  <em>T</em> = Δt / <em>n</em> et <em>f</em> = 1 / <em>T</em>.</li>
+</ol>
+<div class="tip"><p><strong>Mesurer sur plusieurs périodes pour mesurer mieux.</strong> L'erreur sur
+la position des curseurs se partage entre les <em>n</em> périodes : sur 10 périodes, elle est 10 fois
+plus petite que sur une seule.</p></div>
+<p>Mesurer une durée ne change pas l'extrait analysé. Pour lire le spectre, passez à l'onglet
+<span class="btn">Étude des fréquences</span>.</p>
+</section>
+
+<section id="spectre">
+<h2>6. Lire le spectre</h2>
+<p>Le spectre, dans l'onglet <span class="btn">Étude des fréquences</span>, montre les fréquences présentes dans l'extrait. Chaque
+<strong>pic</strong> est une fréquence ; sa hauteur est son amplitude.</p>
+<ul>
+  <li>Un <strong>son pur</strong> (le diapason) donne un seul pic.</li>
+  <li>Un <strong>son composé</strong> (une flûte, une voix) donne une série de pics. Le premier est la
+  <strong>fondamentale</strong> <em>f</em>₁ : c'est la fréquence de la note. Les autres sont les
+  <strong>harmoniques</strong>, aux fréquences <em>f</em><sub><em>n</em></sub> = <em>n</em> ×
+  <em>f</em>₁ (2 <em>f</em>₁, 3 <em>f</em>₁…).</li>
+</ul>
+<h3>Mesurer la fréquence d'un pic</h3>
+<p>Placez la souris <strong>près du pic</strong>, sur le spectre. Le réticule affiche :</p>
+<ul>
+  <li>la <strong>valeur sous la souris</strong> : la fréquence et l'amplitude à l'endroit du pointeur ;</li>
+  <li>le <strong>pic le plus proche</strong>, marqué d'un rond plein : sa fréquence et son amplitude.
+  C'est cette valeur qu'on note. Inutile de viser le sommet exactement.</li>
+</ul>
+<p>Zoomez avec la molette pour séparer des pics proches ; double-cliquez pour revoir tout le spectre.</p>
+<div class="note"><p><strong>Hauteur et timbre.</strong> Deux instruments qui jouent la même note ont
+la même fondamentale : le son a la même <strong>hauteur</strong>. Leurs harmoniques n'ont pas les mêmes
+amplitudes : le son n'a pas le même <strong>timbre</strong>. Un tuyau fermé à un bout (tuyau d'orgue
+bouché) n'a que les harmoniques impairs (<em>f</em>₁, 3 <em>f</em>₁, 5 <em>f</em>₁…).</p></div>
+</section>
+
+<section id="extrait">
+<h2>7. Choisir l'extrait analysé</h2>
+<p>Le spectre est celui de l'<strong>extrait</strong> choisi sur le signal, entre les curseurs
+<strong>A</strong> (orange) et <strong>B</strong> (vert).</p>
+<ol class="steps">
+  <li>Cliquez sur l'onglet <span class="btn">Étude des fréquences</span>, en haut de la fenêtre.</li>
+  <li>Glissez sur le signal d'un instant à un autre : l'extrait, grisé, va de A à B. Pour ajuster,
+  attrapez A ou B ; un simple clic amène le curseur le plus proche sous la souris. A reste toujours
+  avant B : un curseur s'arrête sur l'autre.</li>
+  <li>Le spectre se recalcule aussitôt. Le panneau de gauche donne A, B et la durée de l'extrait.</li>
+</ol>
+<p>Choisissez un extrait où le son est <strong>stable</strong> : la note tenue, sans le début (l'attaque)
+ni un silence.</p>
+<div class="tip"><p><strong>Plus l'extrait est long, plus le spectre est fin.</strong> Deux fréquences
+ne sont séparées que si leur écart dépasse environ 1 / (durée de l'extrait) : 10 Hz pour un extrait de
+0,1 s, 1 Hz pour 1 s. Si les pics sont larges, allongez l'extrait.</p></div>
+</section>
+
+<section id="exemple">
+<h2>8. Exemple : un signal carré</h2>
+<p>Un générateur (GBF) délivre un signal carré de 200 Hz à un haut-parleur ; le son est enregistré,
+puis ouvert dans MeVSono.</p>
+<ol class="steps">
+  <li><strong>Période.</strong> Dans l'onglet <span class="btn">Mesure de la période</span>, encadrez deux motifs
+  (figure de la <a href="#mesure">partie 5</a>) : Δt = 10,00 ms pour <em>n</em> = 2 motifs, donc
+  <em>T</em> = Δt / 2 = 5,00 ms.</li>
+  <li><strong>Fréquence.</strong> <em>f</em> = 1 / <em>T</em> = 1 / (5,00 × 10<sup>−3</sup> s) =
+  200 Hz.</li>
+  <li><strong>Spectre.</strong> Dans l'onglet <span class="btn">Étude des fréquences</span>, survolez le premier pic : le pic le plus proche est à 200 Hz. C'est la
+  fondamentale <em>f</em>₁, égale à la fréquence calculée : les deux mesures se confirment.</li>
+  <li><strong>Harmoniques.</strong> Les pics suivants sont à 600 Hz, 1000 Hz, 1400 Hz… soit
+  3 <em>f</em>₁, 5 <em>f</em>₁, 7 <em>f</em>₁ : un signal carré n'a que des harmoniques impairs, de plus
+  en plus faibles.</li>
+</ol>
+<div class="note"><p><strong>À vous</strong> : faites de même avec un instrument, puis avec votre voix.
+Quels harmoniques sont présents ? Lequel est le plus fort ?</p></div>
+</section>
+
+<section id="raccourcis">
+<h2>9. Souris et clavier</h2>
+<table>
+<thead><tr><th>Action</th><th>Geste</th></tr></thead>
+<tbody>
+<tr><td>Placer t₁ et t₂ (onglet Mesure de la période)</td><td>glisser sur le signal</td></tr>
+<tr><td>Choisir l'extrait (onglet Étude des fréquences)</td><td>glisser sur le signal</td></tr>
+<tr><td>Déplacer un curseur</td><td>l'attraper et glisser ; ou cliquer : le plus proche vient sous la souris</td></tr>
+<tr><td>Zoomer (signal, spectre)</td><td>molette, autour de la souris</td></tr>
+<tr><td>Se déplacer</td><td>clic droit maintenu, ou <kbd>Maj</kbd>+molette</td></tr>
+<tr><td>Tout revoir</td><td>double-clic, ou <span class="btn">🔍 Tout voir</span></td></tr>
+<tr><td>Lire une fréquence</td><td>survoler le spectre près du pic</td></tr>
+<tr><td>Écouter, mettre en pause</td><td><kbd>Espace</kbd>, ou <span class="btn">▶</span> <span class="btn">⏸</span> <span class="btn">⏹</span></td></tr>
+<tr><td>Ouvrir un son</td><td><kbd>Ctrl</kbd>+<kbd>O</kbd>, ou glisser le fichier sur la fenêtre</td></tr>
+<tr><td>Agrandir ou réduire les textes</td><td><kbd>Ctrl</kbd>+<kbd>+</kbd>, <kbd>Ctrl</kbd>+<kbd>−</kbd> ; <kbd>Ctrl</kbd>+<kbd>0</kbd> : taille normale</td></tr>
+<tr><td>Ouvrir cette notice</td><td><kbd>F1</kbd>, ou <em>Aide › Notice d'utilisation…</em></td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="problemes">
+<h2>10. En cas de problème</h2>
+<dl class="faq">
+<dt>« Impossible de lire… : format non reconnu »</dt>
+<dd>Le fichier n'est pas un son ou une vidéo lisible. Enregistrez-le en WAV ou en MP3 (par exemple avec
+l'application du téléphone), ou demandez à votre professeur.</dd>
+
+<dt>« Ce fichier ne contient pas de son »</dt>
+<dd>La vidéo a été filmée sans le son, ou le son a été coupé.</dd>
+
+<dt>Le signal n'est qu'une bande pleine.</dt>
+<dd>Le son dure longtemps : on ne voit que son enveloppe. Zoomez avec la molette pour voir apparaître les
+motifs.</dd>
+
+<dt>Le réticule n'indique pas le pic voulu.</dt>
+<dd>Zoomez sur le spectre (molette) pour séparer les pics proches, puis approchez la souris du pic.</dd>
+
+<dt>Les pics sont larges, ou deux pics se confondent.</dt>
+<dd>Allongez l'extrait (<a href="#extrait">partie 7</a>).</dd>
+
+<dt>On n'entend rien.</dt>
+<dd>Vérifiez le volume et la sortie de l'ordinateur (haut-parleurs ou casque). « Aucune sortie audio »
+signale qu'il n'y en a aucune de branchée.</dd>
+
+<dt>Les textes sont devenus énormes (ou minuscules).</dt>
+<dd><kbd>Ctrl</kbd>+<kbd>0</kbd> rétablit la taille normale.</dd>
+
+<dt>Le programme s'est fermé tout seul.</dt>
+<dd>Une erreur imprévue s'est produite. Relancez MeVSono et prévenez votre professeur.</dd>
+</dl>
+</section>
+
+<div class="part" id="professeurs">
+  <h2>Pour les professeurs</h2>
+  <p>Les deux modes, les réglages de l'analyse, l'installation et la configuration de la salle.</p>
+</div>
+
+<section id="modes">
+<h2>11. Mode simplifié, mode expert</h2>
+<p>Le menu <strong>Mode</strong> propose deux modes ; le mode en cours est rappelé à droite de la barre
+d'état.</p>
+<ul>
+  <li><strong>Simplifié</strong> (par défaut) : les mesures seulement, celles décrites dans la partie
+  élèves. L'extrait initial couvre les 80 % du milieu du son ; on écoute l'extrait ; t₁ et t₂ sont
+  aimantés aux passages par zéro montants ; l'affichage est fixe (amplitudes linéaires, fréquences
+  jusqu'à 5 kHz). Le logiciel ne donne ni la fondamentale ni la période : l'élève les mesure.</li>
+  <li><strong>Expert</strong> : toutes les options (<a href="#expert">partie 12</a>). L'extrait initial
+  dure une demi-seconde, sur la partie la plus forte du son.</li>
+</ul>
+<p>Les réglages du mode expert sont gardés quand on repasse en mode simplifié. Pour imposer un mode à
+toute une salle, voir la <a href="#installer">partie 15</a>.</p>
+</section>
+
+<section id="expert">
+<h2>12. Le mode expert</h2>
+<figure class="ecran">
+<a href="expert-fr.jpg"><img src="expert-fr.jpg" alt="Mode expert, étude des fréquences : le panneau de gauche ajoute la période par autocorrélation, les caractéristiques de la FFT, la fondamentale et le tableau des harmoniques" width="1024" height="640"></a>
+<figcaption>Le son de flûte en mode expert : fondamentale <em>f</em>₁ = 440,0 Hz, tableau des
+harmoniques, période par autocorrélation, caractéristiques du calcul.</figcaption>
+</figure>
+<ul>
+  <li><strong>Fondamentale et harmoniques</strong> : MeVSono cherche la fréquence <em>f</em>₁ dont les
+  multiples correspondent le mieux aux pics. Le tableau donne, pour chaque rang <em>n</em>, la fréquence
+  mesurée, le rapport <em>f</em> / <em>f</em>₁, l'amplitude en décibels et rapportée à celle de la
+  fondamentale. Un tiret signale un rang sans pic (harmoniques pairs d'un tuyau bouché ou d'un
+  signal carré). <span class="btn">📋 Copier le tableau</span> le copie pour un tableur.</li>
+  <li><strong>Clic droit sur un pic</strong> du spectre : le prendre comme fondamentale ;
+  <span class="btn">Détection automatique</span> revient au choix du logiciel.</li>
+  <li><strong>Période par autocorrélation</strong> de l'extrait : le signal est comparé à lui-même
+  décalé, et se ressemble le plus pour un décalage d'une période. Utile pour vérifier une mesure.</li>
+  <li><strong>Aimanter t₁ et t₂ aux passages par zéro</strong> (onglet <span class="btn">Mesure de la période</span>, coché par défaut) :
+  décochez pour placer les curseurs librement, sur une crête par exemple.</li>
+  <li><strong>Écoute</strong> : la liste à gauche de <span class="btn">▶</span> choisit tout le son ou
+  l'extrait A–B.</li>
+  <li><strong>Menu Affichage</strong> : amplitudes en décibels, axe des fréquences logarithmique,
+  voie étudiée d'un son stéréo (moyenne, gauche ou droite), <span class="btn">⚙ Réglages…</span>
+  (aussi en haut du panneau de gauche).</li>
+  <li><strong>Exports</strong> (menu <em>Fichier</em>) : le spectre (colonnes <code>f (Hz)</code>,
+  <code>A</code>, <code>A (dB)</code>) et l'extrait du signal (<code>t (s)</code>,
+  <code>signal</code>), en CSV. En français, les colonnes sont séparées par <code>;</code> avec la
+  virgule décimale. En Python :
+  <code>pandas.read_csv("spectre.csv", sep=";", decimal=",")</code>.</li>
+</ul>
+</section>
+
+<section id="reglages">
+<h2>13. Réglages de l'analyse</h2>
+<p>En mode expert, <span class="btn">⚙ Réglages…</span> ouvre les réglages. Ils s'appliquent aussitôt
+et sont conservés d'une séance à l'autre ; <span class="btn">Valeurs par défaut</span> les rétablit.</p>
+<h3>Fenêtre de pondération</h3>
+<p>Avant le calcul, l'extrait est multiplié par une « fenêtre » qui l'atténue à ses bords : sans elle,
+le début et la fin brusques de l'extrait étaleraient chaque pic (fuite spectrale).</p>
+<table>
+<thead><tr><th>Fenêtre</th><th>Usage</th></tr></thead>
+<tbody>
+<tr><td>Hann (par défaut)</td><td>le bon choix pour la plupart des sons : pics fins, fréquences et amplitudes précises</td></tr>
+<tr><td>rectangulaire</td><td>aucune pondération : pics les plus fins, mais forte fuite et amplitudes approximatives</td></tr>
+<tr><td>Hamming</td><td>proche de Hann</td></tr>
+<tr><td>Blackman, Blackman-Harris</td><td>pics plus larges, mais fuite très faible : pour voir des harmoniques faibles</td></tr>
+<tr><td>à sommet plat</td><td>pics larges et plats : la mesure la plus juste des amplitudes</td></tr>
+</tbody>
+</table>
+<h3>Taille de la FFT</h3>
+<p>Le spectre est calculé par transformée de Fourier rapide (FFT). En taille
+<strong>automatique</strong>, tout l'extrait est analysé d'un seul tenant, complété par des zéros
+jusqu'à une puissance de 2 (au-delà de 262 144 échantillons, environ 6 s, il est découpé comme
+ci-dessous). Une taille fixée plus petite que l'extrait le découpe en <strong>segments</strong> qui se
+recouvrent de moitié, et fait la moyenne de leurs spectres : le spectre est plus lisse, mais moins fin.
+L'écart entre raies est Δ<em>f</em> = fréquence d'échantillonnage / taille de la FFT ; la fréquence des
+pics est affinée par interpolation, bien en dessous.</p>
+<h3>Autres réglages</h3>
+<ul>
+  <li><strong>Seuil de détection des pics</strong> : un pic plus faible que le plus grand de cette valeur
+  est ignoré (−40 dB : 1 % de son amplitude), y compris pour le « pic le plus proche » du réticule.
+  Baissez-le pour repérer des harmoniques faibles.</li>
+  <li><strong>Nombre d'harmoniques</strong> du tableau (10 par défaut).</li>
+  <li><strong>Voie étudiée</strong> d'un son stéréo.</li>
+  <li><strong>Amplitude</strong> linéaire ou en dB, <strong>axe des fréquences</strong> linéaire ou
+  logarithmique, <strong>fréquence maximale affichée</strong> (5 kHz par défaut), <strong>repères des
+  harmoniques</strong> (traits pointillés roses aux fréquences <em>n</em> × <em>f</em>₁).</li>
+</ul>
+<div class="note"><p>Les amplitudes sont des amplitudes de sinusoïdes : un son pur d'amplitude 0,5 donne
+un pic de hauteur 0,5. Elles dépendent du réglage du microphone : on compare surtout les amplitudes
+entre elles.</p></div>
+</section>
+
+<section id="conseils">
+<h2>14. Idées pour la classe</h2>
+<ul>
+  <li><strong>Enregistrer un son</strong> : un téléphone (application dictaphone) convient très bien.
+  Le tenir à quelques dizaines de centimètres de la source, dans une pièce calme, et éviter la
+  saturation (signal écrêté en haut et en bas) : elle crée de faux harmoniques.</li>
+  <li><strong>Hauteur et timbre</strong> : la même note jouée par deux instruments (même fondamentale,
+  harmoniques différents), ou deux notes du même instrument. Un tuyau ouvert aux deux bouts a tous les
+  harmoniques, un tuyau fermé à une extrémité seulement les impairs.</li>
+  <li><strong>Corde pincée</strong> : son qui s'éteint ; prendre l'extrait juste après l'attaque.</li>
+  <li><strong>Battements</strong> : deux diapasons de 440 Hz et 444 Hz joués ensemble ; un extrait de
+  0,1 s ne sépare pas les deux fréquences, un extrait de 1 s les sépare. L'enveloppe du signal varie
+  4 fois par seconde.</li>
+  <li><strong>Mesures croisées</strong> : comparer la fréquence calculée à partir de la période à celle
+  du premier pic du spectre (<a href="#exemple">partie 8</a>).</li>
+</ul>
+</section>
+
+<section id="installer">
+<h2>15. Installer et configurer</h2>
+<h3>Installation</h3>
+<ul>
+  <li><strong>Windows, sans installation</strong> : MeVSono tient dans un dossier (archive
+  <code>.zip</code>), à copier sur le poste, le réseau du lycée ou une clé USB ; lancer
+  <code>mevsono.exe</code>. Il fonctionne hors connexion, notice comprise. Au premier lancement,
+  Windows peut afficher « Windows a protégé votre ordinateur », car MeVSono n'est pas signé
+  numériquement : cliquer sur « Informations complémentaires », puis « Exécuter quand même ». Pour
+  ouvrir un son directement : clic droit sur le fichier → « Ouvrir avec… » → MeVSono.</li>
+  <li><strong>Windows, installateur</strong> : <code>MeVSono-<i>version</i>-windows-x64-setup.exe</code> installe
+  MeVSono pour tous les utilisateurs dans <code>Program Files\MeVSuite</code>, avec un raccourci dans le menu
+  Démarrer ; il se désinstalle par les Paramètres de Windows. Déploiement sur un parc (WAPT, GPO) :
+  options <code>/VERYSILENT /SUPPRESSMSGBOXES /NORESTART</code>.</li>
+  <li><strong>Linux</strong> : paquet <code>.deb</code> (Ubuntu, Debian), <code>.rpm</code> (Fedora),
+  ou <code>.AppImage</code>, qui se lance sans installation (le rendre exécutable).</li>
+  <li><strong>Formats</strong> : WAV, MP3, OGG, Opus, FLAC, M4A et AAC, AIFF, CAF ; la piste son des
+  vidéos MP4, MOV, M4V, MKV, WebM, AVI. Les autres formats sont lus si ffmpeg est installé sur le poste,
+  ou placé dans un dossier <code>ffmpeg</code> à côté du programme. Les sons sont lus jusqu'à
+  30 minutes.</li>
+  <li><strong>Vidéoprojecteur</strong> : <kbd>Ctrl</kbd>+<kbd>+</kbd> agrandit les textes et les
+  graphiques ; <kbd>Ctrl</kbd>+<kbd>0</kbd> revient à la taille normale.</li>
+</ul>
+<h3>Réglages conservés</h3>
+<p>Au premier lancement, MeVSono prend la langue et le thème clair ou sombre du système (anglais si la
+langue n'est ni le français ni l'anglais). Les nombres suivent la langue : virgule décimale en
+français, point en anglais.</p>
+<p>MeVSono retient d'une séance à l'autre le mode, la langue, le thème, les réglages de l'analyse,
+l'agrandissement des textes, le dernier dossier ouvert et la taille de la fenêtre, dans un petit
+fichier texte <code>mevsono.ini</code>, propre à chaque utilisateur et modifiable à la main ; le
+supprimer rétablit les valeurs par défaut.</p>
+<table>
+<thead><tr><th>Système</th><th>Emplacement</th></tr></thead>
+<tbody>
+<tr><td>Windows</td><td><code>%APPDATA%\MeVSuite\mevsono.ini</code></td></tr>
+<tr><td>Linux</td><td><code>~/.config/MeVSuite/mevsono.ini</code></td></tr>
+</tbody>
+</table>
+<h3>Réglages imposés</h3>
+<p>Un fichier <code>mevsono.ini</code> placé à côté du programme (salle informatique, clé USB) est lu
+à chaque lancement et l'emporte sur les réglages de l'utilisateur ; MeVSono ne l'écrit jamais. Par
+exemple :</p>
+<pre><code>mode = simple
+language = fr
+theme = light</code></pre>
+<p>fait démarrer tous les postes en mode simplifié, en français et en thème clair. Les clés possibles
+sont celles du fichier de l'utilisateur ; <code>language</code> et <code>theme</code> acceptent aussi
+<code>auto</code> (langue ou thème du système). Les chemins des deux fichiers sont affichés dans
+<strong>Aide › À propos de MeVSono…</strong></p>
+<p>Les quatre logiciels de la suite (MeVPix, MeVCine, MeVReg, MeVSono) rangent leurs réglages dans
+ce même dossier <code>MeVSuite</code>. La notice est écrite à chaque ouverture dans le dossier
+temporaire du système (<code>mevsono-help</code>) : on peut l'imprimer ou l'enregistrer depuis le
+navigateur.</p>
+</section>
+
+<section id="apropos">
+<h2>16. Erreurs, contact et licence</h2>
+<p><strong>Erreur imprévue</strong> : MeVSono affiche un message avant de se fermer et enregistre le
+détail dans <code>mevsono.log</code>, dans le même dossier que <code>mevsono.ini</code>. Joignez ce
+fichier à votre signalement.</p>
+<p><strong>Contact</strong> : Rémi MEVAERE,
+<a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>. Remarques, idées
+d'amélioration et problèmes sont les bienvenus.</p>
+<p><strong>Licence</strong> : MeVSono est un logiciel libre, distribué sous licence MIT ; il est écrit
+en C++ avec les bibliothèques libres Qt et Qt Multimedia (licence LGPL version 3) et s'appuie sur
+FFmpeg pour lire les sons. Les composants utilisés et leur licence sont indiqués dans
+<strong>Aide › À propos de MeVSono…</strong> ; <strong>Aide › À propos de Qt…</strong> donne la
+version de Qt et ses conditions de licence.</p>
+<footer>MeVSono {{version}} — notice intégrée au logiciel, disponible hors connexion.</footer>
+</section>
+</main>
+</div>
+<script>
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a[href^="#"]'));
+  if (!('IntersectionObserver' in window) || !links.length) return;
+  var byId = {};
+  links.forEach(function (a) { byId[a.getAttribute('href').slice(1)] = a; });
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      links.forEach(function (a) { a.classList.remove('current'); });
+      var a = byId[e.target.id];
+      if (a) a.classList.add('current');
+    });
+  }, { rootMargin: '-10% 0px -75% 0px' });
+  document.querySelectorAll('main section[id]').forEach(function (s) { io.observe(s); });
+})();
+</script>
+</body>
+</html>

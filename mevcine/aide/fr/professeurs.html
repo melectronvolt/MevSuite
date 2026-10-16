@@ -1,0 +1,101 @@
+<header class="title">
+<h1>En classe</h1>
+<p>Pour les professeurs : déploiement, choix pédagogiques, séance type, exemple Python</p>
+</header>
+
+<h2 id="deploiement">Déployer MeVCine dans une salle</h2>
+<ul>
+  <li><strong>Aucune installation</strong> : copiez le dossier de MeVCine sur une clé USB, un dossier réseau ou le
+  disque de chaque poste (voir <a href="installer.html">Installer</a>). Il ne demande pas de droits
+  d'administrateur, et n'écrit que dans le dossier de configuration de l'utilisateur.</li>
+  <li><strong>Un raccourci pour les élèves</strong> : vers <code>mevcine.exe --simple</code> (ou
+  <code>mevcine --simple</code>), pour arriver directement en mode simplifié ; on peut y ajouter une vidéo :
+  <code>mevcine.exe --simple \\serveur\physique\chute.mp4</code>.</li>
+  <li><strong>Postes partagés</strong> : MeVCine ne rouvre jamais la dernière vidéo ; chaque élève part d'un écran
+  propre. La langue, le thème, l'unité de l'étalon, la taille de la fenêtre et le dernier dossier de vidéos sont
+  retenus par compte. La sauvegarde automatique aussi : avec un compte commun, <em>Récupérer le travail
+  précédent</em> rend le travail du dernier élève passé sur le poste.</li>
+  <li><strong>Un dossier de configuration commun</strong> : la variable <code>MEVCINE_CONF</code> (dans un fichier
+  <code>.bat</code> de lancement, par exemple) désigne un autre dossier, sur la clé ou le réseau. Voir
+  <a href="reglages.html">Réglages</a>.</li>
+  <li>Au premier lancement, Windows signale un programme non signé (<em>Informations complémentaires › Exécuter
+  quand même</em>) : prévenez les élèves, ou faites ce premier lancement vous-même sur chaque poste.</li>
+</ul>
+
+<h2 id="choix">Les choix pédagogiques</h2>
+<ul>
+  <li>MeVCine <strong>ne demande ni masse ni g</strong>, et n'exporte que des dates et des positions : vitesses,
+  accélérations et énergies sont calculées par les élèves (Python, tableur, papier). Le grapheur du mode expert
+  montre tout de même v et a, pour explorer.</li>
+  <li><strong>L'orientation des axes n'est jamais choisie d'avance</strong> : l'élève décide du repère, et peut le
+  changer après coup pour voir l'effet sur les coordonnées.</li>
+  <li><strong>L'étalon d'abord, sa longueur ensuite</strong>, avec son unité (mm, cm ou m) choisie par l'élève ;
+  les exports sont toujours en mètre et en seconde. Une erreur d'unité se voit tout de suite sur l'image
+  (« 85 m ») et dans les ordres de grandeur.</li>
+  <li>La date zéro est celle de la <strong>première image pointée</strong> : les élèves choisissent l'origine des
+  temps en choisissant où commencer.</li>
+  <li>Les mesures sont gardées en pixels de la vidéo : origine, axes et échelle se modifient sans rien perdre, ce
+  qui permet de discuter l'influence du repère.</li>
+  <li>Les vecteurs vitesse du mode expert ont une <strong>échelle automatique</strong> et une légende (« 1 m/s ») :
+  on peut faire comparer les flèches avant tout calcul.</li>
+</ul>
+
+<h2 id="seance">Une séance type (mode simplifié)</h2>
+<ol class="steps">
+  <li><strong>5 min</strong> : lancer MeVCine, ouvrir la vidéo (fournie, ou filmée par les élèves) ; repérer le début
+  et la fin du mouvement avec la glissière.</li>
+  <li><strong>5 min</strong> : origine, axes, échelle. Faire justifier le choix du repère et de l'étalon.</li>
+  <li><strong>10 min</strong> : pointage d'une vingtaine d'images ; vérifier le tableau ; refaire une mesure
+  douteuse avec ⌖.</li>
+  <li><strong>5 min</strong> : <em>Copier pour Python</em>, coller dans l'éditeur ou le notebook ; ou
+  <em>Enregistrer en CSV…</em>.</li>
+  <li><strong>Le reste</strong> : exploitation en Python (vitesses, graphiques, modèle).</li>
+</ol>
+<p>La page <a href="tp.html">Un TP pas à pas</a> déroule cette séance avec la vidéo d'un palet. Prévoyez
+un <em>Fichier › Enregistrer le projet…</em> en fin de séance si le travail continue plus tard.</p>
+
+<h2 id="python">Un exemple Python : retrouver g</h2>
+<p>Avec le texte copié par MeVCine (chute d'une balle, y vers le haut) :</p>
+<pre>import numpy as np
+import matplotlib.pyplot as plt
+
+# ↓ texte copié depuis MeVCine
+# Mesures MeVCine — vidéo : chute.mp4
+# t : temps en s ; x, y : positions en m
+lst_t = np.array([0.0, 0.04, 0.08, 0.12, 0.16, 0.2])
+lst_x = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+lst_y = np.array([1.2, 1.192, 1.169, 1.129, 1.074, 1.004])
+# ↑
+
+# vitesse verticale, au milieu de chaque intervalle
+t_milieu = (lst_t[1:] + lst_t[:-1]) / 2
+vy = np.diff(lst_y) / np.diff(lst_t)
+
+# modèle : vy = v0 - g t  →  droite de pente -g
+pente, ordonnee = np.polyfit(t_milieu, vy, 1)
+print(f"g ≈ {-pente:.2f} m/s²")
+
+plt.subplot(1, 2, 1)
+plt.plot(lst_t, lst_y, "o")
+plt.xlabel("t (s)"); plt.ylabel("y (m)")
+plt.subplot(1, 2, 2)
+plt.plot(t_milieu, vy, "o", t_milieu, pente * t_milieu + ordonnee, "-")
+plt.xlabel("t (s)"); plt.ylabel("vy (m/s)")
+plt.tight_layout()
+plt.show()</pre>
+
+<h2 id="contact">Contact, langues, contribuer</h2>
+<p>MeVCine est écrit par <strong>Rémi MEVAERE</strong> :
+<a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>. Une remarque, une vidéo qui ne
+s'ouvre pas, une idée pour la classe : écrivez, en joignant si possible le journal des erreurs
+(<a href="reglages.html#configuration">Réglages</a>) et la vidéo.</p>
+<p>L'interface et la notice existent en français et en anglais. Les traductions sont des fichiers gettext
+(<code>data/lang/*.po</code>, modifiables avec Poedit) ; la notice est faite de pages HTML
+(<code>aide/<i>langue</i>/</code>, assemblées par <code>scripts/site-aide.py</code>). Le code est en C++ avec Qt ;
+le fichier <code>README.md</code> explique comment le compiler et lancer les tests.</p>
+
+<h2 id="licence">Licence</h2>
+<p>MeVCine est un <strong>logiciel libre</strong>, sous licence GNU GPL version 3 ou ultérieure : vous pouvez le
+copier, le distribuer aux élèves et le modifier librement. Il intègre des composants libres (Qt, FFmpeg…) :
+<em>Aide › À propos</em> en donne la liste, avec leurs licences ; le bouton <em>À propos de Qt</em> donne celle de
+Qt.</p>

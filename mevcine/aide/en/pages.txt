@@ -1,0 +1,16 @@
+== For students
+index	Overview
+demarrer	Getting started
+simplifie	Simple mode
+echelle	The scale
+expert	Expert mode
+exports	Exporting the measurements
+tp	A lab, step by step
+video	Filming a motion
+clavier	Keyboard and mouse
+faq	Frequently asked questions
+== For teachers
+professeurs	In the classroom
+installer	Installing
+reglages	Settings
+depannage	Troubleshooting

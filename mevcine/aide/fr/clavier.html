@@ -1,0 +1,49 @@
+<header class="title">
+<h1>Clavier et souris</h1>
+<p>Les raccourcis, et les gestes sur l'image</p>
+</header>
+
+<h2 id="raccourcis">Raccourcis clavier</h2>
+<table>
+  <tr><th>Touches</th><th>Action</th></tr>
+  <tr><td><kbd>←</kbd> <kbd>→</kbd>, <kbd>Page ↑</kbd> <kbd>Page ↓</kbd></td><td>image précédente, image suivante</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd></td><td>annuler le dernier point / le rétablir</td></tr>
+  <tr><td><kbd>Échap</kbd></td><td>annuler le tracé de l'étalon, la mesure à refaire, le choix de l'origine (mode
+  expert) ; fermer un message</td></tr>
+  <tr><td><kbd>Entrée</kbd></td><td>valider la longueur de l'étalon ; fermer un message (mais jamais confirmer une
+  action qui ferait perdre des mesures)</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>C</kbd></td><td>copier les mesures pour Python (hors d'un champ de saisie)</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>O</kbd></td><td>ouvrir une vidéo</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>S</kbd></td><td>enregistrer le projet</td></tr>
+  <tr><td><kbd>F1</kbd></td><td>cette notice, à la page de ce que vous faites</td></tr>
+  <tr><td><kbd>F11</kbd></td><td>pointer en plein écran ; <kbd>Échap</kbd> ou <kbd>F11</kbd> revient à la
+  fenêtre</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>+</kbd> / <kbd>Ctrl</kbd>+<kbd>−</kbd></td><td>agrandir ou réduire toute
+  l'interface (de 50 à 300 %)</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>0</kbd></td><td>remettre l'interface à sa taille normale</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>Q</kbd></td><td>quitter</td></tr>
+</table>
+
+<h2 id="souris">La souris sur l'image</h2>
+<table>
+  <tr><th>Geste</th><th>Effet</th></tr>
+  <tr><td>Clic</td><td>placer l'origine (étape 1, ou après <span class="btn">Placer l'origine</span>) ; pointer
+  l'objet (pendant le pointage) ; une extrémité de l'étalon (pendant son tracé)</td></tr>
+  <tr><td>Glisser l'origine</td><td>déplacer l'origine : aux étapes 1 et 2 du mode simplifié, et en mode expert
+  avant le pointage ou après <span class="btn">Placer l'origine</span>. Au-dessus de l'origine, le curseur
+  devient une main.</td></tr>
+  <tr><td>Glisser</td><td>tracer l'étalon d'une extrémité à l'autre ; tracer un cadre autour d'un objet (suivi
+  automatique). Pendant le pointage, un petit glissement compte comme un clic : le point est posé quand on lâche le
+  bouton.</td></tr>
+  <tr><td>Clic droit</td><td>annuler le tracé de l'étalon</td></tr>
+  <tr><td>Survol</td><td>la loupe grossit l'image autour de la souris ; à côté, les coordonnées du point visé</td></tr>
+  <tr><td>Grapheur</td><td>molette : zoom ; glisser : déplacer ; double-clic : recadrer</td></tr>
+</table>
+
+<h2 id="loupe">La loupe</h2>
+<p>En haut à gauche, la loupe montre l'image grossie autour de la souris, avec une croix de visée et un petit
+cercle. Regardez-la au moment de cliquer, et visez toujours le même point de l'objet d'une image à l'autre. Son
+titre rappelle ce qui est attendu : « Origine du repère », « Étalon », « Pointage », « Pointage de l'objet 2 »,
+« Mesure à refaire ».</p>
+<p>À côté, le petit tableau donne les coordonnées du point visé, dans votre repère : la ligne <strong>px</strong>
+en pixels, la ligne <strong>m</strong> en mètres (une fois l'échelle définie).</p>

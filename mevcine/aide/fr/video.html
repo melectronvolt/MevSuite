@@ -1,0 +1,56 @@
+<header class="title">
+<h1>Filmer un mouvement</h1>
+<p>Bien filmer avec un téléphone, transférer la vidéo, les ralentis</p>
+</header>
+
+<h2 id="filmer">Bien filmer</h2>
+<ul>
+  <li><strong>Caméra immobile</strong> : sur un trépied, un support, ou posée contre un objet. Ne suivez pas
+  l'objet avec la caméra : le repère doit rester fixe.</li>
+  <li><strong>Face au mouvement</strong> : la caméra regarde perpendiculairement au plan du mouvement, et d'assez
+  loin pour que la perspective ne déforme pas les distances (mieux vaut zoomer un peu que s'approcher).</li>
+  <li><strong>Un étalon dans le plan du mouvement</strong> : une règle, un mètre ruban, deux marques mesurées, bien
+  visibles. Voir <a href="echelle.html#choisir">Choisir un bon étalon</a>.</li>
+  <li><strong>Beaucoup de lumière</strong> : l'objet est moins flou, et le téléphone garde une cadence régulière.
+  Dehors ou près d'une fenêtre, plutôt que sous les néons.</li>
+  <li><strong>Un objet contrasté</strong> sur un fond uni (une balle colorée devant un mur clair) : plus facile à
+  viser, et le suivi automatique marche mieux.</li>
+  <li><strong>Remplissez l'image</strong> avec le mouvement : plus l'objet parcourt de pixels, plus la mesure est
+  précise.</li>
+  <li><strong>La cadence</strong> : 30 images par seconde suffisent pour un mouvement lent ; pour une chute ou un
+  lancer, le ralenti (120 ou 240 images par seconde) donne beaucoup plus de points.</li>
+</ul>
+
+<h2 id="transfert">Transférer la vidéo sur l'ordinateur</h2>
+<ul>
+  <li>Le mieux : <strong>le câble</strong> (le téléphone apparaît comme une clé USB), AirDrop (iPhone vers Mac), ou
+  l'espace de partage de l'établissement.</li>
+  <li><strong>Évitez les messageries</strong> (WhatsApp, Messenger…) : elles recompressent la vidéo, l'image est
+  moins nette, et l'information du ralenti peut être perdue.</li>
+  <li>Quelques secondes suffisent : coupez la vidéo autour du mouvement sur le téléphone, avant de la
+  transférer.</li>
+</ul>
+
+<h2 id="telephone">Les vidéos de téléphone</h2>
+<dl class="faq">
+  <dt>En portrait</dt>
+  <dd>MeVCine redresse tout seul une vidéo filmée en portrait. Si elle apparaît quand même couchée, tournez-la :
+  étape 1 du mode simplifié, ou boutons ⟲ ⟳ sous l'image en mode expert (avant l'échelle et le pointage).</dd>
+  <dt id="ralenti">Au ralenti</dt>
+  <dd>Une vidéo au ralenti est filmée à 120 ou 240 images par seconde, mais se lit à 30 : pour les dates, c'est la
+  cadence de <strong>prise de vue</strong> qui compte. Les téléphones Android l'écrivent dans le fichier : MeVCine
+  l'utilise d'office, et le dit (« Vidéo au ralenti »). Un iPhone ne l'écrit pas toujours : indiquez vous-même la
+  cadence de prise de vue, dans <em>Vidéo au ralenti ?</em> (étape 4 du mode simplifié) ou <em>Images par
+  seconde</em> (mode expert). Les dates du tableau sont recalculées aussitôt.</dd>
+  <dt>Cadence variable</dt>
+  <dd>Beaucoup de téléphones perdent des images, ou filment moins vite quand la lumière baisse. MeVCine le détecte
+  (« Cadence variable ») et utilise la date réelle de chaque image : les intervalles du tableau ne sont alors pas
+  tous égaux, et c'est normal.</dd>
+  <dt>HDR</dt>
+  <dd>Les vidéos HDR (iPhone récents) sont converties en couleurs ordinaires : elles ne paraissent pas délavées.</dd>
+</dl>
+
+<h2 id="formats">Les formats</h2>
+<p>MeVCine lit les formats des téléphones, des appareils photo et des webcams : MP4, MOV, AVI, MKV, WebM, 3GP, MTS…,
+en H.264, HEVC (H.265), AV1, VP9, ProRes, Motion JPEG. Les très grandes vidéos (4K) s'ouvrent, mais plus
+lentement : pour un TP, une vidéo en 1080p suffit largement.</p>

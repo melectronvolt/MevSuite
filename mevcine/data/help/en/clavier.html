@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — Keyboard and mouse</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="Contents">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">User guide · version 0.2.0</p>
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="index.html">1. Overview</a></li>
+    <li><a href="demarrer.html">2. Getting started</a></li>
+    <li><a href="simplifie.html">3. Simple mode</a></li>
+    <li><a href="echelle.html">4. The scale</a></li>
+    <li><a href="expert.html">5. Expert mode</a></li>
+    <li><a href="exports.html">6. Exporting the measurements</a></li>
+    <li><a href="tp.html">7. A lab, step by step</a></li>
+    <li><a href="video.html">8. Filming a motion</a></li>
+    <li><a href="clavier.html" class="current">9. Keyboard and mouse</a></li>
+    <li><a href="faq.html">10. Frequently asked questions</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="professeurs.html">11. In the classroom</a></li>
+    <li><a href="installer.html">12. Installing</a></li>
+    <li><a href="reglages.html">13. Settings</a></li>
+    <li><a href="depannage.html">14. Troubleshooting</a></li>
+  </ol>
+  <p class="lang"><a href="../fr/clavier.html" lang="fr" hreflang="fr">Français</a></p>
+</nav>
+
+<main>
+<header class="title">
+<h1>Keyboard and mouse</h1>
+<p>Shortcuts, and gestures on the frame</p>
+</header>
+
+<h2 id="raccourcis">Keyboard shortcuts</h2>
+<table>
+  <tr><th>Keys</th><th>Action</th></tr>
+  <tr><td><kbd>←</kbd> <kbd>→</kbd>, <kbd>Page ↑</kbd> <kbd>Page ↓</kbd></td><td>previous frame, next frame</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd></td><td>undo the last point / redo it</td></tr>
+  <tr><td><kbd>Esc</kbd></td><td>cancel drawing the reference, the measurement to redo, choosing the origin (expert
+  mode); close a message</td></tr>
+  <tr><td><kbd>Enter</kbd></td><td>confirm the length of the reference; close a message (but never confirm an action
+  that would lose measurements)</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>C</kbd></td><td>copy the measurements for Python (outside a text field)</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>O</kbd></td><td>open a video</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>S</kbd></td><td>save the project</td></tr>
+  <tr><td><kbd>F1</kbd></td><td>this guide, at the page of what you are doing</td></tr>
+  <tr><td><kbd>F11</kbd></td><td>mark in full screen; <kbd>Esc</kbd> or <kbd>F11</kbd> goes back to the window</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>+</kbd> / <kbd>Ctrl</kbd>+<kbd>−</kbd></td><td>enlarge or shrink the whole
+  interface (from 50 to 300%)</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>0</kbd></td><td>bring the interface back to its normal size</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>Q</kbd></td><td>quit</td></tr>
+</table>
+
+<h2 id="souris">The mouse on the frame</h2>
+<table>
+  <tr><th>Gesture</th><th>Effect</th></tr>
+  <tr><td>Click</td><td>place the origin (step 1, or after <span class="btn">Place the origin</span>); mark the
+  object (while marking); one end of the reference (while drawing it)</td></tr>
+  <tr><td>Drag the origin</td><td>move the origin: at steps 1 and 2 of simple mode, and in expert mode before
+  marking or after <span class="btn">Place the origin</span>. Over the origin, the cursor becomes a hand.</td></tr>
+  <tr><td>Drag</td><td>draw the reference from one end to the other; draw a box around an object (automatic
+  tracking). While marking, a small drag counts as a click: the point is placed when the button is
+  released.</td></tr>
+  <tr><td>Right-click</td><td>cancel drawing the reference</td></tr>
+  <tr><td>Hover</td><td>the magnifier enlarges the frame around the mouse; next to it, the coordinates of the point
+  under the cursor</td></tr>
+  <tr><td>Grapher</td><td>wheel: zoom; drag: move; double-click: fit</td></tr>
+</table>
+
+<h2 id="loupe">The magnifier</h2>
+<p>At the top left, the magnifier shows the frame enlarged around the mouse, with a crosshair and a small circle.
+Look at it when you click, and always aim at the same point of the object from one frame to the next. Its title
+recalls what is expected: “Origin of the axes”, “Reference”, “Marking”, “Marking object 2”, “Measurement to
+redo”.</p>
+<p>Next to it, the small table gives the coordinates of the point under the cursor, in your axes: the
+<strong>px</strong> row in pixels, the <strong>m</strong> row in metres (once the scale is set).</p>
+<nav class="voisins">
+<a class="precedent" href="video.html"><small>◀ Previous page</small>Filming a motion</a>
+<a class="suivant" href="faq.html"><small>Next page ▶</small>Frequently asked questions</a>
+</nav>
+<footer>MeVCine 0.2.0 · user guide · Rémi MEVAERE · free software, GPL 3 or later</footer>
+</main>
+</div>
+</body>
+</html>

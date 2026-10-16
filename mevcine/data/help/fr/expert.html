@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — Le mode expert</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="Sommaire">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">Notice d&#x27;utilisation · version 0.2.0</p>
+  <p class="group">Pour les élèves</p>
+  <ol>
+    <li><a href="index.html">1. Présentation</a></li>
+    <li><a href="demarrer.html">2. Démarrer</a></li>
+    <li><a href="simplifie.html">3. Mode simplifié</a></li>
+    <li><a href="echelle.html">4. L&#x27;échelle</a></li>
+    <li><a href="expert.html" class="current">5. Mode expert</a></li>
+    <li><a href="exports.html">6. Exporter les mesures</a></li>
+    <li><a href="tp.html">7. Un TP pas à pas</a></li>
+    <li><a href="video.html">8. Filmer un mouvement</a></li>
+    <li><a href="clavier.html">9. Clavier et souris</a></li>
+    <li><a href="faq.html">10. Questions fréquentes</a></li>
+  </ol>
+  <p class="group">Pour les professeurs</p>
+  <ol>
+    <li><a href="professeurs.html">11. En classe</a></li>
+    <li><a href="installer.html">12. Installer</a></li>
+    <li><a href="reglages.html">13. Réglages</a></li>
+    <li><a href="depannage.html">14. Dépannage</a></li>
+  </ol>
+  <p class="lang"><a href="../en/expert.html" lang="en" hreflang="en">English</a></p>
+</nav>
+
+<main>
+<header class="title">
+<h1>Le mode expert</h1>
+<p>Toutes les fonctions, dans quatre onglets</p>
+</header>
+
+<p>Le mode expert donne accès à tout : plusieurs objets, suivi automatique, trajectoires, vecteurs vitesse,
+chronophotographie, changement de référentiel, grapheur. On y passe par le menu <em>Mode › Mode expert</em> ;
+les mesures faites en mode simplifié sont gardées. Les
+quatre onglets, dans l'ordre du travail : <strong>1. Pointage</strong>, <strong>2. Coordonnées</strong>,
+<strong>3. Trajectoires</strong>, <strong>4. Grapheur</strong>. Les trois derniers s'ouvrent une fois le pointage
+démarré.</p>
+
+<h2 id="pointage">Onglet Pointage</h2>
+<figure>
+<img src="images/expert-pointage.jpg" alt="L'onglet Pointage : en haut la barre Origine, Axes, Échelle ; à gauche la loupe, les objets suivis et la vidéo ; au centre l'image">
+<figcaption>En haut, le repère en trois étapes ; à gauche, la loupe, le pointage et la vidéo.</figcaption>
+</figure>
+<h3 id="repere">En haut : le repère, en trois étapes</h3>
+<dl class="faq">
+  <dt>1. Origine — <span class="btn">Placer l'origine</span></dt>
+  <dd>Puis cliquez sur l'image à l'endroit choisi (un second appui sur le bouton, ou <kbd>Échap</kbd>, y
+  renonce). Avant le pointage, l'origine se déplace aussi en la <strong>faisant glisser</strong>. Possible même
+  après le pointage : les mesures sont recalculées.</dd>
+  <dt>2. Axes — quatre petits repères</dt>
+  <dd>Un clic choisit le sens de x et de y ; le repère choisi est entouré. La souris posée sur un bouton dit son
+  sens en mots (« x vers la droite, y vers le haut »).</dd>
+  <dt>3. Échelle — <span class="btn">Définir l'échelle</span></dt>
+  <dd>Tracez l'étalon sur l'image (deux clics, ou un glisser), puis donnez sa longueur et son unité (mm, cm ou m)
+  dans la petite fenêtre. À côté du bouton : « 85 cm pour 353 px », ou « non définie : les mesures sont en
+  pixel ». Voir <a href="echelle.html">L'échelle</a>.</dd>
+</dl>
+<p>Pendant le choix de l'origine ou de l'étalon, la consigne s'affiche sous ces boutons, en orange, avec
+<span class="btn">Annuler</span>.</p>
+<h3 id="gauche">À gauche : la loupe, les objets, la vidéo</h3>
+<dl class="faq">
+  <dt>Loupe et coordonnées</dt>
+  <dd>L'image grossie autour de la souris, et les coordonnées du point visé, en px et en m.</dd>
+  <dt>Objets à suivre</dt>
+  <dd>Le nombre d'objets (1 à 10), avant de démarrer. Avec plusieurs objets, on pointe l'objet 1, puis
+  l'objet 2… sur chaque image : le titre de la loupe dit lequel est attendu, et chaque objet a sa couleur.</dd>
+  <dt>Suivi automatique</dt>
+  <dd>Cochez-le avant de démarrer pour que MeVCine suive les objets tout seul (ci-dessous).</dd>
+  <dt><span class="btn">Démarrer le pointage</span></dt>
+  <dd>Chaque clic sur l'objet enregistre sa position et affiche l'image suivante. Placez-vous d'abord sur la
+  première image utile. On ne laisse pas de trou : pour reprendre ailleurs, annulez les derniers points.</dd>
+  <dt><span class="btn">⏹ Arrêter le pointage</span></dt>
+  <dd>Le pointage est fini : un clic sur l'image ne pointe plus, et l'onglet <em>Coordonnées</em> s'ouvre. Les
+  mesures sont gardées ; ⌖ refait toujours une mesure. <span class="btn">▶ Reprendre le pointage</span> le
+  continue.</dd>
+  <dt>Vidéo</dt>
+  <dd>Le nom de la vidéo, ses dimensions, son nombre d'images, sa durée ; et les <em>Images par seconde</em>,
+  détectées dans la vidéo. Pour un ralenti, indiquez la cadence de prise de vue (par exemple 240). « Cadence
+  variable » signale des images irrégulièrement espacées : leurs dates réelles sont utilisées.</dd>
+  <dt><span class="btn">Tout recommencer</span></dt>
+  <dd>Efface les mesures, l'échelle et le repère ; la vidéo reste ouverte. MeVCine demande confirmation s'il y a
+  des mesures.</dd>
+</dl>
+<p>Sous l'image : ⟲ ⟳ tournent la vidéo d'un quart de tour (avant l'échelle et le pointage) ; le numéro de l'image
+et la glissière ; ↶ ↷ annulent ou rétablissent le dernier point ; <span class="btn">Plein écran</span>
+(<kbd>F11</kbd>), pendant le pointage.</p>
+<h3 id="plein-ecran">Pointer en plein écran</h3>
+<p><span class="btn">Plein écran</span> donne tout l'écran à l'image. La loupe et les coordonnées restent
+affichées dans un cadre, en haut de l'image : il passe de l'autre côté quand la souris s'en approche, pour ne
+jamais cacher l'objet. La consigne est sous la loupe ; en bas, le choix de l'image,
+<span class="btn">✕ Quitter le plein écran</span> (<kbd>Échap</kbd>), qui revient à la fenêtre sans arrêter le
+pointage, et <span class="btn">⏹ Arrêter le pointage</span>. Le plein écran existe aussi en mode simplifié, à
+l'étape 4.</p>
+
+<h3 id="suivi">Le suivi automatique</h3>
+<ol class="steps">
+  <li>Indiquez le nombre d'objets, cochez <em>Suivi automatique</em>, placez-vous sur la première image utile,
+  puis <span class="btn">Démarrer le pointage</span>.</li>
+  <li>Après le message, <strong>tracez un cadre</strong> (glisser) autour de chaque objet, sur l'image affichée.
+  Le cadre doit contenir l'objet, bien contrasté, avec peu de fond.</li>
+  <li>MeVCine cherche chaque objet d'image en image, et pose les points. Le bouton rouge
+  <span class="btn">STOP</span> l'arrête ; il s'arrête tout seul à la dernière image.</li>
+</ol>
+<p>Vérifiez ensuite les points : un point mal placé se refait avec ⌖ (onglet <em>Coordonnées</em>). Le suivi
+marche bien pour un objet net, de couleur franche, sur un fond uni ; il se perd si l'objet tourne, change de
+taille ou passe devant un fond semblable.</p>
+
+<h2 id="coordonnees">Onglet Coordonnées</h2>
+<figure>
+<img src="images/expert-coordonnees.jpg" alt="L'onglet Coordonnées : une ligne d'export en haut, puis le tableau t, x, y sur toute la largeur">
+<figcaption>Le tableau des mesures, sur toute la place ; au-dessus, une ligne pour les exporter.</figcaption>
+</figure>
+<p>Le tableau prend tout l'onglet : la date <code>t</code> (zéro à la première image pointée) et les positions de chaque
+objet, en mètre (<code>x1</code>, <code>y1</code>, <code>x2</code>… avec plusieurs objets). Le bouton
+<strong>⌖</strong> d'une ligne refait cette mesure : l'onglet <em>Pointage</em> s'ouvre sur l'image, le point
+est entouré ; cliquez sur l'objet, et vous revenez au tableau.</p>
+<p>Au-dessus, sur une ligne : <span class="btn">📋 Copier pour Python</span>,
+<span class="btn">💾 Enregistrer en CSV…</span>, <span class="btn">Enregistrer le projet…</span> ; la souris posée
+sur un bouton dit ce qu'il fait. Voir
+<a href="exports.html">Exporter les mesures</a>.</p>
+
+<h2 id="trajectoires">Onglet Trajectoires</h2>
+<figure>
+<img src="images/expert-trajectoires.jpg" alt="L'onglet Trajectoires : les points de la trajectoire, le repère, les vecteurs vitesse et leur légende">
+<figcaption>La trajectoire et les vecteurs vitesse ; la légende, en bas à gauche, donne l'échelle des
+vitesses.</figcaption>
+</figure>
+<dl class="faq">
+  <dt>Trajectoire</dt>
+  <dd>Les points, le repère et, si vous cochez <em>Montrer les vecteurs vitesse</em>, une flèche par point.
+  Chaque vecteur est calculé avec les positions précédente et suivante. Leur longueur est choisie
+  automatiquement ; pour la régler, tapez le nombre de pixels pour 1 m/s dans <em>Échelle de vitesses</em> (case
+  vide : automatique ; la bulle de la case le rappelle). La légende, en bas à gauche, montre la flèche d'une vitesse ronde. <em>Près de la
+  souris</em> ne dessine que le vecteur du point survolé.</dd>
+  <dt>Chronophotographie</dt>
+  <dd>Les points sur une image de la vidéo (<em>Image n°</em> choisit laquelle), avec l'intervalle Δt entre
+  deux images, la date de l'image, et l'étalon en bleu.</dd>
+  <dt>Chronogramme</dt>
+  <dd>Les points seuls, sur fond blanc, nommés M0, M1, M2…, avec l'étalon : prêt à imprimer pour un travail sur
+  papier.</dd>
+  <dt><span class="btn">Enregistrer</span></dt>
+  <dd>Enregistre le dessin comme image (PNG ou JPEG).</dd>
+  <dt>Changement de référentiel</dt>
+  <dd>Choisissez <em>objet n° 1</em> au lieu de <em>caméra</em> : les points sont tracés dans le référentiel où
+  cet objet est immobile. <span class="btn">Voir la vidéo</span> ouvre la vidéo recadrée pour que l'objet reste
+  fixe, avec un ralenti réglable.</dd>
+</dl>
+
+<h2 id="grapheur">Onglet Grapheur</h2>
+<figure>
+<img src="images/expert-grapheur.jpg" alt="L'onglet Grapheur : x en fonction de t, points et lignes">
+<figcaption>x en fonction de t : le titre, et la légende de chaque axe avec son unité. La ligne d'aide, sous le
+graphique, rappelle les gestes : la molette zoome, un glisser déplace le graphique, un double-clic le
+recadre.</figcaption>
+</figure>
+<p>En haut, choisissez ce qu'il faut tracer (<em>Tracer</em>) et en fonction de quoi (<em>en fonction de</em>,
+<code>t</code> d'office) : <code>t</code>, <code>x</code>, <code>y</code>, la vitesse <code>|v|</code> et ses
+composantes <code>vx</code>, <code>vy</code>, l'accélération <code>|a|</code>, <code>ax</code>, <code>ay</code>.
+Le graphique, vide au départ, se trace aussitôt, avec son titre et les légendes de ses axes. Trois styles : points
+seuls, points et lignes, lignes seules. <span class="btn">Enregistrer</span> écrit le graphique en PNG, titre
+compris.</p>
+<p class="note">Les vitesses et accélérations du grapheur sont des estimations rapides, par différences entre deux
+images successives. Elles servent à explorer le mouvement et ne sont pas exportées : le calcul propre, c'est à
+vous de le faire, à partir des positions.</p>
+
+<h2 id="projets">Enregistrer, reprendre</h2>
+<p><em>Fichier › Enregistrer le projet…</em> (<kbd>Ctrl</kbd>+<kbd>S</kbd>) garde tout ;
+<em>Fichier › Ouvrir un projet…</em> reprend là où vous en étiez. Voir <a href="exports.html#projets">Projets</a>.</p>
+<nav class="voisins">
+<a class="precedent" href="echelle.html"><small>◀ Page précédente</small>L&#x27;échelle</a>
+<a class="suivant" href="exports.html"><small>Page suivante ▶</small>Exporter les mesures</a>
+</nav>
+<footer>MeVCine 0.2.0 · notice du logiciel · Rémi MEVAERE · logiciel libre, licence GPL 3 ou ultérieure</footer>
+</main>
+</div>
+</body>
+</html>

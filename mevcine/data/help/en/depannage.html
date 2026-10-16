@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — Troubleshooting</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="Contents">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">User guide · version 0.2.0</p>
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="index.html">1. Overview</a></li>
+    <li><a href="demarrer.html">2. Getting started</a></li>
+    <li><a href="simplifie.html">3. Simple mode</a></li>
+    <li><a href="echelle.html">4. The scale</a></li>
+    <li><a href="expert.html">5. Expert mode</a></li>
+    <li><a href="exports.html">6. Exporting the measurements</a></li>
+    <li><a href="tp.html">7. A lab, step by step</a></li>
+    <li><a href="video.html">8. Filming a motion</a></li>
+    <li><a href="clavier.html">9. Keyboard and mouse</a></li>
+    <li><a href="faq.html">10. Frequently asked questions</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="professeurs.html">11. In the classroom</a></li>
+    <li><a href="installer.html">12. Installing</a></li>
+    <li><a href="reglages.html">13. Settings</a></li>
+    <li><a href="depannage.html" class="current">14. Troubleshooting</a></li>
+  </ol>
+  <p class="lang"><a href="../fr/depannage.html" lang="fr" hreflang="fr">Français</a></p>
+</nav>
+
+<main>
+<header class="title">
+<h1>Troubleshooting</h1>
+<p>For teachers: MeVCine's messages, and what to do</p>
+</header>
+<p>The small problems of the lab (marking, refused length, times, export) are in the
+<a href="faq.html">frequently asked questions</a>. Here are the technical problems.</p>
+
+<h2 id="video">The video does not open</h2>
+<dl class="faq">
+  <dt>“Unreadable video: the video is in HEVC (H.265) format, which ffmpeg could not decode”</dt>
+  <dd>The ffmpeg in use does not know this format. Check that the <code>ffmpeg</code> folder is next to the program,
+  or install a complete ffmpeg. Otherwise, convert the video to H.264:
+  <pre>ffmpeg -i video.mov -c:v libx264 -pix_fmt yuv420p -an video.mp4</pre>
+  (or with HandBrake, VLC…). A conversion may lose the frame rate of a slow-motion video.</dd>
+  <dt>“the program ffprobe cannot be found: ffmpeg must be installed to read videos”</dt>
+  <dd>Neither the <code>ffmpeg</code> folder next to the program, nor an installed ffmpeg. Copy the complete MeVCine
+  folder again, or install ffmpeg (<code>sudo apt install ffmpeg</code>, <code>sudo dnf install ffmpeg</code>…).</dd>
+  <dt>“this file is not a video”, “this file contains no video”</dt>
+  <dd>The file is something else (an image, a sound), or it is damaged. Try to play it with VLC.</dd>
+  <dt>“cannot determine the number of frames”</dt>
+  <dd>The file is incomplete (interrupted transfer). Transfer it again, or re-encode it with the command above.</dd>
+  <dt>“Frame 57 unreadable” in the status bar</dt>
+  <dd>One frame of the video could not be decoded (damaged file). The others remain usable.</dd>
+  <dt>MeVCine is slow with a 4K video</dt>
+  <dd>Decoding a 4K frame takes time, especially when going back. Reduce the video:
+  <code>ffmpeg -i video.mp4 -vf scale=1920:-2 -c:v libx264 small.mp4</code>.</dd>
+</dl>
+
+<h2 id="affichage">The window does not open</h2>
+<dl class="faq">
+  <dt>“This application failed to start because no Qt platform plugin could be initialized”</dt>
+  <dd>The Qt libraries are incomplete. On Windows, the <code>platforms</code> folder (with <code>qwindows.dll</code>)
+  must be next to <code>mevcine.exe</code>: copy the complete folder again. On Linux, install the MeVCine package,
+  or use the AppImage (see <a href="installer.html#linux">Installing</a>).</dd>
+  <dt>Nothing happens on double-click (Windows)</dt>
+  <dd>SmartScreen may have blocked the program: start it again, then <em>More info › Run anyway</em>. Also check
+  that the antivirus has not quarantined it.</dd>
+  <dt>The arrows of the buttons (◀ ▶ ↶ ⟳) are squares</dt>
+  <dd>No system font contains these symbols. On Linux, install the DejaVu fonts (<code>fonts-dejavu</code> or
+  <code>dejavu-sans-fonts</code>).</dd>
+</dl>
+
+<h2 id="fichiers">Files</h2>
+<dl class="faq">
+  <dt>No window opens with <em>Open a video…</em> (Linux)</dt>
+  <dd>MeVCine uses the desktop dialogs, otherwise Qt's. Meanwhile, drag the video onto the window, or start
+  <code>./mevcine video.mp4</code>.</dd>
+  <dt>“File too old”</dt>
+  <dd>An old <code>.mecavideo</code> file from before version 7.3: its format cannot be read.</dd>
+  <dt>“Unreadable project”</dt>
+  <dd>The file is not a MeVCine project, or it is damaged.</dd>
+  <dt>“Error while saving”</dt>
+  <dd>The folder cannot be written to (write-protected stick, full network folder, permissions). Choose another
+  folder, for instance <em>Documents</em>.</dd>
+</dl>
+
+<h2 id="interne">An internal error, a crash</h2>
+<dl class="faq">
+  <dt>“MeVCine internal error”</dt>
+  <dd>The program met an unexpected error and stops. The details are in <code>mevcine-erreurs.log</code>
+  (<a href="reglages.html#configuration">configuration folder</a>): send it to
+  <a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>, with the video if possible.</dd>
+  <dt>Recovering the work in progress</dt>
+  <dd>Start MeVCine again, then <em>File › Recover previous work…</em>: the automatic backup (at most two seconds
+  before the stop) comes back.</dd>
+  <dt>“Error reading the configuration”</dt>
+  <dd>The <code>mevcine.ini</code> file is damaged: MeVCine starts from a fresh configuration. Nothing serious.</dd>
+</dl>
+<nav class="voisins">
+<a class="precedent" href="reglages.html"><small>◀ Previous page</small>Settings</a>
+</nav>
+<footer>MeVCine 0.2.0 · user guide · Rémi MEVAERE · free software, GPL 3 or later</footer>
+</main>
+</div>
+</body>
+</html>

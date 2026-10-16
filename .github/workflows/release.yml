@@ -1,0 +1,267 @@
+# Fabrique les versions distribuables des quatre logiciels, les essaie sur les systèmes visés et,
+# pour une étiquette « v… », les publie dans une « release » GitHub.
+#
+# - .deb : fabriqué sur Ubuntu 26.04 (Qt du système), essayé sur un Ubuntu 26.04 neuf ;
+# - .rpm : fabriqué sur Fedora 45 (Qt du système), essayé sur un Fedora 45 neuf ;
+# - AppImage : fabriquée sur Ubuntu 24.04 avec le Qt officiel (aqtinstall), essayée sur
+#   Ubuntu 24.04, Debian 13 et Fedora 45 ;
+# - Windows x64 : version portable (.zip) et installateur Inno Setup, compilés avec MSYS2 UCRT64 ;
+#   le programme est essayé dans son dossier, l'installateur installé puis désinstallé en silence.
+#
+# L'étiquette doit porter la version des quatre CMakeLists.txt (v0.2.0 pour 0.2.0). Lancé à la
+# main (onglet Actions), le workflow fabrique et essaie sans publier : les fichiers sont dans les
+# « artifacts » de l'exécution.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  version:
+    name: Version
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: v
+        env:
+          REF_NAME: ${{ github.ref_name }}
+          REF_TYPE: ${{ github.ref_type }}
+        run: |
+          set -eu
+          source packaging/commun.sh
+          version=$(version_de mevreg)
+          for app in mevpix mevcine mevsono; do
+            if [ "$(version_de $app)" != "$version" ]; then
+              echo "::error::$app est en version $(version_de $app), MeVReg en $version"
+              exit 1
+            fi
+          done
+          if [ "$REF_TYPE" = tag ] && [ "$REF_NAME" != "v$version" ]; then
+            echo "::error::l'étiquette $REF_NAME ne correspond pas à la version $version"
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+  deb:
+    name: .deb Ubuntu 26.04 (${{ matrix.app }})
+    needs: version
+    runs-on: ubuntu-24.04
+    container: ubuntu:26.04
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [mevpix, mevcine, mevreg, mevsono]
+    steps:
+      - uses: actions/checkout@v7
+      - name: Outils
+        run: |
+          apt-get update -qq
+          DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
+            cmake ninja-build g++ qt6-base-dev qt6-svg-dev qt6-multimedia-dev qt6-image-formats-plugins \
+            python3-dev dpkg-dev file
+      - name: Fabrication
+        run: bash packaging/paquet-linux.sh ${{ matrix.app }} deb
+      - uses: actions/upload-artifact@v7
+        with:
+          name: deb-${{ matrix.app }}
+          path: dist/*.deb
+          if-no-files-found: error
+
+  deb-essai:
+    name: Essai .deb Ubuntu 26.04 (${{ matrix.app }})
+    needs: deb
+    runs-on: ubuntu-24.04
+    container: ubuntu:26.04
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [mevpix, mevcine, mevreg, mevsono]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          name: deb-${{ matrix.app }}
+          path: dist
+      - run: bash packaging/essai-linux.sh ${{ matrix.app }} dist/*.deb
+
+  rpm:
+    name: .rpm Fedora 45 (${{ matrix.app }})
+    needs: version
+    runs-on: ubuntu-24.04
+    container: fedora:45
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [mevpix, mevcine, mevreg, mevsono]
+    steps:
+      - uses: actions/checkout@v7
+      - name: Outils
+        run: |
+          dnf install -y -q cmake ninja-build gcc-c++ qt6-qtbase-devel qt6-qtsvg-devel qt6-qtmultimedia-devel \
+            python3-devel rpm-build
+      - name: Fabrication
+        run: bash packaging/paquet-linux.sh ${{ matrix.app }} rpm
+      - uses: actions/upload-artifact@v7
+        with:
+          name: rpm-${{ matrix.app }}
+          path: dist/*.rpm
+          if-no-files-found: error
+
+  rpm-essai:
+    name: Essai .rpm Fedora 45 (${{ matrix.app }})
+    needs: rpm
+    runs-on: ubuntu-24.04
+    container: fedora:45
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [mevpix, mevcine, mevreg, mevsono]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          name: rpm-${{ matrix.app }}
+          path: dist
+      - run: bash packaging/essai-linux.sh ${{ matrix.app }} dist/*.rpm
+
+  appimage:
+    name: AppImage (${{ matrix.app }})
+    needs: version
+    runs-on: ubuntu-24.04
+    container: ubuntu:24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [mevpix, mevcine, mevreg, mevsono]
+    steps:
+      - uses: actions/checkout@v7
+      - name: Outils
+        run: |
+          apt-get update -qq
+          DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
+            cmake ninja-build g++-14 python3-dev python3-venv curl ca-certificates file xz-utils \
+            libgl-dev libegl-dev libxkbcommon-dev libfontconfig1-dev libglib2.0-0t64 libdbus-1-3 \
+            libxcb-cursor0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-render-util0 libxcb-shape0 \
+            libxkbcommon-x11-0 libxcb-randr0 libxcb-xfixes0 libxcb-sync1 libxcb-xkb1 libxcb-xinput0 libegl1 \
+            libwayland-cursor0 libwayland-egl1 libwayland-client0 libfreetype6 libpulse0 libxrandr2 \
+            libcups2t64 libgtk-3-0t64
+      - uses: actions/cache@v6
+        with:
+          path: build-paquet/qt
+          key: qt-6.10.3-linux-gcc64
+      - name: Fabrication
+        run: bash packaging/appimage.sh ${{ matrix.app }}
+      - uses: actions/upload-artifact@v7
+        with:
+          name: appimage-${{ matrix.app }}
+          path: dist/*.AppImage
+          if-no-files-found: error
+
+  appimage-essai:
+    name: Essai AppImage ${{ matrix.systeme }} (${{ matrix.app }})
+    needs: appimage
+    runs-on: ubuntu-24.04
+    container: ${{ matrix.systeme }}
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [mevpix, mevcine, mevreg, mevsono]
+        systeme: ["ubuntu:24.04", "debian:13", "fedora:45"]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          name: appimage-${{ matrix.app }}
+          path: dist
+      - run: bash packaging/essai-linux.sh ${{ matrix.app }} dist/*.AppImage
+
+  windows:
+    name: Windows x64 (${{ matrix.app.nom }})
+    needs: version
+    runs-on: windows-2025
+    strategy:
+      fail-fast: false
+      matrix:
+        app:
+          - { id: mevpix, nom: MeVPix }
+          - { id: mevcine, nom: MeVCine }
+          - { id: mevreg, nom: MeVReg }
+          - { id: mevsono, nom: MeVSono }
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Inno Setup
+        shell: pwsh
+        run: choco install innosetup --no-progress -y
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          cache: true
+          install: zip unzip curl
+          pacboy: >-
+            toolchain:p cmake:p ninja:p qt6-base:p qt6-svg:p qt6-multimedia:p qt6-imageformats:p
+            qt6-translations:p python:p
+      - name: Fabrication et essai de la version portable
+        run: bash packaging/windows.sh ${{ matrix.app.id }}
+      - name: Essai de l'installateur (installation et désinstallation silencieuses)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $setup = Get-ChildItem dist\*-setup.exe | Select-Object -First 1
+          $p = Start-Process -FilePath $setup.FullName -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/LOG=installation.log' -Wait -PassThru
+          if ($p.ExitCode -ne 0) { Get-Content installation.log; exit 1 }
+          $dossier = Join-Path $env:ProgramFiles 'MeVSuite\${{ matrix.app.nom }}'
+          $exe = Join-Path $dossier '${{ matrix.app.id }}.exe'
+          if (-not (Test-Path $exe)) { Get-Content installation.log; throw "programme absent : $exe" }
+          $raccourci = Join-Path $env:ProgramData 'Microsoft\Windows\Start Menu\Programs\MeVSuite\${{ matrix.app.nom }}.lnk'
+          if (-not (Test-Path $raccourci)) { throw "raccourci absent : $raccourci" }
+          if ('${{ matrix.app.id }}' -eq 'mevreg') {
+            $t = Start-Process -FilePath $exe -ArgumentList '--selftest' -Wait -PassThru -NoNewWindow -RedirectStandardOutput selftest.txt
+            Get-Content selftest.txt
+            if ($t.ExitCode -ne 0) { throw 'Python intégré en panne' }
+          }
+          $u = Start-Process -FilePath (Join-Path $dossier 'unins000.exe') -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART' -Wait -PassThru
+          Start-Sleep -Seconds 5
+          if (Test-Path $exe) { throw 'désinstallation incomplète' }
+          Write-Output "installation et désinstallation réussies"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: windows-${{ matrix.app.id }}
+          path: |
+            dist/*.zip
+            dist/*-setup.exe
+          if-no-files-found: error
+
+  publication:
+    name: Publication
+    if: github.ref_type == 'tag'
+    needs: [version, deb-essai, rpm-essai, appimage-essai, windows]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.version.outputs.version }}
+        run: |
+          set -eu
+          ls -l dist
+          (cd dist && sha256sum * > SHA256SUMS.txt)
+          sed "s/{{version}}/$VERSION/g" packaging/notes-de-version.md > notes.md
+          gh release create "v$VERSION" dist/* --title "MevSuite $VERSION" --notes-file notes.md --verify-tag

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — Un TP pas à pas</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="Sommaire">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">Notice d&#x27;utilisation · version 0.2.0</p>
+  <p class="group">Pour les élèves</p>
+  <ol>
+    <li><a href="index.html">1. Présentation</a></li>
+    <li><a href="demarrer.html">2. Démarrer</a></li>
+    <li><a href="simplifie.html">3. Mode simplifié</a></li>
+    <li><a href="echelle.html">4. L&#x27;échelle</a></li>
+    <li><a href="expert.html">5. Mode expert</a></li>
+    <li><a href="exports.html">6. Exporter les mesures</a></li>
+    <li><a href="tp.html" class="current">7. Un TP pas à pas</a></li>
+    <li><a href="video.html">8. Filmer un mouvement</a></li>
+    <li><a href="clavier.html">9. Clavier et souris</a></li>
+    <li><a href="faq.html">10. Questions fréquentes</a></li>
+  </ol>
+  <p class="group">Pour les professeurs</p>
+  <ol>
+    <li><a href="professeurs.html">11. En classe</a></li>
+    <li><a href="installer.html">12. Installer</a></li>
+    <li><a href="reglages.html">13. Réglages</a></li>
+    <li><a href="depannage.html">14. Dépannage</a></li>
+  </ol>
+  <p class="lang"><a href="../en/tp.html" lang="en" hreflang="en">English</a></p>
+</nav>
+
+<main>
+<header class="title">
+<h1>Un TP pas à pas</h1>
+<p>Le principe d'inertie, avec la vidéo d'un palet sur une table</p>
+</header>
+
+<p><strong>La question :</strong> un palet glisse sur une table presque sans frottement. Son mouvement est-il
+rectiligne et uniforme ? Nous allons le mesurer avec MeVCine, puis le vérifier avec Python. Durée : une
+vingtaine de minutes.</p>
+
+<h2 id="mesurer">1. Mesurer avec MeVCine</h2>
+<ol class="steps">
+  <li>Lancez MeVCine, choisissez <strong>Mode simplifié</strong>, puis <span class="btn">📂 Ouvrir une
+  vidéo…</span> et choisissez la vidéo donnée par votre professeur (ici <code>Principe_inertie.avi</code> : un
+  palet sur une table, avec une règle jaune de 85 cm).</li>
+  <li><strong>Origine</strong> : cliquez sur l'extrémité gauche de la règle jaune. <span class="btn">Suivant ▶</span></li>
+  <li><strong>Axes</strong> : choisissez « x vers la droite, y vers le haut ». <span class="btn">Suivant ▶</span></li>
+  <li><strong>Échelle</strong> : <span class="btn">Sélectionner l'étalon</span>, cliquez sur les deux bouts de
+  la règle jaune ; tapez <code>85</code>, choisissez <code>cm</code>, <span class="btn">Valider</span>.
+  <span class="btn">Suivant ▶</span></li>
+  <li><strong>Pointage</strong> : avec la glissière, allez à la première image où le palet a quitté la main
+  (vers l'image 3). Cliquez sur le <strong>centre</strong> du palet, image après image, en regardant la loupe,
+  jusqu'à ce qu'il sorte de l'image. <span class="btn">Terminer le pointage ▶</span></li>
+  <li><strong>Tableau</strong> : vérifiez les valeurs ; refaites avec ⌖ une mesure qui paraît fausse.
+  <span class="btn">Suivant ▶</span></li>
+  <li><strong>Export</strong> : <span class="btn">📋 Copier pour Python</span>.</li>
+</ol>
+<p class="tip">Avant d'exporter, passez en mode expert (menu <em>Mode</em>), onglet
+<em>Trajectoires</em>, et cochez <em>Montrer les vecteurs vitesse</em> : des flèches de même longueur, dans la même
+direction, annoncent déjà un mouvement rectiligne uniforme. Revenez ensuite en
+mode simplifié : rien n'est perdu.</p>
+
+<h2 id="python">2. Exploiter avec Python</h2>
+<p>Collez le texte copié (<kbd>Ctrl</kbd>+<kbd>V</kbd>) au début d'un programme, puis ajoutez :</p>
+<pre>import matplotlib.pyplot as plt
+
+# vitesse entre deux images successives, au milieu de chaque intervalle
+t_milieu = (lst_t[1:] + lst_t[:-1]) / 2
+vx = np.diff(lst_x) / np.diff(lst_t)
+vy = np.diff(lst_y) / np.diff(lst_t)
+print("vx moyenne :", vx.mean(), "m/s")
+
+# la droite qui passe au plus près des points x(t)
+a, b = np.polyfit(lst_t, lst_x, 1)
+print(f"x(t) ≈ {a:.3f} t + {b:.3f}")
+
+plt.subplot(1, 2, 1)
+plt.plot(lst_t, lst_x, "o", lst_t, a * lst_t + b, "-")
+plt.xlabel("t (s)"); plt.ylabel("x (m)")
+plt.subplot(1, 2, 2)
+plt.plot(t_milieu, vx, "o", t_milieu, vy, "s")
+plt.xlabel("t (s)"); plt.ylabel("vitesse (m/s)")
+plt.tight_layout()
+plt.show()</pre>
+
+<h2 id="conclure">3. Conclure</h2>
+<ul>
+  <li>Les points <code>y(t)</code> sont presque constants : la trajectoire est une droite parallèle à l'axe x.</li>
+  <li>Les points <code>x(t)</code> sont alignés : x varie de la même quantité à chaque intervalle de temps, la
+  vitesse est constante. Son signe dépend du sens choisi pour l'axe x.</li>
+  <li>Les vitesses calculées image par image ne sont pas toutes égales : de petits écarts viennent du pointage (par
+  exemple, un pixel d'erreur sur un déplacement de 15 pixels entre deux images, c'est près de 7 %). Plus on vise
+  le même point du palet, plus ces écarts sont faibles.</li>
+</ul>
+<p class="note">Pour aller plus loin : déplacez l'origine, ou changez le sens de x (étapes 1 et 2), et regardez ce
+qui change dans le tableau. La forme du mouvement, elle, ne dépend pas du repère.</p>
+<nav class="voisins">
+<a class="precedent" href="exports.html"><small>◀ Page précédente</small>Exporter les mesures</a>
+<a class="suivant" href="video.html"><small>Page suivante ▶</small>Filmer un mouvement</a>
+</nav>
+<footer>MeVCine 0.2.0 · notice du logiciel · Rémi MEVAERE · logiciel libre, licence GPL 3 ou ultérieure</footer>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<header class="title">
+<h1>MeVCine</h1>
+<p>Mesurer un mouvement filmé — la notice, pour les élèves d'abord, pour les professeurs ensuite</p>
+</header>
+
+<p>MeVCine sert à <strong>mesurer un mouvement filmé</strong> : la chute d'une balle, un palet qui glisse, un
+cycliste qui passe… Vous ouvrez la vidéo, vous choisissez un repère (une origine et le sens des axes) et une
+échelle (un objet de longueur connue), puis vous cliquez sur l'objet, image après image. MeVCine donne alors,
+pour chaque image, la date <code>t</code> et les coordonnées <code>x</code> et <code>y</code> de l'objet. Vous
+les copiez dans un programme Python, ou vous les enregistrez dans un fichier pour un tableur.</p>
+
+<p class="note"><strong>C'est vous qui faites la physique.</strong> MeVCine mesure des dates et des positions,
+rien d'autre : il ne demande ni la masse ni g. Les vitesses, les accélérations, les énergies, c'est votre
+travail, par exemple dans un programme Python.</p>
+
+<h2 id="etapes">Six étapes</h2>
+<ol class="steps">
+  <li><strong>Ouvrir une vidéo</strong> : la vôtre (téléphone, appareil photo), ou celle de votre professeur.</li>
+  <li><strong>Placer l'origine</strong> du repère : un clic sur l'image, ou un glisser.</li>
+  <li><strong>Choisir le sens des axes</strong> x et y, parmi quatre repères dessinés.</li>
+  <li><strong>Définir l'échelle</strong> : tracer un étalon sur l'image, puis taper sa longueur (en mm, cm ou m).</li>
+  <li><strong>Pointer l'objet</strong> image après image : le tableau des mesures se remplit.</li>
+  <li><strong>Exporter</strong> : copier pour Python, ou enregistrer en CSV.</li>
+</ol>
+<p>Le <a href="simplifie.html">mode simplifié</a> suit ces étapes une par une, avec une consigne à chaque fois.
+Pour débuter, c'est lui qu'il faut choisir.</p>
+
+<h2 id="fenetre">La fenêtre</h2>
+<figure class="ecran">
+<svg viewBox="0 0 1280 800" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, sans-serif" role="img" aria-label="La fenêtre de MeVCine en mode simplifié, à l'étape du pointage, avec des pastilles numérotées">
+  <image href="images/pointage.jpg" width="1280" height="800"/>
+  <g font-weight="700" font-size="22" text-anchor="middle">
+    <circle cx="240" cy="17" r="16" fill="#0b5cad"/><text x="240" y="25" fill="#fff">1</text>
+    <circle cx="1200" cy="16" r="16" fill="#0b5cad"/><text x="1200" y="24" fill="#fff">2</text>
+    <circle cx="594" cy="39" r="16" fill="#0b5cad"/><text x="594" y="47" fill="#fff">3</text>
+    <circle cx="235" cy="178" r="16" fill="#0b5cad"/><text x="235" y="186" fill="#fff">4</text>
+    <circle cx="300" cy="255" r="16" fill="#0b5cad"/><text x="300" y="263" fill="#fff">5</text>
+    <circle cx="130" cy="750" r="16" fill="#0b5cad"/><text x="130" y="758" fill="#fff">6</text>
+    <circle cx="365" cy="91" r="16" fill="#0b5cad"/><text x="365" y="99" fill="#fff">7</text>
+    <circle cx="700" cy="728" r="16" fill="#0b5cad"/><text x="700" y="736" fill="#fff">8</text>
+    <circle cx="1135" cy="73" r="16" fill="#0b5cad"/><text x="1135" y="81" fill="#fff">9</text>
+    <circle cx="300" cy="785" r="16" fill="#0b5cad"/><text x="300" y="793" fill="#fff">10</text>
+  </g>
+</svg>
+<figcaption>Le mode simplifié, à l'étape du pointage, avec la vidéo <code>Principe_inertie.avi</code>
+(<a href="images/pointage.jpg">image en grand</a>).</figcaption>
+</figure>
+<ol class="legend">
+  <li><span class="num">1</span><strong>Les menus</strong> : <em>Fichier</em> (ouvrir une vidéo, enregistrer le
+  projet…), <em>Édition</em>, <em>Mode</em> (simplifié ou expert, à tout moment, sans perdre les mesures) et
+  <em>Aide</em> (cette notice, <kbd>F1</kbd>).</li>
+  <li><span class="num">2</span><strong>Le thème et la langue</strong> : le soleil (thème clair) ou la lune (thème
+  sombre), et le drapeau de la langue. Un clic passe à l'autre thème, ou à l'autre langue.</li>
+  <li><span class="num">3</span><strong>Les six étapes</strong> du mode simplifié. Une coche ✔ marque les étapes
+  faites ; un clic sur une étape y revient.</li>
+  <li><span class="num">4</span><strong>La loupe</strong> grossit l'image autour de la souris. À côté, les
+  <strong>coordonnées</strong> du point visé, dans votre repère : en pixel (px), puis en mètre (m) une fois
+  l'échelle définie.</li>
+  <li><span class="num">5</span><strong>La consigne</strong> de l'étape : ce qu'il faut faire, et ses
+  boutons.</li>
+  <li><span class="num">6</span><span class="btn">◀ Précédent</span> et <span class="btn">Suivant ▶</span> :
+  changer d'étape. Ils restent toujours visibles.</li>
+  <li><span class="num">7</span><strong>L'image de la vidéo</strong>, avec le repère (en vert), l'étalon et
+  sa longueur, et vos points (croix rouges).</li>
+  <li><span class="num">8</span><strong>Le choix de l'image</strong> : le numéro, la glissière, et les boutons
+  ↶ ↷ pour annuler ou rétablir le dernier point. <span class="btn">Plein écran</span> : pour pointer, l'image
+  occupe tout l'écran, la loupe reste affichée (<kbd>Échap</kbd> pour revenir).</li>
+  <li><span class="num">9</span><strong>Le tableau des mesures</strong> : t, x, y pour chaque image pointée,
+  et le bouton ⌖ pour refaire une mesure.</li>
+  <li><span class="num">10</span><strong>La barre d'état</strong> : à gauche, ce qu'il faut faire ensuite, ou
+  ce qui vient de se passer (en vert une réussite, en orange une action attendue, en rouge un problème) ; à
+  droite, la vidéo ouverte, l'image affichée et le mode.</li>
+</ol>
+<p class="tip"><strong>Perdu ?</strong> Lisez la barre d'état, tout en bas : elle dit toujours ce qu'il faut
+faire ensuite. Et la touche <kbd>F1</kbd> ouvre la page de cette notice qui correspond à ce que vous faites.</p>
+
+<h2 id="modes">Deux modes de travail</h2>
+<table>
+  <tr><th>Mode simplifié</th><td>Les six étapes, une par une, pour un seul objet. Pour débuter, et pour la plupart
+  des TP.</td></tr>
+  <tr><th>Mode expert</th><td>Toutes les fonctions, dans quatre onglets : <em>Pointage</em>,
+  <em>Coordonnées</em>, <em>Trajectoires</em>, <em>Grapheur</em>. Plusieurs objets, suivi automatique,
+  vecteurs vitesse, chronophotographie, changement de référentiel, graphiques.</td></tr>
+</table>
+<p>Le menu <em>Mode</em> change de mode à tout moment, <strong>sans perdre les mesures</strong>. Le mode simplifié ne suit qu'un objet :
+si vos mesures en comptent plusieurs, MeVCine propose de ne garder que l'objet 1.</p>
+
+<h2 id="sommaire">Les pages de la notice</h2>
+<h3>Pour les élèves</h3>
+<ul class="cartes">
+  <li><a href="demarrer.html">Démarrer</a><p>Lancer MeVCine, choisir le mode, ouvrir une vidéo ou un projet,
+  le thème et la langue.</p></li>
+  <li><a href="simplifie.html">Mode simplifié</a><p>Les six étapes en détail, et comment refaire une
+  mesure.</p></li>
+  <li><a href="echelle.html">L'échelle</a><p>Choisir un bon étalon, le tracer, écrire sa longueur et son
+  unité.</p></li>
+  <li><a href="expert.html">Mode expert</a><p>Les quatre onglets, plusieurs objets, le suivi automatique, les
+  vecteurs vitesse.</p></li>
+  <li><a href="exports.html">Exporter les mesures</a><p>La copie pour Python, le fichier CSV, les projets, la
+  sauvegarde automatique.</p></li>
+  <li><a href="tp.html">Un TP pas à pas</a><p>Le principe d'inertie avec la vidéo d'un palet, de l'ouverture au
+  programme Python.</p></li>
+  <li><a href="video.html">Filmer un mouvement</a><p>Bien filmer avec un téléphone, transférer la vidéo, les
+  ralentis.</p></li>
+  <li><a href="clavier.html">Clavier et souris</a><p>Les raccourcis, et les gestes sur l'image.</p></li>
+  <li><a href="faq.html">Questions fréquentes</a><p>Le clic ne pointe rien, la longueur est refusée, les dates
+  paraissent fausses…</p></li>
+</ul>
+<h3>Pour les professeurs</h3>
+<ul class="cartes">
+  <li><a href="professeurs.html">En classe</a><p>Déploiement en salle, choix pédagogiques, séance type, exemple
+  Python, contact et licence.</p></li>
+  <li><a href="installer.html">Installer</a><p>Windows, Linux, le dossier du programme, la ligne de
+  commande.</p></li>
+  <li><a href="reglages.html">Réglages</a><p>Le fichier de configuration, les dossiers, les variables
+  d'environnement.</p></li>
+  <li><a href="depannage.html">Dépannage</a><p>Les messages du programme et quoi faire.</p></li>
+</ul>

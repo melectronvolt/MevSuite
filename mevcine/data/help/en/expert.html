@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — Expert mode</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="Contents">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">User guide · version 0.2.0</p>
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="index.html">1. Overview</a></li>
+    <li><a href="demarrer.html">2. Getting started</a></li>
+    <li><a href="simplifie.html">3. Simple mode</a></li>
+    <li><a href="echelle.html">4. The scale</a></li>
+    <li><a href="expert.html" class="current">5. Expert mode</a></li>
+    <li><a href="exports.html">6. Exporting the measurements</a></li>
+    <li><a href="tp.html">7. A lab, step by step</a></li>
+    <li><a href="video.html">8. Filming a motion</a></li>
+    <li><a href="clavier.html">9. Keyboard and mouse</a></li>
+    <li><a href="faq.html">10. Frequently asked questions</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="professeurs.html">11. In the classroom</a></li>
+    <li><a href="installer.html">12. Installing</a></li>
+    <li><a href="reglages.html">13. Settings</a></li>
+    <li><a href="depannage.html">14. Troubleshooting</a></li>
+  </ol>
+  <p class="lang"><a href="../fr/expert.html" lang="fr" hreflang="fr">Français</a></p>
+</nav>
+
+<main>
+<header class="title">
+<h1>Expert mode</h1>
+<p>All the features, in four tabs</p>
+</header>
+
+<p>Expert mode gives access to everything: several objects, automatic tracking, trajectories, velocity vectors,
+chronophotography, change of reference frame, grapher. You switch to it with the <em>Mode › Expert mode</em>
+menu; the measurements made in simple mode are kept. The four tabs, in the order of the work:
+<strong>1. Marking</strong>, <strong>2. Coordinates</strong>, <strong>3. Trajectories</strong>,
+<strong>4. Grapher</strong>. The last three open once marking has started.</p>
+
+<h2 id="pointage">Marking tab</h2>
+<figure>
+<img src="images/expert-pointage.jpg" alt="The Marking tab: at the top the Origin, Axes, Scale bar; on the left the magnifier, the tracked objects and the video; in the middle the frame">
+<figcaption>At the top, the axes in three steps; on the left, the magnifier, marking and the video.</figcaption>
+</figure>
+<h3 id="repere">At the top: the axes, in three steps</h3>
+<dl class="faq">
+  <dt>1. Origin — <span class="btn">Place the origin</span></dt>
+  <dd>Then click on the frame where you want it (pressing the button again, or <kbd>Esc</kbd>, gives up). Before
+  marking, the origin can also be <strong>dragged</strong>. Possible even after marking: the measurements are
+  recomputed.</dd>
+  <dt>2. Axes — four small sets of axes</dt>
+  <dd>A click chooses the direction of x and y; the chosen one is outlined. With the mouse on a button, its
+  direction is given in words (“x to the right, y upward”).</dd>
+  <dt>3. Scale — <span class="btn">Set the scale</span></dt>
+  <dd>Draw the reference on the frame (two clicks, or a drag), then give its length and unit (mm, cm or m) in the
+  small window. Next to the button: “85 cm for 353 px”, or “not set: the measurements are in pixels”. See
+  <a href="echelle.html">The scale</a>.</dd>
+</dl>
+<p>While choosing the origin or the reference, the instruction shows below these buttons, in orange, with
+<span class="btn">Cancel</span>.</p>
+<h3 id="gauche">On the left: the magnifier, the objects, the video</h3>
+<dl class="faq">
+  <dt>Magnifier and coordinates</dt>
+  <dd>The frame enlarged around the mouse, and the coordinates of the point under the cursor, in px and in m.</dd>
+  <dt>Objects to track</dt>
+  <dd>The number of objects (1 to 10), before starting. With several objects, you mark object 1, then object 2… on
+  each frame: the magnifier's title says which one is expected, and each object has its own colour.</dd>
+  <dt>Automatic tracking</dt>
+  <dd>Tick it before starting so that MeVCine follows the objects by itself (below).</dd>
+  <dt><span class="btn">Start marking</span></dt>
+  <dd>Each click on the object records its position and shows the next frame. First go to the first useful frame.
+  No gaps are allowed: to resume elsewhere, undo the last points.</dd>
+  <dt><span class="btn">⏹ Stop marking</span></dt>
+  <dd>Marking is over: a click on the image no longer marks, and the <em>Coordinates</em> tab opens. The
+  measurements are kept; ⌖ still redoes a measurement. <span class="btn">▶ Resume marking</span> goes on.</dd>
+  <dt>Video</dt>
+  <dd>The name of the video, its size, its number of frames, its duration; and the <em>Frames per second</em>,
+  detected in the video. For slow motion, enter the capture frame rate (for instance 240). “Variable frame rate”
+  means the frames are not evenly spaced: their real times are used.</dd>
+  <dt><span class="btn">Start over</span></dt>
+  <dd>Erases the measurements, the scale and the axes; the video stays open. MeVCine asks for confirmation if there
+  are measurements.</dd>
+</dl>
+<p>Under the frame: ⟲ ⟳ rotate the video by a quarter turn (before the scale and marking); the frame number and the
+slider; ↶ ↷ undo or redo the last point; <span class="btn">Full screen</span> (<kbd>F11</kbd>), while marking.</p>
+<h3 id="plein-ecran">Marking in full screen</h3>
+<p><span class="btn">Full screen</span> gives the whole screen to the image. The magnifier and the coordinates stay
+visible in a frame at the top of the image: it moves to the other side when the mouse comes near, so that it never
+hides the object. The instruction is under the magnifier; at the bottom, the choice of the frame,
+<span class="btn">✕ Leave full screen</span> (<kbd>Esc</kbd>), which goes back to the window without stopping the
+marking, and <span class="btn">⏹ Stop marking</span>. Full screen also exists in simple mode, at step 4.</p>
+
+<h3 id="suivi">Automatic tracking</h3>
+<ol class="steps">
+  <li>Enter the number of objects, tick <em>Automatic tracking</em>, go to the first useful frame, then
+  <span class="btn">Start marking</span>.</li>
+  <li>After the message, <strong>draw a box</strong> (drag) around each object, on the frame shown. The box should
+  contain the object, well contrasted, with little background.</li>
+  <li>MeVCine looks for each object from frame to frame, and places the points. The red
+  <span class="btn">STOP</span> button stops it; it stops by itself at the last frame.</li>
+</ol>
+<p>Then check the points: a misplaced point is redone with ⌖ (<em>Coordinates</em> tab). Tracking works well for a
+sharp object, with a clear colour, on a plain background; it gets lost if the object rotates, changes size or
+passes in front of a similar background.</p>
+
+<h2 id="coordonnees">Coordinates tab</h2>
+<figure>
+<img src="images/expert-coordonnees.jpg" alt="The Coordinates tab: a line of exports at the top, then the t, x, y table across the whole width">
+<figcaption>The table of measurements, taking all the room; above it, a line to export them.</figcaption>
+</figure>
+<p>The table takes the whole tab: the time <code>t</code> (zero at the first marked frame) and the positions of each
+object, in metres (<code>x1</code>, <code>y1</code>, <code>x2</code>… with several objects). The <strong>⌖</strong>
+button of a row redoes that measurement: the <em>Marking</em> tab opens on the frame, the point is circled; click on
+the object, and you come back to the table.</p>
+<p>Above it, on one line: <span class="btn">📋 Copy for Python</span>, <span class="btn">💾 Save as CSV…</span>,
+<span class="btn">Save the project…</span>; the mouse resting on a button says what it does. See
+<a href="exports.html">Exporting the measurements</a>.</p>
+
+<h2 id="trajectoires">Trajectories tab</h2>
+<figure>
+<img src="images/expert-trajectoires.jpg" alt="The Trajectories tab: the points of the trajectory, the axes, the velocity vectors and their legend">
+<figcaption>The trajectory and the velocity vectors; the legend, bottom left, gives the velocity scale.</figcaption>
+</figure>
+<dl class="faq">
+  <dt>Trajectory</dt>
+  <dd>The points, the axes and, if you tick <em>Show the velocity vectors</em>, one arrow per point. Each vector is
+  computed from the previous and next positions. Their length is chosen automatically; to set it, type the number
+  of pixels for 1 m/s in <em>Velocity scale</em> (empty box: automatic; the tooltip of the box recalls it). The legend, bottom left, shows the arrow of
+  a round speed. <em>Near the mouse</em> draws only the vector of the point under the mouse.</dd>
+  <dt>Chronophotography</dt>
+  <dd>The points on a frame of the video (<em>Frame no.</em> chooses which), with the interval Δt between two frames,
+  the time of the frame, and the reference in blue.</dd>
+  <dt>Motion diagram</dt>
+  <dd>The points alone, on a white background, named M0, M1, M2…, with the reference: ready to print for work on
+  paper.</dd>
+  <dt><span class="btn">Save</span></dt>
+  <dd>Saves the drawing as an image (PNG or JPEG).</dd>
+  <dt>Change of reference frame</dt>
+  <dd>Choose <em>object no. 1</em> instead of <em>camera</em>: the points are drawn in the frame of reference where
+  this object is still. <span class="btn">Watch the video</span> opens the video cropped so that the object stays
+  still, with an adjustable slow motion.</dd>
+</dl>
+
+<h2 id="grapheur">Grapher tab</h2>
+<figure>
+<img src="images/expert-grapheur.jpg" alt="The Grapher tab: x versus t, points and lines">
+<figcaption>x versus t: the title, and the label of each axis with its unit. The help line, under the graph,
+recalls the gestures: the wheel zooms, a drag moves the graph, a double-click fits it again.</figcaption>
+</figure>
+<p>At the top, choose what to plot (<em>Plot</em>) and against what (<em>versus</em>, <code>t</code> by default):
+<code>t</code>, <code>x</code>, <code>y</code>, the speed <code>|v|</code> and its components <code>vx</code>,
+<code>vy</code>, the acceleration <code>|a|</code>, <code>ax</code>, <code>ay</code>. The graph, empty at first, is
+drawn at once, with its title and the labels of its axes. Three styles: points only, points and lines, lines only.
+<span class="btn">Save</span> writes the graph as PNG, title included.</p>
+<p class="note">The velocities and accelerations of the grapher are quick estimates, from differences between two
+successive frames. They are for exploring the motion and are not exported: the proper calculation is yours to do,
+from the positions.</p>
+
+<h2 id="projets">Saving, resuming</h2>
+<p><em>File › Save the project…</em> (<kbd>Ctrl</kbd>+<kbd>S</kbd>) keeps everything; <em>File › Open a
+project…</em> resumes where you were. See <a href="exports.html#projets">Projects</a>.</p>
+<nav class="voisins">
+<a class="precedent" href="echelle.html"><small>◀ Previous page</small>The scale</a>
+<a class="suivant" href="exports.html"><small>Next page ▶</small>Exporting the measurements</a>
+</nav>
+<footer>MeVCine 0.2.0 · user guide · Rémi MEVAERE · free software, GPL 3 or later</footer>
+</main>
+</div>
+</body>
+</html>

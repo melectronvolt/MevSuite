@@ -1,0 +1,16 @@
+== Pour les élèves
+index	Présentation
+demarrer	Démarrer
+simplifie	Mode simplifié
+echelle	L'échelle
+expert	Mode expert
+exports	Exporter les mesures
+tp	Un TP pas à pas
+video	Filmer un mouvement
+clavier	Clavier et souris
+faq	Questions fréquentes
+== Pour les professeurs
+professeurs	En classe
+installer	Installer
+reglages	Réglages
+depannage	Dépannage

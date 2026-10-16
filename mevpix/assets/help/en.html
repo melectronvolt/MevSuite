@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVPix — User guide</title>
+<link rel="stylesheet" href="help.css">
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="Contents">
+  <p class="brand">MeVPix</p>
+  <p class="version">User guide · version {{version}}</p>
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="#presentation">1. What is MeVPix for?</a></li>
+    <li><a href="#fenetre">2. The window</a></li>
+    <li><a href="#etapes">3. Measuring in three steps</a></li>
+    <li><a href="#precision">4. Measuring well</a></li>
+    <li><a href="#profil">5. The intensity profile</a></li>
+    <li><a href="#exemple">6. Example: diffraction</a></li>
+    <li><a href="#raccourcis">7. Mouse and keyboard</a></li>
+    <li><a href="#problemes">8. Troubleshooting</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="#installer">9. Installing and using in class</a></li>
+    <li><a href="#reglages">10. Settings</a></li>
+    <li><a href="#apropos">11. Errors, contact and licence</a></li>
+  </ol>
+  <p class="lang"><a href="fr.html">Version française</a></p>
+</nav>
+
+<main>
+<header class="title">
+  <h1>MeVPix — User guide</h1>
+  <p>Measure lengths · version {{version}}</p>
+</header>
+
+<section id="presentation">
+<h2>1. What is MeVPix for?</h2>
+<p>MeVPix <strong>measures lengths on an image</strong>: a photo taken with a phone, a microscope
+image, a map… It works in two stages:</p>
+<ol>
+  <li>you show the program an object in the image whose length you know: the
+  <strong>reference</strong> (for example 2 cm of graph paper);</li>
+  <li>you draw segments on the image: MeVPix gives their <strong>real length</strong>.</li>
+</ol>
+<p>In practical work, it is used for instance to measure the central spot of a diffraction pattern,
+the fringe spacing of an interference pattern, the size of a cell under the microscope or a distance
+on a map.</p>
+<p>MeVPix also draws the <strong>intensity profile</strong>: the curve of the brightness along a
+line. The dark and bright fringes of an optics pattern are located there far more precisely than
+by eye.</p>
+</section>
+
+<section id="fenetre">
+<h2>2. The window</h2>
+<figure class="ecran">
+<svg viewBox="0 0 1280 800" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, sans-serif">
+  <image href="fenetre-en.jpg" width="1280" height="800"/>
+  <g font-weight="700" font-size="22" text-anchor="middle">
+    <circle cx="875" cy="39" r="16" fill="#0b5cad"/><text x="875" y="47" fill="#fff">1</text>
+    <circle cx="1200" cy="16" r="16" fill="#0b5cad"/><text x="1200" y="24" fill="#fff">2</text>
+    <circle cx="268" cy="74" r="16" fill="#0b5cad"/><text x="268" y="82" fill="#fff">3</text>
+    <circle cx="1245" cy="90" r="16" fill="#0b5cad"/><text x="1245" y="98" fill="#fff">4</text>
+    <circle cx="930" cy="783" r="16" fill="#0b5cad"/><text x="930" y="791" fill="#fff">5</text>
+  </g>
+</svg>
+<figcaption>MeVPix after the calibration and a first measurement (<a href="fenetre-en.jpg">full-size image</a>).</figcaption>
+</figure>
+<ol class="legend">
+  <li><span class="num">1</span><strong>Toolbar</strong>: open an image, choose the tool
+  (<span class="btn">📏 Calibrate</span>, <span class="btn">📐 Measure</span>,
+  <span class="btn">📈 Intensity profile</span>), see the whole image again
+  (<span class="btn">🔍 Fit to window</span>); then the scale of the image.</li>
+  <li><span class="num">2</span><strong>Theme and language</strong>: the sun (light theme) or the
+  moon (dark theme), and the flag of the language. A click switches to the other theme or the other
+  language.</li>
+  <li><span class="num">3</span><strong>Tool panel</strong>: what to do, then the results (scale,
+  table of measurements, profile cursors).</li>
+  <li><span class="num">4</span><strong>The image</strong>, with the segments of the chosen tool: the
+  reference in yellow (Calibrate), the measurements in blue (Measure) or the profile line in pink
+  (Intensity profile).</li>
+  <li><span class="num">5</span><strong>Status bar</strong>: on the left, what to do next or what just
+  happened (in green, a success; in red, a problem); on the right, the open image and its zoom.</li>
+</ol>
+<div class="tip"><p><strong>Lost?</strong> Read the status bar at the bottom of the window: it
+always tells you the next step.</p></div>
+</section>
+
+<section id="etapes">
+<h2>3. Measuring in three steps</h2>
+
+<h3>Step 1: open the image</h3>
+<p>On start-up, MeVPix shows its welcome page. Click <span class="btn">📂 Open an image…</span>, in
+the middle of the window or in the toolbar (or <kbd>Ctrl</kbd>+<kbd>O</kbd>), or drag the image file
+onto the window. MeVPix reads PNG, JPEG, BMP, TIFF and WebP images.</p>
+<div class="note"><p><strong>iPhone photo (HEIC)</strong>: MeVPix cannot read it. Email the photo to
+yourself (it arrives as JPEG), or set the camera to “Formats → Most Compatible”.</p></div>
+
+<h3>Step 2: calibrate</h3>
+<p>Calibration tells MeVPix how long one pixel of the image is. It is done for each image.</p>
+<ol class="steps">
+  <li>The <span class="btn">📏 Calibrate</span> tool is selected as soon as an image is open.</li>
+  <li>Draw a segment, <strong>left-click and drag</strong>, from one end to the other of an object
+  whose length you know: lines of the graph paper, marks of a ruler, scale bar of a microscope
+  image. Holding <kbd>Shift</kbd> keeps the segment horizontal or vertical.</li>
+  <li>Type its <strong>real length</strong> (for example “20”) and choose the
+  <strong>unit</strong> (µm, mm, cm or m).</li>
+  <li>Click <span class="btn">✔ Confirm calibration</span>, or press <kbd>Enter</kbd>. The scale
+  appears in the toolbar (“Scale: 1 px = 0.0206 mm”) and MeVPix switches to the Measure tool.</li>
+</ol>
+<figure class="ecran">
+<a href="etalonnage-en.jpg"><img src="etalonnage-en.jpg" alt="Reference drawn over 2 cm of graph paper, length 20 typed" width="1024" height="640"></a>
+<figcaption>Reference (in yellow) drawn over 2 cm of graph paper, from one thick line to another:
+type 20, unit mm, then confirm.</figcaption>
+</figure>
+
+<h3>Step 3: measure</h3>
+<p>With the <span class="btn">📐 Measure</span> tool, every segment you draw (left-click and drag)
+becomes a measurement. Its length appears on the image (M1, M2…) and in the table of the panel (see
+the figure in <a href="#fenetre">section 2</a>).</p>
+<ul>
+  <li><strong>Correct a measurement</strong>: grab an end point (round handle) and move it.</li>
+  <li><strong>Delete a measurement</strong>: the bin 🗑 next to it, or <kbd>Ctrl</kbd>+<kbd>Z</kbd>
+  for the last one; <span class="btn">Clear all</span> deletes them all.</li>
+  <li><strong>Keep the results</strong>: <span class="btn">📋 Copy the table</span>, then
+  <kbd>Ctrl</kbd>+<kbd>V</kbd> in a spreadsheet, Regressi or your report.</li>
+</ul>
+</section>
+
+<section id="precision">
+<h2>4. Measuring well</h2>
+<h3>Pointing precisely</h3>
+<ul>
+  <li><strong>Zoom</strong> with the mouse wheel (the zoom is centred on the mouse), then place each
+  end point to the nearest pixel.</li>
+  <li><strong>Move the image</strong> with the right mouse button held down.</li>
+  <li><span class="btn">🔍 Fit to window</span> shows the whole image again.</li>
+</ul>
+<h3>Choosing a good reference</h3>
+<ul>
+  <li><strong>Long</strong>: a 1-pixel error at each end matters much less on a long reference. Over
+  50 px (1 mm of graph paper), the error is 4 % on every measurement; over 1000 px (2 cm), 0.2 %.</li>
+  <li><strong>In the same plane as the measured object</strong>, with the camera <strong>facing it
+  squarely</strong>: otherwise perspective distorts the lengths.</li>
+</ul>
+<h3>Precision of the result</h3>
+<p>MeVPix shows three significant figures (“20.2 mm”): this is rounding, not an uncertainty. The
+uncertainty mostly comes from <strong>pointing</strong>, about 1 pixel at each end. With the scale
+“1 px = 0.0206 mm”, that is about 0.04 mm on a measurement. Pointing the same end points several
+times shows the spread of your measurements.</p>
+<div class="warn"><p><strong>Reference changed?</strong> If you move the reference or change its
+length or unit, a ⚠ warning asks you to confirm again. After confirming, the measurements already
+drawn are recalculated: nothing is lost.</p></div>
+<p>Without calibration, lengths are in pixels (“px”) and the warning “⚠ Not calibrated” stays
+visible.</p>
+</section>
+
+<section id="profil">
+<h2>5. The intensity profile</h2>
+<p>The <span class="btn">📈 Intensity profile</span> tool draws the curve of the brightness along a
+profile line. On a diffraction or interference pattern, the dips of the curve are the dark fringes.</p>
+<ol class="steps">
+  <li>Choose the tool: the graph appears below the image.</li>
+  <li>Draw the <strong>profile line</strong> on the image, along the pattern (left-click and drag;
+  <kbd>Shift</kbd> for a horizontal line).</li>
+  <li>Place the <strong>cursors A and B</strong>: drag them on the image (they stay on the profile line),
+  or click and drag on the graph.</li>
+  <li>Read their positions and the gap <strong>Δx = |x<sub>B</sub> − x<sub>A</sub>|</strong> on the
+  left.</li>
+</ol>
+<figure class="ecran">
+<a href="profil-en.jpg"><img src="profil-en.jpg" alt="Profile line, cursors A and B on the minima, profile graph" width="1024" height="640"></a>
+<figcaption>Profile line (in pink) along the pattern; A and B on the two minima around the central
+spot: Δx = 20.2 mm. The top of the curve is flat: the photo is saturated in the centre, but the
+minima remain clearly visible.</figcaption>
+</figure>
+<h3>Channel and thickness</h3>
+<ul>
+  <li><strong>Channel</strong>: luminance (grey) combines the three colours; the <strong>Red</strong>
+  channel often brings out the fringes of a red laser better.</li>
+  <li><strong>Thickness</strong>: the intensity is averaged over a band on both sides of the profile
+  line. 10 to 20 px smooth out the grid of the paper and the noise of the photo.</li>
+</ul>
+<h3>Saturation</h3>
+<p>“⚠ … % of the line is saturated”: the photo reaches the maximum value 255 there, and the real
+intensity is higher than shown. This is common in the centre of a diffraction pattern. The positions
+of the minima remain correct; the heights of saturated maxima do not.</p>
+<h3>The graph</h3>
+<ul>
+  <li>Mouse wheel: zoom; <kbd>Shift</kbd>+wheel: move; double-click: see the whole curve again.</li>
+  <li>Hovering over the curve shows the position and intensity of the point.</li>
+</ul>
+<h3>Exporting the profile</h3>
+<p><span class="btn">💾 Export the profile (CSV)…</span> saves the curve in a file with two columns: the
+position <code>x</code> and the intensity <code>I</code> (from 0 to 255). It opens in LibreOffice
+Calc, Excel or Regressi. In Python:</p>
+<pre><code>import pandas as pd
+profile = pd.read_csv("profile.csv")
+profile.plot(x="x (mm)", y="I")</code></pre>
+</section>
+
+<section id="exemple">
+<h2>6. Example: diffraction by a slit</h2>
+<p>A laser of wavelength <em>λ</em> lights a slit of width <em>a</em>. On a screen at distance
+<em>D</em>, a central spot of width <em>L</em> appears, surrounded by smaller spots. When <em>D</em>
+is large compared with <em>L</em>:</p>
+<p class="formula"><em>L</em> = 2 <em>λ</em> <em>D</em> / <em>a</em>   so   <em>a</em> = 2 <em>λ</em> <em>D</em> / <em>L</em></p>
+<ol class="steps">
+  <li><strong>Photograph</strong> the pattern on graph paper fixed to the screen, with the camera
+  facing it squarely. Note <em>λ</em> (written on the laser) and measure <em>D</em>.</li>
+  <li><strong>Open</strong> the photo in MeVPix.</li>
+  <li><strong>Calibrate</strong> on the thick lines of the graph paper (one every centimetre): for
+  example 2 cm, i.e. “20” and the unit mm.</li>
+  <li><strong>Measure <em>L</em></strong> from one dark minimum to the other around the central spot,
+  with the Measure tool, or better with the intensity profile (cursors A and B on the two minima:
+  <em>L</em> = Δx).</li>
+  <li><strong>Calculate <em>a</em></strong>. With <em>L</em> = 20.2 mm, <em>λ</em> = 650 nm and
+  <em>D</em> = 2.00 m: <em>a</em> = 2 × 650 × 10<sup>−9</sup> × 2.00 / 0.0202 ≈ 1.29 × 10<sup>−4</sup> m,
+  i.e. about 129 µm.</li>
+</ol>
+<div class="tip"><p><strong>Measure wider to measure better.</strong> The two third-order minima are
+3 <em>L</em> apart. Placing A and B on these minima and dividing Δx by 3 also divides the pointing
+error by 3.</p></div>
+<div class="note"><p><strong>Young's slits</strong>: the interference fringes are spaced by
+<em>i</em> = <em>λ</em> <em>D</em> / <em>b</em> (<em>b</em>: distance between the slits). Measure
+the distance across <em>N</em> + 1 fringes and divide by <em>N</em> to get <em>i</em>.</p></div>
+</section>
+
+<section id="raccourcis">
+<h2>7. Mouse and keyboard</h2>
+<table>
+<thead><tr><th>Action</th><th>Gesture</th></tr></thead>
+<tbody>
+<tr><td>Draw a segment</td><td>left-click and drag</td></tr>
+<tr><td>Horizontal or vertical segment</td><td>hold <kbd>Shift</kbd> while drawing</td></tr>
+<tr><td>Correct an end point, move A or B</td><td>grab the round handle and drag</td></tr>
+<tr><td>Cancel the line being drawn</td><td><kbd>Esc</kbd></td></tr>
+<tr><td>Zoom</td><td>mouse wheel, centred on the mouse</td></tr>
+<tr><td>Move the image</td><td>right-click and drag</td></tr>
+<tr><td>See the whole image again</td><td>button <span class="btn">🔍 Fit to window</span></td></tr>
+<tr><td>Open an image</td><td><kbd>Ctrl</kbd>+<kbd>O</kbd>, or drag and drop</td></tr>
+<tr><td>Confirm the calibration</td><td><kbd>Enter</kbd> in the length field</td></tr>
+<tr><td>Delete the last measurement</td><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> (Measure tool)</td></tr>
+<tr><td>Enlarge or shrink the text</td><td><kbd>Ctrl</kbd>+<kbd>+</kbd>, <kbd>Ctrl</kbd>+<kbd>−</kbd>; <kbd>Ctrl</kbd>+<kbd>0</kbd>: normal size</td></tr>
+<tr><td>Profile graph</td><td>wheel: zoom; <kbd>Shift</kbd>+wheel: move; double-click: see it all</td></tr>
+<tr><td>Open this guide</td><td><kbd>F1</kbd>, or <em>Help › User guide…</em></td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="problemes">
+<h2>8. Troubleshooting</h2>
+<dl class="faq">
+<dt>The “Confirm calibration” button stays greyed out.</dt>
+<dd>The segment is missing (draw it on the image), or the length is not a positive number. Type only
+the number (“20”, not “20 mm”): the unit is chosen in the list next to it.</dd>
+
+<dt>Lengths are shown in “px”.</dt>
+<dd>The image is not calibrated: do step 2. The measurements already drawn will be converted.</dd>
+
+<dt>“Unsupported image format”.</dt>
+<dd>The file is not a PNG, JPEG, BMP, TIFF or WebP image. An iPhone photo (HEIC) or a PDF must first
+be converted to JPEG.</dd>
+
+<dt>The mouse wheel does not zoom.</dt>
+<dd>The mouse must be over the image, not over the panel or the graph.</dd>
+
+<dt>The text has become huge (or tiny).</dt>
+<dd><kbd>Ctrl</kbd>+<kbd>0</kbd> restores the normal size.</dd>
+
+<dt><kbd>Ctrl</kbd>+<kbd>Z</kbd> does nothing.</dt>
+<dd>It deletes the last measurement only with the Measure tool, and when you are not typing in a
+field.</dd>
+
+<dt>The profile graph is empty.</dt>
+<dd>Draw a profile line on the image with the Intensity profile tool.</dd>
+
+<dt>My measurements have disappeared.</dt>
+<dd>Opening another image clears the calibration and the measurements (MeVPix asks first). Copy the
+table of measurements before changing image.</dd>
+
+<dt>The program closed by itself.</dt>
+<dd>An unexpected error occurred. Start MeVPix again and tell your teacher.</dd>
+</dl>
+</section>
+
+<div class="part" id="professeurs">
+  <h2>For teachers</h2>
+  <p>Installation, classroom settings, error log and licence.</p>
+</div>
+
+<section id="installer">
+<h2>9. Installing and using in class</h2>
+<ul>
+  <li><strong>Windows, no installation</strong>: MeVPix fits in a folder (<code>.zip</code>
+  archive), to copy onto the computer, the school network or a USB stick; run
+  <code>mevpix.exe</code>. It works offline, guide included. The first time it runs on a computer,
+  Windows may show “Windows protected your PC”, because MeVPix is not digitally signed: click “More
+  info”, then “Run anyway”. To open an image directly: right-click on the image → “Open with…” →
+  MeVPix.</li>
+  <li><strong>Windows, installer</strong>: <code>MeVPix-<i>version</i>-windows-x64-setup.exe</code> installs MeVPix
+  for all users in <code>Program Files\MeVSuite</code>, with a Start menu shortcut; it is uninstalled from
+  the Windows Settings. Deployment on many computers (WAPT, GPO): options
+  <code>/VERYSILENT /SUPPRESSMSGBOXES /NORESTART</code>.</li>
+  <li><strong>Linux</strong>: <code>.deb</code> package (Ubuntu, Debian), <code>.rpm</code> (Fedora), or
+  <code>.AppImage</code>, which runs without installation (make it executable).</li>
+  <li><strong>Large photos</strong>: a phone photo (12 to 50 Mpx) opens in a few seconds (“Loading…”
+  in the status bar). The display is reduced if needed, but measurements and the profile always use
+  the original pixels.</li>
+  <li><strong>Projector</strong>: <kbd>Ctrl</kbd>+<kbd>+</kbd> enlarges the text and the buttons (the
+  enlargement is capped so that the panels stay visible); <kbd>Ctrl</kbd>+<kbd>0</kbd> returns to
+  the normal size.</li>
+</ul>
+</section>
+
+<section id="reglages">
+<h2>10. Settings</h2>
+<p>On first launch, MeVPix uses the language and the light or dark theme of the system (English if
+the language is neither French nor English). The sun/moon and flag buttons change the theme and the
+language; numbers follow the language (decimal point in English).</p>
+<p>MeVPix remembers from one session to the next: the language, the theme, the unit of the
+reference, the channel and thickness of the profile, the text enlargement, the last folder opened,
+the size of the window. These settings are in a small text file <code>mevpix.ini</code>, specific to
+each user and editable by hand; deleting it restores the defaults.</p>
+<table>
+<thead><tr><th>System</th><th>Location</th></tr></thead>
+<tbody>
+<tr><td>Windows</td><td><code>%APPDATA%\MeVSuite\mevpix.ini</code></td></tr>
+<tr><td>Linux</td><td><code>~/.config/MeVSuite/mevpix.ini</code></td></tr>
+</tbody>
+</table>
+<p><strong>Enforced settings</strong> (computer room, USB stick): a <code>mevpix.ini</code> file
+placed next to <code>mevpix.exe</code> is read at every launch and takes priority over the user's
+settings; MeVPix never writes it. For example:</p>
+<pre><code>language = fr
+theme = light</code></pre>
+<p>enforces French and the light theme on every computer. The possible keys are those of the user's
+file; <code>language</code> and <code>theme</code> also accept <code>auto</code> (language or theme
+of the system). The paths of both files are shown in <strong>Help → About MeVPix</strong>.</p>
+<p>The four programs of the suite (MeVPix, MeVCine, MeVReg, MeVSono) keep their settings in this same
+<code>MeVSuite</code> folder. The guide is written each time it is opened to the system's temporary
+folder (<code>mevpix-help</code>): it can be printed or saved from the browser.</p>
+</section>
+
+<section id="apropos">
+<h2>11. Errors, contact and licence</h2>
+<p><strong>Unexpected error</strong>: MeVPix shows a message before closing and saves the details in
+<code>mevpix.log</code>, in the same folder as <code>mevpix.ini</code>. Attach this file to your
+report.</p>
+<p><strong>Contact</strong>: Rémi MEVAERE, <a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>.
+Comments, ideas for improvement and problems are welcome.</p>
+<p><strong>Licence</strong>: MeVPix is free software, released under the MIT licence; it is written
+in C++ with the free Qt library (LGPL version 3). The components used and their licences are listed
+in <strong>Help → About MeVPix…</strong>; <strong>Help → About Qt…</strong> gives the version of Qt
+and its licence terms.</p>
+<footer>MeVPix {{version}} — guide built into the program, available offline.</footer>
+</section>
+</main>
+</div>
+<script>
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a[href^="#"]'));
+  if (!('IntersectionObserver' in window) || !links.length) return;
+  var byId = {};
+  links.forEach(function (a) { byId[a.getAttribute('href').slice(1)] = a; });
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      links.forEach(function (a) { a.classList.remove('current'); });
+      var a = byId[e.target.id];
+      if (a) a.classList.add('current');
+    });
+  }, { rootMargin: '-10% 0px -75% 0px' });
+  document.querySelectorAll('main section[id]').forEach(function (s) { io.observe(s); });
+})();
+</script>
+</body>
+</html>

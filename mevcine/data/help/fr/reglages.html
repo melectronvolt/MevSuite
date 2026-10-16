@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — Réglages</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="Sommaire">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">Notice d&#x27;utilisation · version 0.2.0</p>
+  <p class="group">Pour les élèves</p>
+  <ol>
+    <li><a href="index.html">1. Présentation</a></li>
+    <li><a href="demarrer.html">2. Démarrer</a></li>
+    <li><a href="simplifie.html">3. Mode simplifié</a></li>
+    <li><a href="echelle.html">4. L&#x27;échelle</a></li>
+    <li><a href="expert.html">5. Mode expert</a></li>
+    <li><a href="exports.html">6. Exporter les mesures</a></li>
+    <li><a href="tp.html">7. Un TP pas à pas</a></li>
+    <li><a href="video.html">8. Filmer un mouvement</a></li>
+    <li><a href="clavier.html">9. Clavier et souris</a></li>
+    <li><a href="faq.html">10. Questions fréquentes</a></li>
+  </ol>
+  <p class="group">Pour les professeurs</p>
+  <ol>
+    <li><a href="professeurs.html">11. En classe</a></li>
+    <li><a href="installer.html">12. Installer</a></li>
+    <li><a href="reglages.html" class="current">13. Réglages</a></li>
+    <li><a href="depannage.html">14. Dépannage</a></li>
+  </ol>
+  <p class="lang"><a href="../en/reglages.html" lang="en" hreflang="en">English</a></p>
+</nav>
+
+<main>
+<header class="title">
+<h1>Réglages</h1>
+<p>Pour les professeurs : la configuration, les dossiers, les variables d'environnement</p>
+</header>
+
+<h2 id="retenu">Ce que MeVCine retient</h2>
+<table>
+  <tr><th>Langue</th><td>le drapeau, en haut à droite (français ou anglais) ; sans choix, la langue du
+  système</td></tr>
+  <tr><th>Thème</th><td>le soleil ou la lune, en haut à droite ; sans choix, le thème du bureau</td></tr>
+  <tr><th>Unité de l'étalon</th><td>la dernière choisie (mm, cm ou m)</td></tr>
+  <tr><th>Fenêtre</th><td>sa taille, et si elle était agrandie</td></tr>
+  <tr><th>Agrandissement</th><td>la taille des textes de l'interface, choisie avec <kbd>Ctrl</kbd>+<kbd>+</kbd> et
+  <kbd>Ctrl</kbd>+<kbd>−</kbd> (de 50 à 300 %)</td></tr>
+  <tr><th>Dossier des vidéos</th><td>le dernier utilisé, proposé par <em>Ouvrir une vidéo…</em></td></tr>
+</table>
+<p>À l'écran, les nombres suivent la langue (virgule décimale en français, point en anglais). Les exports (Python,
+CSV) gardent toujours le point décimal, et les fichiers de projet ne dépendent pas de la langue.</p>
+
+<h2 id="configuration">Le fichier de configuration</h2>
+<p>Ces réglages sont dans <code>mevcine.ini</code>, pour chaque utilisateur, dans le dossier commun aux
+logiciels de la suite (MeVPix, MeVCine, MeVReg, MeVSono) :</p>
+<table>
+  <tr><th>Windows</th><td><code>%APPDATA%\MeVSuite\</code> (en général
+  <code>C:\Users\<i>nom</i>\AppData\Roaming\MeVSuite\</code>)</td></tr>
+  <tr><th>Linux</th><td><code>~/.config/MeVSuite/</code></td></tr>
+</table>
+<p>Le même dossier contient <code>mevcine-secours.mevcine</code>, la sauvegarde automatique du travail en cours, et
+<code>mevcine.log</code>, le journal des erreurs internes s'il y en a eu. Si le fichier de configuration
+est illisible, MeVCine le signale et repart d'une configuration neuve ; le supprimer remet tous les réglages à
+zéro. Les projets de l'ancienne version, CineMev (<code>.cinemev</code>), s'ouvrent dans MeVCine.</p>
+<p>Les réglages du poste y sont écrits en clair : <code>langue = fr</code> (ou <code>en</code>),
+<code>theme = light</code> (ou <code>dark</code> ; <code>auto</code>, ou rien, suit le bureau),
+<code>agrandissement = 1.2</code>, <code>taille_fenetre = (1200,700)</code>, <code>fenetre_maximisee = False</code>.
+Ils ne vont jamais dans les fichiers de projet.</p>
+
+<h2 id="variables">Les variables d'environnement</h2>
+<table>
+  <tr><th><code>MEVCINE_CONF</code></th><td>un autre dossier de configuration (un dossier commun à une salle, un
+  dossier sur la clé USB)</td></tr>
+  <tr><th><code>MEVCINE_DATA</code></th><td>un autre dossier de données (la notice), à la place du
+  dossier <code>data</code> à côté du programme</td></tr>
+</table>
+
+<h2 id="dossiers">Les dossiers</h2>
+<ul>
+  <li><code>ffmpeg/</code>, à côté du programme : le ffmpeg livré. S'il manque, MeVCine utilise le ffmpeg installé
+  sur l'ordinateur (dans le <code>PATH</code>), qui ne sait pas toujours décoder le HEVC.</li>
+  <li><code>data/help</code> : cette notice.</li>
+  <li>Les dialogues d'ouverture proposent le dernier dossier de vidéos, sinon le dossier <em>Vidéos</em> (ou
+  <em>Téléchargements</em>) de l'utilisateur ; ceux d'enregistrement, le dossier <em>Documents</em>.</li>
+</ul>
+
+<h2 id="fenetre">La fenêtre</h2>
+<p>La fenêtre se redimensionne librement (au minimum 900 × 600) : l'image occupe la place disponible, les colonnes
+de commandes défilent si la fenêtre est basse, et les pointages restent justes, car ils sont gardés en pixels de
+la vidéo. En mode simplifié, la largeur du tableau des mesures se règle en tirant son bord.</p>
+<nav class="voisins">
+<a class="precedent" href="installer.html"><small>◀ Page précédente</small>Installer</a>
+<a class="suivant" href="depannage.html"><small>Page suivante ▶</small>Dépannage</a>
+</nav>
+<footer>MeVCine 0.2.0 · notice du logiciel · Rémi MEVAERE · logiciel libre, licence GPL 3 ou ultérieure</footer>
+</main>
+</div>
+</body>
+</html>

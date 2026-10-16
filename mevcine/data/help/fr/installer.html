@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — Installer MeVCine</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="Sommaire">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">Notice d&#x27;utilisation · version 0.2.0</p>
+  <p class="group">Pour les élèves</p>
+  <ol>
+    <li><a href="index.html">1. Présentation</a></li>
+    <li><a href="demarrer.html">2. Démarrer</a></li>
+    <li><a href="simplifie.html">3. Mode simplifié</a></li>
+    <li><a href="echelle.html">4. L&#x27;échelle</a></li>
+    <li><a href="expert.html">5. Mode expert</a></li>
+    <li><a href="exports.html">6. Exporter les mesures</a></li>
+    <li><a href="tp.html">7. Un TP pas à pas</a></li>
+    <li><a href="video.html">8. Filmer un mouvement</a></li>
+    <li><a href="clavier.html">9. Clavier et souris</a></li>
+    <li><a href="faq.html">10. Questions fréquentes</a></li>
+  </ol>
+  <p class="group">Pour les professeurs</p>
+  <ol>
+    <li><a href="professeurs.html">11. En classe</a></li>
+    <li><a href="installer.html" class="current">12. Installer</a></li>
+    <li><a href="reglages.html">13. Réglages</a></li>
+    <li><a href="depannage.html">14. Dépannage</a></li>
+  </ol>
+  <p class="lang"><a href="../en/installer.html" lang="en" hreflang="en">English</a></p>
+</nav>
+
+<main>
+<header class="title">
+<h1>Installer MeVCine</h1>
+<p>Pour les professeurs : un dossier à copier ou un installateur sous Windows, un paquet ou une AppImage sous Linux</p>
+</header>
+
+<h2 id="dossier">Le dossier de MeVCine (Windows)</h2>
+<p>Sous Windows, MeVCine est livré sous la forme d'un dossier (archive <code>.zip</code>), sans installation, à
+copier tel quel (clé USB, dossier partagé, disque de chaque poste). Il contient :</p>
+<table>
+  <tr><th><code>mevcine.exe</code></th><td>le programme, avec les bibliothèques de Qt (les fichiers
+  <code>*.dll</code> et le dossier <code>platforms</code>)</td></tr>
+  <tr><th><code>ffmpeg/</code></th><td>les programmes ffmpeg et ffprobe, qui lisent les vidéos (HEVC des téléphones
+  compris). Ne séparez pas ces fichiers du dossier.</td></tr>
+  <tr><th><code>data/</code></th><td>cette notice (<code>help</code>)</td></tr>
+  <tr><th><code>COPYING.txt</code>, <code>NOTICE.txt</code></th><td>la licence</td></tr>
+</table>
+
+<h2 id="installateur">Installateur (Windows)</h2>
+<p><code>MeVCine-<i>version</i>-windows-x64-setup.exe</code> installe le même dossier pour tous les utilisateurs
+dans <code>Program Files\MeVSuite\MeVCine</code>, avec un raccourci dans le menu Démarrer ; il se désinstalle par
+les Paramètres de Windows. Déploiement sur un parc (WAPT, GPO), sans fenêtre ni question :</p>
+<pre><code>MeVCine-<i>version</i>-windows-x64-setup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART</code></pre>
+
+<h2 id="windows">Sous Windows</h2>
+<p>Double-cliquez sur <code>mevcine.exe</code>. Au premier lancement, Windows peut afficher « Windows a protégé
+votre ordinateur », car le programme n'est pas signé : <em>Informations complémentaires</em>, puis <em>Exécuter
+quand même</em>.</p>
+<p>L'affichage ne demande aucune accélération graphique : MeVCine fonctionne aussi dans une machine virtuelle ou
+un bureau à distance. Si la fenêtre ne s'ouvre pas, voyez le <a href="depannage.html#affichage">dépannage</a>.</p>
+
+<h2 id="linux">Sous Linux</h2>
+<ul>
+  <li><strong>Paquet</strong> : <code>.deb</code> pour Ubuntu et Debian, <code>.rpm</code> pour Fedora. Il installe
+  MeVCine dans le menu des applications, avec ffmpeg (sous Fedora, le ffmpeg de RPM Fusion décode le H.264 et le
+  HEVC des téléphones ; celui de Fedora, <code>ffmpeg-free</code>, ne les décode pas tous).</li>
+  <li><strong>AppImage</strong>, sans installation : un seul fichier, ffmpeg compris, à rendre exécutable (clic
+  droit › <em>Propriétés</em>, ou <code>chmod +x</code>) puis à lancer.</li>
+</ul>
+<p>Il faut un bureau graphique (Wayland ou X11). Les dialogues de fichiers sont ceux du bureau (GNOME, KDE…), et
+le thème sombre du bureau est suivi tant que l'élève n'a pas choisi le sien.</p>
+
+<h2 id="premier">Au premier lancement</h2>
+<ul>
+  <li>MeVCine prend la langue du système si c'est le français, sinon l'anglais ; le thème clair ou sombre du
+  bureau. Le drapeau et le soleil (ou la lune), en haut à droite de la fenêtre, les changent ; le choix est retenu.</li>
+  <li>La fenêtre s'ouvre à sa taille normale (1200 × 700, réduite si l'écran est plus petit), jamais agrandie
+  d'office ; elle garde ensuite la taille que l'utilisateur lui a donnée (et reste agrandie si on l'a
+  agrandie).</li>
+  <li>MeVCine ne rouvre jamais la dernière vidéo : il retient seulement le dernier dossier de vidéos.</li>
+</ul>
+
+<h2 id="commande">La ligne de commande</h2>
+<pre>mevcine                        écran d'accueil : choix du mode
+mevcine --simple chute.mp4     mode simplifié, avec une vidéo
+mevcine --expert projet.mevcine
+mevcine -d 2 ...               messages de débogage (1 à 3) dans le terminal</pre>
+<p>Un raccourci vers <code>mevcine.exe --simple</code> ouvre directement le mode simplifié. Un projet
+(<code>.mevcine</code>, <code>.cinemev</code>, ancien <code>.mecavideo</code>) se donne aussi sur la ligne de
+commande, ou se glisse sur la fenêtre. Voir <a href="professeurs.html#deploiement">Déployer MeVCine dans une
+salle</a>.</p>
+<nav class="voisins">
+<a class="precedent" href="professeurs.html"><small>◀ Page précédente</small>En classe</a>
+<a class="suivant" href="reglages.html"><small>Page suivante ▶</small>Réglages</a>
+</nav>
+<footer>MeVCine 0.2.0 · notice du logiciel · Rémi MEVAERE · logiciel libre, licence GPL 3 ou ultérieure</footer>
+</main>
+</div>
+</body>
+</html>

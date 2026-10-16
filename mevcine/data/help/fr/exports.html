@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — Exporter les mesures</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="Sommaire">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">Notice d&#x27;utilisation · version 0.2.0</p>
+  <p class="group">Pour les élèves</p>
+  <ol>
+    <li><a href="index.html">1. Présentation</a></li>
+    <li><a href="demarrer.html">2. Démarrer</a></li>
+    <li><a href="simplifie.html">3. Mode simplifié</a></li>
+    <li><a href="echelle.html">4. L&#x27;échelle</a></li>
+    <li><a href="expert.html">5. Mode expert</a></li>
+    <li><a href="exports.html" class="current">6. Exporter les mesures</a></li>
+    <li><a href="tp.html">7. Un TP pas à pas</a></li>
+    <li><a href="video.html">8. Filmer un mouvement</a></li>
+    <li><a href="clavier.html">9. Clavier et souris</a></li>
+    <li><a href="faq.html">10. Questions fréquentes</a></li>
+  </ol>
+  <p class="group">Pour les professeurs</p>
+  <ol>
+    <li><a href="professeurs.html">11. En classe</a></li>
+    <li><a href="installer.html">12. Installer</a></li>
+    <li><a href="reglages.html">13. Réglages</a></li>
+    <li><a href="depannage.html">14. Dépannage</a></li>
+  </ol>
+  <p class="lang"><a href="../en/exports.html" lang="en" hreflang="en">English</a></p>
+</nav>
+
+<main>
+<header class="title">
+<h1>Exporter les mesures</h1>
+<p>Le tableau, la copie pour Python, le fichier CSV, les projets</p>
+</header>
+
+<h2 id="tableau">Le tableau des mesures</h2>
+<p>Le tableau (à droite en mode simplifié, onglet <em>Coordonnées</em> en mode expert) a une ligne par image
+pointée :</p>
+<ul>
+  <li><code>t (s)</code> : la date de l'image, <strong>comptée depuis la première image pointée</strong>, qui
+  est à t = 0 ;</li>
+  <li><code>x (m)</code>, <code>y (m)</code> : les coordonnées de l'objet dans votre repère. Avec plusieurs
+  objets : <code>x1</code>, <code>y1</code>, <code>x2</code>, <code>y2</code>… Sans échelle, elles sont en
+  pixels : <code>x (px)</code> ;</li>
+  <li><strong>⌖</strong> : refaire cette mesure.</li>
+</ul>
+<p>À l'écran, les nombres ont une virgule décimale (en français). Les exports gardent le point décimal, que Python
+et les tableurs comprennent. Seules les images où <strong>tous</strong> les objets sont pointés sont exportées :
+toutes les listes ont la même longueur.</p>
+
+<h2 id="python">Copier pour Python</h2>
+<p><span class="btn">📋 Copier pour Python</span> (étape 6, onglet <em>Coordonnées</em>, menu <em>Fichier</em>,
+ou <kbd>Ctrl</kbd>+<kbd>C</kbd>) place dans le presse-papiers un texte prêt à coller :</p>
+<pre>import numpy as np
+
+# Mesures MeVCine — vidéo : chute.mp4
+# t : temps en s ; x, y : positions en m
+lst_t = np.array([0.0, 0.04, 0.08, 0.12])
+lst_x = np.array([0.1, 0.2, 0.3, 0.4])
+lst_y = np.array([0.5, 0.48, 0.42, 0.33])</pre>
+<p>Collez-le avec <kbd>Ctrl</kbd>+<kbd>V</kbd> au début de votre programme Python (ou dans une cellule de
+notebook), puis écrivez vos calculs à la suite, par exemple :</p>
+<pre>import matplotlib.pyplot as plt
+
+# vitesse horizontale entre deux images successives
+vx = (lst_x[1:] - lst_x[:-1]) / (lst_t[1:] - lst_t[:-1])
+print(vx)
+
+plt.plot(lst_t, lst_y, "o-")
+plt.xlabel("t (s)")
+plt.ylabel("y (m)")
+plt.show()</pre>
+<p>Les nombres ont 6 chiffres significatifs. Avec plusieurs objets, les listes s'appellent <code>lst_x1</code>,
+<code>lst_y1</code>, <code>lst_x2</code>… « ✔ Copié » reste affiché tant que les mesures n'ont pas changé depuis
+la copie.</p>
+
+<h2 id="csv">Le fichier CSV</h2>
+<p><span class="btn">💾 Enregistrer en CSV…</span> écrit un fichier standard : une virgule entre les colonnes,
+le point décimal, une ligne d'en-tête.</p>
+<pre>t (s),x (m),y (m)
+0,0.1,0.5
+0.04,0.2,0.48
+0.08,0.3,0.42</pre>
+<p>Pour le lire en Python :</p>
+<pre>import numpy as np
+lst_t, lst_x, lst_y = np.loadtxt("chute.csv", delimiter=",", skiprows=1, unpack=True)</pre>
+<ul>
+  <li><strong>LibreOffice Calc</strong> : à l'ouverture, cochez la virgule comme séparateur, et choisissez
+  « Anglais (USA) » comme langue, pour que le point décimal soit compris.</li>
+  <li><strong>Excel</strong> : <em>Données › À partir d'un fichier texte/CSV</em>, délimiteur virgule,
+  paramètres régionaux « Anglais (États-Unis) ».</li>
+</ul>
+
+<h2 id="images">Enregistrer une image</h2>
+<p>En mode expert, <span class="btn">Enregistrer</span> de l'onglet <em>Trajectoires</em> écrit le dessin
+(trajectoire, chronophotographie, chronogramme) en PNG ou JPEG ; celui du <em>Grapheur</em> écrit le graphique en
+PNG : pratique pour un compte rendu.</p>
+
+<h2 id="projets">Projets</h2>
+<p><em>Fichier › Enregistrer le projet…</em> (<kbd>Ctrl</kbd>+<kbd>S</kbd>) écrit un
+fichier <code>.mevcine</code> : le chemin de la vidéo, le repère, l'échelle (et son unité), la cadence et toutes
+les mesures. <em>Fichier › Ouvrir un projet…</em> le rouvre, à l'image qui suit la dernière pointée.</p>
+<p class="warn">Le projet ne contient pas la vidéo : <strong>gardez la vidéo à côté du projet</strong>
+(copiez les deux fichiers ensemble sur votre clé). Sinon, le message « Vidéo introuvable » dit quel fichier
+manque.</p>
+
+<h2 id="securite">Rien ne se perd sans prévenir</h2>
+<figure>
+<img src="images/confirmation.jpg" alt="La demande de confirmation avant de quitter : vos mesures n'ont été ni copiées ni enregistrées">
+<figcaption>Avant de quitter avec des mesures non enregistrées, MeVCine demande confirmation.</figcaption>
+</figure>
+<ul>
+  <li><strong>Confirmation</strong> : quitter, tout recommencer ou ouvrir une autre vidéo alors que les mesures
+  n'ont été ni copiées, ni exportées, ni enregistrées : MeVCine demande d'abord. <kbd>Entrée</kbd> ne confirme
+  pas ; <kbd>Échap</kbd> annule.</li>
+  <li><strong>Sauvegarde automatique</strong> : le travail en cours est enregistré tout seul, toutes les deux
+  secondes s'il a changé.</li>
+  <li><strong>Récupérer</strong> : après un plantage ou une fermeture malencontreuse, relancez MeVCine, puis
+  <em>Fichier › Récupérer le travail précédent…</em>. La vidéo doit toujours être à sa place.</li>
+</ul>
+<nav class="voisins">
+<a class="precedent" href="expert.html"><small>◀ Page précédente</small>Mode expert</a>
+<a class="suivant" href="tp.html"><small>Page suivante ▶</small>Un TP pas à pas</a>
+</nav>
+<footer>MeVCine 0.2.0 · notice du logiciel · Rémi MEVAERE · logiciel libre, licence GPL 3 ou ultérieure</footer>
+</main>
+</div>
+</body>
+</html>

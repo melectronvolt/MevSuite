@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVReg — Référence Python</title>
+<link rel="stylesheet" href="help.css">
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="Sommaire">
+  <p class="brand">MeVReg</p>
+  <p class="version">Référence Python · version {{version}}</p>
+  <p class="group">Les bases</p>
+  <ol>
+    <li><a href="#scripts">1. Les scripts</a></li>
+    <li><a href="#grandeurs">2. Grandeurs et paramètres</a></li>
+  </ol>
+  <p class="group">Bibliothèques</p>
+  <ol>
+    <li><a href="#numpy">3. numpy</a></li>
+    <li><a href="#matplotlib">4. matplotlib</a></li>
+    <li><a href="#pandas">5. pandas</a></li>
+  </ol>
+  <p class="group">Le module mevreg</p>
+  <ol>
+    <li><a href="#mr-grandeurs">6. Grandeurs</a></li>
+    <li><a href="#mr-tableurs">7. Tableurs et CSV</a></li>
+    <li><a href="#mr-graphes">8. Graphes</a></li>
+    <li><a href="#mr-modeliser">9. Modélisation</a></li>
+    <li><a href="#mr-fenetres">10. Fenêtres et fichiers</a></li>
+  </ol>
+  <p class="group">Dessin</p>
+  <ol>
+    <li><a href="#fenetre">11. Le module fenetre</a></li>
+  </ol>
+  <p class="lang"><a href="notice.html">Notice d'utilisation</a></p>
+</nav>
+
+<main>
+<header class="title">
+  <h1>MeVReg — Référence Python</h1>
+  <p>Ce que les scripts peuvent utiliser · version {{version}}</p>
+</header>
+
+<section id="scripts">
+<h2>1. Les scripts</h2>
+<p>MeVReg contient son propre Python : rien à installer. Bouton <span class="btn">Python</span> (ou
+menu <em>Python › Nouveau script</em>), puis <span class="btn">Exécuter</span> (<kbd>F5</kbd> ou
+<kbd>Ctrl</kbd>+<kbd>Entrée</kbd>) ; <span class="btn">Arrêter</span> interrompt une boucle trop
+longue. La console affiche les <code>print</code> et les erreurs, avec un lien vers la ligne
+fautive. Le menu <em>Python › Exemples</em> donne un exemple court pour chaque usage.</p>
+<p>numpy, matplotlib et pandas sont des versions <strong>simplifiées</strong>, écrites pour MeVReg :
+elles contiennent les fonctions de cette page, qui s'utilisent comme les vraies. Un script qui s'en
+tient à ces fonctions donne le même résultat dans Capytale ou dans un Python installé.</p>
+<pre><code>import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+import mevreg as mr</code></pre>
+<p>Un script <strong>lié</strong> (case <span class="btn">lié</span>) est relancé dès qu'une grandeur
+ou un paramètre qu'il utilise change.</p>
+</section>
+
+<section id="grandeurs">
+<h2>2. Grandeurs et paramètres</h2>
+<ul>
+  <li>Chaque grandeur du document est un <strong>tableau numpy</strong> à son nom : <code>t</code>,
+  <code>u_C</code>, <code>v_x</code>… Les calculs portent sur toutes les valeurs à la fois :
+  <code>Ec = 0.5 * m * v**2</code>.</li>
+  <li>Chaque paramètre du document est un <strong>nombre</strong> à son nom.</li>
+  <li>À la fin du script, chaque <strong>liste ou tableau numpy</strong> nouveau devient une grandeur
+  du document, sans unité (nom de la variable). Une grandeur du document changée dans le script
+  reste inchangée dans le document : la console le signale. Pour la changer :
+  <code>grandeur(nom, valeurs)</code> ou <code>mr.modifier</code>.</li>
+  <li><code>grandeur(nom, valeurs, unite="")</code> crée ou remplace une grandeur, avec son unité
+  (comme <code>mr.creer</code>).</li>
+</ul>
+<pre><code>import numpy as np
+v = np.gradient(x, t)          # nouvelle grandeur v, sans unité
+grandeur("a", np.gradient(v, t), "m/s²")
+print("vitesse maximale :", round(v.max(), 2), "m/s")</code></pre>
+<div class="note"><p>Pas de <code>input()</code> : un script ne pose pas de question. Pour changer une
+valeur, utilisez un paramètre (curseur) et un script lié.</p></div>
+</section>
+
+<section id="numpy">
+<h2>3. numpy (<code>np.</code>)</h2>
+<table>
+<thead><tr><th>Usage</th><th>Fonctions</th></tr></thead>
+<tbody>
+<tr><td>Créer un tableau</td><td><code>array</code>, <code>asarray</code>, <code>zeros</code>, <code>ones</code>, <code>empty</code>, <code>full</code>, <code>zeros_like</code>, <code>ones_like</code>, <code>full_like</code>, <code>copy</code>, <code>linspace(debut, fin, n)</code>, <code>logspace</code>, <code>arange(debut, fin, pas)</code>, <code>meshgrid</code></td></tr>
+<tr><td>Assembler</td><td><code>concatenate</code>, <code>append</code></td></tr>
+<tr><td>Fonctions usuelles</td><td><code>sin</code>, <code>cos</code>, <code>tan</code>, <code>arcsin</code>, <code>arccos</code>, <code>arctan</code>, <code>arctan2</code>, <code>sinh</code>, <code>cosh</code>, <code>tanh</code>, <code>exp</code>, <code>exp2</code>, <code>expm1</code>, <code>log</code>, <code>log10</code>, <code>log2</code>, <code>log1p</code>, <code>sqrt</code>, <code>cbrt</code>, <code>square</code>, <code>abs</code>, <code>sign</code>, <code>hypot</code>, <code>radians</code>, <code>degrees</code>, <code>deg2rad</code>, <code>rad2deg</code>, <code>reciprocal</code></td></tr>
+<tr><td>Arrondis</td><td><code>round(x, n)</code>, <code>around</code>, <code>floor</code>, <code>ceil</code>, <code>trunc</code>, <code>rint</code>, <code>clip</code></td></tr>
+<tr><td>Opérations</td><td><code>add</code>, <code>subtract</code>, <code>multiply</code>, <code>divide</code>, <code>power</code>, <code>mod</code>, <code>remainder</code>, <code>maximum</code>, <code>minimum</code>, <code>dot</code>, <code>inner</code>, <code>vdot</code>, <code>cross</code></td></tr>
+<tr><td>Statistiques</td><td><code>sum</code>, <code>prod</code>, <code>mean</code>, <code>average</code>, <code>std(x, ddof=0)</code>, <code>var</code>, <code>median</code>, <code>min</code>, <code>max</code>, <code>ptp</code>, <code>argmin</code>, <code>argmax</code>, <code>nansum</code>, <code>nanmean</code>, <code>nanstd</code>, <code>nanmin</code>, <code>nanmax</code>, <code>histogram</code></td></tr>
+<tr><td>Calcul numérique</td><td><code>diff</code>, <code>gradient(y, x)</code> (dérivée), <code>cumsum</code>, <code>cumprod</code>, <code>trapezoid(y, x)</code> (intégrale), <code>interp</code>, <code>polyfit(x, y, degre)</code>, <code>polyval</code></td></tr>
+<tr><td>Tri et recherche</td><td><code>sort</code>, <code>argsort</code>, <code>flip</code>, <code>unique</code>, <code>where</code>, <code>nonzero</code>, <code>count_nonzero</code>, <code>any</code>, <code>all</code></td></tr>
+<tr><td>Tests</td><td><code>isnan</code>, <code>isfinite</code>, <code>isinf</code>, <code>isclose</code>, <code>allclose</code>, <code>array_equal</code></td></tr>
+<tr><td>Nombres complexes</td><td><code>real</code>, <code>imag</code>, <code>angle</code>, <code>conj</code></td></tr>
+<tr><td>Constantes</td><td><code>pi</code>, <code>e</code>, <code>inf</code>, <code>nan</code></td></tr>
+<tr><td><code>np.fft</code></td><td><code>fft</code>, <code>ifft</code>, <code>rfft</code>, <code>fftfreq(n, d)</code>, <code>rfftfreq</code>, <code>fftshift</code>, <code>ifftshift</code></td></tr>
+<tr><td><code>np.random</code></td><td><code>seed</code>, <code>random</code>, <code>rand</code>, <code>randn</code>, <code>uniform(a, b, n)</code>, <code>normal(moyenne, ecart_type, n)</code>, <code>randint</code>, <code>choice</code>, <code>permutation</code>, <code>shuffle</code>, <code>default_rng</code></td></tr>
+<tr><td><code>np.linalg</code></td><td><code>norm</code></td></tr>
+</tbody>
+</table>
+<p>Les tableaux ont aussi leurs méthodes : <code>x.max()</code>, <code>x.mean()</code>,
+<code>x.std()</code>, <code>x.sum()</code>, <code>x.round(2)</code>, <code>len(x)</code>,
+<code>x[0]</code>, <code>x[-1]</code>, <code>x[2:5]</code>, <code>x[x &gt; 0]</code>…</p>
+</section>
+
+<section id="matplotlib">
+<h2>4. matplotlib (<code>plt.</code>)</h2>
+<p>Chaque figure devient un <strong>graphe de MeVReg</strong> (au <code>plt.show()</code> ou à la fin
+du script), qu'on peut ensuite régler et modéliser à la souris.</p>
+<table>
+<thead><tr><th>Usage</th><th>Fonctions</th></tr></thead>
+<tbody>
+<tr><td>Tracer</td><td><code>plot(x, y, "ro-", label="…")</code> (couleur, marqueur et trait : <code>"b+"</code>, <code>"k--"</code>…), <code>scatter</code>, <code>errorbar(x, y, yerr=…, xerr=…, fmt="+")</code>, <code>hist</code>, <code>bar</code></td></tr>
+<tr><td>Habiller</td><td><code>title</code>, <code>xlabel</code>, <code>ylabel</code>, <code>legend</code>, <code>grid</code>, <code>xlim</code>, <code>ylim</code>, <code>xticks</code>, <code>text</code>, <code>annotate</code>, <code>axhline</code>, <code>axvline</code>, <code>suptitle</code></td></tr>
+<tr><td>Échelles</td><td><code>xscale("log")</code>, <code>yscale</code>, <code>loglog</code>, <code>semilogx</code>, <code>semilogy</code>, <code>twinx</code> (second axe des ordonnées)</td></tr>
+<tr><td>Figures</td><td><code>figure</code>, <code>subplot(lignes, colonnes, n)</code>, <code>subplots</code>, <code>gcf</code>, <code>gca</code>, <code>clf</code>, <code>cla</code>, <code>close</code>, <code>tight_layout</code>, <code>show</code>, <code>savefig("figure.png")</code></td></tr>
+</tbody>
+</table>
+<p>Avec <code>fig, ax = plt.subplots()</code>, les mêmes fonctions s'écrivent <code>ax.plot</code>,
+<code>ax.set_xlabel</code>, <code>ax.set_title</code>, <code>ax.set_xlim</code>…</p>
+</section>
+
+<section id="pandas">
+<h2>5. pandas (<code>pd.</code>)</h2>
+<p>Un <code>DataFrame</code> réunit plusieurs grandeurs, une par colonne.</p>
+<table>
+<thead><tr><th>Usage</th><th>Fonctions</th></tr></thead>
+<tbody>
+<tr><td>Créer, lire</td><td><code>pd.DataFrame({"t": t, "x": x})</code>, <code>pd.read_csv(chemin, sep=None, decimal=None)</code> (séparateurs devinés s'ils ne sont pas donnés), <code>pd.concat</code>, <code>pd.to_numeric</code>, <code>pd.isna</code>, <code>pd.notna</code></td></tr>
+<tr><td>Colonnes, lignes</td><td><code>df["t"]</code>, <code>df[["t", "x"]]</code>, <code>df[df["x"] &gt; 0]</code>, <code>df.iloc[0]</code>, <code>df.columns</code>, <code>df.shape</code>, <code>df.head()</code>, <code>df.tail()</code>, <code>df.assign</code>, <code>df.drop</code>, <code>df.rename</code></td></tr>
+<tr><td>Statistiques</td><td><code>describe</code>, <code>mean</code>, <code>std</code> (écart-type d'échantillon, ddof = 1), <code>var</code>, <code>median</code>, <code>min</code>, <code>max</code>, <code>sum</code>, <code>count</code>, <code>quantile</code>, <code>corr</code>, <code>cumsum</code>, <code>diff</code></td></tr>
+<tr><td>Nettoyer, trier</td><td><code>dropna</code>, <code>fillna</code>, <code>isna</code>, <code>sort_values</code>, <code>round</code>, <code>abs</code>, <code>unique</code></td></tr>
+<tr><td>Exporter</td><td><code>to_csv(chemin, sep=";", decimal=",")</code>, <code>to_numpy</code>, <code>to_dict</code>, <code>to_list</code>, <code>plot(x="t", y="x")</code></td></tr>
+</tbody>
+</table>
+<p>Les colonnes sont des <code>Series</code> : <code>df["x"].mean()</code>,
+<code>df["x"].to_numpy()</code>… <code>mr.tableau()</code> donne les grandeurs du document dans un
+DataFrame ; <code>mr.importer(df)</code> fait l'inverse.</p>
+<div class="tip"><p>Dans Capytale, précisez les séparateurs :
+<code>pd.read_csv("mesures.csv", sep=";", decimal=",")</code>.</p></div>
+</section>
+
+<section id="mr-grandeurs">
+<h2>6. mevreg : grandeurs</h2>
+<p><code>import mevreg as mr</code>. Les lectures (valeurs, unités) se font tout de suite ; les
+changements du document, des graphes et des fenêtres sont faits <strong>à la fin du script</strong>,
+dans l'ordre où ils ont été demandés.</p>
+<table>
+<thead><tr><th>Fonction</th><th>Effet</th></tr></thead>
+<tbody>
+<tr><td><code>mr.grandeurs()</code></td><td>liste des noms des grandeurs du document</td></tr>
+<tr><td><code>mr.valeurs(nom)</code></td><td>valeurs de la grandeur (tableau numpy)</td></tr>
+<tr><td><code>mr.unite(nom)</code></td><td>unité de la grandeur (<code>"m/s"</code>…), vide s'il n'y en a pas</td></tr>
+<tr><td><code>mr.parametres()</code></td><td>paramètres du document : <code>{nom: valeur}</code></td></tr>
+<tr><td><code>mr.creer(nom, valeurs, unite="")</code></td><td>crée la grandeur, ou remplace ses valeurs</td></tr>
+<tr><td><code>mr.calculer(nom, formule, unite="")</code></td><td>grandeur calculée par une formule du tableur (<code>"0.5*m*v^2"</code>), recalculée quand les mesures changent</td></tr>
+<tr><td><code>mr.modifier(nom, valeurs=None, unite=None, nouveau_nom=None)</code></td><td>change les valeurs, l'unité ou le nom</td></tr>
+<tr><td><code>mr.renommer(nom, nouveau_nom)</code></td><td>renomme (les formules suivent)</td></tr>
+<tr><td><code>mr.supprimer(nom)</code></td><td>supprime la grandeur</td></tr>
+<tr><td><code>mr.incertitude(nom, valeur)</code></td><td>incertitude-type : un nombre (<code>0.02</code>) ou une formule (<code>"0.02*U + 0.01"</code>)</td></tr>
+<tr><td><code>mr.parametre(nom, valeur, unite="")</code></td><td>crée ou change un paramètre du document</td></tr>
+</tbody>
+</table>
+<pre><code>import numpy as np
+import mevreg as mr
+
+mr.creer("v", np.gradient(mr.valeurs("x"), mr.valeurs("t")), "m/s")
+mr.calculer("Ec", "0.5*m*v^2", "J")
+mr.incertitude("x", 0.005)</code></pre>
+</section>
+
+<section id="mr-tableurs">
+<h2>7. mevreg : tableurs et CSV</h2>
+<table>
+<thead><tr><th>Fonction</th><th>Effet</th></tr></thead>
+<tbody>
+<tr><td><code>mr.tableur(nom, colonnes)</code></td><td>tableur nommé, avec ces grandeurs en colonnes (créé, ou mis à jour)</td></tr>
+<tr><td><code>mr.tableau(noms=None)</code></td><td>les grandeurs (toutes, ou celles nommées) dans un DataFrame pandas ; unités dans <code>df.attrs["unites"]</code></td></tr>
+<tr><td><code>mr.importer(df, tableur=None)</code></td><td>chaque colonne du DataFrame devient une grandeur (en-tête <code>"t (s)"</code> : nom t, unité s) ; renvoie leurs noms</td></tr>
+<tr><td><code>mr.lire_csv(chemin, tableur=None, sep=None, decimal=None)</code></td><td>importe un fichier CSV (séparateurs devinés s'ils ne sont pas donnés) ; renvoie le DataFrame lu</td></tr>
+<tr><td><code>mr.exporter_csv(chemin, grandeurs=None, separateur=";", virgule=True)</code></td><td>grandeurs (toutes par défaut) dans un fichier CSV ; <code>virgule=False</code> : point décimal</td></tr>
+</tbody>
+</table>
+<p>Les chemins relatifs partent du dossier du document enregistré.</p>
+</section>
+
+<section id="mr-graphes">
+<h2>8. mevreg : graphes</h2>
+<table>
+<thead><tr><th>Fonction</th><th>Effet</th></tr></thead>
+<tbody>
+<tr><td><code>mr.graphe(nom, x=None, y=None, incertitudes=None)</code></td><td>graphe nommé (créé, ou retrouvé) ; avec x et y, la courbe y(x), y pouvant être une liste de grandeurs. <code>incertitudes</code> : <code>"barres"</code>, <code>"deux"</code>, <code>"rectangles"</code> ou <code>"aucune"</code></td></tr>
+<tr><td><code>mr.courbe(graphe, x, y, couleur=None, marqueur=None, trait=None, incertitudes=None)</code></td><td>ajoute la courbe y(x). <code>couleur</code> : <code>"rouge"</code>, <code>"#ff0000"</code>… ; <code>marqueur</code> : <code>"croix"</code>, <code>"plus"</code>, <code>"rond"</code>, <code>"point"</code>, <code>"carre"</code>, <code>"aucun"</code> ; <code>trait</code> : <code>"aucun"</code>, <code>"droit"</code>, <code>"lisse"</code></td></tr>
+<tr><td><code>mr.retirer_courbe(graphe, y)</code></td><td>retire les courbes de la grandeur y</td></tr>
+<tr><td><code>mr.axes(graphe, xmin=None, xmax=None, ymin=None, ymax=None, titre=None, x_titre=None, y_titre=None)</code></td><td>bornes des axes (les autres restent automatiques), titre du graphe, titres des axes</td></tr>
+<tr><td><code>mr.verticale(graphe, x, texte="")</code></td><td>droite verticale, avec une étiquette</td></tr>
+<tr><td><code>mr.horizontale(graphe, y)</code></td><td>droite horizontale</td></tr>
+<tr><td><code>mr.oblique(graphe, x1, y1, x2, y2, texte="")</code></td><td>droite passant par (x1, y1) et (x2, y2)</td></tr>
+<tr><td><code>mr.texte(graphe, x, y, texte, taille=12)</code></td><td>texte placé en (x, y)</td></tr>
+<tr><td><code>mr.exporter_graphe(nom, chemin)</code></td><td>image du graphe : PNG, SVG ou PDF selon l'extension</td></tr>
+</tbody>
+</table>
+<pre><code>import mevreg as mr
+
+mr.graphe("Chute", x="t", y="z", incertitudes="barres")
+mr.axes("Chute", ymin=0, titre="Position de la bille")
+mr.horizontale("Chute", 0.75)</code></pre>
+</section>
+
+<section id="mr-modeliser">
+<h2>9. mevreg : modélisation</h2>
+<p><code>mr.modeliser(y, x, modele="affine", degre=3, plage=None, graphe=None, nom=None)</code>
+ajuste un modèle à y(x) et renvoie un résultat. Le modèle est aussi tracé sur le graphe donné, ou
+sur un graphe qui montre déjà y(x).</p>
+<ul>
+  <li><code>modele</code> : <code>"constante"</code>, <code>"lineaire"</code>, <code>"affine"</code>,
+  <code>"parabole"</code>, <code>"polynome"</code> (de degré <code>degre</code>),
+  <code>"puissance"</code>, <code>"exponentielle"</code>, <code>"exp_inverse"</code>,
+  <code>"charge"</code>, <code>"decharge"</code>, <code>"ln"</code>, <code>"log"</code>,
+  <code>"sinus"</code>, <code>"cosinus"</code>, <code>"sinus_amorti"</code>,
+  <code>"cosinus_amorti"</code>, ou une expression : <code>"a*x^2 + b"</code> (<code>x</code>
+  désigne l'abscisse, quel que soit son nom) ;</li>
+  <li><code>plage</code> : <code>(xmin, xmax)</code>, les points utilisés ;</li>
+  <li><code>nom</code> : le nom du modèle dans la légende.</li>
+</ul>
+<p>Le résultat <code>r</code> donne <code>r.a</code> ou <code>r["a"]</code> (valeur d'un paramètre),
+<code>r.incertitudes["a"]</code>, <code>r.parametres</code>, <code>r.r2</code>,
+<code>r.equation</code> ; <code>print(r)</code> affiche le tout.</p>
+<pre><code>import mevreg as mr
+
+r = mr.modeliser("v", "t", "affine", graphe="Vitesse")
+print(r)
+print("g =", round(-r.a, 2), "±", round(r.incertitudes["a"], 2), "m/s²")</code></pre>
+</section>
+
+<section id="mr-fenetres">
+<h2>10. mevreg : fenêtres et fichiers</h2>
+<table>
+<thead><tr><th>Fonction</th><th>Effet</th></tr></thead>
+<tbody>
+<tr><td><code>mr.ouvrir(nom)</code></td><td>affiche la fenêtre : <code>"Grandeurs"</code>, <code>"Calculs"</code>, <code>"Modélisation"</code>, <code>"Statistiques"</code>, <code>"Notice"</code> (dans le navigateur), ou le nom d'un tableur, d'un graphe, d'un script, d'un dessin</td></tr>
+<tr><td><code>mr.cacher(nom)</code></td><td>cache la fenêtre (elle reste dans le menu Fenêtres)</td></tr>
+<tr><td><code>mr.fermer(nom)</code></td><td>ferme la fenêtre pour de bon : son tableur, son graphe ou son script est supprimé</td></tr>
+<tr><td><code>mr.detacher(nom)</code></td><td>met la fenêtre à part, hors de la fenêtre principale</td></tr>
+<tr><td><code>mr.rattacher(nom)</code></td><td>remet une fenêtre détachée dans la fenêtre principale</td></tr>
+<tr><td><code>mr.disposition()</code></td><td>disposition par défaut des fenêtres</td></tr>
+<tr><td><code>mr.enregistrer(chemin=None)</code></td><td>enregistre le document (sous ce nom de fichier <code>.phy</code> s'il est donné)</td></tr>
+<tr><td><code>mr.message(texte)</code></td><td>message dans la barre d'état</td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="fenetre">
+<h2>11. Le module fenetre</h2>
+<p>Une <strong>fenêtre de dessin</strong>, en unités physiques : un montage, une figure de
+diffraction, une carte d'intensité.</p>
+<pre><code>import fenetre as fe
+
+d = fe.Dessin("Montage", xmin=-1, xmax=1, ymin=-0.5, ymax=0.5, unite="m")
+d.fleche(-0.8, 0, 0.8, 0, couleur="rouge")
+d.texte(0, 0.1, "faisceau laser")
+d.montrer()</code></pre>
+<table>
+<thead><tr><th>Méthode</th><th>Effet</th></tr></thead>
+<tbody>
+<tr><td><code>fe.Dessin(nom="Dessin", xmin=-1, xmax=1, ymin=-1, ymax=1, unite="", fond="blanc")</code></td><td>nouveau dessin</td></tr>
+<tr><td><code>d.ligne(x1, y1, x2, y2, couleur="noir", epaisseur=1.5, style="-")</code></td><td>segment (<code>style</code> : <code>"-"</code>, <code>"--"</code>, <code>":"</code>, <code>"-."</code>)</td></tr>
+<tr><td><code>d.fleche(x1, y1, x2, y2, couleur="noir", epaisseur=1.5)</code></td><td>flèche</td></tr>
+<tr><td><code>d.cercle(x, y, r, couleur="noir", epaisseur=1.5, rempli=None)</code></td><td>cercle, rempli de la couleur donnée</td></tr>
+<tr><td><code>d.rectangle(x, y, largeur, hauteur, couleur="noir", epaisseur=1.5, rempli=None)</code></td><td>rectangle</td></tr>
+<tr><td><code>d.point(x, y, couleur="noir", taille=5)</code></td><td>point</td></tr>
+<tr><td><code>d.texte(x, y, texte, couleur="noir", taille=12)</code></td><td>texte</td></tr>
+<tr><td><code>d.bandes(profil, palette="gris", longueur_onde=None, normaliser=True)</code></td><td>figure d'une fente : bandes verticales d'intensité <code>profil</code> (tableau sur toute la largeur)</td></tr>
+<tr><td><code>d.radial(profil, rmax=None, palette="gris", longueur_onde=None, normaliser=True)</code></td><td>figure d'un trou circulaire : anneaux d'intensité <code>profil</code></td></tr>
+<tr><td><code>d.carte(expression, palette="gris", longueur_onde=None, normaliser=True, nx=500, ny=None, **parametres)</code></td><td>intensité à deux dimensions : expression en <code>x</code> et <code>y</code>, avec ses paramètres (<code>a=…</code>)</td></tr>
+<tr><td><code>d.effacer()</code>, <code>d.montrer()</code></td><td>tout effacer ; afficher (ou mettre à jour) la fenêtre</td></tr>
+<tr><td><code>fe.couleur_longueur_onde(lambda_m)</code></td><td>couleur d'une lumière de longueur d'onde donnée, en mètres (<code>633e-9</code>)</td></tr>
+</tbody>
+</table>
+<p>Palettes : <code>"gris"</code>, <code>"laser"</code> (couleur réelle de
+<code>longueur_onde</code>, en mètres : <code>longueur_onde=633e-9</code>), <code>"chaud"</code>, <code>"viridis"</code>,
+<code>"bleu-rouge"</code>. Couleurs : noms français (<code>"rouge"</code>, <code>"bleu"</code>…) ou
+<code>"#rrggbb"</code>.</p>
+<footer>MeVReg {{version}} — référence intégrée au logiciel, disponible hors connexion.</footer>
+</section>
+</main>
+</div>
+<script>
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a[href^="#"]'));
+  if (!('IntersectionObserver' in window) || !links.length) return;
+  var byId = {};
+  links.forEach(function (a) { byId[a.getAttribute('href').slice(1)] = a; });
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      links.forEach(function (a) { a.classList.remove('current'); });
+      var a = byId[e.target.id];
+      if (a) a.classList.add('current');
+    });
+  }, { rootMargin: '-10% 0px -75% 0px' });
+  document.querySelectorAll('main section[id]').forEach(function (s) { io.observe(s); });
+})();
+</script>
+</body>
+</html>

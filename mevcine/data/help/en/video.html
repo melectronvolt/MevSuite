@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — Filming a motion</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="Contents">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">User guide · version 0.2.0</p>
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="index.html">1. Overview</a></li>
+    <li><a href="demarrer.html">2. Getting started</a></li>
+    <li><a href="simplifie.html">3. Simple mode</a></li>
+    <li><a href="echelle.html">4. The scale</a></li>
+    <li><a href="expert.html">5. Expert mode</a></li>
+    <li><a href="exports.html">6. Exporting the measurements</a></li>
+    <li><a href="tp.html">7. A lab, step by step</a></li>
+    <li><a href="video.html" class="current">8. Filming a motion</a></li>
+    <li><a href="clavier.html">9. Keyboard and mouse</a></li>
+    <li><a href="faq.html">10. Frequently asked questions</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="professeurs.html">11. In the classroom</a></li>
+    <li><a href="installer.html">12. Installing</a></li>
+    <li><a href="reglages.html">13. Settings</a></li>
+    <li><a href="depannage.html">14. Troubleshooting</a></li>
+  </ol>
+  <p class="lang"><a href="../fr/video.html" lang="fr" hreflang="fr">Français</a></p>
+</nav>
+
+<main>
+<header class="title">
+<h1>Filming a motion</h1>
+<p>Filming well with a phone, transferring the video, slow motion</p>
+</header>
+
+<h2 id="filmer">Filming well</h2>
+<ul>
+  <li><strong>A still camera</strong>: on a tripod, a stand, or resting against an object. Do not follow the object
+  with the camera: the axes must stay fixed.</li>
+  <li><strong>Facing the motion</strong>: the camera looks perpendicular to the plane of the motion, from far
+  enough away so that perspective does not distort distances (better zoom in a little than move closer).</li>
+  <li><strong>A reference in the plane of the motion</strong>: a ruler, a tape measure, two measured marks, clearly
+  visible. See <a href="echelle.html#choisir">Choosing a good reference</a>.</li>
+  <li><strong>Plenty of light</strong>: the object is less blurred, and the phone keeps a regular frame rate.
+  Outdoors or near a window, rather than under neon lights.</li>
+  <li><strong>A contrasted object</strong> on a plain background (a coloured ball in front of a light wall): easier
+  to aim at, and automatic tracking works better.</li>
+  <li><strong>Fill the frame</strong> with the motion: the more pixels the object travels, the more precise the
+  measurement.</li>
+  <li><strong>The frame rate</strong>: 30 frames per second are enough for a slow motion; for a fall or a throw,
+  slow motion (120 or 240 frames per second) gives many more points.</li>
+</ul>
+
+<h2 id="transfert">Transferring the video to the computer</h2>
+<ul>
+  <li>Best: <strong>the cable</strong> (the phone shows up like a USB stick), AirDrop (iPhone to Mac), or the
+  school's file sharing.</li>
+  <li><strong>Avoid messaging apps</strong> (WhatsApp, Messenger…): they recompress the video, the picture is less
+  sharp, and the slow-motion information may be lost.</li>
+  <li>A few seconds are enough: trim the video around the motion on the phone, before transferring it.</li>
+</ul>
+
+<h2 id="telephone">Phone videos</h2>
+<dl class="faq">
+  <dt>In portrait</dt>
+  <dd>MeVCine straightens a video filmed in portrait by itself. If it still appears lying on its side, rotate it:
+  step 1 of simple mode, or the ⟲ ⟳ buttons under the frame in expert mode (before the scale and marking).</dd>
+  <dt id="ralenti">In slow motion</dt>
+  <dd>A slow-motion video is filmed at 120 or 240 frames per second, but plays at 30: for the times, the
+  <strong>capture</strong> frame rate is what matters. Android phones write it in the file: MeVCine uses it
+  automatically, and says so (“Slow-motion video”). An iPhone does not always write it: enter the capture frame
+  rate yourself, in <em>Slow-motion video?</em> (step 4 of simple mode) or <em>Frames per second</em> (expert mode).
+  The times in the table are recomputed at once.</dd>
+  <dt>Variable frame rate</dt>
+  <dd>Many phones drop frames, or film more slowly when the light gets dim. MeVCine detects it (“Variable frame
+  rate”) and uses the real time of each frame: the intervals in the table are then not all equal, and that is
+  normal.</dd>
+  <dt>HDR</dt>
+  <dd>HDR videos (recent iPhones) are converted to ordinary colours: they do not look washed out.</dd>
+</dl>
+
+<h2 id="formats">Formats</h2>
+<p>MeVCine reads the formats of phones, cameras and webcams: MP4, MOV, AVI, MKV, WebM, 3GP, MTS…, in H.264, HEVC
+(H.265), AV1, VP9, ProRes, Motion JPEG. Very large videos (4K) open, but more slowly: for a lab, a 1080p video is
+plenty.</p>
+<nav class="voisins">
+<a class="precedent" href="tp.html"><small>◀ Previous page</small>A lab, step by step</a>
+<a class="suivant" href="clavier.html"><small>Next page ▶</small>Keyboard and mouse</a>
+</nav>
+<footer>MeVCine 0.2.0 · user guide · Rémi MEVAERE · free software, GPL 3 or later</footer>
+</main>
+</div>
+</body>
+</html>

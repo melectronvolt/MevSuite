@@ -1,0 +1,11 @@
+# Compilation de chaque logiciel (cmake -S <logiciel> -B <logiciel>/build)
+build/
+# Empaquetage (packaging/) : dossiers intermédiaires et téléchargements, fichiers produits
+/build-paquet/
+/dist/
+# Python (outils des notices)
+__pycache__/
+*.pyc
+# Fichiers laissés par les essais lancés dans un conteneur
+/.cache/
+/.qttest/

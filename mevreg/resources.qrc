@@ -1,0 +1,22 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/">
+        <file alias="fonts/DejaVuSans.ttf">assets/fonts/DejaVuSans.ttf</file>
+        <file alias="fonts/DejaVuSans-Bold.ttf">assets/fonts/DejaVuSans-Bold.ttf</file>
+        <file alias="fonts/DejaVuSansMono.ttf">assets/fonts/DejaVuSansMono.ttf</file>
+        <file alias="fonts/LICENSE-DejaVu.txt">assets/fonts/LICENSE-DejaVu.txt</file>
+        <file alias="icons/mevreg.svg">assets/icons/mevreg.svg</file>
+        <file alias="icons/mevreg-256.png">assets/icons/mevreg-256.png</file>
+        <file alias="icons/mevreg-64.png">assets/icons/mevreg-64.png</file>
+        <file alias="icons/mevreg-32.png">assets/icons/mevreg-32.png</file>
+        <file alias="python/numpy/__init__.py">python/numpy/__init__.py</file>
+        <file alias="python/numpy/fft.py">python/numpy/fft.py</file>
+        <file alias="python/numpy/linalg.py">python/numpy/linalg.py</file>
+        <file alias="python/numpy/random.py">python/numpy/random.py</file>
+        <file alias="python/matplotlib/__init__.py">python/matplotlib/__init__.py</file>
+        <file alias="python/matplotlib/pyplot.py">python/matplotlib/pyplot.py</file>
+        <file alias="python/fenetre.py">python/fenetre.py</file>
+        <file alias="python/mevreg.py">python/mevreg.py</file>
+        <file alias="python/pandas.py">python/pandas.py</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVReg — Notice d'utilisation</title>
+<link rel="stylesheet" href="help.css">
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="Sommaire">
+  <p class="brand">MeVReg</p>
+  <p class="version">Notice d'utilisation · version {{version}}</p>
+  <p class="group">Pour les élèves</p>
+  <ol>
+    <li><a href="#presentation">1. À quoi sert MeVReg ?</a></li>
+    <li><a href="#fenetre">2. La fenêtre</a></li>
+    <li><a href="#commencer">3. Commencer</a></li>
+    <li><a href="#saisir">4. Saisir des mesures</a></li>
+    <li><a href="#csv">5. Importer un fichier CSV</a></li>
+    <li><a href="#calculer">6. Calculer une grandeur</a></li>
+    <li><a href="#incertitudes">7. Incertitudes</a></li>
+    <li><a href="#graphe">8. Tracer un graphe</a></li>
+    <li><a href="#modeliser">9. Modéliser</a></li>
+    <li><a href="#analyses">10. Autres analyses</a></li>
+    <li><a href="#enregistrer">11. Enregistrer, exporter, imprimer</a></li>
+    <li><a href="#fenetres">12. Ranger les fenêtres</a></li>
+    <li><a href="#raccourcis">13. Souris et clavier</a></li>
+    <li><a href="#problemes">14. En cas de problème</a></li>
+  </ol>
+  <p class="group">Pour les professeurs</p>
+  <ol>
+    <li><a href="#python">15. Python dans MeVReg</a></li>
+    <li><a href="#preparer">16. Préparer un TP</a></li>
+    <li><a href="#installer">17. Installer et configurer</a></li>
+    <li><a href="#apropos">18. Contact et licence</a></li>
+  </ol>
+  <p class="lang"><a href="python.html">Référence Python (toutes les fonctions)</a></p>
+</nav>
+
+<main>
+<header class="title">
+  <h1>MeVReg — Notice d'utilisation</h1>
+  <p>Traitement des données des TP de physique-chimie · version {{version}}</p>
+</header>
+
+<section id="presentation">
+<h2>1. À quoi sert MeVReg ?</h2>
+<p>MeVReg sert à <strong>exploiter les mesures d'un TP</strong> :</p>
+<ul>
+  <li>les <strong>saisir</strong> dans un tableur, ou les importer d'un fichier ;</li>
+  <li><strong>calculer</strong> d'autres grandeurs avec des formules (vitesse, énergie…) ;</li>
+  <li>les <strong>tracer</strong> dans des graphes, avec leurs incertitudes ;</li>
+  <li><strong>modéliser</strong> une courbe (droite, parabole, exponentielle…) et lire les
+  paramètres du modèle, avec leur incertitude ;</li>
+  <li>enregistrer le travail, et faire un <strong>compte rendu</strong> en PDF.</li>
+</ul>
+<p>Chaque colonne du tableur est une <strong>grandeur</strong> : un nom (<code>t</code>,
+<code>U</code>, <code>v_x</code>…), une unité et une liste de valeurs. Les interprétations restent
+<strong>votre travail</strong>.</p>
+</section>
+
+<section id="fenetre">
+<h2>2. La fenêtre</h2>
+<figure class="ecran">
+<svg viewBox="0 0 1280 800" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, sans-serif">
+  <image href="fenetre.jpg" width="1280" height="800"/>
+  <g font-weight="700" font-size="22" text-anchor="middle">
+    <circle cx="520" cy="17" r="16" fill="#0b5cad"/><text x="520" y="25" fill="#fff">1</text>
+    <circle cx="362" cy="41" r="16" fill="#0b5cad"/><text x="362" y="49" fill="#fff">2</text>
+    <circle cx="1190" cy="17" r="16" fill="#0b5cad"/><text x="1190" y="25" fill="#fff">3</text>
+    <circle cx="140" cy="330" r="16" fill="#0b5cad"/><text x="140" y="338" fill="#fff">4</text>
+    <circle cx="662" cy="104" r="16" fill="#0b5cad"/><text x="662" y="112" fill="#fff">5</text>
+    <circle cx="1200" cy="73" r="16" fill="#0b5cad"/><text x="1200" y="81" fill="#fff">6</text>
+    <circle cx="1205" cy="104" r="16" fill="#0b5cad"/><text x="1205" y="112" fill="#fff">7</text>
+    <circle cx="1100" cy="420" r="16" fill="#0b5cad"/><text x="1100" y="428" fill="#fff">8</text>
+    <circle cx="500" cy="785" r="16" fill="#0b5cad"/><text x="500" y="793" fill="#fff">9</text>
+  </g>
+</svg>
+<figcaption>MeVReg avec la décharge d'un condensateur (<a href="fenetre.jpg">image en grand</a>).</figcaption>
+</figure>
+<ol class="legend">
+  <li><span class="num">1</span><strong>Les menus</strong> : <em>Fichier</em> (ouvrir, enregistrer,
+  importer, exporter), <em>Édition</em> (annuler, rétablir), <em>Données</em>, <em>Graphes</em>,
+  <em>Analyse</em>, <em>Python</em>, <em>Fenêtres</em> et <em>Aide</em>.</li>
+  <li><span class="num">2</span><strong>Les fenêtres de travail</strong> :
+  <span class="btn">Grandeurs</span>, <span class="btn">Tableur</span> (un nouveau tableur),
+  <span class="btn">Graphe</span> (un nouveau graphe) et <span class="btn">Python</span> (un nouveau
+  script).</li>
+  <li><span class="num">3</span><strong>Thème et langue</strong> : le soleil (thème clair) ou la lune
+  (thème sombre) ; un clic passe à l'autre thème. Le drapeau rappelle que MeVReg n'existe pour
+  l'instant qu'en français.</li>
+  <li><span class="num">4</span><strong>La fenêtre Grandeurs</strong> : toutes les grandeurs du
+  document, avec leur unité et leur nombre de valeurs. Le bouton <span class="btn">⋯</span> d'une
+  grandeur ouvre son menu. L'onglet <span class="btn">Calculs</span> contient les formules.</li>
+  <li><span class="num">5</span><strong>Le tableur</strong> et ses boutons : nouvelle grandeur
+  mesurée ou calculée, remplissage, lignes, import et export.</li>
+  <li><span class="num">6</span><strong>La barre de titre</strong> de chaque fenêtre : le bouton
+  <em>Détacher</em> (une flèche qui sort d'un carré) la met à part, <span class="btn">✕</span> la
+  ferme.</li>
+  <li><span class="num">7</span><strong>Les outils du graphe</strong> : réticule, zoom, déplacement,
+  points, plage, échelle automatique, <span class="btn">Modéliser</span>, export et
+  <span class="btn">Réglages</span>.</li>
+  <li><span class="num">8</span><strong>Le graphe</strong>, ici avec un modèle (courbe rouge).</li>
+  <li><span class="num">9</span><strong>Barre d'état</strong> : à gauche, ce qui vient de se passer
+  (en vert, une réussite ; en orange, un point à vérifier ; en rouge, une erreur) ; à droite, le
+  fichier, le titre du TP et le nombre de grandeurs.</li>
+</ol>
+<div class="tip"><p><strong>Les bulles d'aide.</strong> Laissez la souris un instant sur un bouton :
+une bulle dit ce qu'il fait. Les textes gris des fenêtres disent quoi faire.</p></div>
+</section>
+
+<section id="commencer">
+<h2>3. Commencer</h2>
+<figure class="ecran">
+<a href="accueil.jpg"><img src="accueil.jpg" alt="Page d'accueil de MeVReg : les boutons Nouveau tableur et Ouvrir" width="1024" height="640"></a>
+<figcaption>La page d'accueil : un tableur vide pour saisir des mesures, ou un fichier.</figcaption>
+</figure>
+<ul>
+  <li><span class="btn">Nouveau tableur</span> : un tableur vide, pour saisir vos mesures.</li>
+  <li><span class="btn">Ouvrir…</span> (ou <kbd>Ctrl</kbd>+<kbd>O</kbd>) : un document MeVReg
+  (<code>.phy</code>), donné par votre professeur ou enregistré lors d'une séance, ou un fichier de
+  mesures <code>.csv</code> (<a href="#csv">partie 5</a>).</li>
+  <li>Vous pouvez aussi <strong>glisser le fichier</strong> sur la fenêtre.</li>
+</ul>
+<p>Un document <code>.phy</code> contient tout : les grandeurs, les formules, les tableurs, les
+graphes, les modèles, les scripts et la place des fenêtres.</p>
+</section>
+
+<section id="saisir">
+<h2>4. Saisir des mesures</h2>
+<figure class="ecran">
+<a href="tableur.jpg"><img src="tableur.jpg" alt="Tableur de la chute d'une bille : t, z avec son incertitude u_z, et v_z calculée ; deux graphes avec leurs modèles" width="1024" height="640"></a>
+<figcaption>Un tableur : les mesures t et z, l'incertitude u_z, et la vitesse v_z calculée (colonnes vertes).</figcaption>
+</figure>
+<ol class="steps">
+  <li><strong>Créez les grandeurs.</strong> <span class="btn">+ Mesure</span> du tableur (ou la
+  colonne <span class="btn">+</span>, à droite) : donnez le nom et l'unité, par exemple
+  <code>t</code> et <code>s</code>.</li>
+  <li><strong>Tapez les valeurs</strong> : cliquez dans une case, tapez le nombre ;
+  <kbd>Entrée</kbd> valide et descend, <kbd>Tab</kbd> passe à droite. La virgule et le point sont
+  acceptés : <code>1,5</code> ou <code>1.5</code>. Pour 2,5 × 10⁻³, tapez <code>2,5e-3</code>.</li>
+  <li><strong>Vérifiez</strong> : ce qui n'est pas un nombre est refusé, et la barre d'état le
+  signale en rouge.</li>
+</ol>
+<h3>Gagner du temps</h3>
+<ul>
+  <li><strong>Copier-coller</strong> depuis un autre tableur (LibreOffice, Excel…) :
+  <kbd>Ctrl</kbd>+<kbd>C</kbd> puis <kbd>Ctrl</kbd>+<kbd>V</kbd>. Avec une ligne d'en-tête comme
+  <code>t (s)</code>, les grandeurs sont créées avec leur nom et leur unité.</li>
+  <li><span class="btn">Remplir…</span> : une suite de valeurs dans la colonne choisie, par exemple de
+  0 à 10 par pas de 0,5.</li>
+  <li><span class="btn">Insérer une ligne</span>, <span class="btn">Supprimer les lignes</span> :
+  au-dessus du curseur, ou les lignes sélectionnées.</li>
+  <li><strong>Clic droit sur un en-tête</strong> : nom, unité, incertitude, tri, statistiques, tracé en
+  fonction de la première colonne. Double-clic : nom, unité et formule.</li>
+  <li><strong>Largeur des colonnes</strong> : glissez le bord d'un en-tête ; double-clic sur le bord
+  pour revenir à la largeur commune.</li>
+</ul>
+<div class="note"><p><strong>Une grandeur, plusieurs fenêtres.</strong> Une même grandeur peut
+figurer dans plusieurs tableurs et plusieurs graphes : changer une valeur la change partout. Pour
+l'ajouter à un tableur : bouton <span class="btn">Grandeur ▾</span> du tableur, ou glissez-la depuis
+la fenêtre Grandeurs. <span class="btn">Retirer du tableur</span> (clic droit sur l'en-tête) ne la
+supprime pas.</p></div>
+</section>
+
+<section id="csv">
+<h2>5. Importer un fichier CSV</h2>
+<p>Les interfaces d'acquisition, les tableurs et les téléphones (applications de mesure) exportent
+leurs mesures en CSV : un fichier texte, une ligne par mesure. Menu
+<em>Fichier › Importer un fichier CSV…</em>, bouton <span class="btn">Importer</span> de la fenêtre
+Grandeurs, ou glissez le fichier sur la fenêtre.</p>
+<figure class="ecran etroite">
+<a href="import-csv.jpg"><img src="import-csv.jpg" alt="Fenêtre d'import CSV : réglages, début du fichier, aperçu des colonnes et résumé" width="760" height="700"></a>
+<figcaption>Avant d'importer : les réglages devinés, le début du fichier et l'aperçu des colonnes.</figcaption>
+</figure>
+<p>MeVReg <strong>montre ce qu'il va importer</strong> avant de le faire :</p>
+<ul>
+  <li>le <strong>séparateur des valeurs</strong> (point-virgule, virgule, tabulation…) et le
+  <strong>séparateur décimal</strong> (virgule ou point), devinés mais modifiables ;</li>
+  <li>la <strong>ligne des noms</strong>, celle des <strong>unités</strong> s'il y en a une, et la
+  <strong>première ligne de valeurs</strong> ; l'option d'ignorer les lignes vides ;</li>
+  <li>l'<strong>aperçu</strong> : une colonne par grandeur, à cocher ou non, avec son nom et son unité
+  (modifiables) ;</li>
+  <li>un <strong>résumé</strong> qui signale les problèmes : case illisible, nombre écrit avec l'autre
+  séparateur décimal, ligne trop courte…</li>
+</ul>
+<p>Vérifiez l'aperçu, puis <span class="btn">Importer</span>.</p>
+</section>
+
+<section id="calculer">
+<h2>6. Calculer une grandeur</h2>
+<p>Une <strong>grandeur calculée</strong> est donnée par une formule ; elle est recalculée dès qu'une
+mesure change. Ses colonnes sont vertes, marquées <em>ƒ</em>.</p>
+<ol class="steps">
+  <li><span class="btn">ƒ Calculée</span> (tableur ou fenêtre Grandeurs), ou l'onglet
+  <span class="btn">Calculs</span>.</li>
+  <li>Écrivez <code>nom = formule</code>, par exemple <code>Ec = 0.5*m*v^2</code>, puis
+  <kbd>Entrée</kbd>. Dans les formules, le séparateur décimal est le <strong>point</strong>.</li>
+</ol>
+<table>
+<thead><tr><th>Écriture</th><th>Sens</th></tr></thead>
+<tbody>
+<tr><td><code>+ - * /</code>, <code>^</code></td><td>opérations, puissance (<code>v^2</code>)</td></tr>
+<tr><td><code>sqrt(x)</code>, <code>exp(x)</code>, <code>ln(x)</code>, <code>log(x)</code></td><td>racine carrée, exponentielle, logarithmes népérien et décimal</td></tr>
+<tr><td><code>sin(x)</code>, <code>cos(x)</code>, <code>tan(x)</code>, <code>rad(x)</code>, <code>deg(x)</code></td><td>trigonométrie (en radians), conversions des angles</td></tr>
+<tr><td><code>deriv(y, x)</code></td><td>dérivée de y par rapport à x : <code>v = deriv(x, t)</code></td></tr>
+<tr><td><code>integ(y, x)</code></td><td>primitive de y, nulle au premier point</td></tr>
+<tr><td><code>mean(x)</code>, <code>std(x)</code>, <code>min(x)</code>, <code>max(x)</code>, <code>sum(x)</code></td><td>moyenne, écart-type, minimum, maximum, somme</td></tr>
+</tbody>
+</table>
+<p>La liste complète est dans l'onglet <span class="btn">Calculs</span>
+(<span class="btn">Fonctions disponibles</span>).</p>
+<p>Un <strong>paramètre</strong> est une constante (masse, <em>g</em>, <em>k</em>…) utilisable dans
+les formules : menu <em>Données › Nouveau paramètre…</em> Un curseur change sa valeur, et tout est
+recalculé aussitôt.</p>
+<div class="tip"><p>Renommer une grandeur met à jour toutes les formules qui l'utilisent.</p></div>
+</section>
+
+<section id="incertitudes">
+<h2>7. Incertitudes</h2>
+<p>L'incertitude-type d'une grandeur est une autre grandeur, placée à sa droite :
+<code>u_z</code> pour <code>z</code>.</p>
+<ul>
+  <li>Bouton <span class="btn">⋯</span> de la grandeur › <em>Incertitude › Nouvelle incertitude…</em>
+  (ou clic droit sur l'en-tête › <em>Incertitude…</em>) : une valeur (<code>0.01</code>) ou une
+  formule (<code>0.02*U + 0.01</code> pour « 2 % + 1 digit »).</li>
+  <li>Sur les graphes, les points ont alors leurs <strong>barres d'incertitude</strong> ; les
+  réglages de la courbe choisissent barres verticales, barres en x et en y, ou rectangles, et
+  permettent une incertitude différente de chaque côté.</li>
+  <li>Le réticule accroché à un point donne sa valeur avec son incertitude, arrondie à la même
+  décimale : <em>U</em> = (5,04 ± 0,07) V.</li>
+</ul>
+</section>
+
+<section id="graphe">
+<h2>8. Tracer un graphe</h2>
+<ol class="steps">
+  <li><span class="btn">Graphe</span>, en haut, crée un graphe vide.</li>
+  <li><strong>Glissez des colonnes</strong> du tableur (ou des grandeurs de la fenêtre Grandeurs)
+  sur le graphe : la première donne les abscisses, les suivantes les ordonnées. Plusieurs colonnes
+  sélectionnées se glissent ensemble.</li>
+</ol>
+<p>Autre façon : menu <em>Graphes › Nouveau graphe y(x)</em>.</p>
+<figure class="ecran">
+<a href="graphe.jpg"><img src="graphe.jpg" alt="Graphe U(I) avec barres d'incertitude et modèle linéaire ; à droite, les réglages de la courbe" width="1024" height="640"></a>
+<figcaption>Un graphe et ses réglages : courbe, marqueur, incertitudes, légende.</figcaption>
+</figure>
+<h3>Lire et zoomer</h3>
+<ul>
+  <li><strong>Réticule</strong> (outil par défaut) : il donne les coordonnées sous la souris, et
+  s'accroche au point de mesure le plus proche.</li>
+  <li><strong>Molette</strong> : zoom autour de la souris (<kbd>Maj</kbd> : abscisses seules,
+  <kbd>Alt</kbd> : ordonnées seules). Outil zoom : tracez un rectangle.</li>
+  <li><strong>Se déplacer</strong> : glisser avec le réticule ou l'outil main ; bouton du milieu.</li>
+  <li><strong>Double-clic</strong> dans le graphe : échelle automatique.</li>
+</ul>
+<h3>Régler</h3>
+<p><span class="btn">Réglages</span> ouvre, à droite du graphe, les onglets <em>Courbes</em>,
+<em>Axes</em>, <em>Titre et légende</em>, <em>Modèles</em> et <em>Annotations</em> ; le
+<span class="btn">✕</span> les ferme. Double-cliquer sur un axe, le titre ou la légende ouvre le bon
+onglet. Plusieurs graphes dans une fenêtre : bouton grille de la barre du graphe.</p>
+<h3>Droites et textes</h3>
+<p>Clic droit sur le graphe › <em>Ajouter ici</em> : droite verticale, horizontale, oblique, ou texte.
+Cliquez une droite ou un texte pour le sélectionner, puis glissez-le ; les poignées d'une droite
+oblique changent sa pente. Le cadenas (clic droit, ou onglet <em>Annotations</em>) évite de les
+déplacer par erreur ; <kbd>Suppr</kbd> supprime l'annotation sélectionnée.</p>
+</section>
+
+<section id="modeliser">
+<h2>9. Modéliser</h2>
+<p>Modéliser, c'est chercher la fonction qui passe au plus près des points, et ses paramètres.</p>
+<figure class="ecran etroite">
+<a href="modele.jpg"><img src="modele.jpg" alt="Fenêtre Modélisation : modèle parabole, paramètres a, b, c avec incertitudes, R², courbe tracée" width="560" height="700"></a>
+<figcaption>La fenêtre Modélisation : la parabole ajustée aux points de la chute.</figcaption>
+</figure>
+<ol class="steps">
+  <li>Bouton <span class="btn">Modéliser</span> du graphe : la fenêtre <em>Modélisation</em> s'ouvre
+  à part, à côté de la fenêtre principale.</li>
+  <li>Choisissez la <strong>courbe</strong>, puis un modèle (<span class="btn">+ Nouveau modèle</span>
+  et une vignette) : affine, linéaire, parabole, exponentielle, charge ou décharge d'un
+  condensateur, sinus, sinus amorti, puissance… Le modèle est ajusté et tracé aussitôt.</li>
+  <li>Lisez les <strong>paramètres</strong> et leur incertitude-type, l'équation et <em>R</em>² (plus
+  il est proche de 1, mieux le modèle décrit les points).</li>
+</ol>
+<ul>
+  <li><strong>Points</strong> : <em>tous</em>, ou une <em>plage</em> : deux barres verticales
+  apparaissent sur le graphe ; glissez-les pour choisir les points utilisés.</li>
+  <li><strong>Courbe tracée</strong> : <em>sur tout le graphe</em> (elle se prolonge avant et après
+  les points, et suit le zoom), <em>sur les points</em>, ou <em>de … à …</em> (barres en pointillés,
+  à glisser sur le graphe).</li>
+  <li><strong>Légende</strong> : le nom du modèle sur le graphe. <strong>Fixé</strong> : impose la
+  valeur d'un paramètre.</li>
+  <li><span class="btn">Créer la grandeur modèle</span> ajoute les valeurs du modèle au document ;
+  <span class="btn">Copier les résultats</span> les copie pour un compte rendu.</li>
+  <li>Modèle à écrire soi-même (<em>Utilisateur</em>) : par exemple <code>a*t^2 + b</code>, avec
+  la variable de l'axe des abscisses.</li>
+</ul>
+</section>
+
+<section id="analyses">
+<h2>10. Autres analyses</h2>
+<p>Menu <em>Analyse</em> :</p>
+<ul>
+  <li><strong>Statistiques</strong> d'une série de mesures répétées : moyenne, écart-type,
+  incertitude-type (type A) et histogramme.</li>
+  <li><strong>Dérivée…</strong>, <strong>Dérivée seconde…</strong>, <strong>Intégrale…</strong> :
+  une nouvelle grandeur calculée.</li>
+  <li><strong>Spectre (analyse de Fourier)…</strong> : les fréquences présentes dans un signal.</li>
+  <li><strong>Méthode des tangentes…</strong> et <strong>Méthode de la dérivée…</strong> : repérer
+  l'équivalence d'un dosage. Les tangentes se déplacent à la souris ; clic droit pour les
+  verrouiller ou les supprimer.</li>
+</ul>
+</section>
+
+<section id="enregistrer">
+<h2>11. Enregistrer, exporter, imprimer</h2>
+<ul>
+  <li><strong>Enregistrer</strong> : <kbd>Ctrl</kbd>+<kbd>S</kbd>, un document <code>.phy</code>.
+  <kbd>Ctrl</kbd>+<kbd>Z</kbd> annule la dernière modification, <kbd>Ctrl</kbd>+<kbd>Y</kbd> la
+  rétablit.</li>
+  <li><strong>Compte rendu</strong> : <em>Fichier › Compte rendu du TP en PDF…</em> (tableurs,
+  calculs, graphes, modèles, scripts), ou <em>Imprimer le compte rendu…</em> Le titre, les noms et
+  la classe se donnent dans <em>Fichier › Informations du TP…</em></li>
+  <li><strong>Image d'un graphe</strong> : bouton d'export du graphe (ou clic droit) : copier l'image,
+  PNG, SVG, PDF, imprimer.</li>
+  <li><strong>CSV</strong> : <em>Fichier › Exporter toutes les grandeurs en CSV…</em>, ou
+  <span class="btn">CSV, PDF ▾</span> du tableur. On choisit le séparateur, la virgule ou le point
+  décimal, l'en-tête et l'encodage, avec un aperçu.</li>
+</ul>
+</section>
+
+<section id="fenetres">
+<h2>12. Ranger les fenêtres</h2>
+<ul>
+  <li><strong>Déplacer</strong> : glissez la barre de titre d'une fenêtre ; des repères montrent où
+  elle se placera (à côté, dessous, ou en onglet avec une autre).</li>
+  <li><strong>Détacher</strong> : le bouton <em>Détacher</em> de la barre de titre (une flèche qui sort
+  d'un carré) met la fenêtre à part, avec son propre cadre : pratique avec deux écrans. Son bouton
+  <span class="btn">Rattacher</span> la remet dans la fenêtre principale.</li>
+  <li><strong>Fermer</strong> : <span class="btn">✕</span>. MeVReg demande s'il faut
+  <strong>cacher</strong> la fenêtre (elle reste dans le document : menu <em>Fenêtres</em> pour la
+  rouvrir) ou la <strong>fermer</strong> (le tableur, le graphe ou le script est supprimé ;
+  <kbd>Ctrl</kbd>+<kbd>Z</kbd> le rend).</li>
+  <li>Menu <em>Fenêtres</em> : toutes les fenêtres, ouvertes ou cachées ; le <span class="btn">✕</span>
+  d'une ligne ferme la fenêtre. <em>Disposition par défaut</em> range tout.</li>
+</ul>
+</section>
+
+<section id="raccourcis">
+<h2>13. Souris et clavier</h2>
+<table>
+<thead><tr><th>Action</th><th>Geste</th></tr></thead>
+<tbody>
+<tr><td>Valider une valeur, passer à droite</td><td><kbd>Entrée</kbd>, <kbd>Tab</kbd></td></tr>
+<tr><td>Copier, coller (tableur)</td><td><kbd>Ctrl</kbd>+<kbd>C</kbd>, <kbd>Ctrl</kbd>+<kbd>V</kbd></td></tr>
+<tr><td>Effacer les cases sélectionnées</td><td><kbd>Suppr</kbd></td></tr>
+<tr><td>Tracer des colonnes</td><td>les glisser sur un graphe</td></tr>
+<tr><td>Zoomer (graphe)</td><td>molette ; <kbd>Maj</kbd> : abscisses, <kbd>Alt</kbd> : ordonnées</td></tr>
+<tr><td>Échelle automatique</td><td>double-clic dans le graphe</td></tr>
+<tr><td>Régler un axe, le titre, la légende</td><td>double-clic dessus</td></tr>
+<tr><td>Annuler, rétablir</td><td><kbd>Ctrl</kbd>+<kbd>Z</kbd>, <kbd>Ctrl</kbd>+<kbd>Y</kbd></td></tr>
+<tr><td>Nouveau, ouvrir, enregistrer</td><td><kbd>Ctrl</kbd>+<kbd>N</kbd>, <kbd>Ctrl</kbd>+<kbd>O</kbd>, <kbd>Ctrl</kbd>+<kbd>S</kbd></td></tr>
+<tr><td>Exécuter un script Python</td><td><kbd>F5</kbd> ou <kbd>Ctrl</kbd>+<kbd>Entrée</kbd></td></tr>
+<tr><td>Agrandir ou réduire les textes</td><td><kbd>Ctrl</kbd>+<kbd>+</kbd>, <kbd>Ctrl</kbd>+<kbd>−</kbd> ; <kbd>Ctrl</kbd>+<kbd>0</kbd> : taille normale</td></tr>
+<tr><td>Ouvrir cette notice</td><td><kbd>F1</kbd>, ou <em>Aide › Notice d'utilisation…</em></td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="problemes">
+<h2>14. En cas de problème</h2>
+<dl class="faq">
+<dt>Une formule est marquée d'un triangle rouge.</dt>
+<dd>Elle contient une erreur : laissez la souris sur le triangle, la bulle dit laquelle (nom
+inconnu, parenthèse manquante…). Dans les formules, le séparateur décimal est le point : <code>0.5</code>, pas
+<code>0,5</code>.</dd>
+
+<dt>Le graphe est vide, ou les points sont hors de vue.</dt>
+<dd>Double-cliquez dans le graphe : l'échelle s'ajuste aux données. S'il n'y a aucune courbe,
+glissez-y des colonnes du tableur.</dd>
+
+<dt>Le modèle ne passe pas par les points.</dt>
+<dd>Vérifiez la courbe choisie et la plage de points. Essayez un autre modèle, ou fixez la valeur
+d'un paramètre.</dd>
+
+<dt>L'import CSV donne des valeurs fausses.</dt>
+<dd>Vérifiez dans l'aperçu le séparateur décimal (virgule ou point) et la première ligne de
+valeurs.</dd>
+
+<dt>Une fenêtre a disparu.</dt>
+<dd>Elle est cachée : menu <em>Fenêtres</em>. <em>Disposition par défaut</em> range toutes les
+fenêtres.</dd>
+
+<dt>Les textes sont devenus énormes (ou minuscules).</dt>
+<dd><kbd>Ctrl</kbd>+<kbd>0</kbd> rétablit la taille normale.</dd>
+
+<dt>Une modification est une erreur.</dt>
+<dd><kbd>Ctrl</kbd>+<kbd>Z</kbd> l'annule, même la fermeture d'un tableur ou d'un graphe.</dd>
+</dl>
+</section>
+
+<div class="part" id="professeurs">
+  <h2>Pour les professeurs</h2>
+  <p>Python intégré, préparation d'un TP, installation et configuration.</p>
+</div>
+
+<section id="python">
+<h2>15. Python dans MeVReg</h2>
+<p>MeVReg contient Python : aucune installation n'est nécessaire. <span class="btn">Python</span>,
+en haut, ouvre un nouveau script ; <span class="btn">Exécuter</span> (<kbd>F5</kbd>) le lance, la
+console affiche les <code>print</code> et les erreurs, avec le numéro de la ligne.</p>
+<figure class="ecran">
+<a href="python.jpg"><img src="python.jpg" alt="Script Python qui calcule la puissance P = u_C × i, crée la grandeur P et trace P(t) avec matplotlib" width="1024" height="640"></a>
+<figcaption>Un script : P = u_C × i devient une grandeur du document, et la figure matplotlib un graphe de MeVReg.</figcaption>
+</figure>
+<ul>
+  <li>Les <strong>grandeurs</strong> du document sont des tableaux numpy, à leur nom
+  (<code>t</code>, <code>u_C</code>…) ; les <strong>paramètres</strong> sont des nombres.</li>
+  <li>Une <strong>liste ou un tableau</strong> créé dans le script devient une grandeur (sans unité) ;
+  <code>mr.creer("P", P, "W")</code> lui donne une unité.</li>
+  <li>Les <strong>figures matplotlib</strong> (<code>plt.plot</code>, <code>plt.show</code>…)
+  deviennent des graphes de MeVReg, modifiables à la souris.</li>
+  <li>Le module <code>mevreg</code> (<code>import mevreg as mr</code>) pilote tout le logiciel :
+  grandeurs, tableurs, graphes, modélisation, fenêtres, fichiers.</li>
+  <li><strong>Script lié</strong> (case <span class="btn">lié</span>) : relancé dès qu'une grandeur ou
+  un paramètre qu'il utilise change.</li>
+  <li>Menu <em>Python › Exemples</em> : un exemple court pour chaque usage (grandeurs, graphes,
+  modélisation, fenêtres et fichiers, divers), à copier et adapter.</li>
+</ul>
+<p>Les fonctions disponibles de numpy, matplotlib et pandas, et toutes celles du module
+<code>mevreg</code> avec leurs paramètres, sont dans la <a href="python.html">référence Python</a>.</p>
+<div class="note"><p><strong>Capytale.</strong> <em>Fichier › Exporter vers Python (Capytale)…</em>
+écrit un script numpy + matplotlib qui refait les données, les calculs et les graphes. Un script qui
+n'utilise que numpy, matplotlib et pandas donne le même résultat dans Capytale.</p></div>
+</section>
+
+<section id="preparer">
+<h2>16. Préparer un TP</h2>
+<ul>
+  <li>Préparez les grandeurs (noms, unités, incertitudes), les formules, les tableurs et les graphes,
+  puis <em>Fichier › Enregistrer</em> : le <code>.phy</code>, distribué aux élèves, s'ouvre avec
+  les mêmes fenêtres, à la même place.</li>
+  <li><em>Fichier › Informations du TP…</em> : titre, noms des élèves, classe et notes, repris en
+  tête du compte rendu PDF.</li>
+  <li>Un script lié peut faire un calcul que les élèves ne voient pas (fenêtre cachée), ou tracer une
+  figure qui suit leurs mesures.</li>
+  <li>Le module <code>fenetre</code> dessine en unités physiques (montages, figures de diffraction et
+  d'interférences) : voir la <a href="python.html#fenetre">référence Python</a>.</li>
+</ul>
+</section>
+
+<section id="installer">
+<h2>17. Installer et configurer</h2>
+<h3>Installation</h3>
+<ul>
+  <li><strong>Windows, sans installation</strong> : MeVReg tient dans un dossier (archive
+  <code>.zip</code>), à copier sur le poste, le réseau du lycée ou une clé USB ; lancer
+  <code>mevreg.exe</code>. Python y est compris. Au premier lancement, Windows peut afficher
+  « Windows a protégé votre ordinateur », car MeVReg n'est pas signé numériquement : « Informations
+  complémentaires », puis « Exécuter quand même ».</li>
+  <li><strong>Windows, installateur</strong> : <code>MeVReg-<i>version</i>-windows-x64-setup.exe</code> installe
+  MeVReg pour tous les utilisateurs dans <code>Program Files\MeVSuite</code>, avec un raccourci dans le menu
+  Démarrer ; il se désinstalle par les Paramètres de Windows. Déploiement sur un parc (WAPT, GPO) :
+  options <code>/VERYSILENT /SUPPRESSMSGBOXES /NORESTART</code>.</li>
+  <li><strong>Linux</strong> : paquet <code>.deb</code> (Ubuntu, Debian), <code>.rpm</code> (Fedora),
+  ou <code>.AppImage</code>, qui se lance sans installation (le rendre exécutable).</li>
+  <li><strong>Vidéoprojecteur</strong> : <kbd>Ctrl</kbd>+<kbd>+</kbd> agrandit les textes et les
+  graphes ; <kbd>Ctrl</kbd>+<kbd>0</kbd> revient à la taille normale.</li>
+</ul>
+<h3>Préférences et réglages</h3>
+<p><em>Édition › Préférences…</em> : graphes sur fond sombre avec le thème sombre, confirmation
+avant de fermer une fenêtre, chiffres significatifs des tableurs.</p>
+<p>Au premier lancement, MeVReg prend le thème clair ou sombre du système. Il retient d'une séance
+à l'autre le thème, les préférences, l'agrandissement des textes, les derniers fichiers et la
+taille de la fenêtre, dans un petit fichier texte <code>mevreg.ini</code>, propre à chaque
+utilisateur ; le supprimer rétablit les valeurs par défaut. Son chemin est affiché dans
+<em>Aide › À propos de MeVReg…</em></p>
+<table>
+<thead><tr><th>Système</th><th>Emplacement</th></tr></thead>
+<tbody>
+<tr><td>Windows</td><td><code>%APPDATA%\MeVSuite\mevreg.ini</code></td></tr>
+<tr><td>Linux</td><td><code>~/.config/MeVSuite/mevreg.ini</code></td></tr>
+</tbody>
+</table>
+<p>Les quatre logiciels de la suite (MeVPix, MeVCine, MeVReg, MeVSono) rangent leurs réglages dans
+ce même dossier <code>MeVSuite</code>.</p>
+</section>
+
+<section id="apropos">
+<h2>18. Contact et licence</h2>
+<p><strong>Contact</strong> : Rémi MEVAERE,
+<a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>. Remarques, idées
+d'amélioration et problèmes sont les bienvenus.</p>
+<p><strong>Licence</strong> : MeVReg est un logiciel libre, distribué sous licence MIT ; il est écrit
+en C++ avec la bibliothèque libre Qt, et contient l'interpréteur Python (licence PSF). Les composants
+utilisés et leur licence sont indiqués dans <em>Aide › À propos de MeVReg…</em> ;
+<em>Aide › À propos de Qt…</em> donne la version de Qt et ses conditions de licence.</p>
+<footer>MeVReg {{version}} — notice intégrée au logiciel, disponible hors connexion.</footer>
+</section>
+</main>
+</div>
+<script>
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a[href^="#"]'));
+  if (!('IntersectionObserver' in window) || !links.length) return;
+  var byId = {};
+  links.forEach(function (a) { byId[a.getAttribute('href').slice(1)] = a; });
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      links.forEach(function (a) { a.classList.remove('current'); });
+      var a = byId[e.target.id];
+      if (a) a.classList.add('current');
+    });
+  }, { rootMargin: '-10% 0px -75% 0px' });
+  document.querySelectorAll('main section[id]').forEach(function (s) { io.observe(s); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <!-- MeVReg : des mesures avec leurs incertitudes et le modèle ajusté -->
+  <rect x="8" y="8" width="240" height="240" rx="40" fill="#1b3a2f"/>
+  <g stroke="#cfe8dc" stroke-opacity="0.18" stroke-width="2">
+    <line x1="58" y1="64" x2="214" y2="64"/>
+    <line x1="58" y1="110" x2="214" y2="110"/>
+    <line x1="58" y1="156" x2="214" y2="156"/>
+    <line x1="110" y1="44" x2="110" y2="204"/>
+    <line x1="162" y1="44" x2="162" y2="204"/>
+  </g>
+  <g stroke="#cfe8dc" stroke-width="8" stroke-linecap="round" fill="none">
+    <line x1="52" y1="204" x2="206" y2="204"/>
+    <line x1="52" y1="204" x2="52" y2="58"/>
+  </g>
+  <g fill="#cfe8dc">
+    <polygon points="220,204 202,193 202,215"/>
+    <polygon points="52,44 41,62 63,62"/>
+  </g>
+  <path d="M60,192 C96,182 120,150 140,120 S186,64 214,52" fill="none" stroke="#52b788" stroke-width="7" stroke-linecap="round"/>
+  <g stroke="#ffb703" stroke-width="4" stroke-linecap="round">
+    <line x1="80" y1="172" x2="80" y2="196"/><line x1="72" y1="172" x2="88" y2="172"/><line x1="72" y1="196" x2="88" y2="196"/>
+    <line x1="112" y1="141" x2="112" y2="167"/><line x1="104" y1="141" x2="120" y2="141"/><line x1="104" y1="167" x2="120" y2="167"/>
+    <line x1="144" y1="100" x2="144" y2="128"/><line x1="136" y1="100" x2="152" y2="100"/><line x1="136" y1="128" x2="152" y2="128"/>
+    <line x1="176" y1="70" x2="176" y2="98"/><line x1="168" y1="70" x2="184" y2="70"/><line x1="168" y1="98" x2="184" y2="98"/>
+  </g>
+  <g fill="#ffb703" stroke="#1b3a2f" stroke-width="3">
+    <circle cx="80" cy="184" r="9"/>
+    <circle cx="112" cy="154" r="9"/>
+    <circle cx="144" cy="114" r="9"/>
+    <circle cx="176" cy="84" r="9"/>
+    <circle cx="206" cy="58" r="9"/>
+  </g>
+</svg>

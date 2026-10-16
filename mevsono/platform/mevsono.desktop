@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=MeVSono
+GenericName=Analyse spectrale des sons
+GenericName[en]=Sound spectrum analysis
+Comment=Signal, période, spectre, fondamentale et harmoniques d'un son
+Comment[en]=Signal, period, spectrum, fundamental and harmonics of a sound
+Exec=mevsono %f
+Icon=mevsono
+Terminal=false
+Categories=Education;Physics;Qt;
+MimeType=audio/x-wav;audio/wav;audio/mpeg;audio/ogg;audio/flac;audio/mp4;audio/aac;video/mp4;
+Keywords=physique;son;spectre;fréquence;physics;sound;spectrum;

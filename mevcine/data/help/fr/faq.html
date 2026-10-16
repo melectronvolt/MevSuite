@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — Questions fréquentes</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="Sommaire">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">Notice d&#x27;utilisation · version 0.2.0</p>
+  <p class="group">Pour les élèves</p>
+  <ol>
+    <li><a href="index.html">1. Présentation</a></li>
+    <li><a href="demarrer.html">2. Démarrer</a></li>
+    <li><a href="simplifie.html">3. Mode simplifié</a></li>
+    <li><a href="echelle.html">4. L&#x27;échelle</a></li>
+    <li><a href="expert.html">5. Mode expert</a></li>
+    <li><a href="exports.html">6. Exporter les mesures</a></li>
+    <li><a href="tp.html">7. Un TP pas à pas</a></li>
+    <li><a href="video.html">8. Filmer un mouvement</a></li>
+    <li><a href="clavier.html">9. Clavier et souris</a></li>
+    <li><a href="faq.html" class="current">10. Questions fréquentes</a></li>
+  </ol>
+  <p class="group">Pour les professeurs</p>
+  <ol>
+    <li><a href="professeurs.html">11. En classe</a></li>
+    <li><a href="installer.html">12. Installer</a></li>
+    <li><a href="reglages.html">13. Réglages</a></li>
+    <li><a href="depannage.html">14. Dépannage</a></li>
+  </ol>
+  <p class="lang"><a href="../en/faq.html" lang="en" hreflang="en">English</a></p>
+</nav>
+
+<main>
+<header class="title">
+<h1>Questions fréquentes</h1>
+<p>Les petits problèmes du TP, et comment les régler</p>
+</header>
+
+<h2 id="pointage">Le pointage</h2>
+<dl class="faq">
+  <dt>Je clique sur l'objet, et rien ne se passe.</dt>
+  <dd>En mode simplifié, on ne pointe qu'à l'étape 4 (ou pour refaire une mesure avec ⌖). En mode expert, il faut
+  d'abord <span class="btn">Démarrer le pointage</span>, et l'image doit suivre celles déjà pointées : on ne
+  laisse pas de trou. Vérifiez aussi qu'un tracé d'étalon ou un choix d'origine n'est pas en cours : la barre
+  d'état le dit ; <kbd>Échap</kbd> l'annule.</dd>
+  <dt>J'ai cliqué à côté.</dt>
+  <dd>Juste après : <span class="btn">↶ Annuler le dernier point</span> (<kbd>Ctrl</kbd>+<kbd>Z</kbd>). Plus
+  tard : le bouton ⌖ de la ligne, dans le tableau des mesures, puis un clic sur l'objet.</dd>
+  <dt>Mes points font des zigzags.</dt>
+  <dd>Visez toujours le même point de l'objet (son centre, ou son bord avant), en regardant la loupe. Un objet flou
+  sur la vidéo est difficile à viser : filmez avec plus de lumière (voir <a href="video.html">Filmer un
+  mouvement</a>).</dd>
+</dl>
+
+<h2 id="echelle">L'échelle</h2>
+<dl class="faq">
+  <dt>Ma longueur est refusée.</dt>
+  <dd>Tapez un nombre, et choisissez l'unité dans la liste : <code>mm</code>, <code>cm</code> ou <code>m</code>.
+  Une autre unité (km, dm…) n'est pas acceptée. Voir <a href="echelle.html#longueur">Écrire la longueur</a>.</dd>
+  <dt>Mes positions sont en pixels (<code>x (px)</code>).</dt>
+  <dd>L'échelle n'est pas définie. Définissez-la, même après le pointage : les mesures sont recalculées.</dd>
+  <dt>Mes distances sont beaucoup trop grandes, ou trop petites.</dt>
+  <dd>Vérifiez l'unité de l'étalon : 85 en <code>m</code> au lieu de <code>cm</code> donne des distances
+  100 fois trop grandes. Corrigez l'unité, puis <span class="btn">Valider</span> de nouveau.</dd>
+</dl>
+
+<h2 id="dates">Les dates</h2>
+<dl class="faq">
+  <dt>Le mouvement paraît trop lent, les dates semblent fausses.</dt>
+  <dd>La vidéo est sans doute au ralenti : indiquez la cadence de prise de vue (par exemple 240) dans <em>Vidéo au
+  ralenti ?</em> (étape 4) ou <em>Images par seconde</em> (mode expert). Voir
+  <a href="video.html#ralenti">Au ralenti</a>.</dd>
+  <dt>Les intervalles de temps du tableau ne sont pas tous égaux.</dt>
+  <dd>La vidéo est à cadence variable (téléphone) : MeVCine utilise la vraie date de chaque image. C'est normal, et
+  plus juste.</dd>
+  <dt>Pourquoi la première date est-elle 0 ?</dt>
+  <dd>La date zéro est celle de la première image pointée : vous choisissez l'origine des temps en choisissant où
+  commencer le pointage.</dd>
+</dl>
+
+<h2 id="modes">Les modes, la fenêtre</h2>
+<dl class="faq">
+  <dt>Comment passer en mode expert, ou revenir au mode simplifié ?</dt>
+  <dd>Avec le menu <em>Mode</em>, à tout moment. Les mesures sont gardées.</dd>
+  <dt>« Passer en mode simplifié ? » : MeVCine veut garder seulement l'objet 1.</dt>
+  <dd>Le mode simplifié ne suit qu'un objet. <span class="btn">Garder l'objet 1</span> oublie les autres ;
+  <span class="btn">Annuler</span> reste en mode expert, avec tous les objets.</dd>
+  <dt>Les textes sont en anglais. / L'écran est trop sombre, ou trop clair.</dt>
+  <dd>Le drapeau, en haut à droite, change la langue ; le soleil (ou la lune), à côté, change le thème.</dd>
+  <dt>Les vecteurs vitesse sont trop longs, ou trop courts.</dt>
+  <dd>Onglet <em>Trajectoires</em> : tapez une autre valeur dans <em>Échelle de vitesses</em> (pixels pour 1 m/s),
+  ou videz la case pour revenir à l'échelle automatique.</dd>
+</dl>
+
+<h2 id="export">L'export</h2>
+<dl class="faq">
+  <dt>Le texte collé dans Python donne une erreur.</dt>
+  <dd>Collez tout le texte copié, y compris la première ligne <code>import numpy as np</code>, au début du
+  programme. Si numpy n'est pas installé sur l'ordinateur, demandez à votre professeur.</dd>
+  <dt>Le tableur affiche des nombres bizarres.</dt>
+  <dd>Le fichier CSV a un point décimal : voir <a href="exports.html#csv">Le fichier CSV</a> pour LibreOffice et
+  Excel.</dd>
+  <dt>J'ai fermé MeVCine sans enregistrer.</dt>
+  <dd>Relancez-le, puis <em>Fichier › Récupérer le travail précédent…</em> : la sauvegarde automatique rend la
+  vidéo, le repère, l'échelle et les mesures.</dd>
+  <dt>« Vidéo introuvable » en rouvrant mon projet.</dt>
+  <dd>Le projet ne contient pas la vidéo : placez-la à côté du fichier <code>.mevcine</code>, puis rouvrez-le.</dd>
+</dl>
+<p>Un autre message ? Voyez le <a href="depannage.html">dépannage</a>, ou demandez à votre professeur.</p>
+<nav class="voisins">
+<a class="precedent" href="clavier.html"><small>◀ Page précédente</small>Clavier et souris</a>
+<a class="suivant" href="professeurs.html"><small>Page suivante ▶</small>En classe</a>
+</nav>
+<footer>MeVCine 0.2.0 · notice du logiciel · Rémi MEVAERE · logiciel libre, licence GPL 3 ou ultérieure</footer>
+</main>
+</div>
+</body>
+</html>

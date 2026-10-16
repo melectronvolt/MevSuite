@@ -1,0 +1,56 @@
+<header class="title">
+<h1>Settings</h1>
+<p>For teachers: the configuration, the folders, the environment variables</p>
+</header>
+
+<h2 id="retenu">What MeVCine remembers</h2>
+<table>
+  <tr><th>Language</th><td>the flag, at the top right (French or English); without a choice, the system language</td></tr>
+  <tr><th>Theme</th><td>the sun or moon, at the top right; without a choice, the desktop theme</td></tr>
+  <tr><th>Unit of the reference</th><td>the last one chosen (mm, cm or m)</td></tr>
+  <tr><th>Window</th><td>its size, and whether it was maximised</td></tr>
+  <tr><th>Enlargement</th><td>the size of the interface texts, chosen with <kbd>Ctrl</kbd>+<kbd>+</kbd> and
+  <kbd>Ctrl</kbd>+<kbd>−</kbd> (from 50 to 300%)</td></tr>
+  <tr><th>Video folder</th><td>the last one used, offered by <em>Open a video…</em></td></tr>
+</table>
+<p>On screen, numbers follow the language (decimal comma in French, point in English). The exports (Python, CSV)
+always use a decimal point, and project files do not depend on the language.</p>
+
+<h2 id="configuration">The configuration file</h2>
+<p>These settings are in <code>mevcine.ini</code>, for each user, in the folder shared by the programs of the
+suite (MeVPix, MeVCine, MeVReg, MeVSono):</p>
+<table>
+  <tr><th>Windows</th><td><code>%APPDATA%\MeVSuite\</code> (usually
+  <code>C:\Users\<i>name</i>\AppData\Roaming\MeVSuite\</code>)</td></tr>
+  <tr><th>Linux</th><td><code>~/.config/MeVSuite/</code></td></tr>
+</table>
+<p>The same folder contains <code>mevcine-secours.mevcine</code>, the automatic backup of the work in progress, and
+<code>mevcine.log</code>, the log of internal errors if there were any. If the configuration file is
+unreadable, MeVCine says so and starts from a fresh configuration; deleting it resets all the settings. Projects of
+the previous version, CineMev (<code>.cinemev</code>), open in MeVCine.</p>
+<p>The settings of the computer are written there in plain text: <code>langue = fr</code> (or <code>en</code>),
+<code>theme = light</code> (or <code>dark</code>; <code>auto</code>, or nothing, follows the desktop),
+<code>agrandissement = 1.2</code>, <code>taille_fenetre = (1200,700)</code>, <code>fenetre_maximisee = False</code>.
+They never go into project files.</p>
+
+<h2 id="variables">Environment variables</h2>
+<table>
+  <tr><th><code>MEVCINE_CONF</code></th><td>another configuration folder (a folder shared by a room, a folder on the
+  USB stick)</td></tr>
+  <tr><th><code>MEVCINE_DATA</code></th><td>another data folder (the user guide), instead of the
+  <code>data</code> folder next to the program</td></tr>
+</table>
+
+<h2 id="dossiers">Folders</h2>
+<ul>
+  <li><code>ffmpeg/</code>, next to the program: the shipped ffmpeg. If it is missing, MeVCine uses the ffmpeg
+  installed on the computer (in the <code>PATH</code>), which cannot always decode HEVC.</li>
+  <li><code>data/help</code>: this guide.</li>
+  <li>Open dialogs offer the last video folder, otherwise the user's <em>Videos</em> (or <em>Downloads</em>) folder;
+  save dialogs, the <em>Documents</em> folder.</li>
+</ul>
+
+<h2 id="fenetre">The window</h2>
+<p>The window can be resized freely (at least 900 × 600): the frame takes the available room, the control columns
+scroll if the window is short, and the points stay right, since they are kept in video pixels. In simple mode, the
+width of the table of measurements is set by dragging its edge.</p>

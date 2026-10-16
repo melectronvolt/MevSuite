@@ -1,0 +1,61 @@
+<header class="title">
+<h1>L'échelle</h1>
+<p>Un étalon tracé sur l'image, et sa longueur réelle</p>
+</header>
+
+<p>Sur l'image, MeVCine mesure des <strong>pixels</strong>. Pour avoir des <strong>mètres</strong>, il lui faut
+un étalon : un objet de longueur connue, visible sur l'image. Vous le tracez, vous donnez sa longueur, et MeVCine
+en déduit le nombre de pixels par mètre. Toutes les mesures, déjà faites ou à venir, sont alors en mètre.</p>
+
+<h2 id="choisir">Choisir un bon étalon</h2>
+<ul>
+  <li><strong>Dans le plan du mouvement</strong> : une règle posée là où l'objet se déplace, pas devant ni
+  derrière. Ce qui est plus près de la caméra paraît plus grand !</li>
+  <li><strong>Le plus long possible</strong> sur l'image : une erreur d'un pixel sur un étalon de 20 pixels, c'est
+  5 % d'erreur sur toutes les mesures ; sur un étalon de 350 pixels, moins de 0,3 %.</li>
+  <li><strong>Des extrémités faciles à viser</strong> : les deux bouts d'une règle, les bords d'une porte, deux
+  marques au sol mesurées au mètre ruban.</li>
+  <li><strong>Face à la caméra</strong>, comme le mouvement lui-même.</li>
+</ul>
+<p>Dans la vidéo du palet (<code>Principe_inertie.avi</code>), la règle jaune mesure 85 cm.</p>
+
+<h2 id="tracer">Tracer l'étalon</h2>
+<p>Mode simplifié : étape 3, <span class="btn">Sélectionner l'étalon</span>. Mode expert : en haut de l'onglet
+<em>Pointage</em>, <span class="btn">Définir l'échelle</span>. Puis, sur l'image :</p>
+<ul>
+  <li><strong>deux clics</strong>, un sur chaque extrémité (entre les deux, le trait suit la souris) ;</li>
+  <li>ou un <strong>glisser</strong> d'une extrémité à l'autre, bouton enfoncé.</li>
+</ul>
+<p>Visez avec la loupe. Clic droit ou <kbd>Échap</kbd> annule : l'échelle d'avant reste. Vous pouvez changer
+d'image avant de tracer l'étalon : il n'a pas besoin d'être sur l'image du pointage.</p>
+
+<h2 id="longueur">Écrire la longueur, et son unité</h2>
+<p>Tapez le nombre, et choisissez l'unité dans la liste : <code>mm</code>, <code>cm</code> ou <code>m</code>.
+Virgule ou point décimal, comme vous voulez ; les puissances de 10 sont permises.</p>
+<table>
+  <tr><th>Vous tapez</th><th>Unité de la liste</th><th>Longueur</th></tr>
+  <tr><td><code>85</code></td><td>cm</td><td>85 cm = 0,85 m</td></tr>
+  <tr><td><code>0,85</code> ou <code>0.85</code></td><td>m</td><td>0,85 m</td></tr>
+  <tr><td><code>850</code></td><td>mm</td><td>850 mm = 0,85 m</td></tr>
+  <tr><td><code>8,5E-1</code></td><td>m</td><td>0,85 m</td></tr>
+  <tr><td><code>2,5×10^-3</code> ou <code>2,5*10**-3</code></td><td>m</td><td>0,0025 m</td></tr>
+  <tr><td><code>85 cm</code>, <code>850mm</code>, <code>0,85 m</code></td><td>(peu importe)</td><td>l'unité écrite
+  l'emporte, et la liste la suit</td></tr>
+</table>
+<p class="warn">Une autre unité (<code>1 km</code>, <code>8 dm</code>…), une longueur nulle ou négative, ou un
+texte qui n'est pas un nombre, est refusé, avec un message qui dit pourquoi.</p>
+<p>Mode simplifié : la longueur se tape dans la consigne de l'étape 3. Mode expert : dans une petite fenêtre qui
+s'ouvre dès l'étalon tracé ; <span class="btn">Annuler</span> ou <kbd>Échap</kbd> abandonne l'étalon.</p>
+
+<h2 id="verifier">Vérifier, changer l'échelle</h2>
+<ul>
+  <li>L'étalon reste dessiné en vert sur l'image, avec sa longueur, dans l'unité choisie. Le mode simplifié
+  affiche « Échelle : 85 cm pour 353 pixels » ; le mode expert, « 85 cm pour 353 px » en haut de l'onglet
+  <em>Pointage</em>.</li>
+  <li><strong>Contrôlez votre échelle</strong> : visez les deux bouts d'un autre objet de longueur connue, et
+  regardez les coordonnées en mètre à côté de la loupe.</li>
+  <li>L'échelle se refait à tout moment, <strong>même après le pointage</strong> : toutes les mesures sont
+  recalculées.</li>
+  <li>Sans échelle, les positions restent en pixels (<code>x (px)</code>) : utile pour regarder la forme d'une
+  trajectoire, mais pas pour calculer une vitesse en m/s.</li>
+</ul>

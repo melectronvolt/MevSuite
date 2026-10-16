@@ -1,0 +1,6 @@
+langue = English
+titre = User guide
+sommaire = Contents
+precedent = Previous page
+suivant = Next page
+pied = MeVCine {version} · user guide · Rémi MEVAERE · free software, GPL 3 or later

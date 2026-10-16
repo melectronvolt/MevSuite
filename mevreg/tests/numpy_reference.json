@@ -1,0 +1,554 @@
+{
+ "numpy": "2.5.3",
+ "setup": "a = np.array([1, 2, 3, 4])\nb = np.array([0.5, -1.5, 2.0, 4.25])\nc = np.array([3.0, 1.0, 2.0, 5.0, 4.0])\nx = np.array([0.0, 0.3, 1.0, 1.2, 2.5, 3.0])\ny = x**2 - 2*x + 1\nt = np.linspace(0, 1, 11)\ns = 2*np.sin(2*np.pi*3*t[:-1])\nxp = np.array([0.0, 1.0, 2.0, 4.0])\nfp = np.array([0.0, 10.0, 0.0, 5.0])\n",
+ "cases": [
+  {
+   "expr": "a",
+   "str": "[1 2 3 4]"
+  },
+  {
+   "expr": "b",
+   "str": "[ 0.5  -1.5   2.    4.25]"
+  },
+  {
+   "expr": "c",
+   "str": "[3. 1. 2. 5. 4.]"
+  },
+  {
+   "expr": "x",
+   "str": "[0.  0.3 1.  1.2 2.5 3. ]"
+  },
+  {
+   "expr": "y",
+   "str": "[1.   0.49 0.   0.04 2.25 4.  ]"
+  },
+  {
+   "expr": "t",
+   "str": "[0.  0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1. ]"
+  },
+  {
+   "expr": "np.array([True, False, True])",
+   "str": "[ True False  True]"
+  },
+  {
+   "expr": "np.array([1, 2.5])",
+   "str": "[1.  2.5]"
+  },
+  {
+   "expr": "np.array([])",
+   "str": "[]"
+  },
+  {
+   "expr": "np.zeros(4)",
+   "str": "[0. 0. 0. 0.]"
+  },
+  {
+   "expr": "np.ones(3)",
+   "str": "[1. 1. 1.]"
+  },
+  {
+   "expr": "np.full(3, 2.5)",
+   "str": "[2.5 2.5 2.5]"
+  },
+  {
+   "expr": "np.zeros(3, dtype=int)",
+   "str": "[0 0 0]"
+  },
+  {
+   "expr": "np.arange(5)",
+   "str": "[0 1 2 3 4]"
+  },
+  {
+   "expr": "np.arange(0, 1, 0.25)",
+   "str": "[0.   0.25 0.5  0.75]"
+  },
+  {
+   "expr": "np.arange(10, 0, -3)",
+   "str": "[10  7  4  1]"
+  },
+  {
+   "expr": "np.arange(1.5, 4)",
+   "str": "[1.5 2.5 3.5]"
+  },
+  {
+   "expr": "np.linspace(0, 1, 7)",
+   "str": "[0.         0.16666667 0.33333333 0.5        0.66666667 0.83333333\n 1.        ]"
+  },
+  {
+   "expr": "np.linspace(0, 10, 5, endpoint=False)",
+   "str": "[0. 2. 4. 6. 8.]"
+  },
+  {
+   "expr": "np.linspace(-1, 1, 4)",
+   "str": "[-1.         -0.33333333  0.33333333  1.        ]"
+  },
+  {
+   "expr": "a + b",
+   "str": "[1.5  0.5  5.   8.25]"
+  },
+  {
+   "expr": "a - 1",
+   "str": "[0 1 2 3]"
+  },
+  {
+   "expr": "2 * a",
+   "str": "[2 4 6 8]"
+  },
+  {
+   "expr": "a / 3",
+   "str": "[0.33333333 0.66666667 1.         1.33333333]"
+  },
+  {
+   "expr": "a // 2",
+   "str": "[0 1 1 2]"
+  },
+  {
+   "expr": "a % 3",
+   "str": "[1 2 0 1]"
+  },
+  {
+   "expr": "a ** 2",
+   "str": "[ 1  4  9 16]"
+  },
+  {
+   "expr": "2 ** a",
+   "str": "[ 2  4  8 16]"
+  },
+  {
+   "expr": "-a",
+   "str": "[-1 -2 -3 -4]"
+  },
+  {
+   "expr": "-b",
+   "str": "[-0.5   1.5  -2.   -4.25]"
+  },
+  {
+   "expr": "b ** 2",
+   "str": "[ 0.25    2.25    4.     18.0625]"
+  },
+  {
+   "expr": "1 / b",
+   "str": "[ 2.         -0.66666667  0.5         0.23529412]"
+  },
+  {
+   "expr": "a / a",
+   "str": "[1. 1. 1. 1.]"
+  },
+  {
+   "expr": "a * b",
+   "str": "[ 0.5 -3.   6.  17. ]"
+  },
+  {
+   "expr": "b - a",
+   "str": "[-0.5  -3.5  -1.    0.25]"
+  },
+  {
+   "expr": "abs(b)",
+   "str": "[0.5  1.5  2.   4.25]"
+  },
+  {
+   "expr": "a > 2",
+   "str": "[False False  True  True]"
+  },
+  {
+   "expr": "(a > 1) & (a < 4)",
+   "str": "[False  True  True False]"
+  },
+  {
+   "expr": "~(a > 2)",
+   "str": "[ True  True False False]"
+  },
+  {
+   "expr": "a == 2",
+   "str": "[False  True False False]"
+  },
+  {
+   "expr": "b != 2",
+   "str": "[ True  True False  True]"
+  },
+  {
+   "expr": "a >= 2.5",
+   "str": "[False False  True  True]"
+  },
+  {
+   "expr": "np.sin(x)",
+   "str": "[0.         0.29552021 0.84147098 0.93203909 0.59847214 0.14112001]"
+  },
+  {
+   "expr": "np.cos(t)",
+   "str": "[1.         0.99500417 0.98006658 0.95533649 0.92106099 0.87758256\n 0.82533561 0.76484219 0.69670671 0.62160997 0.54030231]"
+  },
+  {
+   "expr": "np.tan(b)",
+   "str": "[  0.54630249 -14.10141995  -2.18503986   2.00630903]"
+  },
+  {
+   "expr": "np.exp(b)",
+   "str": "[ 1.64872127  0.22313016  7.3890561  70.10541235]"
+  },
+  {
+   "expr": "np.log(a)",
+   "str": "[0.         0.69314718 1.09861229 1.38629436]"
+  },
+  {
+   "expr": "np.log10(a)",
+   "str": "[0.         0.30103    0.47712125 0.60205999]"
+  },
+  {
+   "expr": "np.sqrt(a)",
+   "str": "[1.         1.41421356 1.73205081 2.        ]"
+  },
+  {
+   "expr": "np.arctan2(b, a)",
+   "str": "[ 0.46364761 -0.64350111  0.5880026   0.81569192]"
+  },
+  {
+   "expr": "np.hypot(3, 4)",
+   "str": "5.0"
+  },
+  {
+   "expr": "np.degrees(np.pi)",
+   "str": "180.0"
+  },
+  {
+   "expr": "np.radians(180)",
+   "str": "3.141592653589793"
+  },
+  {
+   "expr": "np.abs(b)",
+   "str": "[0.5  1.5  2.   4.25]"
+  },
+  {
+   "expr": "np.sum(a)",
+   "str": "10"
+  },
+  {
+   "expr": "np.sum(b)",
+   "str": "5.25"
+  },
+  {
+   "expr": "np.mean(a)",
+   "str": "2.5"
+  },
+  {
+   "expr": "np.mean(b)",
+   "str": "1.3125"
+  },
+  {
+   "expr": "np.std(b)",
+   "str": "2.1018964651000296"
+  },
+  {
+   "expr": "np.std(b, ddof=1)",
+   "str": "2.42706097986845"
+  },
+  {
+   "expr": "np.var(c)",
+   "str": "2.0"
+  },
+  {
+   "expr": "np.min(b)",
+   "str": "-1.5"
+  },
+  {
+   "expr": "np.max(c)",
+   "str": "5.0"
+  },
+  {
+   "expr": "np.argmax(c)",
+   "str": "3"
+  },
+  {
+   "expr": "np.argmin(b)",
+   "str": "1"
+  },
+  {
+   "expr": "np.cumsum(a)",
+   "str": "[ 1  3  6 10]"
+  },
+  {
+   "expr": "np.cumsum(b)",
+   "str": "[ 0.5  -1.    1.    5.25]"
+  },
+  {
+   "expr": "np.diff(c)",
+   "str": "[-2.  1.  3. -1.]"
+  },
+  {
+   "expr": "np.prod(a)",
+   "str": "24"
+  },
+  {
+   "expr": "np.median(c)",
+   "str": "3.0"
+  },
+  {
+   "expr": "np.median(a)",
+   "str": "2.5"
+  },
+  {
+   "expr": "a.sum()",
+   "str": "10"
+  },
+  {
+   "expr": "b.mean()",
+   "str": "1.3125"
+  },
+  {
+   "expr": "c.std(ddof=1)",
+   "str": "1.5811388300841898"
+  },
+  {
+   "expr": "np.gradient(y)",
+   "str": "[-0.51  -0.5   -0.225  1.125  1.98   1.75 ]"
+  },
+  {
+   "expr": "np.gradient(y, 0.5)",
+   "str": "[-1.02 -1.   -0.45  2.25  3.96  3.5 ]"
+  },
+  {
+   "expr": "np.gradient(y, x)",
+   "str": "[-1.70000000e+00 -1.40000000e+00  2.22044605e-16  4.00000000e-01\n  3.00000000e+00  3.50000000e+00]"
+  },
+  {
+   "expr": "np.trapezoid(y, x)",
+   "str": "3.45"
+  },
+  {
+   "expr": "np.trapezoid(a)",
+   "str": "7.5"
+  },
+  {
+   "expr": "np.round(b / 3, 2)",
+   "str": "[ 0.17 -0.5   0.67  1.42]"
+  },
+  {
+   "expr": "np.floor(b)",
+   "str": "[ 0. -2.  2.  4.]"
+  },
+  {
+   "expr": "np.ceil(b)",
+   "str": "[ 1. -1.  2.  5.]"
+  },
+  {
+   "expr": "np.round(2.5)",
+   "str": "2.0"
+  },
+  {
+   "expr": "np.round(np.array([0.5, 1.5, 2.5]))",
+   "str": "[0. 2. 2.]"
+  },
+  {
+   "expr": "np.concatenate([a, b])",
+   "str": "[ 1.    2.    3.    4.    0.5  -1.5   2.    4.25]"
+  },
+  {
+   "expr": "np.append(a, 7)",
+   "str": "[1 2 3 4 7]"
+  },
+  {
+   "expr": "np.where(a > 2, a, 0)",
+   "str": "[0 0 3 4]"
+  },
+  {
+   "expr": "np.where(a > 2)",
+   "str": "(array([2, 3]),)"
+  },
+  {
+   "expr": "np.sort(c)",
+   "str": "[1. 2. 3. 4. 5.]"
+  },
+  {
+   "expr": "np.argsort(c)",
+   "str": "[1 2 0 4 3]"
+  },
+  {
+   "expr": "np.flip(a)",
+   "str": "[4 3 2 1]"
+  },
+  {
+   "expr": "np.unique(np.array([3, 1, 3, 2]))",
+   "str": "[1 2 3]"
+  },
+  {
+   "expr": "np.interp(2.5, xp, fp)",
+   "str": "1.25"
+  },
+  {
+   "expr": "np.interp(np.array([0, 1.5, 10]), xp, fp)",
+   "str": "[0. 5. 5.]"
+  },
+  {
+   "expr": "np.polyfit(x, y, 2)",
+   "str": "[ 1. -2.  1.]"
+  },
+  {
+   "expr": "np.polyval([1, 2, 3], 2)",
+   "str": "11"
+  },
+  {
+   "expr": "np.polyval(np.array([1, 2, 3]), a)",
+   "str": "[ 6 11 18 27]"
+  },
+  {
+   "expr": "np.fft.fft(np.array([1, 2, 3, 4]))",
+   "str": "[10.+0.j -2.+2.j -2.+0.j -2.-2.j]"
+  },
+  {
+   "expr": "np.round(np.abs(np.fft.rfft(s)), 6)",
+   "str": "[ 0.  0.  0. 10.  0.  0.]"
+  },
+  {
+   "expr": "np.fft.fftfreq(8, 0.1)",
+   "str": "[ 0.    1.25  2.5   3.75 -5.   -3.75 -2.5  -1.25]"
+  },
+  {
+   "expr": "np.fft.rfftfreq(8, 0.1)",
+   "str": "[0.   1.25 2.5  3.75 5.  ]"
+  },
+  {
+   "expr": "np.fft.fftshift(np.arange(6))",
+   "str": "[3 4 5 0 1 2]"
+  },
+  {
+   "expr": "np.isnan(np.array([1, np.nan]))",
+   "str": "[False  True]"
+  },
+  {
+   "expr": "np.nanmean(np.array([1, np.nan, 3]))",
+   "str": "2.0"
+  },
+  {
+   "expr": "a[::2]",
+   "str": "[1 3]"
+  },
+  {
+   "expr": "a[::-1]",
+   "str": "[4 3 2 1]"
+  },
+  {
+   "expr": "a[1:-1]",
+   "str": "[2 3]"
+  },
+  {
+   "expr": "a[[0, -1]]",
+   "str": "[1 4]"
+  },
+  {
+   "expr": "a[a % 2 == 0]",
+   "str": "[2 4]"
+  },
+  {
+   "expr": "c[2]",
+   "str": "2.0"
+  },
+  {
+   "expr": "c[-1]",
+   "str": "4.0"
+  },
+  {
+   "expr": "t[3:7]",
+   "str": "[0.3 0.4 0.5 0.6]"
+  },
+  {
+   "expr": "np.dot(a, b)",
+   "str": "20.5"
+  },
+  {
+   "expr": "np.cross([1, 0, 0], [0, 1, 0])",
+   "str": "[0 0 1]"
+  },
+  {
+   "expr": "np.linalg.norm([3, 4])",
+   "str": "5.0"
+  },
+  {
+   "expr": "np.clip(b, 0, 1)",
+   "str": "[0.5 0.  1.  1. ]"
+  },
+  {
+   "expr": "np.maximum(a, 2)",
+   "str": "[2 2 3 4]"
+  },
+  {
+   "expr": "np.minimum(b, 1)",
+   "str": "[ 0.5 -1.5  1.   1. ]"
+  },
+  {
+   "expr": "np.mean([1, 2, 3, 4])",
+   "str": "2.5"
+  },
+  {
+   "expr": "np.cumsum(np.array([True, False, True]))",
+   "str": "[1 1 2]"
+  },
+  {
+   "expr": "a / np.array([2, 4, 8, 16])",
+   "str": "[0.5   0.5   0.375 0.25 ]"
+  },
+  {
+   "expr": "np.array([1, 2, 3]) * 1.0",
+   "str": "[1. 2. 3.]"
+  },
+  {
+   "expr": "np.array([0.1, 0.2]) + 0.1",
+   "str": "[0.2 0.3]"
+  },
+  {
+   "expr": "np.array([1e-5, 1.5e-5])",
+   "str": "[1.0e-05 1.5e-05]"
+  },
+  {
+   "expr": "np.array([1e10, 1.0])",
+   "str": "[1.e+10 1.e+00]"
+  },
+  {
+   "expr": "np.array([1, np.nan, 3.0])",
+   "str": "[ 1. nan  3.]"
+  },
+  {
+   "expr": "len(a)",
+   "str": "4"
+  },
+  {
+   "expr": "a.size",
+   "str": "4"
+  },
+  {
+   "expr": "a.shape",
+   "str": "(4,)"
+  },
+  {
+   "expr": "b.dtype",
+   "str": "float64"
+  },
+  {
+   "expr": "a.dtype",
+   "str": "int64"
+  },
+  {
+   "expr": "np.pi",
+   "str": "3.141592653589793"
+  },
+  {
+   "expr": "np.e",
+   "str": "2.718281828459045"
+  },
+  {
+   "expr": "np.sqrt(2)",
+   "str": "1.4142135623730951"
+  },
+  {
+   "expr": "np.exp(1)",
+   "str": "2.718281828459045"
+  },
+  {
+   "expr": "float(np.mean(a))",
+   "str": "2.5"
+  },
+  {
+   "expr": "a.tolist()",
+   "str": "[1, 2, 3, 4]"
+  }
+ ]
+}

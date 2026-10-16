@@ -1,0 +1,115 @@
+<header class="title">
+<h1>MeVCine</h1>
+<p>Measuring a filmed motion — the user guide, for students first, then for teachers</p>
+</header>
+
+<p>MeVCine is used to <strong>measure a filmed motion</strong>: a falling ball, a sliding puck, a passing
+cyclist… You open the video, choose a set of axes (an origin and the direction of the axes) and a scale (an
+object of known length), then click on the object, frame after frame. MeVCine then gives, for each frame, the
+time <code>t</code> and the coordinates <code>x</code> and <code>y</code> of the object. You copy them into a
+Python program, or save them to a file for a spreadsheet.</p>
+
+<p class="note"><strong>You do the physics.</strong> MeVCine measures times and positions, nothing else: it asks
+for neither the mass nor g. Velocities, accelerations and energies are your job, for instance in a Python
+program.</p>
+
+<h2 id="etapes">Six steps</h2>
+<ol class="steps">
+  <li><strong>Open a video</strong>: your own (phone, camera), or your teacher's.</li>
+  <li><strong>Place the origin</strong> of the axes: a click on the frame, or a drag.</li>
+  <li><strong>Choose the direction of the axes</strong> x and y, among four drawn sets of axes.</li>
+  <li><strong>Set the scale</strong>: draw a reference on the frame, then type its length (in mm, cm or m).</li>
+  <li><strong>Mark the object</strong> frame after frame: the table of measurements fills in.</li>
+  <li><strong>Export</strong>: copy for Python, or save as CSV.</li>
+</ol>
+<p><a href="simplifie.html">Simple mode</a> goes through these steps one by one, with an instruction each time. To
+get started, choose it.</p>
+
+<h2 id="fenetre">The window</h2>
+<figure class="ecran">
+<svg viewBox="0 0 1280 800" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, sans-serif" role="img" aria-label="The MeVCine window in simple mode, at the marking step, with numbered badges">
+  <image href="images/pointage.jpg" width="1280" height="800"/>
+  <g font-weight="700" font-size="22" text-anchor="middle">
+    <circle cx="205" cy="17" r="16" fill="#0b5cad"/><text x="205" y="25" fill="#fff">1</text>
+    <circle cx="1200" cy="16" r="16" fill="#0b5cad"/><text x="1200" y="24" fill="#fff">2</text>
+    <circle cx="585" cy="39" r="16" fill="#0b5cad"/><text x="585" y="47" fill="#fff">3</text>
+    <circle cx="235" cy="178" r="16" fill="#0b5cad"/><text x="235" y="186" fill="#fff">4</text>
+    <circle cx="300" cy="255" r="16" fill="#0b5cad"/><text x="300" y="263" fill="#fff">5</text>
+    <circle cx="146" cy="750" r="16" fill="#0b5cad"/><text x="146" y="758" fill="#fff">6</text>
+    <circle cx="365" cy="91" r="16" fill="#0b5cad"/><text x="365" y="99" fill="#fff">7</text>
+    <circle cx="700" cy="728" r="16" fill="#0b5cad"/><text x="700" y="736" fill="#fff">8</text>
+    <circle cx="1150" cy="73" r="16" fill="#0b5cad"/><text x="1150" y="81" fill="#fff">9</text>
+    <circle cx="300" cy="785" r="16" fill="#0b5cad"/><text x="300" y="793" fill="#fff">10</text>
+  </g>
+</svg>
+<figcaption>Simple mode, at the marking step, with the video <code>Principe_inertie.avi</code>
+(<a href="images/pointage.jpg">full-size image</a>).</figcaption>
+</figure>
+<ol class="legend">
+  <li><span class="num">1</span><strong>The menus</strong>: <em>File</em> (open a video, save the project…),
+  <em>Edit</em>, <em>Mode</em> (simple or expert, at any time, without losing the measurements) and
+  <em>Help</em> (this guide, <kbd>F1</kbd>).</li>
+  <li><span class="num">2</span><strong>Theme and language</strong>: the sun (light theme) or the moon (dark
+  theme), and the flag of the language. A click switches to the other theme, or to the other language.</li>
+  <li><span class="num">3</span><strong>The six steps</strong> of simple mode. A tick ✔ marks the steps done; a
+  click on a step goes back to it.</li>
+  <li><span class="num">4</span><strong>The magnifier</strong> enlarges the frame around the mouse. Next to it,
+  the <strong>coordinates</strong> of the point under the cursor, in your axes: in pixels (px), then in metres
+  (m) once the scale is set.</li>
+  <li><span class="num">5</span><strong>The instruction</strong> of the step: what to do, and its buttons.</li>
+  <li><span class="num">6</span><span class="btn">◀ Previous</span> and <span class="btn">Next ▶</span>:
+  change step. They are always visible.</li>
+  <li><span class="num">7</span><strong>The video frame</strong>, with the axes (in green), the reference and its
+  length, and your points (red crosses).</li>
+  <li><span class="num">8</span><strong>Choosing the frame</strong>: its number, the slider, and the ↶ ↷ buttons
+  to undo or redo the last point. <span class="btn">Full screen</span>: to mark, the image fills the whole screen,
+  the magnifier stays visible (<kbd>Esc</kbd> to come back).</li>
+  <li><span class="num">9</span><strong>The table of measurements</strong>: t, x, y for each marked frame, and the
+  ⌖ button to redo a measurement.</li>
+  <li><span class="num">10</span><strong>The status bar</strong>: on the left, what to do next, or what just
+  happened (green for a success, orange for an expected action, red for a problem); on the right, the open video,
+  the frame shown and the mode.</li>
+</ol>
+<p class="tip"><strong>Lost?</strong> Read the status bar, at the very bottom: it always tells you what to do
+next. And the <kbd>F1</kbd> key opens the page of this guide that matches what you are doing.</p>
+
+<h2 id="modes">Two ways of working</h2>
+<table>
+  <tr><th>Simple mode</th><td>The six steps, one by one, for a single object. To get started, and for most
+  labs.</td></tr>
+  <tr><th>Expert mode</th><td>All the features, in four tabs: <em>Marking</em>, <em>Coordinates</em>,
+  <em>Trajectories</em>, <em>Grapher</em>. Several objects, automatic tracking, velocity vectors,
+  chronophotography, change of reference frame, graphs.</td></tr>
+</table>
+<p>The <em>Mode</em> menu changes mode at any time, <strong>without losing the measurements</strong>. Simple mode follows only one object: if your
+measurements have several, MeVCine offers to keep only object 1.</p>
+
+<h2 id="sommaire">The pages of this guide</h2>
+<h3>For students</h3>
+<ul class="cartes">
+  <li><a href="demarrer.html">Getting started</a><p>Starting MeVCine, choosing the mode, opening a video or a
+  project, theme and language.</p></li>
+  <li><a href="simplifie.html">Simple mode</a><p>The six steps in detail, and how to redo a measurement.</p></li>
+  <li><a href="echelle.html">The scale</a><p>Choosing a good reference, drawing it, writing its length and
+  unit.</p></li>
+  <li><a href="expert.html">Expert mode</a><p>The four tabs, several objects, automatic tracking, velocity
+  vectors.</p></li>
+  <li><a href="exports.html">Exporting the measurements</a><p>Copying for Python, the CSV file, projects, the
+  automatic backup.</p></li>
+  <li><a href="tp.html">A lab, step by step</a><p>The principle of inertia with the video of a puck, from opening it
+  to the Python program.</p></li>
+  <li><a href="video.html">Filming a motion</a><p>Filming well with a phone, transferring the video, slow
+  motion.</p></li>
+  <li><a href="clavier.html">Keyboard and mouse</a><p>Shortcuts, and gestures on the frame.</p></li>
+  <li><a href="faq.html">Frequently asked questions</a><p>The click marks nothing, the length is refused, the times
+  look wrong…</p></li>
+</ul>
+<h3>For teachers</h3>
+<ul class="cartes">
+  <li><a href="professeurs.html">In the classroom</a><p>Deployment in a computer room, teaching choices, a typical
+  session, a Python example, contact and licence.</p></li>
+  <li><a href="installer.html">Installing</a><p>Windows, Linux, the program folder, the command line.</p></li>
+  <li><a href="reglages.html">Settings</a><p>The configuration file, the folders, the environment
+  variables.</p></li>
+  <li><a href="depannage.html">Troubleshooting</a><p>The program's messages and what to do.</p></li>
+</ul>

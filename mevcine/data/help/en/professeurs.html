@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — In the classroom</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="Contents">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">User guide · version 0.2.0</p>
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="index.html">1. Overview</a></li>
+    <li><a href="demarrer.html">2. Getting started</a></li>
+    <li><a href="simplifie.html">3. Simple mode</a></li>
+    <li><a href="echelle.html">4. The scale</a></li>
+    <li><a href="expert.html">5. Expert mode</a></li>
+    <li><a href="exports.html">6. Exporting the measurements</a></li>
+    <li><a href="tp.html">7. A lab, step by step</a></li>
+    <li><a href="video.html">8. Filming a motion</a></li>
+    <li><a href="clavier.html">9. Keyboard and mouse</a></li>
+    <li><a href="faq.html">10. Frequently asked questions</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="professeurs.html" class="current">11. In the classroom</a></li>
+    <li><a href="installer.html">12. Installing</a></li>
+    <li><a href="reglages.html">13. Settings</a></li>
+    <li><a href="depannage.html">14. Troubleshooting</a></li>
+  </ol>
+  <p class="lang"><a href="../fr/professeurs.html" lang="fr" hreflang="fr">Français</a></p>
+</nav>
+
+<main>
+<header class="title">
+<h1>In the classroom</h1>
+<p>For teachers: deployment, teaching choices, a typical session, a Python example</p>
+</header>
+
+<h2 id="deploiement">Deploying MeVCine in a computer room</h2>
+<ul>
+  <li><strong>No installation</strong>: copy the MeVCine folder onto a USB stick, a network folder or the disk of
+  each computer (see <a href="installer.html">Installing</a>). It needs no administrator rights, and writes only in
+  the user's configuration folder.</li>
+  <li><strong>A shortcut for the students</strong>: to <code>mevcine.exe --simple</code> (or
+  <code>mevcine --simple</code>), to open simple mode directly; a video can be added:
+  <code>mevcine.exe --simple \\server\physics\fall.mp4</code>.</li>
+  <li><strong>Shared computers</strong>: MeVCine never reopens the last video; every student starts from a clean
+  screen. The language, the theme, the unit of the reference, the window size and the last video folder are
+  remembered per account. So is the automatic backup: with a shared account, <em>Recover previous work</em> gives
+  back the work of the last student on that computer.</li>
+  <li><strong>A shared configuration folder</strong>: the <code>MEVCINE_CONF</code> variable (in a <code>.bat</code>
+  launcher, for instance) points to another folder, on the stick or the network. See
+  <a href="reglages.html">Settings</a>.</li>
+  <li>On first launch, Windows reports an unsigned program (<em>More info › Run anyway</em>): warn the students, or
+  do this first launch yourself on each computer.</li>
+</ul>
+
+<h2 id="choix">Teaching choices</h2>
+<ul>
+  <li>MeVCine <strong>asks for neither mass nor g</strong>, and exports only times and positions: velocities,
+  accelerations and energies are computed by the students (Python, spreadsheet, paper). The grapher of expert mode
+  still shows v and a, for exploring.</li>
+  <li><strong>The direction of the axes is never chosen in advance</strong>: the student decides on the axes, and
+  can change them afterwards to see the effect on the coordinates.</li>
+  <li><strong>The reference first, its length next</strong>, with its unit (mm, cm or m) chosen by the student; the
+  exports are always in metres and seconds. A unit mistake shows at once on the frame (“85 m”) and in the orders of
+  magnitude.</li>
+  <li>Time zero is that of the <strong>first marked frame</strong>: students choose the origin of time by choosing
+  where to start.</li>
+  <li>Measurements are kept in video pixels: origin, axes and scale can be changed without losing anything, which
+  allows discussing the influence of the axes.</li>
+  <li>The velocity vectors of expert mode have an <strong>automatic scale</strong> and a legend (“1 m/s”): the arrows
+  can be compared before any calculation.</li>
+</ul>
+
+<h2 id="seance">A typical session (simple mode)</h2>
+<ol class="steps">
+  <li><strong>5 min</strong>: start MeVCine, open the video (provided, or filmed by the students); find the start and
+  the end of the motion with the slider.</li>
+  <li><strong>5 min</strong>: origin, axes, scale. Have the students justify their choice of axes and reference.</li>
+  <li><strong>10 min</strong>: mark about twenty frames; check the table; redo a doubtful measurement with ⌖.</li>
+  <li><strong>5 min</strong>: <em>Copy for Python</em>, paste into the editor or notebook; or <em>Save as CSV…</em>.</li>
+  <li><strong>The rest</strong>: analysis in Python (velocities, graphs, model).</li>
+</ol>
+<p>The page <a href="tp.html">A lab, step by step</a> goes through this session with the video of a puck.
+Plan a <em>File › Save the project…</em> at the end of the session if the work continues later.</p>
+
+<h2 id="python">A Python example: finding g</h2>
+<p>With the text copied by MeVCine (a falling ball, y upward):</p>
+<pre>import numpy as np
+import matplotlib.pyplot as plt
+
+# ↓ text copied from MeVCine
+# MeVCine measurements — video: fall.mp4
+# t: time in s; x, y: positions in m
+lst_t = np.array([0.0, 0.04, 0.08, 0.12, 0.16, 0.2])
+lst_x = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+lst_y = np.array([1.2, 1.192, 1.169, 1.129, 1.074, 1.004])
+# ↑
+
+# vertical speed, in the middle of each interval
+t_middle = (lst_t[1:] + lst_t[:-1]) / 2
+vy = np.diff(lst_y) / np.diff(lst_t)
+
+# model: vy = v0 - g t  →  a straight line of slope -g
+slope, intercept = np.polyfit(t_middle, vy, 1)
+print(f"g ≈ {-slope:.2f} m/s²")
+
+plt.subplot(1, 2, 1)
+plt.plot(lst_t, lst_y, "o")
+plt.xlabel("t (s)"); plt.ylabel("y (m)")
+plt.subplot(1, 2, 2)
+plt.plot(t_middle, vy, "o", t_middle, slope * t_middle + intercept, "-")
+plt.xlabel("t (s)"); plt.ylabel("vy (m/s)")
+plt.tight_layout()
+plt.show()</pre>
+
+<h2 id="contact">Contact, languages, contributing</h2>
+<p>MeVCine is written by <strong>Rémi MEVAERE</strong>:
+<a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>. A remark, a video that does not open,
+an idea for the classroom: write, attaching if possible the error log (<a href="reglages.html#configuration">Settings</a>)
+and the video.</p>
+<p>The interface and the user guide exist in French and English. The translations are gettext files
+(<code>data/lang/*.po</code>, editable with Poedit); the user guide is made of HTML pages (<code>aide/<i>language</i>/</code>,
+assembled by <code>scripts/site-aide.py</code>). The code is in C++ with Qt; the <code>README.md</code> file explains
+how to build it and run the tests.</p>
+
+<h2 id="licence">Licence</h2>
+<p>MeVCine is <strong>free software</strong>, under the GNU GPL version 3 or later: you may copy it, hand it out to
+students and modify it freely. It includes open-source components (Qt, FFmpeg…): <em>Help › About</em> lists them,
+with their licences; the <em>About Qt</em> button gives that of Qt.</p>
+<nav class="voisins">
+<a class="precedent" href="faq.html"><small>◀ Previous page</small>Frequently asked questions</a>
+<a class="suivant" href="installer.html"><small>Next page ▶</small>Installing</a>
+</nav>
+<footer>MeVCine 0.2.0 · user guide · Rémi MEVAERE · free software, GPL 3 or later</footer>
+</main>
+</div>
+</body>
+</html>

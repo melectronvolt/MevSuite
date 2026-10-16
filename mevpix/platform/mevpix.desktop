@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=MeVPix
+GenericName=Mesures sur une image
+GenericName[en]=Measurements on an image
+Comment=Mesurer des longueurs sur une photo : étalonnage, mesures, profil d'intensité
+Comment[en]=Measure lengths on a photo: calibration, measurements, intensity profile
+Exec=mevpix %f
+Icon=mevpix
+Terminal=false
+Categories=Education;Physics;Qt;
+MimeType=image/png;image/jpeg;image/bmp;image/gif;image/tiff;image/webp;
+Keywords=physique;diffraction;mesure;image;physics;

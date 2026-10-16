@@ -1,0 +1,48 @@
+<header class="title">
+<h1>Keyboard and mouse</h1>
+<p>Shortcuts, and gestures on the frame</p>
+</header>
+
+<h2 id="raccourcis">Keyboard shortcuts</h2>
+<table>
+  <tr><th>Keys</th><th>Action</th></tr>
+  <tr><td><kbd>←</kbd> <kbd>→</kbd>, <kbd>Page ↑</kbd> <kbd>Page ↓</kbd></td><td>previous frame, next frame</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd></td><td>undo the last point / redo it</td></tr>
+  <tr><td><kbd>Esc</kbd></td><td>cancel drawing the reference, the measurement to redo, choosing the origin (expert
+  mode); close a message</td></tr>
+  <tr><td><kbd>Enter</kbd></td><td>confirm the length of the reference; close a message (but never confirm an action
+  that would lose measurements)</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>C</kbd></td><td>copy the measurements for Python (outside a text field)</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>O</kbd></td><td>open a video</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>S</kbd></td><td>save the project</td></tr>
+  <tr><td><kbd>F1</kbd></td><td>this guide, at the page of what you are doing</td></tr>
+  <tr><td><kbd>F11</kbd></td><td>mark in full screen; <kbd>Esc</kbd> or <kbd>F11</kbd> goes back to the window</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>+</kbd> / <kbd>Ctrl</kbd>+<kbd>−</kbd></td><td>enlarge or shrink the whole
+  interface (from 50 to 300%)</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>0</kbd></td><td>bring the interface back to its normal size</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>Q</kbd></td><td>quit</td></tr>
+</table>
+
+<h2 id="souris">The mouse on the frame</h2>
+<table>
+  <tr><th>Gesture</th><th>Effect</th></tr>
+  <tr><td>Click</td><td>place the origin (step 1, or after <span class="btn">Place the origin</span>); mark the
+  object (while marking); one end of the reference (while drawing it)</td></tr>
+  <tr><td>Drag the origin</td><td>move the origin: at steps 1 and 2 of simple mode, and in expert mode before
+  marking or after <span class="btn">Place the origin</span>. Over the origin, the cursor becomes a hand.</td></tr>
+  <tr><td>Drag</td><td>draw the reference from one end to the other; draw a box around an object (automatic
+  tracking). While marking, a small drag counts as a click: the point is placed when the button is
+  released.</td></tr>
+  <tr><td>Right-click</td><td>cancel drawing the reference</td></tr>
+  <tr><td>Hover</td><td>the magnifier enlarges the frame around the mouse; next to it, the coordinates of the point
+  under the cursor</td></tr>
+  <tr><td>Grapher</td><td>wheel: zoom; drag: move; double-click: fit</td></tr>
+</table>
+
+<h2 id="loupe">The magnifier</h2>
+<p>At the top left, the magnifier shows the frame enlarged around the mouse, with a crosshair and a small circle.
+Look at it when you click, and always aim at the same point of the object from one frame to the next. Its title
+recalls what is expected: “Origin of the axes”, “Reference”, “Marking”, “Marking object 2”, “Measurement to
+redo”.</p>
+<p>Next to it, the small table gives the coordinates of the point under the cursor, in your axes: the
+<strong>px</strong> row in pixels, the <strong>m</strong> row in metres (once the scale is set).</p>

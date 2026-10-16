@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — A lab, step by step</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="Contents">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">User guide · version 0.2.0</p>
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="index.html">1. Overview</a></li>
+    <li><a href="demarrer.html">2. Getting started</a></li>
+    <li><a href="simplifie.html">3. Simple mode</a></li>
+    <li><a href="echelle.html">4. The scale</a></li>
+    <li><a href="expert.html">5. Expert mode</a></li>
+    <li><a href="exports.html">6. Exporting the measurements</a></li>
+    <li><a href="tp.html" class="current">7. A lab, step by step</a></li>
+    <li><a href="video.html">8. Filming a motion</a></li>
+    <li><a href="clavier.html">9. Keyboard and mouse</a></li>
+    <li><a href="faq.html">10. Frequently asked questions</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="professeurs.html">11. In the classroom</a></li>
+    <li><a href="installer.html">12. Installing</a></li>
+    <li><a href="reglages.html">13. Settings</a></li>
+    <li><a href="depannage.html">14. Troubleshooting</a></li>
+  </ol>
+  <p class="lang"><a href="../fr/tp.html" lang="fr" hreflang="fr">Français</a></p>
+</nav>
+
+<main>
+<header class="title">
+<h1>A lab, step by step</h1>
+<p>The principle of inertia, with the video of a puck on a table</p>
+</header>
+
+<p><strong>The question:</strong> a puck slides on a table with almost no friction. Is its motion straight and
+uniform? We are going to measure it with MeVCine, then check it with Python. Time needed: about twenty
+minutes.</p>
+
+<h2 id="mesurer">1. Measuring with MeVCine</h2>
+<ol class="steps">
+  <li>Start MeVCine, choose <strong>Simple mode</strong>, then <span class="btn">📂 Open a video…</span> and
+  choose the video given by your teacher (here <code>Principe_inertie.avi</code>: a puck on a table, with an 85 cm
+  yellow ruler).</li>
+  <li><strong>Origin</strong>: click on the left end of the yellow ruler. <span class="btn">Next ▶</span></li>
+  <li><strong>Axes</strong>: choose “x to the right, y upward”. <span class="btn">Next ▶</span></li>
+  <li><strong>Scale</strong>: <span class="btn">Select the reference</span>, click on both ends of the yellow
+  ruler; type <code>85</code>, choose <code>cm</code>, <span class="btn">Confirm</span>.
+  <span class="btn">Next ▶</span></li>
+  <li><strong>Marking</strong>: with the slider, go to the first frame where the puck has left the hand (around
+  frame 3). Click on the <strong>centre</strong> of the puck, frame after frame, looking at the magnifier, until it
+  leaves the frame. <span class="btn">Finish marking ▶</span></li>
+  <li><strong>Table</strong>: check the values; redo with ⌖ a measurement that looks wrong.
+  <span class="btn">Next ▶</span></li>
+  <li><strong>Export</strong>: <span class="btn">📋 Copy for Python</span>.</li>
+</ol>
+<p class="tip">Before exporting, switch to expert mode (<em>Mode</em> menu), <em>Trajectories</em> tab, and
+tick <em>Show the velocity vectors</em>: arrows of the same length, in the same direction, already suggest a straight
+uniform motion. Then switch back to simple mode: nothing is lost.</p>
+
+<h2 id="python">2. Working with Python</h2>
+<p>Paste the copied text (<kbd>Ctrl</kbd>+<kbd>V</kbd>) at the beginning of a program, then add:</p>
+<pre>import matplotlib.pyplot as plt
+
+# speed between two successive frames, in the middle of each interval
+t_middle = (lst_t[1:] + lst_t[:-1]) / 2
+vx = np.diff(lst_x) / np.diff(lst_t)
+vy = np.diff(lst_y) / np.diff(lst_t)
+print("mean vx:", vx.mean(), "m/s")
+
+# the straight line closest to the x(t) points
+a, b = np.polyfit(lst_t, lst_x, 1)
+print(f"x(t) ≈ {a:.3f} t + {b:.3f}")
+
+plt.subplot(1, 2, 1)
+plt.plot(lst_t, lst_x, "o", lst_t, a * lst_t + b, "-")
+plt.xlabel("t (s)"); plt.ylabel("x (m)")
+plt.subplot(1, 2, 2)
+plt.plot(t_middle, vx, "o", t_middle, vy, "s")
+plt.xlabel("t (s)"); plt.ylabel("speed (m/s)")
+plt.tight_layout()
+plt.show()</pre>
+
+<h2 id="conclure">3. Concluding</h2>
+<ul>
+  <li>The <code>y(t)</code> points are almost constant: the trajectory is a straight line parallel to the x axis.</li>
+  <li>The <code>x(t)</code> points are aligned: x changes by the same amount in each time interval, the speed is
+  constant. Its sign depends on the direction chosen for the x axis.</li>
+  <li>The speeds computed frame by frame are not all equal: small differences come from the marking (for instance,
+  a one-pixel error on a 15-pixel displacement between two frames is almost 7 %). The more you aim at the same point
+  of the puck, the smaller these differences.</li>
+</ul>
+<p class="note">To go further: move the origin, or change the direction of x (steps 1 and 2), and look at what
+changes in the table. The shape of the motion itself does not depend on the axes.</p>
+<nav class="voisins">
+<a class="precedent" href="exports.html"><small>◀ Previous page</small>Exporting the measurements</a>
+<a class="suivant" href="video.html"><small>Next page ▶</small>Filming a motion</a>
+</nav>
+<footer>MeVCine 0.2.0 · user guide · Rémi MEVAERE · free software, GPL 3 or later</footer>
+</main>
+</div>
+</body>
+</html>

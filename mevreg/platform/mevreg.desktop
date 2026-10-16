@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=MeVReg
+GenericName=Traitement des données des TP
+Comment=Tableur de grandeurs, graphes, modélisation, incertitudes et Python
+Exec=mevreg %f
+Icon=mevreg
+Terminal=false
+Categories=Education;Physics;Qt;
+MimeType=text/csv;
+Keywords=physique;chimie;tableur;graphe;modélisation;régression;python;

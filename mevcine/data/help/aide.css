@@ -1,0 +1,27 @@
+/* Notice de MeVCine : ce qui s'ajoute à help.css, la feuille de style commune aux logiciels de la
+   suite (copiée telle quelle de MeVSono). La notice de MeVCine est un site de plusieurs pages : le
+   sommaire mène aux pages, chaque page mène à la précédente et à la suivante, et la présentation
+   montre les pages en cartes. */
+
+nav.toc .brand a { color: inherit; text-decoration: none; }
+nav.toc .lang a { margin-right: .6rem; }
+
+.voisins {
+  display: flex; justify-content: space-between; gap: 1rem; max-width: 46rem;
+  margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border);
+}
+.voisins a { text-decoration: none; }
+.voisins .suivant { margin-left: auto; text-align: right; }
+.voisins small { display: block; color: var(--muted); }
+
+ul.cartes {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: .75rem;
+  max-width: 46rem; padding: 0; list-style: none;
+}
+ul.cartes li { max-width: none; padding: .6rem .9rem; border: 1px solid var(--border); border-radius: 8px; background: var(--panel); }
+ul.cartes a { font-weight: 600; text-decoration: none; }
+ul.cartes p { margin: .25rem 0 0; color: var(--muted); font-size: .93rem; }
+
+@media print {
+  .voisins { display: none; }
+}

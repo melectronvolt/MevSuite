@@ -1,0 +1,41 @@
+MeVCine
+Copyright (C) 2026 Rémi MEVAERE
+
+MeVCine est un logiciel libre : vous pouvez le redistribuer et le modifier
+selon les termes de la licence GNU GPL, version 3 ou (à votre choix) toute
+version ultérieure (fichier COPYING). Il est distribué SANS AUCUNE GARANTIE.
+
+MeVCine est écrit en C++ avec Qt. Il reprend CineMev, sa version
+précédente écrite en Rust (dossier Archive/cinemev du dépôt).
+
+
+Composants libres intégrés
+==========================
+
+pymecavideo — https://gitlab.com/oppl/pymecavideo
+  Licence : GPL-3.0-or-later (fichier COPYING)
+  Copyright (C) 2007-2016 Jean-Baptiste Butet <ashashiwa@gmail.com>
+  Copyright (C) 2007-2023 Georges Khaznadar <georgesk@debian.org>
+  MeVCine contient du code adapté de ce logiciel (pointage, suivi
+  automatique, trajectoires, grapheur, format des fichiers de projet),
+  modifié en 2026.
+
+Vidéos d'exemple (dossier data/video), distribuées avec pymecavideo
+  Copyright (C) 2007 Benoît Markey
+  Licence : Creative Commons Attribution - Partage dans les mêmes
+  conditions 3.0 (CC BY-SA 3.0),
+  https://creativecommons.org/licenses/by-sa/3.0/deed.fr
+
+Qt — https://www.qt.io
+  Licence : LGPL-3.0-only. Bibliothèques Qt Core, Gui, Widgets et
+  Concurrent, liées dynamiquement ; la fenêtre Aide › À propos de Qt donne
+  leur licence et leurs composants.
+
+FFmpeg — https://ffmpeg.org
+  Licence : LGPL ou GPL selon la compilation. Programmes ffmpeg et ffprobe,
+  lancés comme programmes séparés : ceux du système, ou ceux du dossier
+  « ffmpeg » à côté du programme, avec leur licence.
+
+GCC (libstdc++), mingw-w64
+  Licences : GPL-3.0-or-later WITH GCC-exception-3.1 ; ZPL-2.1, MIT.
+  Bibliothèques d'exécution du compilateur.
