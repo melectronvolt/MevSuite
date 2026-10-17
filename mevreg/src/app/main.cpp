@@ -2,6 +2,7 @@
 // TP de physique-chimie.
 
 #include "app/about.h"
+#include "app/crash.h"
 #include "app/mainwindow.h"
 #include "app/theme.h"
 #include "core/resources.h"
@@ -9,6 +10,8 @@
 
 #include <QApplication>
 #include <QCoreApplication>
+#include <QDir>
+#include <QFileInfo>
 #include <QIcon>
 #include <QLibraryInfo>
 #include <QScreen>
@@ -71,6 +74,11 @@ int main(int argc, char **argv)
     store.prefs = Prefs::load();
     theme::init();
     theme::choose(store.prefs.theme);
+    // relancé après un plantage : la boîte de message seulement
+    if (crash::showCrash(QApplication::arguments()))
+        return 0;
+    // journal des erreurs fatales et des plantages, à côté du fichier de réglages
+    crash::install(QFileInfo(settingsFile()).dir().filePath(u"mevreg.log"_s));
     MainWindow win(store);
     win.resize(store.prefs.windowSize.value_or(DEFAULT_WINDOW));
     bool maximized = store.prefs.maximized;

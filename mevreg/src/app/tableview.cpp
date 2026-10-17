@@ -307,11 +307,9 @@ TableHeader::TableHeader(MainWindow &win, TableModel *model, QWidget *parent) : 
 
 QSize TableHeader::sizeHint() const
 {
-    // deux lignes : le nom, puis l'unité et l'incertitude (police réduite)
+    // deux lignes : le nom, puis l'unité et l'incertitude (indication : taille normale, couleur discrète)
     QSize s = QHeaderView::sizeHint();
-    QFont small = font();
-    small.setPointSizeF(small.pointSizeF() * 0.86);
-    s.setHeight(std::max(theme::px(42), fontMetrics().height() + QFontMetrics(small).height() + theme::px(10)));
+    s.setHeight(std::max(theme::px(42), 2 * fontMetrics().height() + theme::px(10)));
     return s;
 }
 
@@ -353,8 +351,7 @@ void TableHeader::paintSection(QPainter *p, const QRect &rect, int logical) cons
     QString sub = prettyUnit(q->unit);
     if (q->uncertainty)
         sub = (sub.isEmpty() ? QString() : sub + u" "_s) + u"± "_s + store.ws.doc.name(*q->uncertainty);
-    QFont sf = font();
-    sf.setPointSizeF(sf.pointSizeF() * 0.86);
+    const QFont sf = font();
     p->setFont(sf);
     p->setPen(colors.weak);
     const QRect bottom(rect.left() + m, rect.top() + rect.height() / 2 + 1, rect.width() - 2 * m, rect.height() / 2 - 4);

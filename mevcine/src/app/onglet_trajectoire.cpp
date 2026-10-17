@@ -121,11 +121,21 @@ void DessinTrajectoire::paintEvent(QPaintEvent *)
     const dessin::Vue vue = dessin::Vue::ajuste(QRectF(rect()), d);
     const ModeTrajectoire mode = a.traj.mode;
 
-    // le fond : clair, comme une feuille, pour bien voir les points (le gris d'autrefois les noyait)
-    const QColor feuille(250, 250, 250);
+    // le fond des graphiques de la suite (Base : blanc en thème clair, presque noir en sombre), et
+    // l'encre du texte ; les couleurs des objets, éclaircies sur le fond sombre
+    const QPalette pal = palette();
+    const bool fonce = dessin::sombre(pal);
+    const QColor feuille = pal.color(QPalette::Base), encre = pal.color(QPalette::Text);
+    const auto couleur_objet = [fonce](int obj) {
+        const QColor c = dessin::couleur(obj);
+        if (!fonce)
+            return c;
+        // un tiers de blanc : le bleu et le vert foncé se voient sur le fond sombre
+        return QColor((c.red() * 2 + 255) / 3, (c.green() * 2 + 255) / 3, (c.blue() * 2 + 255) / 3);
+    };
     switch (mode) {
-    case ModeTrajectoire::Trajectoire: painter.fillRect(vue.rect, feuille); break;
-    case ModeTrajectoire::Chronogramme: painter.fillRect(vue.rect, Qt::white); break;
+    case ModeTrajectoire::Trajectoire:
+    case ModeTrajectoire::Chronogramme: painter.fillRect(vue.rect, feuille); break;
     case ModeTrajectoire::Chronophotographie: {
         const int i = std::clamp(a.traj.chrono_img, 1, std::max(a.image_max, 1));
         std::optional<QImage> img;
@@ -168,16 +178,16 @@ void DessinTrajectoire::paintEvent(QPaintEvent *)
             dessin::texte(painter, {x1, y1 + 20.0}, trad("échelle non précisée"), 15.0, bleu, std::nullopt, false);
         }
     } else if (mode == ModeTrajectoire::Chronogramme) {
-        painter.setPen(QPen(Qt::black, 1.0));
+        painter.setPen(QPen(encre, 1.0));
         if (e.est_definie()) {
             const double longueur = e.longueur_pixel_etalon() * vue.echelle;
             painter.drawLine(QPointF(x1, y1 - 10), QPointF(x1, y1 + 10));
             painter.drawLine(QPointF(x1, y1), QPointF(x1 + longueur, y1));
             painter.drawLine(QPointF(x1 + longueur, y1 - 10), QPointF(x1 + longueur, y1 + 10));
             dessin::texte(painter, {x1 + longueur / 2.0, y1 + 30.0}, u"d = %1 m"_s.arg(nombre_local(e.longueur_reelle_etalon, 4)),
-                          13.0, Qt::black, std::nullopt, true);
+                          13.0, encre, std::nullopt, true);
         } else {
-            dessin::texte(painter, {x1, y1 + 20.0}, trad("échelle non précisée"), 13.0, Qt::black, std::nullopt, false);
+            dessin::texte(painter, {x1, y1 + 20.0}, trad("échelle non précisée"), 13.0, encre, std::nullopt, false);
         }
     }
 
@@ -193,12 +203,13 @@ void DessinTrajectoire::paintEvent(QPaintEvent *)
                 continue;
             const QPointF pos = vue.ecran(*ligne[j]);
             if (mode == ModeTrajectoire::Chronogramme) {
-                dessin::croix(painter, pos, 4.0, Qt::black);
+                dessin::croix(painter, pos, 4.0, encre);
                 const double decal = pos.x() - vue.rect.left() - 25.0 < 0.0 ? 5.0 : -25.0;
-                painter.setPen(Qt::black);
+                painter.setPen(encre);
                 painter.drawText(pos + QPointF(-10.0 + decal, 15.0), u"M%1%2"_s.arg(QString(static_cast<qsizetype>(j), u'\'')).arg(i));
             } else {
-                const QColor c = dessin::couleur(static_cast<int>(j) + 1);
+                const QColor c = mode == ModeTrajectoire::Chronophotographie && a.video ? dessin::couleur(static_cast<int>(j) + 1)
+                                                                                         : couleur_objet(static_cast<int>(j) + 1);
                 dessin::croix(painter, pos, 5.0, c, 2.0);
                 if (plusieurs) {
                     painter.setPen(c);
@@ -231,7 +242,7 @@ void DessinTrajectoire::paintEvent(QPaintEvent *)
                     if (std::abs(ecart.x()) + std::abs(ecart.y()) > 20.0)
                         continue;
                 }
-                dessin::fleche(painter, e1, e2, dessin::couleur(static_cast<int>(j) + 1), 2.0);
+                dessin::fleche(painter, e1, e2, couleur_objet(static_cast<int>(j) + 1), 2.0);
             }
         }
         // La légende, en bas à gauche : la flèche d'une vitesse ronde, d'environ 80 points d'écran
@@ -246,10 +257,11 @@ void DessinTrajectoire::paintEvent(QPaintEvent *)
             const QFontMetricsF fm(f);
             const QRectF cadre(depart.x() - 8.0, depart.y() - fm.height() - 14.0,
                                std::max(longueur, fm.horizontalAdvance(texte)) + 16.0, fm.height() + 22.0);
-            // sur la feuille claire : un cartouche clair, bordé, texte et flèche sombres
-            const QColor encre(40, 40, 40);
-            painter.setPen(QPen(QColor(0, 0, 0, 70), 1.0));
-            painter.setBrush(QColor(255, 255, 255, 235));
+            // un cartouche du fond, bordé, au-dessus des points ; texte et flèche à l'encre du texte
+            QColor fond = feuille;
+            fond.setAlpha(235);
+            painter.setPen(QPen(pal.color(QPalette::Mid), 1.0));
+            painter.setBrush(fond);
             painter.drawRoundedRect(cadre, 4, 4);
             dessin::fleche(painter, depart, depart + QPointF(longueur, 0), encre, 2.0);
             painter.setFont(f);

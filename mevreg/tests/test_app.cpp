@@ -4,6 +4,7 @@
 // sont enregistrées.
 
 #include "app/about.h"
+#include "app/crash.h"
 #include "app/csvimport.h"
 #include "app/dialogs.h"
 #include "app/docking.h"
@@ -54,9 +55,26 @@
 #include <QUrl>
 #include <QtTest>
 
+#include <cstdint>
+
+#ifdef Q_OS_LINUX
+#include <sys/prctl.h>
+#endif
+
 using namespace Qt::StringLiterals;
 
 namespace {
+
+/// Plantage pour l'essai du journal : accès mémoire invalide, sans fichier core (Linux).
+[[noreturn]] void crashNow()
+{
+#ifdef Q_OS_LINUX
+    prctl(PR_SET_DUMPABLE, 0);
+#endif
+    volatile std::uintptr_t address = 0;
+    *reinterpret_cast<volatile int *>(address) = 0;
+    std::abort();
+}
 
 void shot(QWidget *w, const QString &name)
 {
@@ -587,6 +605,57 @@ private Q_SLOTS:
         QCOMPARE(win.openTabs().size(), tabs.size());
         for (const TabKey &k : tabs)
             QVERIFY2(win.isOpen(k), qPrintable(k.text()));
+    }
+
+    /// Un document reçu (pas enregistré sur ce poste) ne lance ses scripts qu'après accord ; une fois
+    /// accepté, ou enregistré ici, il les lance sans question.
+    void receivedScriptsAskFirst()
+    {
+        QTemporaryDir dir;
+        const QString path = dir.filePath(u"recu.phy"_s);
+        {
+            Workspace ws;
+            const ViewId sid = ws.addScript(u"import mevreg as mr\nmr.creer(\"z\", mr.valeurs(\"t\") * 2)\n"_s);
+            ws.scriptMut(sid)->linked = true;
+            ws.doc.addExperimental(u"t"_s, u"s"_s, {1, 2});
+            QFile f(path);
+            QVERIFY(f.open(QIODevice::WriteOnly));
+            f.write(phy::save(ws, QJsonValue()).toUtf8());
+        }
+        Store store;
+        store.prefs.trustedDocuments.clear();
+        MainWindow win(store);
+        win.resize(1300, 800);
+        win.show();
+        auto clickButton = [](QMessageBox *box, const QString &name) {
+            for (QAbstractButton *b : box->buttons())
+                if (b->objectName() == name)
+                    b->click();
+        };
+        // refus (bouton par défaut) : rien ne se lance, même quand les données du script lié changent
+        QVERIFY(win.openPath(path));
+        settle(40);
+        auto *box = win.findChild<QMessageBox *>(u"confirmScripts"_s);
+        QVERIFY(box && box->isVisible());
+        QCOMPARE(box->defaultButton()->objectName(), u"norun"_s);
+        shot(box, u"scripts-confirmation"_s);
+        clickButton(box, u"norun"_s);
+        settle(40);
+        store.edit([](Workspace &ws) { ws.doc.setValues(ws.doc.byName(u"t"_s)->id, {3.0}); });
+        settle(300);
+        QVERIFY(!store.ws.doc.byName(u"z"_s));
+        // accord : le script se lance, et ce document ne pose plus la question
+        QVERIFY(win.openPath(path));
+        settle(40);
+        box = win.findChild<QMessageBox *>(u"confirmScripts"_s);
+        QVERIFY(box && box->isVisible());
+        clickButton(box, u"run"_s);
+        QTRY_VERIFY_WITH_TIMEOUT(store.ws.doc.byName(u"z"_s), 10000);
+        settle(40);
+        QVERIFY(win.openPath(path));
+        settle(40);
+        QVERIFY(!win.findChild<QMessageBox *>(u"confirmScripts"_s));
+        QTRY_VERIFY_WITH_TIMEOUT(store.ws.doc.byName(u"z"_s), 10000);
     }
 
     /// Annuler et rétablir par le menu Édition (ils ne sont plus dans la barre d'outils) : grisés quand
@@ -1429,6 +1498,122 @@ mr.effacer_annotations("G")
         win.closeTab(TabKey{TabKey::Script, sid});
         settle();
         QCOMPARE(store.ws.script(sid)->code, u"x = 1  # pas encore rangé"_s);
+    }
+
+    /// Menu Fenêtres : un clic cache une fenêtre affichée (cochée), un autre la réaffiche ; rien
+    /// n'est supprimé du document.
+    void windowsMenuToggles()
+    {
+        Store store;
+        MainWindow win(store);
+        win.resize(1300, 800);
+        win.show();
+        win.loadExample(0);
+        settle();
+        QMenu *windows = nullptr;
+        for (QAction *a : win.menuBar()->actions())
+            if (a->text() == u"Fenê&tres")
+                windows = a->menu();
+        QVERIFY(windows);
+        // un graphe : ligne du menu
+        const TabKey gk{TabKey::Graph, store.ws.graphs.front().id};
+        QVERIFY(win.isOpen(gk));
+        auto clickRow = [&] {
+            Q_EMIT windows->aboutToShow();
+            QWidget *row = windows->findChild<QWidget *>(u"windowRow:"_s + gk.text());
+            QVERIFY(row);
+            QTest::mouseClick(row, Qt::LeftButton, {}, QPoint(10, row->height() / 2));
+            settle();
+        };
+        clickRow();
+        QVERIFY(!win.isOpen(gk));
+        QVERIFY(store.ws.graph(gk.id));
+        clickRow();
+        QVERIFY(win.isOpen(gk));
+        // Grandeurs : entrée cochable du menu
+        const TabKey qk{TabKey::Quantities};
+        auto triggerQuantities = [&] {
+            Q_EMIT windows->aboutToShow();
+            QAction *quantities = nullptr;
+            for (QAction *a : windows->actions())
+                if (a->text() == u"Grandeurs")
+                    quantities = a;
+            QVERIFY(quantities && quantities->isCheckable());
+            QCOMPARE(quantities->isChecked(), win.isOpen(qk));
+            quantities->trigger();
+            settle();
+        };
+        win.openTab(qk);
+        settle();
+        triggerQuantities();
+        QVERIFY(!win.isOpen(qk));
+        triggerQuantities();
+        QVERIFY(win.isOpen(qk));
+    }
+
+    /// Réglages du graphe, incertitudes : cocher « une grandeur pour chaque côté » fait apparaître
+    /// les listes (le panneau, refait pendant le clic, détruisait la case : plantage).
+    void errorSidesCheckbox()
+    {
+        Store store;
+        MainWindow win(store);
+        win.resize(1300, 800);
+        win.show();
+        win.loadExample(0);
+        settle();
+        const ViewId g = store.ws.graphs.front().id;
+        store.edit([&](Workspace &ws) {
+            for (auto &c : ws.graphMut(g)->plots.front().curves)
+                c.errors = ErrorBars::Vertical;
+        });
+        GraphPanel *gp = win.graphPanel(g);
+        QVERIFY(gp);
+        gp->openSettings(SettingsSection::Curves);
+        settle(120);
+        auto *settings = gp->findChild<GraphSettings *>();
+        QVERIFY(settings);
+        QCheckBox *sides = nullptr;
+        for (QCheckBox *c : settings->findChildren<QCheckBox *>(u"errorSides"_s))
+            if (c->isVisible())
+                sides = c;
+        QVERIFY(sides);
+        QVERIFY(!sides->isChecked());
+        QTest::mouseClick(sides, Qt::LeftButton);
+        settle();
+        bool lists = false;
+        for (QWidget *w : settings->findChildren<QWidget *>(u"errorYHigh"_s))
+            lists = lists || w->isVisible();
+        QVERIFY(lists);
+    }
+
+    /// Plantage (accès mémoire invalide) : le journal reçoit la cause et la pile d'appels. L'essai
+    /// se relance lui-même, et c'est ce second programme qui plante.
+    void crashLog()
+    {
+        if (const QString log = qEnvironmentVariable("MEVSUITE_ESSAI_PLANTAGE"); !log.isEmpty()) {
+            crash::install(log, false);
+            crashNow();
+        }
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+        const QString log = dir.filePath(u"mevreg.log"_s);
+        QProcess child;
+        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+        env.insert(u"MEVSUITE_ESSAI_PLANTAGE"_s, log);
+        child.setProcessEnvironment(env);
+        child.start(QCoreApplication::applicationFilePath(), {u"crashLog"_s});
+        QVERIFY(child.waitForFinished(60000));
+        QCOMPARE(child.exitStatus(), QProcess::CrashExit);
+        QFile file(log);
+        QVERIFY(file.open(QIODevice::ReadOnly));
+        const QStringList lines = QString::fromUtf8(file.readAll()).split(u'\n', Qt::SkipEmptyParts);
+        QVERIFY2(lines.size() >= 4, qPrintable(lines.join(u'\n')));
+        QVERIFY(lines[0].startsWith(u"MeVReg "_s + about::VERSION));
+#ifdef Q_OS_WIN
+        QCOMPARE(lines[1], u"Exception 0xC0000005 (EXCEPTION_ACCESS_VIOLATION)"_s);
+#else
+        QCOMPARE(lines[1], u"Signal 11 (SIGSEGV)"_s);
+#endif
     }
 
     /// Coller un tableau dont une case n'est pas un nombre : la case est laissée vide, et la barre

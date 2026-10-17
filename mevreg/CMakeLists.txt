@@ -91,6 +91,7 @@ if(MEVREG_APP)
         src/app/scripting.cpp
         src/app/examples.cpp
         src/app/about.cpp
+        src/app/crash.cpp
         src/app/help.cpp
     )
     target_link_libraries(mevregui PUBLIC mevregcore Qt6::Widgets)
@@ -143,7 +144,9 @@ if(MEVREG_TESTS)
         target_link_libraries(test_${t} PRIVATE mevregcore Qt6::Test)
         target_compile_definitions(test_${t} PRIVATE TESTS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests")
         add_test(NAME ${t} COMMAND test_${t})
-        set_tests_properties(${t} PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+        # MALLOC_PERTURB_ (glibc) : la mémoire libérée est écrasée, un objet détruit puis encore
+        # utilisé fait planter l'essai au lieu de passer par chance
+        set_tests_properties(${t} PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen;MALLOC_PERTURB_=165")
     endforeach()
     if(MEVREG_APP)
         target_link_libraries(test_app PRIVATE mevregui)

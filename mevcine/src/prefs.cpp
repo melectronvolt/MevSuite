@@ -21,7 +21,8 @@ namespace {
 
 /// les réglages propres au poste, qui ne vont pas dans les fichiers de projet
 const QStringList REGLAGES_DU_POSTE = {u"langue"_s,         u"niveaudbg"_s,         u"theme"_s,
-                                       u"taille_fenetre"_s, u"fenetre_maximisee"_s, u"agrandissement"_s};
+                                       u"taille_fenetre"_s, u"fenetre_maximisee"_s, u"agrandissement"_s,
+                                       u"mode"_s};
 
 QString ecrit(const QString &chemin, const QString &texte)
 {

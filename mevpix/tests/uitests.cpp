@@ -4,8 +4,10 @@
 // « offscreen »). Chaque étape est rendue dans `captures/` (dossier de compilation), d'où viennent
 // les images de la notice (tools/images_notice.py).
 
+#include "about.h"
 #include "app.h"
 #include "canvas.h"
+#include "crash.h"
 #include "plot.h"
 #include "style.h"
 
@@ -13,16 +15,19 @@
 #include <QAction>
 #include <QApplication>
 #include <QDir>
+#include <QFile>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QMouseEvent>
+#include <QProcess>
 #include <QPushButton>
 #include <QScrollArea>
 #include <QStackedWidget>
 #include <QStatusBar>
+#include <QTemporaryDir>
 #include <QTest>
 #include <QTimer>
 #include <QToolBar>
@@ -30,7 +35,12 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
 #include <memory>
+
+#ifdef Q_OS_LINUX
+#include <sys/prctl.h>
+#endif
 
 using namespace Qt::StringLiterals;
 
@@ -39,6 +49,17 @@ namespace {
 /// Photo d'exemple : 2148 × 732 px. Les lignes épaisses du papier millimétré (tous les centimètres)
 /// passent par x = 568 et x = 1538 px ; la tache centrale va d'un minimum sombre à l'autre, de
 /// x ≈ 563 à x ≈ 1544 px, sur la ligne y = 350 px.
+/// Plantage pour l'essai du journal : accès mémoire invalide, sans fichier core (Linux).
+[[noreturn]] void crashNow()
+{
+#ifdef Q_OS_LINUX
+    prctl(PR_SET_DUMPABLE, 0);
+#endif
+    volatile std::uintptr_t address = 0;
+    *reinterpret_cast<volatile int *>(address) = 0;
+    std::abort();
+}
+
 const QString EXAMPLE = QStringLiteral(MEVPIX_SOURCES "/tests/data/diffraction1.png");
 constexpr double GRID_Y = 520.0;
 constexpr double FRINGE_Y = 350.0;
@@ -568,6 +589,36 @@ private slots:
             QVERIFY(statusZoomed);
             QVERIFY2(statusOneLine, qPrintable(statusHeights));
         }
+    }
+
+    // Plantage (accès mémoire invalide) : le journal reçoit la cause et la pile d'appels. L'essai se
+    // relance lui-même, et c'est ce second programme qui plante.
+    void crashLog()
+    {
+        if (const QString log = qEnvironmentVariable("MEVSUITE_ESSAI_PLANTAGE"); !log.isEmpty()) {
+            crash::install(log, Lang::Fr, false);
+            crashNow();
+        }
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+        const QString log = dir.filePath(u"mevpix.log"_s);
+        QProcess child;
+        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+        env.insert(u"MEVSUITE_ESSAI_PLANTAGE"_s, log);
+        child.setProcessEnvironment(env);
+        child.start(QCoreApplication::applicationFilePath(), {u"crashLog"_s});
+        QVERIFY(child.waitForFinished(60000));
+        QCOMPARE(child.exitStatus(), QProcess::CrashExit);
+        QFile file(log);
+        QVERIFY(file.open(QIODevice::ReadOnly));
+        const QStringList lines = QString::fromUtf8(file.readAll()).split(u'\n', Qt::SkipEmptyParts);
+        QVERIFY2(lines.size() >= 4, qPrintable(lines.join(u'\n')));
+        QVERIFY(lines[0].startsWith(u"MeVPix "_s + about::VERSION));
+#ifdef Q_OS_WIN
+        QCOMPARE(lines[1], u"Exception 0xC0000005 (EXCEPTION_ACCESS_VIOLATION)"_s);
+#else
+        QCOMPARE(lines[1], u"Signal 11 (SIGSEGV)"_s);
+#endif
     }
 };
 

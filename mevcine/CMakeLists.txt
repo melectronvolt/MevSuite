@@ -66,6 +66,7 @@ add_library(mevcine_interface STATIC
     src/app/demarrage.cpp src/app/demarrage.h
     src/app/dessin.cpp src/app/dessin.h
     src/app/dialogues.cpp src/app/dialogues.h
+    src/erreurs.cpp src/erreurs.h
     src/app/guide.cpp src/app/guide.h
     src/app/icones.cpp src/app/icones.h
     src/app/onglet_coord.cpp src/app/onglet_coord.h
@@ -91,10 +92,7 @@ qt_add_resources(mevcine_interface icones
         data/icones/mevcine-64.png data/icones/mevcine-256.png
 )
 
-qt_add_executable(mevcine WIN32
-    src/erreurs.cpp src/erreurs.h
-    src/main.cpp
-)
+qt_add_executable(mevcine WIN32 src/main.cpp)
 target_link_libraries(mevcine PRIVATE mevcine_interface)
 if(WIN32)
     set(MEVCINE_ICO "${CMAKE_CURRENT_SOURCE_DIR}/data/icones/mevcine.ico")

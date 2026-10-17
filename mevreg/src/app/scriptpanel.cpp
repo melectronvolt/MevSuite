@@ -600,6 +600,8 @@ void ScriptPanel::run()
     Store &store = m_win.store();
     if (store.isRunning(m_id))
         return;
+    // lancé par l'utilisateur : le script d'un document reçu se relance ensuite de lui-même s'il est lié
+    store.blockedScripts.erase(m_id);
     store.runScript(m_id);
 }
 

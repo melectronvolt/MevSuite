@@ -463,9 +463,11 @@ void GraphSettings::buildCurves(QVBoxLayout *l)
             bySide->setToolTip(u"Choisir une grandeur existante pour le haut, le bas, la gauche et la droite (incertitudes différentes de part et d'autre)"_s);
             connect(bySide, &QCheckBox::toggled, this, [this, k, set](bool on) {
                 if (on) {
-                    // les listes apparaissent ; rien ne change tant qu'aucune grandeur n'est choisie
+                    // les listes apparaissent ; rien ne change tant qu'aucune grandeur n'est choisie.
+                    // Panneau refait après le clic : refait tout de suite, il détruisait la case
+                    // pendant que Qt s'en servait encore (plantage)
                     m_errorSides.insert(k);
-                    rebuild();
+                    scheduleRebuild();
                     return;
                 }
                 m_errorSides.erase(k);

@@ -78,7 +78,31 @@ Prefs Prefs::load()
     const double zoom = s.value(u"ui_zoom"_s, 1.0).toDouble(&ok);
     p.uiZoom = ok && zoom >= UI_ZOOM_MIN && zoom <= UI_ZOOM_MAX ? zoom : 1.0;
     p.confirmClose = s.value(u"confirm_close"_s, true).toBool();
+    p.trustedDocuments = s.value(u"trusted_documents"_s).toStringList();
     return p;
+}
+
+namespace {
+
+QString fingerprint(const QByteArray &bytes)
+{
+    return QString::fromLatin1(QCryptographicHash::hash(bytes, QCryptographicHash::Sha256).toHex());
+}
+
+} // namespace
+
+void Prefs::trust(const QByteArray &bytes)
+{
+    const QString f = fingerprint(bytes);
+    trustedDocuments.removeAll(f);
+    trustedDocuments.prepend(f);
+    while (trustedDocuments.size() > 200)
+        trustedDocuments.removeLast();
+}
+
+bool Prefs::trusted(const QByteArray &bytes) const
+{
+    return trustedDocuments.contains(fingerprint(bytes));
 }
 
 void Prefs::save() const
@@ -95,6 +119,7 @@ void Prefs::save() const
     s.setValue(u"maximized"_s, maximized);
     s.setValue(u"ui_zoom"_s, uiZoom);
     s.setValue(u"confirm_close"_s, confirmClose);
+    s.setValue(u"trusted_documents"_s, trustedDocuments);
     // position et taille enregistrées par les premières versions : remplacées par les clés ci-dessus ;
     // virgule décimale : elle suit maintenant la langue
     s.remove(u"geometry"_s);
@@ -232,6 +257,7 @@ void Store::reset(Workspace w)
     m_jobs.clear();
     runs.clear();
     drawings.clear();
+    blockedScripts.clear();
     setDirty(false);
     Q_EMIT workspaceChanged();
 }
@@ -322,7 +348,7 @@ void Store::runLinkedScripts()
     // pas pendant un glisser : le script tourne une fois le curseur relâché… sauf s'il est lié,
     // auquel cas on le relance dès qu'il a fini, pour suivre le curseur en direct
     for (const auto &s : ws.scripts) {
-        if (!s.linked || isRunning(s.id))
+        if (!s.linked || isRunning(s.id) || blockedScripts.count(s.id))
             continue;
         auto it = runs.find(s.id);
         if (it == runs.end() || it->second.inputHash != inputHash(ws, s.id))

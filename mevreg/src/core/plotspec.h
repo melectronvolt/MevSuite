@@ -99,7 +99,9 @@ struct NumFormat {
 struct TitleSpec {
     QString text;
     bool visible = true;
-    double size = 15.0;
+    /// taille du texte des titres des axes, comme les titres des graphiques de la suite (taille
+    /// normale) ; en gras : la police des graphes (DejaVu Sans) n'a pas de demi-gras
+    double size = 13.0;
     HAlign align = HAlign::Center;
     bool bold = true;
     bool operator==(const TitleSpec &) const = default;

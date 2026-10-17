@@ -51,7 +51,6 @@
 class EcranDemarrage;
 class OngletCoord;
 class PleinEcran;
-class PageAccueil;
 class PageGuide;
 class PageSansVideo;
 class QAction;
@@ -97,8 +96,9 @@ public:
     // (lu par les parties de l'interface et par les tests)
 
     prefs::Config config;
-    /// mode de travail ; rien tant qu'il n'est pas choisi (écran d'accueil)
-    std::optional<Mode> mode;
+    /// mode de travail : celui de la dernière fois (réglage du poste), simplifié au premier lancement ;
+    /// il se change dans le menu Mode
+    Mode mode = Mode::Simplifie;
     Etat etat = Etat::Debut;
     /// état à restaurer après la sélection de l'étalon (A ou D)
     Etat etat_ancien = Etat::A;
@@ -411,7 +411,6 @@ private:
 
     // les pages
     QStackedWidget *m_pages = nullptr;
-    PageAccueil *m_accueil = nullptr;
     PageSansVideo *m_sans_video = nullptr;
     PageGuide *m_guide = nullptr;
     QTabWidget *m_expert = nullptr;

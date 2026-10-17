@@ -15,6 +15,7 @@
 #include "app/tableau.h"
 #include "app/theme.h"
 #include "calculs.h"
+#include "erreurs.h"
 #include "i18n.h"
 #include "outils.h"
 #include "prefs.h"
@@ -32,6 +33,8 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPlainTextEdit>
+#include <QProcess>
+#include <QRegularExpression>
 #include <QTabBar>
 #include <QTabWidget>
 #include <QTableWidget>
@@ -47,9 +50,25 @@
 #include <QScrollArea>
 #include <QToolButton>
 
+#include <cstdint>
 #include <memory>
 
+#ifdef Q_OS_LINUX
+#include <sys/prctl.h>
+#endif
+
 namespace {
+
+/// plantage pour l'essai du journal : accès mémoire invalide, sans fichier core (Linux)
+[[noreturn]] void plante()
+{
+#ifdef Q_OS_LINUX
+    prctl(PR_SET_DUMPABLE, 0);
+#endif
+    volatile std::uintptr_t adresse = 0;
+    *reinterpret_cast<volatile int *>(adresse) = 0;
+    std::abort();
+}
 
 QString lit_texte(const QString &chemin)
 {
@@ -425,17 +444,18 @@ private slots:
         i18n::choisit(Langue::Francais);
     }
 
-    void accueil_choix_du_mode()
+    void accueil_ouvrir_une_video()
     {
+        // premier lancement : mode simplifié (il se change dans le menu Mode), et l'accueil propose
+        // d'ouvrir une vidéo, sans choix du mode
         auto app = fenetre({}, std::nullopt);
-        QCOMPARE(app->mode, std::nullopt);
+        QCOMPARE(app->mode, Mode::Simplifie);
         QCOMPARE(app->windowTitle(), u"MeVCine — Étude cinématique de vidéos"_s);
-        QVERIFY(bouton(*app, u"Mode simplifié"_s));
-        QVERIFY(bouton(*app, u"Mode expert"_s));
+        QVERIFY(!bouton(*app, u"Mode simplifié"_s));
+        QVERIFY(!bouton(*app, u"Mode expert"_s));
         // la notice est dans le menu Aide (F1), sans bouton à elle ; l'accueil n'a pas d'autre bouton
         QVERIFY(!bouton(*app, u"Notice"_s));
         QVERIFY(!bouton(*app, u"📖 Notice complète…"_s));
-        QCOMPARE(app->page_d_aide(), u"index.html"_s);
         QVERIFY(QFileInfo(QDir(chemins::help_dir()).filePath(u"fr/index.html"_s)).isFile());
         // la notice ouverte est une copie, dans le dossier temporaire du système, avec ses images
         const QString copie = chemins::copie_aide();
@@ -444,8 +464,6 @@ private slots:
         QVERIFY(QFileInfo(QDir(copie).filePath(u"en/images/pointage.jpg"_s)).isFile());
         QVERIFY(QFileInfo(QDir(copie).filePath(u"help.css"_s)).isFile());
         rendu(*app, u"00_accueil"_s);
-        QVERIFY(clique(*app, u"Mode simplifié"_s));
-        QCOMPARE(app->mode, Mode::Simplifie);
         // pas de vidéo rouverte d'office : l'écran d'ouverture, avec un seul bouton (pas de vidéos
         // d'exemple : chacun ouvre les siennes)
         auto *ouvrir = app->m_sans_video->findChild<QPushButton *>(u"ouvrir"_s);
@@ -462,11 +480,16 @@ private slots:
         attend();
         QVERIFY(app->video);
         QCOMPARE(app->windowTitle(), u"MeVCine — Principe_inertie.avi"_s);
+        // le mode choisi dans le menu est retenu pour la prochaine fois
+        app->change_mode(Mode::Expert);
+        app->sauve_prefs();
+        app.reset();
+        auto suivante = fenetre({}, std::nullopt, std::nullopt, true);
+        QCOMPARE(suivante->mode, Mode::Expert);
     }
 
-    /// Les deux pages sans vidéo (le choix du mode, puis l'ouverture d'une vidéo) sont épurées et
-    /// tiennent sans chevauchement dans la fenêtre à sa taille minimale, dans chaque langue et dans
-    /// chaque thème
+    /// La page sans vidéo (ouvrir une vidéo) est épurée et tient sans chevauchement dans la fenêtre à
+    /// sa taille minimale, dans chaque langue et dans chaque thème
     void pages_d_accueil_a_la_taille_minimale()
     {
         for (Langue langue : TOUTES_LES_LANGUES) {
@@ -481,12 +504,6 @@ private slots:
                 attend();
                 QCOMPARE(dessin::sombre(QApplication::palette()), sombre);
                 const QString nom = u"%1_%2"_s.arg(code, sombre ? u"sombre"_s : u"clair"_s);
-                a.mode.reset();
-                a.rafraichit();
-                attend();
-                verifie_page_epuree(a.m_accueil, nom + u" accueil"_s);
-                rendu(a, u"03_%1_accueil_minimale"_s.arg(nom));
-                a.change_mode(Mode::Simplifie);
                 a.rafraichit();
                 attend();
                 verifie_page_epuree(a.m_sans_video, nom + u" sans vidéo"_s, 1);
@@ -902,7 +919,7 @@ private slots:
         QCOMPARE(arrondi_rond(47.0), 50.0);
         QCOMPARE(arrondi_rond(0.3), 0.2);
         rendu(a, u"32_expert_vitesses"_s);
-        // la trajectoire sur un fond clair, comme une feuille
+        // la trajectoire sur le fond des graphiques : blanc en thème clair
         {
             auto *dessin = a.m_onglet_trajectoire->findChild<DessinTrajectoire *>();
             QVERIFY(dessin);
@@ -1481,14 +1498,10 @@ private slots:
         QVERIFY(app->ecran_demarrage() && app->ecran_demarrage()->isVisible());
         QTest::qWait(100);
         app->grab().save(QDir(QString::fromUtf8(MEVCINE_RENDUS_TESTS)).filePath(u"02_demarrage.png"_s));
-        // un clic sur une carte de l'accueil, cachée par l'écran de démarrage, ne choisit pas de mode :
-        // il fait seulement disparaître l'écran
-        QAbstractButton *carte = bouton(*app, u"Mode simplifié"_s);
-        QVERIFY(carte);
-        QTest::mouseClick(carte, Qt::LeftButton);
+        // un clic sur l'accueil, caché par l'écran de démarrage, fait seulement disparaître l'écran
+        QTest::mouseClick(app->m_sans_video, Qt::LeftButton, {}, QPoint(10, 10));
         attend();
         QVERIFY(!app->ecran_demarrage());
-        QCOMPARE(app->mode, std::nullopt);
         // sans clic, il disparaît en moins de trois secondes
         auto app2 = std::make_unique<App>(QString(), std::nullopt);
         app2->show();
@@ -1595,6 +1608,20 @@ private slots:
             a.traj.vecteurs = true;
             a.rafraichit();
             rendu(a, u"67_trajectoires_sombre"_s);
+            // la trajectoire et le chronogramme sur le fond sombre des graphiques (Base)
+            for (const ModeTrajectoire mode : {ModeTrajectoire::Trajectoire, ModeTrajectoire::Chronogramme}) {
+                a.traj.mode = mode;
+                a.rafraichit();
+                auto *dessin = a.m_onglet_trajectoire->findChild<DessinTrajectoire *>();
+                QVERIFY(dessin);
+                const QImage image = dessin->grab().toImage();
+                const dessin::Vue vue = dessin::Vue::ajuste(QRectF(dessin->rect()), a.dimensions());
+                const QPoint coin = (vue.rect.topLeft() + QPointF(3, 3)).toPoint() * image.devicePixelRatio();
+                QCOMPARE(QColor(image.pixel(coin)), dessin->palette().color(QPalette::Base));
+                QVERIFY2(QColor(image.pixel(coin)).lightness() < 60, qUtf8Printable(QColor(image.pixel(coin)).name()));
+            }
+            a.traj.mode = ModeTrajectoire::Trajectoire;
+            a.rafraichit();
             onglet(a, u"Grapheur"_s);
             a.graph.x = u"t"_s;
             a.graph.y = u"x"_s;
@@ -1626,7 +1653,6 @@ private slots:
                 auto app = fenetre({}, std::nullopt, langue);
                 QCOMPARE(i18n::langue(), langue);
                 rendu(*app, u"80_%1_accueil"_s.arg(code));
-                QVERIFY(clique(*app, trad("Mode simplifié")));
                 QVERIFY(bouton(*app, trad("📂 Ouvrir une vidéo…")));
                 rendu(*app, u"91_%1_sans_video"_s.arg(code));
             }
@@ -1712,6 +1738,37 @@ private slots:
             }
         }
         i18n::choisit(Langue::Francais);
+    }
+
+    void journal_des_plantages()
+    {
+        // plantage (accès mémoire invalide) : le journal reçoit la date, la cause et la pile
+        // d'appels ; l'essai se relance lui-même, et c'est ce second programme qui plante
+        if (qEnvironmentVariableIsSet("MEVSUITE_ESSAI_PLANTAGE")) {
+            erreurs::installe(false);
+            plante();
+        }
+        QTemporaryDir conf;
+        QVERIFY(conf.isValid());
+        QProcess enfant;
+        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+        env.insert(u"MEVSUITE_ESSAI_PLANTAGE"_s, u"1"_s);
+        env.insert(u"MEVCINE_CONF"_s, conf.path());
+        enfant.setProcessEnvironment(env);
+        enfant.start(QCoreApplication::applicationFilePath(), {u"journal_des_plantages"_s});
+        QVERIFY(enfant.waitForFinished(60000));
+        QCOMPARE(enfant.exitStatus(), QProcess::CrashExit);
+        const QStringList lignes = lit_texte(conf.filePath(u"mevcine.log"_s)).split(u'\n', Qt::SkipEmptyParts);
+        QVERIFY2(lignes.size() >= 4, qUtf8Printable(lignes.join(u'\n')));
+        static const QRegularExpression entete(uR"(^\[\d{4}-\d\d-\d\d \d\d:\d\d:\d\d UTC\] MeVCine (\S+) \(C\+\+, Qt\)$)"_s);
+        const QRegularExpressionMatch m = entete.match(lignes[0]);
+        QVERIFY2(m.hasMatch(), qUtf8Printable(lignes[0]));
+        QCOMPARE(m.captured(1), a_propos::VERSION);
+#ifdef Q_OS_WIN
+        QCOMPARE(lignes[1], u"Exception 0xC0000005 (EXCEPTION_ACCESS_VIOLATION)"_s);
+#else
+        QCOMPARE(lignes[1], u"Signal 11 (SIGSEGV)"_s);
+#endif
     }
 };
 

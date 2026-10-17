@@ -29,7 +29,10 @@ int main(int argc, char *argv[])
     const Settings settings = Settings::load(files);
     theme::choose(settings.theme);
     const Lang lang = resolveLang(settings.lang);
-    // Journal des erreurs fatales, à côté du fichier de réglages de l'utilisateur.
+    // Relancé après un plantage : la boîte de message seulement.
+    if (crash::showCrash(QApplication::arguments(), lang))
+        return 0;
+    // Journal des erreurs fatales et des plantages, à côté du fichier de réglages de l'utilisateur.
     crash::install(files.user.isEmpty() ? QString() : QFileInfo(files.user).dir().filePath(u"mevsono.log"_s), lang);
 
     // Son éventuellement passé en argument (« Ouvrir avec… » sous Windows).

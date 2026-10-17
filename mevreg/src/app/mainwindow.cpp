@@ -706,6 +706,8 @@ void MainWindow::buildMenus()
         if (!m_store.ws.scripts.empty()) {
             m_pythonMenu->addAction(icons::get("play"), u"Exécuter tous les scripts"_s, this, [this] {
                 flushScripts();
+                // demandé par l'utilisateur : les scripts d'un document reçu aussi
+                m_store.blockedScripts.clear();
                 runAllScripts();
             });
             m_pythonMenu->addSeparator();
@@ -721,8 +723,15 @@ void MainWindow::buildMenus()
     m_windowsMenu = menuBar()->addMenu(u"Fenê&tres"_s);
     connect(m_windowsMenu, &QMenu::aboutToShow, this, [this] {
         m_windowsMenu->clear();
-        auto add = [this](const char *icon, const QString &text, const TabKey &k) {
-            QAction *a = m_windowsMenu->addAction(icons::get(icon), text, this, [this, k] { openTab(k); });
+        // un clic cache une fenêtre affichée (cochée), affiche une fenêtre cachée
+        auto toggle = [this](const TabKey &k) {
+            if (isOpen(k))
+                hideTab(k);
+            else
+                openTab(k);
+        };
+        auto add = [this, toggle](const char *icon, const QString &text, const TabKey &k) {
+            QAction *a = m_windowsMenu->addAction(icons::get(icon), text, this, [toggle, k] { toggle(k); });
             a->setCheckable(true);
             a->setChecked(isOpen(k));
         };
@@ -734,10 +743,10 @@ void MainWindow::buildMenus()
         // croix pour les fermer (supprimer du document)
         if (!m_store.ws.tables.empty() || !m_store.ws.graphs.empty() || !m_store.ws.scripts.empty() || !m_store.drawings.empty())
             m_windowsMenu->addSection(u"Tableurs, graphes, scripts — ✕ : fermer"_s);
-        auto row = [this](const char *icon, const QString &text, const TabKey &k) {
+        auto row = [this, toggle](const char *icon, const QString &text, const TabKey &k) {
             auto *action = new QWidgetAction(m_windowsMenu);
             action->setText(text);
-            auto *w = new WindowRow(m_windowsMenu, icons::get(icon), text, isOpen(k), [this, k] { openTab(k); }, [this, k] { deleteWindow(k); });
+            auto *w = new WindowRow(m_windowsMenu, icons::get(icon), text, isOpen(k), [toggle, k] { toggle(k); }, [this, k] { deleteWindow(k); });
             w->setObjectName(u"windowRow:"_s + k.text());
             action->setDefaultWidget(w);
             m_windowsMenu->addAction(action);
@@ -1362,6 +1371,17 @@ void MainWindow::closeTab(const TabKey &key)
         removeDock(it->second);
 }
 
+void MainWindow::hideTab(const TabKey &key)
+{
+    // la fenêtre s'en va, son contenu reste dans le document
+    auto it = m_docks.find(key.text());
+    if (it == m_docks.end() || !it->second)
+        return;
+    const QString title = it->second->windowTitle();
+    removeDock(it->second);
+    m_store.message(u"Fenêtre « %1 » cachée ; menu Fenêtres pour la réafficher"_s.arg(title));
+}
+
 Dock *MainWindow::createDock(const TabKey &key)
 {
     auto *dock = new Dock(key, createContent(key), this);
@@ -1975,18 +1995,65 @@ void MainWindow::guarded(const std::function<void()> &then)
     }
 }
 
-void MainWindow::setWorkspace(Workspace ws, const QJsonValue &layout)
+void MainWindow::setWorkspace(Workspace ws, const QJsonValue &layout, const std::optional<QByteArray> &file)
 {
     closeAllDocks();
     m_store.reset(std::move(ws));
+    const quint64 document = ++m_document;
     if (layout.isObject())
         restoreLayout(layout);
     else
         defaultLayout();
-    // les scripts sont relancés à l'ouverture : leurs résultats ne sont pas enregistrés
-    if (!m_store.ws.scripts.empty())
-        QTimer::singleShot(0, this, &MainWindow::runAllScripts);
+    // Les scripts sont relancés à l'ouverture : leurs résultats ne sont pas enregistrés. Ceux d'un
+    // fichier reçu peuvent agir sur l'ordinateur (lire, modifier, effacer des fichiers) : ils
+    // attendent l'accord de l'utilisateur, sauf si le document a été enregistré sur ce poste.
+    if (!m_store.ws.scripts.empty()) {
+        if (file && !m_store.prefs.trusted(*file)) {
+            for (const auto &s : m_store.ws.scripts)
+                m_store.blockedScripts.insert(s.id);
+            QTimer::singleShot(0, this, [this, content = *file, document] { askScripts(content, document); });
+        } else {
+            QTimer::singleShot(0, this, &MainWindow::runAllScripts);
+        }
+    }
     refresh();
+}
+
+void MainWindow::askScripts(const QByteArray &file, quint64 document)
+{
+    if (document != m_document || m_store.blockedScripts.empty())
+        return;
+    const int n = static_cast<int>(m_store.ws.scripts.size());
+    auto *box = new QMessageBox(QMessageBox::Warning, u"Scripts Python"_s,
+                                n > 1 ? u"Ce document contient %1 scripts Python. Les lancer ?"_s.arg(n)
+                                      : u"Ce document contient un script Python. Le lancer ?"_s,
+                                QMessageBox::NoButton, this);
+    box->setAttribute(Qt::WA_DeleteOnClose);
+    box->setObjectName(u"confirmScripts"_s);
+    box->setInformativeText(u"Un script peut agir sur l'ordinateur : lire, modifier ou effacer des fichiers. Lancez-le seulement "
+                            "si le document vient d'une personne de confiance. Sinon, lisez-le d'abord : le bouton « Exécuter » "
+                            "de sa fenêtre le lance."_s);
+    QPushButton *run = box->addButton(n > 1 ? u"Lancer les scripts"_s : u"Lancer le script"_s, QMessageBox::AcceptRole);
+    run->setObjectName(u"run"_s);
+    QPushButton *no = box->addButton(u"Ne pas lancer"_s, QMessageBox::RejectRole);
+    no->setObjectName(u"norun"_s);
+    // Entrée ou Échap : rien ne se lance
+    box->setDefaultButton(no);
+    box->setEscapeButton(no);
+    connect(box, &QMessageBox::buttonClicked, this, [this, run, file, document](QAbstractButton *clicked) {
+        if (document != m_document)
+            return;
+        if (clicked != run) {
+            m_store.message(u"Scripts non lancés : le bouton « Exécuter » de la fenêtre d'un script le lance"_s, icons::Status::Warning);
+            return;
+        }
+        // accepté une fois : ce document-là ne pose plus la question
+        m_store.prefs.trust(file);
+        m_store.prefs.save();
+        m_store.blockedScripts.clear();
+        runAllScripts();
+    });
+    box->open();
 }
 
 void MainWindow::newFile()
@@ -2021,13 +2088,14 @@ bool MainWindow::openPath(const QString &path)
         return false;
     }
     QString error;
-    auto loaded = phy::load(QString::fromUtf8(f.readAll()), &error);
+    const QByteArray bytes = f.readAll();
+    auto loaded = phy::load(QString::fromUtf8(bytes), &error);
     if (!loaded) {
         m_store.message(u"%1 : %2"_s.arg(fileName(path), error), icons::Status::Error);
         return false;
     }
     m_path = QFileInfo(path).absoluteFilePath();
-    setWorkspace(std::move(loaded->ws), loaded->layout);
+    setWorkspace(std::move(loaded->ws), loaded->layout, bytes);
     addRecent(m_path);
     m_store.message(u"%1 ouvert"_s.arg(fileName(path)));
     updateTitle();
@@ -2078,6 +2146,12 @@ bool MainWindow::save(bool saveAs, const QString &to)
     m_path = QFileInfo(path).absoluteFilePath();
     m_store.setDirty(false);
     addRecent(m_path);
+    // enregistré ici : ses scripts se lanceront à l'ouverture sans question (sauf ceux d'un document
+    // reçu que l'utilisateur n'a pas encore acceptés)
+    if (!m_store.ws.scripts.empty() && m_store.blockedScripts.empty()) {
+        m_store.prefs.trust(bytes);
+        m_store.prefs.save();
+    }
     m_store.message(u"%1 enregistré"_s.arg(fileName(path)));
     updateTitle();
     updateStatus();
@@ -2476,7 +2550,8 @@ void MainWindow::exportHistogram(exporter::Format fmt)
 void MainWindow::runAllScripts()
 {
     for (const auto &s : m_store.ws.scripts)
-        m_store.runScript(s.id);
+        if (!m_store.blockedScripts.count(s.id))
+            m_store.runScript(s.id);
 }
 
 void MainWindow::onScriptApplied(ViewId, const std::vector<ViewId> &openGraphs, const std::vector<std::pair<ViewId, QString>> &figs,

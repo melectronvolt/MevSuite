@@ -51,6 +51,16 @@ version. Les plus récents en haut ; « Non publié » : ce qui sera dans la pro
     `mr.retirer_tangentes` ; deux exemples de plus dans Python → Exemples.
 - **Notice** : dans le tableau des raccourcis, Entrée (descendre) et Tab (passer à droite) sont
   séparés.
+- **Document reçu** : ses scripts Python ne se lancent qu'après accord (un script peut lire, modifier
+  ou effacer des fichiers) ; « Ne pas lancer » est le choix par défaut, et le bouton « Exécuter » de
+  la fenêtre d'un script le lance quand on l'a lu. Un document enregistré sur ce poste, ou dont les
+  scripts ont été acceptés, les lance sans question.
+- **Graphes** : titre par défaut à la taille des titres des axes (13 au lieu de 15) ; tableur : unité
+  et incertitude sous le nom d'une grandeur à la taille normale (elles étaient plus petites).
+- **Menu Fenêtres** : un clic sur une fenêtre affichée (cochée) la cache, un autre la réaffiche ; il
+  ne servait qu'à la faire passer devant. La croix ✕ la ferme toujours (supprimée du document).
+- **Réglages du graphe** : cocher « une grandeur pour chaque côté » (incertitudes) faisait planter
+  MeVReg.
 - **Python** : une grandeur recréée sous un nom libéré par un renommage (`mr.creer("x", …)`,
   `mr.renommer("x", "a")`, `mr.creer("x", …)`) garde ses valeurs ; la grandeur renommée aussi (elle
   prenait celles de la seconde).
@@ -94,6 +104,11 @@ version. Les plus récents en haut ; « Non publié » : ce qui sera dans la pro
 - La notice s'ouvre depuis une copie dans le dossier temporaire du système, comme dans les autres
   logiciels : ses liens restent valables après la fermeture de MeVCine (AppImage).
 - Grapheur : grille et graduations aux couleurs communes de la suite.
+- Accueil : plus de choix du mode au démarrage. MeVCine s'ouvre dans le mode de la dernière fois
+  (simplifié au premier lancement) et propose tout de suite d'ouvrir une vidéo ; le mode se change
+  dans le menu Mode.
+- Trajectoire et chronogramme sur le fond des graphiques de la suite : sombre en thème sombre (ils
+  restaient sur une feuille blanche), couleurs des objets éclaircies pour s'y voir.
 - Accélération juste quand l'intervalle entre deux images change (image perdue, cadence variable des
   téléphones) : elle était fausse jusqu'à 50 % aux images qui suivent un saut.
 - Ouverture d'une vidéo : l'examen se fait à part, la fenêtre reste dessinée ; la fermer pendant ce
@@ -174,6 +189,11 @@ version. Les plus récents en haut ; « Non publié » : ce qui sera dans la pro
   restaient petits dans MeVCine).
 - Windows : les licences des bibliothèques livrées (Qt, Python…) et la liste de leurs versions sont
   dans le dossier `licences` de chaque logiciel.
+- **Plantage** (accès mémoire invalide…) : le logiciel ne disparaît plus sans rien dire. Il note la
+  cause et la pile d'appels dans son journal (`mevpix.log`, `mevcine.log`, `mevreg.log`,
+  `mevsono.log`, dans le dossier des réglages), puis un message dit où le trouver. Jusque-là, seules
+  les erreurs internes détectées par le logiciel y étaient notées. MeVReg, qui n'avait pas de
+  journal, en a un.
 
 ## [0.2.0] — 2026-10-16
 

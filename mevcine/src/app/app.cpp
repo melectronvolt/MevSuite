@@ -138,7 +138,6 @@ QString nom_etat(Etat e)
 }
 
 App::App(const QString &fichier, std::optional<Mode> mode_impose)
-    : mode(mode_impose)
 {
     setWindowIcon(QApplication::windowIcon());
     setMinimumSize(TAILLE_MIN_FENETRE);
@@ -151,12 +150,13 @@ App::App(const QString &fichier, std::optional<Mode> mode_impose)
     else
         erreur_conf = true;
     i18n::choisit(prefs::langue(config).value_or(i18n::langue_du_systeme()));
+    // le mode imposé (--simple, --expert), sinon celui de la dernière fois
+    mode = mode_impose.value_or(config.get(u"mode"_s) == u"expert"_s ? Mode::Expert : Mode::Simplifie);
     unite_etalon = unite_depuis_symbole(config.get(u"unite_etalon"_s).value_or(QString())).value_or(Unite::Metre);
 
     construit_menus();
     construit_coin_des_menus();
     m_pages = new QStackedWidget(this);
-    m_accueil = new PageAccueil(*this, m_pages);
     m_sans_video = new PageSansVideo(*this, m_pages);
     m_guide = new PageGuide(*this, m_pages);
     m_expert = new QTabWidget(m_pages);
@@ -184,8 +184,7 @@ App::App(const QString &fichier, std::optional<Mode> mode_impose)
             traj.choisit_camera();
         rafraichit();
     });
-    for (QWidget *page : {static_cast<QWidget *>(m_accueil), static_cast<QWidget *>(m_sans_video),
-                          static_cast<QWidget *>(m_guide), static_cast<QWidget *>(m_expert)})
+    for (QWidget *page : {static_cast<QWidget *>(m_sans_video), static_cast<QWidget *>(m_guide), static_cast<QWidget *>(m_expert)})
         m_pages->addWidget(page);
     setCentralWidget(m_pages);
 
@@ -261,8 +260,6 @@ QString App::message_etat() const
 
 QString App::message_par_defaut() const
 {
-    if (!mode)
-        return trad("Choisissez votre mode de travail : simplifié (pas à pas) ou expert");
     if (!video || etat == Etat::Debut)
         return trad("Ouvrez une vidéo");
     if (simplifie())
@@ -329,6 +326,8 @@ void App::change_mode(Mode m)
     // le mode simplifié conduit lui-même le pointage, étape par étape
     pointage_arrete = false;
     mode = m;
+    // retenu pour la prochaine fois
+    config.set(u"mode"_s, m == Mode::Expert ? u"expert"_s : u"simplifie"_s);
 }
 
 void App::mode_simplifie_un_objet()
@@ -1529,8 +1528,6 @@ void App::aide_page(const QString &page)
 
 QString App::page_d_aide() const
 {
-    if (!mode)
-        return u"index.html"_s;
     if (!video)
         return u"demarrer.html"_s;
     return simplifie() ? u"simplifie.html"_s : u"expert.html"_s;
@@ -1858,8 +1855,7 @@ void App::maj_barre_etat()
     const int cote = m_statut->fontMetrics().height();
     m_statut_icone->setPixmap(icones::statut(type).pixmap(QSize(cote, cote), devicePixelRatioF()));
     m_info_video->setVisible(video != nullptr);
-    m_info_image->setVisible(video != nullptr && mode.has_value());
-    m_info_mode->setVisible(mode.has_value());
+    m_info_image->setVisible(video != nullptr);
     if (video) {
         // le nom de la vidéo (raccourci au milieu s'il est long) et ses caractéristiques
         const QSize d = dimensions();
@@ -1920,7 +1916,7 @@ void App::echap()
 void App::touche_image(int pas)
 {
     const bool image_visible = simplifie() || onglet == Onglet::Pointage;
-    if (mode && image_visible && controle_image_actif())
+    if (image_visible && controle_image_actif())
         change_image(index + pas);
 }
 
@@ -1959,14 +1955,6 @@ void App::maj_menus()
     m_mode_expert->setText(trad("Mode expert (toutes les fonctions)"));
     m_mode_simplifie->setChecked(mode == Mode::Simplifie);
     m_mode_expert->setChecked(mode == Mode::Expert);
-    if (!mode) {
-        // aucun mode choisi : aucune case cochée
-        m_mode_simplifie->actionGroup()->setExclusionPolicy(QActionGroup::ExclusionPolicy::ExclusiveOptional);
-        m_mode_simplifie->setChecked(false);
-        m_mode_expert->setChecked(false);
-    } else {
-        m_mode_simplifie->actionGroup()->setExclusionPolicy(QActionGroup::ExclusionPolicy::Exclusive);
-    }
 
     m_menu_aide->setTitle(trad("Aide"));
     m_notice->setText(trad("Notice d'utilisation…"));
@@ -2015,10 +2003,7 @@ void App::rafraichit()
     if (!m_secours.isActive() && sauvegarde_de_secours())
         m_secours.start();
 
-    if (!mode) {
-        m_pages->setCurrentWidget(m_accueil);
-        m_accueil->maj();
-    } else if (!video) {
+    if (!video) {
         m_pages->setCurrentWidget(m_sans_video);
         m_sans_video->maj();
     } else if (simplifie()) {

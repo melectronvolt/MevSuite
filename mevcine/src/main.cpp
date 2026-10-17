@@ -115,6 +115,9 @@ int main(int argc, char *argv[])
     const prefs::Config conf = prefs::charge().value_or(prefs::Config());
     i18n::choisit(prefs::langue(conf).value_or(i18n::langue_du_systeme()));
     theme::choisit(theme::depuis_texte(conf.get(u"theme"_s).value_or(QString())));
+    // relancé après un plantage : la boîte de dialogue seulement
+    if (erreurs::montre_plantage(QApplication::arguments()))
+        return 0;
     erreurs::installe();
     const Arguments args = analyse_arguments(QApplication::arguments());
 

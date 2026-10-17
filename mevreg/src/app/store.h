@@ -18,6 +18,7 @@
 
 #include <map>
 #include <optional>
+#include <set>
 #include <tuple>
 #include <vector>
 
@@ -50,8 +51,14 @@ struct Prefs {
     /// Confirmation avant de fermer la fenêtre d'un tableur, d'un graphe, d'un script ou d'un
     /// dessin (ils restent dans le document) ; « Ne plus demander » l'écarte.
     bool confirmClose = true;
+    /// Empreintes (SHA-256) des documents enregistrés sur ce poste, ou dont l'utilisateur a accepté
+    /// les scripts : ils se lancent à l'ouverture sans question.
+    QStringList trustedDocuments;
 
     NumberStyle style() const { return NumberStyle{decimalComma}; }
+    /// Le document de contenu `bytes` a été enregistré ici, ou ses scripts acceptés.
+    void trust(const QByteArray &bytes);
+    bool trusted(const QByteArray &bytes) const;
     static Prefs load();
     void save() const;
 };
@@ -84,6 +91,9 @@ public:
     std::map<ViewId, QId> pendingAbscissa;
     /// Dossier du document enregistré (chemins relatifs des scripts), vide sinon.
     QString documentFolder;
+    /// Scripts qui ne se lancent pas d'eux-mêmes (script lié, données changées) : ceux d'un document
+    /// reçu dont l'utilisateur n'a pas accepté les scripts, tant qu'il ne les lance pas lui-même.
+    std::set<ViewId> blockedScripts;
     /// Graphe actif de chaque fenêtre graphique (grille de plusieurs graphes).
     std::map<ViewId, int> selectedPlot;
     /// Dernière plage d'abscisses tracée à la souris : graphe de la fenêtre, bornes.

@@ -4,6 +4,7 @@
 
 #include "about.h"
 #include "app.h"
+#include "crash.h"
 #include "settingsdialog.h"
 #include "signalplot.h"
 #include "spectrumplot.h"
@@ -15,12 +16,14 @@
 #include <QCheckBox>
 #include <QComboBox>
 #include <QDir>
+#include <QFile>
 #include <QHeaderView>
 #include <QLabel>
 #include <QMenu>
 #include <QMenuBar>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QProcess>
 #include <QPushButton>
 #include <QScrollArea>
 #include <QShortcut>
@@ -28,6 +31,7 @@
 #include <QStackedWidget>
 #include <QStatusBar>
 #include <QTabBar>
+#include <QTemporaryDir>
 #include <QTableWidget>
 #include <QTest>
 #include <QToolBar>
@@ -35,13 +39,29 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
 #include <functional>
 #include <memory>
 #include <thread>
 
+#ifdef Q_OS_LINUX
+#include <sys/prctl.h>
+#endif
+
 using namespace Qt::StringLiterals;
 
 namespace {
+
+/// Plantage pour l'essai du journal : accès mémoire invalide, sans fichier core (Linux).
+[[noreturn]] void crashNow()
+{
+#ifdef Q_OS_LINUX
+    prctl(PR_SET_DUMPABLE, 0);
+#endif
+    volatile std::uintptr_t address = 0;
+    *reinterpret_cast<volatile int *>(address) = 0;
+    std::abort();
+}
 
 std::unique_ptr<MainWindow> harness(Lang lang, bool expert)
 {
@@ -795,6 +815,36 @@ private slots:
         QVERIFY(w->settingsDialog() && shows(w->settingsDialog(), u"Window function"_s));
         QVERIFY(waitAnalysis(*w));
         capture(w.get(), u"12_en_settings"_s, w->settingsDialog());
+    }
+
+    // Plantage (accès mémoire invalide) : le journal reçoit la cause et la pile d'appels. L'essai se
+    // relance lui-même, et c'est ce second programme qui plante.
+    void crashLog()
+    {
+        if (const QString log = qEnvironmentVariable("MEVSUITE_ESSAI_PLANTAGE"); !log.isEmpty()) {
+            crash::install(log, Lang::Fr, false);
+            crashNow();
+        }
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+        const QString log = dir.filePath(u"mevsono.log"_s);
+        QProcess child;
+        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+        env.insert(u"MEVSUITE_ESSAI_PLANTAGE"_s, log);
+        child.setProcessEnvironment(env);
+        child.start(QCoreApplication::applicationFilePath(), {u"crashLog"_s});
+        QVERIFY(child.waitForFinished(60000));
+        QCOMPARE(child.exitStatus(), QProcess::CrashExit);
+        QFile file(log);
+        QVERIFY(file.open(QIODevice::ReadOnly));
+        const QStringList lines = QString::fromUtf8(file.readAll()).split(u'\n', Qt::SkipEmptyParts);
+        QVERIFY2(lines.size() >= 4, qPrintable(lines.join(u'\n')));
+        QVERIFY(lines[0].startsWith(u"MeVSono "_s + about::VERSION));
+#ifdef Q_OS_WIN
+        QCOMPARE(lines[1], u"Exception 0xC0000005 (EXCEPTION_ACCESS_VIOLATION)"_s);
+#else
+        QCOMPARE(lines[1], u"Signal 11 (SIGSEGV)"_s);
+#endif
     }
 };
 

@@ -137,6 +137,7 @@ public:
     // --- fenêtres ---
     void openTab(const TabKey &key);
     void closeTab(const TabKey &key);
+    void hideTab(const TabKey &key);
     bool isOpen(const TabKey &key) const;
     QList<TabKey> openTabs() const;
     void newTable(std::vector<QId> columns);
@@ -250,7 +251,11 @@ private:
     void addRecent(const QString &path);
     /// Exécute `then` après avoir proposé d'enregistrer les modifications.
     void guarded(const std::function<void()> &then);
-    void setWorkspace(Workspace ws, const QJsonValue &layout);
+    /// Nouveau document ; `file` : le contenu du fichier ouvert (ses scripts ne se lancent qu'après
+    /// accord, sauf s'il a été enregistré sur ce poste).
+    void setWorkspace(Workspace ws, const QJsonValue &layout, const std::optional<QByteArray> &file = std::nullopt);
+    /// Demande s'il faut lancer les scripts d'un document reçu (contenu `file`).
+    void askScripts(const QByteArray &file, quint64 document);
     QJsonValue layoutJson() const;
     void restoreLayout(const QJsonValue &layout);
     QWidget *createContent(const TabKey &key);
@@ -285,6 +290,8 @@ private:
     void flushScripts();
 
     Store &m_store;
+    /// Numéro du document affiché : une question sur les scripts d'un document déjà remplacé ne vaut plus.
+    quint64 m_document = 0;
     std::map<QString, QPointer<Dock>> m_docks;
     QString m_path;
     bool m_allowClose = false;
