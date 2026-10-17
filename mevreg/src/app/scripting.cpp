@@ -462,10 +462,15 @@ void applyCommands(Workspace &ws, ViewId script, const python::ScriptOutput &out
         const QString order = o.value(u"ordre"_s).toString();
         const QString name = o.value(u"nom"_s).toString();
         if (order == u"grandeur") {
-            // dernières valeurs données sous ce nom
-            for (const auto &q : out.quantities)
-                if (q.name == name)
-                    applyQuantity(ws, script, q, res, newIds);
+            // les valeurs de cet appel ; à défaut, les dernières données sous ce nom
+            const qint64 k = o.value(u"indice"_s).toInteger(-1);
+            if (k >= 0 && k < static_cast<qint64>(out.given.size()) && out.given[static_cast<size_t>(k)].name == name) {
+                applyQuantity(ws, script, out.given[static_cast<size_t>(k)], res, newIds);
+            } else {
+                for (const auto &q : out.quantities)
+                    if (q.name == name)
+                        applyQuantity(ws, script, q, res, newIds);
+            }
         } else if (order == u"calculer") {
             const QString formula = o.value(u"formule"_s).toString(), unit = o.value(u"unite"_s).toString();
             if (const Quantity *q = ws.doc.byName(name)) {

@@ -39,12 +39,15 @@ std::vector<Serie> grandeurs(const Pointage &p)
             if (const Position v = p.vitesse_px(obj, i))
                 vit[i] = p.vitesse_en_metre(*v);
         }
+        // vit[i] est la vitesse moyenne entre les images i − 1 et i, au milieu de cet intervalle : deux
+        // vitesses successives sont donc séparées de (t[i] − t[i − 2]) / 2, qui n'est égal à t[i] − t[i − 1]
+        // que si la cadence est régulière (une image perdue, une vidéo à cadence variable)
         const auto derivee = [&](double Vecteur::*composante) {
             std::vector<std::optional<double>> d(n);
-            for (int i = 1; i < n; ++i) {
+            for (int i = 2; i < n; ++i) {
                 if (!vit[i] || !vit[i - 1])
                     continue;
-                const double dt = p.date(i) - p.date(i - 1);
+                const double dt = (p.date(i) - p.date(i - 2)) / 2.0;
                 if (dt > 0.0)
                     d[i] = ((*vit[i]).*composante - (*vit[i - 1]).*composante) / dt;
             }

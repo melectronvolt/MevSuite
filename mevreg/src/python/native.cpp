@@ -912,11 +912,15 @@ PyObject *grandeur(PyObject *, PyObject *args)
         PyErr_SetString(PyExc_ValueError, "une grandeur ne peut pas contenir de nombres complexes (utilisez np.abs ou .real)");
         return nullptr;
     }
-    auto &q = hostOutput().quantities;
+    HostOutput &host = hostOutput();
+    auto &q = host.quantities;
     std::erase_if(q, [&](const NamedValues &v) { return v.name == name; });
     q.push_back({name, QString::fromUtf8(unit), a.re});
-    // repère dans la suite des ordres : la grandeur est mise dans le document à cette place
-    hostOutput().commands.append(QJsonObject{{u"ordre"_s, u"grandeur"_s}, {u"nom"_s, name}});
+    // repère dans la suite des ordres : la grandeur est mise dans le document à cette place, avec les
+    // valeurs de cet appel (le même nom peut être repris plus loin, après un renommage)
+    host.given.push_back(q.back());
+    host.commands.append(QJsonObject{
+        {u"ordre"_s, u"grandeur"_s}, {u"nom"_s, name}, {u"indice"_s, static_cast<qint64>(host.given.size() - 1)}});
     Py_RETURN_NONE;
 }
 
@@ -938,7 +942,7 @@ PyObject *commande(PyObject *, PyObject *args)
 
 /// `_ajuster(type, degré, expression, nom_x, x, nom_y, y, plage)` : modélisation faite tout de
 /// suite, comme dans la fenêtre Modélisation ; (noms, valeurs, incertitudes, R², n, équation,
-/// erreur).
+/// erreur, noms des paramètres fixés).
 PyObject *ajuster(PyObject *, PyObject *args)
 {
     const char *type = nullptr, *expression = nullptr, *xname = nullptr, *yname = nullptr;
@@ -997,8 +1001,14 @@ PyObject *ajuster(PyObject *, PyObject *args)
         if (auto model = fit::Model::make(kind, QString::fromUtf8(xname), doc.paramValues()))
             equation = model->display(spec.result->params, QString::fromUtf8(xname), QString::fromUtf8(yname), NumberStyle{false});
     }
+    PyObject *fixedNames = PyList_New(0);
+    for (const auto &[name, value] : spec.fixed) {
+        PyObject *nm = fromQString(name);
+        PyList_Append(fixedNames, nm);
+        Py_DECREF(nm);
+    }
     PyObject *eq = fromQString(equation), *err = fromQString(spec.resultError);
-    return Py_BuildValue("(NNNdLNN)", names, values, uncs, r2, n, eq, err);
+    return Py_BuildValue("(NNNdLNNN)", names, values, uncs, r2, n, eq, err, fixedNames);
 }
 
 /// `_lire_csv(chemin, sep, decimal)` : fichier de données lu comme par l'import de MeVReg
@@ -1216,12 +1226,12 @@ QString sourcePath(const QString &name, bool *package)
 {
     ensureCoreResources();
     const QString base = u":/python/"_s + QString(name).replace(u'.', u'/');
-    if (QFile::exists(base + u"/__init__.py")) {
+    if (QFile::exists(base + u"/__init__.py"_s)) {
         if (package)
             *package = true;
         return base + u"/__init__.py"_s;
     }
-    if (QFile::exists(base + u".py")) {
+    if (QFile::exists(base + u".py"_s)) {
         if (package)
             *package = false;
         return base + u".py"_s;

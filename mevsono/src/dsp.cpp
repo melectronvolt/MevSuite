@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <complex>
 #include <numbers>
 
 using namespace Qt::StringLiterals;
@@ -42,6 +43,30 @@ double mean(std::span<const float> samples)
     for (float x : samples)
         sum += x;
     return samples.empty() ? 0.0 : sum / double(samples.size());
+}
+
+/// Noyau de Dirichlet : Σ e^(−2iπνn) pour n de 0 à `len` − 1 (périodique en ν, de période 1).
+std::complex<double> dirichlet(double nu, double len)
+{
+    nu -= std::round(nu);
+    const double s = std::sin(std::numbers::pi * nu);
+    if (std::abs(s) < 1e-12)
+        return len;
+    return std::polar(std::sin(std::numbers::pi * nu * len) / s, -std::numbers::pi * nu * (len - 1.0));
+}
+
+/// Amplitude relative d'une sinusoïde décalée de `delta` raies de la raie mesurée, pour la fenêtre
+/// `terms` de `len` échantillons et une FFT de `fftLen` points : |W(δ / fftLen)| / W(0), où W est le
+/// spectre de la fenêtre (somme de noyaux de Dirichlet décalés).
+double windowGain(const std::vector<double> &terms, double delta, size_t len, size_t fftLen)
+{
+    const double n = double(len), nu = delta / double(fftLen);
+    std::complex<double> w;
+    for (size_t k = 0; k < terms.size(); ++k) {
+        const double c = (k % 2 == 0 ? terms[k] : -terms[k]) / 2.0;
+        w += c * (dirichlet(nu - double(k) / n, n) + dirichlet(nu + double(k) / n, n));
+    }
+    return std::abs(w) / (n * terms[0]);
 }
 
 /// Rang maximal des harmoniques pris en compte pour reconnaître la fondamentale.
@@ -174,7 +199,8 @@ std::vector<Peak> peaks(const Spectrum &sp, Window window, const PeakParams &par
     const double df = sp.df();
     const size_t first = std::max<size_t>(toIndex(std::ceil(params.fmin / df)), 1);
     const size_t last = std::min(toIndex(std::floor(params.fmax / df)), a.size() - 2);
-    const auto ln = [](double x) { return std::log(std::max(x, 1e-300)); };
+    const std::vector<double> terms = cosineTerms(window);
+    const auto gain = [&](double delta) { return windowGain(terms, delta, sp.segmentLen, sp.fftLen); };
     std::vector<Peak> found;
     for (size_t k = first; k <= last; ++k) {
         if (a[k] < floor)
@@ -189,23 +215,35 @@ std::vector<Peak> peaks(const Spectrum &sp, Window window, const PeakParams &par
             isMax = a[j] <= a[k];
         if (!isMax)
             continue;
-        const double l = ln(a[k - 1]), c = ln(a[k]), r = ln(a[k + 1]);
-        const double denom = l - 2.0 * c + r;
-        const double delta = denom < 0.0 ? std::clamp(0.5 * (l - r) / denom, -0.5, 0.5) : 0.0;
-        const double amplitude = std::exp(c - 0.25 * (l - r) * delta);
-        double freq;
+        // Écart δ du vrai sommet à la raie k, puis amplitude a[k] / G(δ), G étant la réponse de la
+        // fenêtre : justes pour une sinusoïde, où qu'elle tombe entre deux raies (une parabole passant
+        // par le logarithme des trois raies se trompait sur l'amplitude jusqu'à 27 % avec la fenêtre
+        // rectangulaire, 4 % avec Hann, 2 % avec le sommet plat).
+        double delta, centre;
         if (window == Window::FlatTop) {
-            // sommet plat : la parabole situe mal le centre, le barycentre du lobe le situe bien
+            // sommet plat : les raies voisines changent trop peu avec δ, le barycentre du lobe situe
+            // mieux le centre
             double sum = 0.0, weighted = 0.0;
             for (size_t j = lo; j <= hi; ++j) {
                 sum += a[j] * a[j];
                 weighted += a[j] * a[j] * double(j);
             }
-            freq = weighted / sum * df;
+            centre = weighted / sum;
+            delta = std::clamp(centre - double(k), -0.5, 0.5);
         } else {
-            freq = (double(k) + delta) * df;
+            // δ pour lequel le rapport de la plus grande voisine à la raie k est celui que donne la
+            // fenêtre (il croît de G(1) / G(0) à 1 quand δ va de 0 à une demi-raie)
+            const int side = a[k + 1] >= a[k - 1] ? 1 : -1;
+            const double ratio = a[side > 0 ? k + 1 : k - 1] / a[k];
+            double below = 0.0, above = 0.5;
+            for (int i = 0; i < 50; ++i) {
+                const double u = 0.5 * (below + above);
+                (gain(1.0 - u) < ratio * gain(u) ? below : above) = u;
+            }
+            delta = side * 0.5 * (below + above);
+            centre = double(k) + delta;
         }
-        found.push_back({freq, amplitude});
+        found.push_back({centre * df, a[k] / gain(delta)});
     }
     std::stable_sort(found.begin(), found.end(), [](const Peak &x, const Peak &y) { return x.amplitude > y.amplitude; });
     if (found.size() > params.maxPeaks)

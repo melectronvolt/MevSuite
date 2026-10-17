@@ -1,6 +1,7 @@
 #include "export.h"
 
 #include "calculs.h"
+#include "fichier.h"
 #include "format.h"
 #include "i18n.h"
 
@@ -49,7 +50,7 @@ QString texte_csv(const Pointage &p)
 QString ecrit_csv(const QString &chemin, const Pointage &p)
 {
     QSaveFile f(chemin);
-    if (!f.open(QIODevice::WriteOnly) || f.write(texte_csv(p).toUtf8()) < 0 || !f.commit())
+    if (!f.open(QIODevice::WriteOnly) || !ecrit_tout(f, texte_csv(p).toUtf8()) || !f.commit())
         return f.errorString();
     return {};
 }

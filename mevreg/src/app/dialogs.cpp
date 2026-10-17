@@ -2,6 +2,7 @@
 
 #include "app/icons.h"
 #include "app/mainwindow.h"
+#include "app/savefile.h"
 #include "app/scriptpanel.h"
 #include "app/theme.h"
 #include "app/widgets.h"
@@ -400,7 +401,7 @@ void newQuantity(MainWindow &win, bool calculated, std::optional<ViewId> table)
     if (calculated) {
         formula = formulaEdit(QString(), u"0.5*m*v^2"_s, box.dlg);
         f->addRow(u"Formule"_s, formula);
-        box.layout->addWidget(weakLabel(u"Opérations + − * / ^, fonctions sqrt, exp, ln, log, sin, cos… ; deriv(y, x) et integ(y, x) pour dériver et intégrer. Le point décimal est toujours le point."_s, box.dlg));
+        box.layout->addWidget(weakLabel(u"Opérations + − * / ^, fonctions sqrt, exp, ln, log, sin, cos… ; deriv(y, x) et integ(y, x) pour dériver et intégrer. Nombres décimaux : avec un point ou une virgule (0.05 ou 0,05)."_s, box.dlg));
     }
     FillFields *fill = nullptr;
     QCheckBox *withFill = nullptr;
@@ -504,12 +505,14 @@ void newUncertainty(MainWindow &win, QId of)
     auto *lbl = new QLabel(u"u_%1 ="_s.arg(name), box.dlg);
     lbl->setFont(theme::fixedFont());
     row->addWidget(lbl);
-    auto *formula = formulaEdit(QString(), u"0.05   ou   0.02*%1 + 0.01"_s.arg(name), box.dlg);
+    auto *formula = formulaEdit(QString(), u"0.05   ou   (0.02*abs(%1) + 0.01)/sqrt(3)"_s.arg(name), box.dlg);
     row->addWidget(formula, 1);
     box.layout->addLayout(row);
-    box.layout->addWidget(weakLabel(u"Une constante s'applique à toutes les valeurs ; une formule peut dépendre de la grandeur "
-                                    "(par exemple 0.02*%1 + 0.01 pour « 2 % + 1 digit »). Pour une graduation de pas Δ : Δ/sqrt(12) ; "
-                                    "pour une tolérance ±a du constructeur : a/sqrt(3)."_s
+    // une incertitude-type, et non la tolérance du constructeur : l'exemple « 2 % + 1 digit » la divise
+    // par √3 (loi uniforme), et prend la valeur absolue (une incertitude n'est jamais négative)
+    box.layout->addWidget(weakLabel(u"Une constante s'applique à toutes les valeurs ; une formule peut dépendre de la grandeur. "
+                                    "Pour une graduation de pas Δ : Δ/sqrt(12). Pour une tolérance ±a du constructeur : a/sqrt(3) ; "
+                                    "par exemple (0.02*abs(%1) + 0.01)/sqrt(3) pour « ±(2 % + 1 digit) », avec un digit de 0,01."_s
                                         .arg(name),
                                     box.dlg));
     auto *bars = new QCheckBox(u"Afficher les barres d'incertitude sur les graphes"_s, box.dlg);
@@ -1193,15 +1196,16 @@ void preferences(MainWindow &win)
 {
     Store &store = win.store();
     Box box(win, u"Préférences"_s, QString(), 440);
-    // le thème clair ou sombre se choisit avec le bouton soleil / lune de la barre d'outils ; la
+    // le thème clair ou sombre se choisit avec le bouton soleil / lune de la barre de menus ; la
     // virgule ou le point décimal suit la langue
     auto *darkPlots = new QCheckBox(u"Graphes sur fond sombre avec le thème sombre"_s, box.dlg);
     darkPlots->setChecked(store.prefs.darkPlots);
     darkPlots->setToolTip(u"Les exports et les impressions restent toujours sur fond blanc"_s);
     box.layout->addWidget(darkPlots);
-    auto *confirm = new QCheckBox(u"Demander avant de fermer la fenêtre d'un tableur, d'un graphe ou d'un script"_s, box.dlg);
+    auto *confirm = new QCheckBox(u"Demander s'il faut cacher ou fermer un tableur, un graphe, un script ou un dessin"_s, box.dlg);
     confirm->setChecked(store.prefs.confirmClose);
-    confirm->setToolTip(u"Ils restent dans le document : menu Fenêtres pour les rouvrir"_s);
+    confirm->setToolTip(u"Case cochée : choisir entre cacher la fenêtre (elle reste dans le menu Fenêtres) et la fermer "
+                        "(elle est retirée du document). Case décochée : la fenêtre est cachée."_s);
     box.layout->addWidget(confirm);
     QFormLayout *f = box.form();
     auto *sig = new QSpinBox(box.dlg);
@@ -1250,7 +1254,7 @@ void pythonExport(MainWindow &win)
             path += u".py"_s;
         const QByteArray bytes = text.toUtf8();
         QSaveFile file(path);
-        if (!file.open(QIODevice::WriteOnly) || file.write(bytes) != bytes.size() || !file.commit()) {
+        if (!file.open(QIODevice::WriteOnly) || !writeAll(file, bytes) || !file.commit()) {
             win.store().message(u"Écriture impossible : %1"_s.arg(file.errorString()), icons::Status::Error);
             return;
         }

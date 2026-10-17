@@ -7,6 +7,7 @@
 #include "demarrage.h"
 #include "detect.h"
 #include "export.h"
+#include "fichier.h"
 #include "format.h"
 #include "i18n.h"
 #include "onglet_coord.h"
@@ -20,8 +21,10 @@
 #include <QCloseEvent>
 #include <QDir>
 #include <QDragEnterEvent>
+#include <QEventLoop>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QFutureWatcher>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLibraryInfo>
@@ -40,6 +43,7 @@
 #include <QTabWidget>
 #include <QToolButton>
 #include <QUrl>
+#include <QtConcurrent/QtConcurrentRun>
 
 #include <cmath>
 
@@ -426,10 +430,35 @@ bool App::ouvre_video(const QString &chemin_donne, int rotation)
     dbg_p(2, u"rentre dans 'ouvre_video' %1"_s.arg(chemin_donne));
     // chemin absolu, pour les préférences et les fichiers de projet
     const QString chemin = chemins::absolu(chemin_donne);
-    // l'examen d'une grande vidéo peut prendre quelques secondes : curseur d'attente
+    // L'examen d'une grande vidéo (ffprobe en compte les paquets) peut prendre du temps, surtout sur une
+    // clé USB : il se fait dans un autre fil, avec le curseur d'attente. La fenêtre se redessine, mais
+    // ni clic ni touche n'agissent avant la fin ; la fermer interrompt l'ouverture.
+    using Ouverture = std::expected<std::unique_ptr<VideoReader>, QString>;
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    auto lecteur = VideoReader::ouvre(chemin);
+    ouverture_annulee = false;
+    ouverture_en_cours = true;
+    QFuture<Ouverture> tache = QtConcurrent::run([chemin, fil = thread(), annule = &ouverture_annulee] {
+        Ouverture l = VideoReader::ouvre(chemin, annule);
+        if (l)
+            (*l)->confie_au_fil(fil);
+        return l;
+    });
+    QEventLoop attente;
+    QFutureWatcher<Ouverture> fin;
+    connect(&fin, &QFutureWatcherBase::finished, &attente, &QEventLoop::quit);
+    fin.setFuture(tache);
+    if (!tache.isFinished())
+        attente.exec(QEventLoop::ExcludeUserInputEvents);
+    tache.waitForFinished();
+    Ouverture lecteur = tache.takeResult();
+    ouverture_en_cours = false;
     QApplication::restoreOverrideCursor();
+    if (ouverture_annulee) {
+        // la fenêtre a été fermée pendant l'ouverture : on la ferme maintenant (en demandant d'abord si
+        // des mesures seraient perdues)
+        QTimer::singleShot(0, this, &QWidget::close);
+        return false;
+    }
     if (!lecteur) {
         dbg_p(1, u"erreur de lecture de %1 : %2"_s.arg(chemin, lecteur.error()));
         message(trad("Vidéo illisible"), trad("MeVCine n'arrive pas à lire la vidéo :\n{}\n\n{}", natif(chemin), lecteur.error()));
@@ -1286,7 +1315,7 @@ void App::enregistre(const QString &chemin)
 {
     sauve_prefs();
     QSaveFile f(chemin);
-    if (f.open(QIODevice::WriteOnly) && f.write(texte_projet().toUtf8()) >= 0 && f.commit()) {
+    if (f.open(QIODevice::WriteOnly) && ecrit_tout(f, texte_projet().toUtf8()) && f.commit()) {
         note_travail_sauve();
         affiche_statut(trad("Projet enregistré : {}", natif(chemin)), icones::Statut::Reussite);
     } else {
@@ -1306,6 +1335,12 @@ void App::rouvre(const QString &fichier)
     const prefs::Config &c = projet->config;
     if (!version_conf_ok(c))
         return;
+    // un étalon de longueur nulle ou négative rendrait toutes les positions infinies
+    if (const auto longueur = c.get_float(u"etalon_m"_s); longueur && !(std::isfinite(*longueur) && *longueur > 0.0)) {
+        message(trad("Projet illisible"),
+                natif(fichier) + u'\n' + trad("La longueur de l'étalon ({} m) n'est pas valide.", texte_reel(*longueur)));
+        return;
+    }
     // la vidéo, ou à défaut une vidéo de même nom à côté du projet
     QString chemin_video = QDir::fromNativeSeparators(c.get(u"lastvideo"_s).value_or(QString()));
     if (!QFileInfo(chemin_video).isFile()) {
@@ -1736,6 +1771,12 @@ void App::dimensionne_coin_des_menus()
         b->setIconSize(QSize(icone, icone));
         b->setFixedHeight(hauteur);
     }
+    // la barre des menus ne revoit la place du coin que quand on le lui redonne : il garderait sinon sa
+    // taille d'avant, trop petite pour les boutons agrandis (comme MeVReg)
+    if (QWidget *coin = menuBar()->cornerWidget(Qt::TopRightCorner)) {
+        coin->adjustSize();
+        menuBar()->setCornerWidget(coin, Qt::TopRightCorner);
+    }
     menuBar()->updateGeometry();
 }
 
@@ -1895,7 +1936,7 @@ void App::maj_menus()
                                  "après un plantage ou une fermeture malencontreuse"));
     m_recuperer->setEnabled(QFileInfo(prefs::fichier_secours()).isFile());
     m_enregistrer->setText(trad("Enregistrer le projet…"));
-    m_enregistrer->setToolTip(trad("Enregistre la vidéo utilisée, le repère, l'échelle et les mesures, pour continuer plus tard"));
+    m_enregistrer->setToolTip(trad("Enregistre le chemin de la vidéo, le repère, l'échelle et les mesures, pour continuer plus tard"));
     m_enregistrer->setEnabled(disponible);
     m_copier->setText(trad("Copier pour Python"));
     m_copier->setToolTip(trad("Copie lst_t, lst_x, lst_y (tableaux numpy), à coller dans un programme Python"));
@@ -1933,7 +1974,7 @@ void App::maj_menus()
     m_a_propos_qt->setText(trad("À propos de Qt…"));
 
     m_ouvrir->setToolTip(trad("Ouvrir une vidéo (Ctrl+O)"));
-    m_mode_simplifie->setToolTip(trad("Mode simplifié : pas à pas, un seul objet. Les mesures sont gardées."));
+    m_mode_simplifie->setToolTip(trad("Mode simplifié : pas à pas, un seul objet. Les mesures de l'objet 1 sont gardées."));
     m_mode_expert->setToolTip(trad("Mode expert : toutes les fonctions. Les mesures sont gardées."));
     // À droite de la barre des menus : la notice, puis le soleil ou la lune et le drapeau, qui montrent
     // le thème et la langue affichés
@@ -2091,6 +2132,12 @@ void App::ferme_dialogue(bool ok)
 
 void App::closeEvent(QCloseEvent *event)
 {
+    // une vidéo en cours d'ouverture : on l'interrompt d'abord, la fenêtre se ferme ensuite
+    if (ouverture_en_cours) {
+        ouverture_annulee = true;
+        event->ignore();
+        return;
+    }
     if (fermeture_confirmee || travail_en_securite()) {
         // à la fermeture, on retient le dossier des vidéos et la taille de la fenêtre
         ecrit_dimensions_conf();

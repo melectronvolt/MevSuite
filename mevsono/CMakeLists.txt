@@ -35,6 +35,7 @@ add_library(mevsono_core STATIC
     src/help.cpp src/help.h
     src/i18n.cpp src/i18n.h
     src/player.cpp src/player.h
+    src/savefile.h
     src/session.cpp src/session.h
     src/settings.cpp src/settings.h
     src/wave.cpp src/wave.h

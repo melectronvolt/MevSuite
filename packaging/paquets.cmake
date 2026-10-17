@@ -32,6 +32,10 @@ foreach(taille 16 32 48 64 128 256)
 endforeach()
 install(FILES "${MEVSUITE_ICONES}/${MEVSUITE_PAQUET}.svg" DESTINATION share/icons/hicolor/scalable/apps)
 install(FILES ${MEVSUITE_LICENCES} DESTINATION share/doc/${MEVSUITE_PAQUET})
+# type des documents du logiciel (.phy, .mevcine), s'il en a : le lanceur l'ouvre d'un double clic
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/platform/${MEVSUITE_PAQUET}.xml")
+    install(FILES platform/${MEVSUITE_PAQUET}.xml DESTINATION share/mime/packages)
+endif()
 
 set(CPACK_PACKAGE_NAME ${MEVSUITE_PAQUET})
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
@@ -56,6 +60,7 @@ set(CPACK_RPM_PACKAGE_GROUP "Applications/Engineering")
 set(CPACK_RPM_PACKAGE_URL "${CPACK_PACKAGE_HOMEPAGE_URL}")
 set(CPACK_RPM_PACKAGE_REQUIRES "${MEVSUITE_RPM_REQUIRES}")
 # dossiers du système : à ne pas réclamer (conflit avec le paquet « filesystem »)
-set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION /usr/share/applications /usr/share/doc ${_mevsuite_dossiers_icones})
+set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION /usr/share/applications /usr/share/doc /usr/share/mime
+    /usr/share/mime/packages ${_mevsuite_dossiers_icones})
 
 include(CPack)

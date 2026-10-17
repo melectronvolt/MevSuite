@@ -991,10 +991,17 @@ QString ModelingPanel::resultsText() const
         s += u"Modèle %1 : %2\n"_s.arg(spec.kind.label().toLower(), model->display(r.params, xname, yname, style));
         for (int i = 0; i < model->params().size() && static_cast<size_t>(i) < r.params.size(); ++i) {
             const double u = static_cast<size_t>(i) < r.uncertainties.size() ? r.uncertainties[i] : NAN;
-            if (std::isfinite(u) && u > 0.0)
-                s += u"%1 = %2\n"_s.arg(model->params()[i], roundMeasure(r.params[i], u, 2, style).toText(QString()));
+            const QString &name = model->params()[i];
+            const bool fixed = std::any_of(spec.fixed.begin(), spec.fixed.end(), [&](const auto &f) { return f.first == name; });
+            if (fixed)
+                s += u"%1 = %2 (fixé)\n"_s.arg(name, formatSig(r.params[i], 6, style));
+            else if (std::isfinite(u) && u > 0.0)
+                s += u"%1 = %2\n"_s.arg(name, roundMeasure(r.params[i], u, 2, style).toText(QString()));
+            else if (u == 0.0)
+                s += u"%1 = %2 (incertitude nulle)\n"_s.arg(name, formatSig(r.params[i], 6, style));
             else
-                s += u"%1 = %2 (fixé)\n"_s.arg(model->params()[i], formatSig(r.params[i], 6, style));
+                // deux points pour deux paramètres, paramètres liés : pas d'incertitude
+                s += u"%1 = %2 (incertitude non calculable)\n"_s.arg(name, formatSig(r.params[i], 6, style));
         }
     }
     s += u"R² = %1\n"_s.arg(formatSig(r.r2, 6, style));

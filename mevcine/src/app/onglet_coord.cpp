@@ -64,6 +64,6 @@ void OngletCoord::maj()
     m_csv->setText(trad("💾 Enregistrer en CSV…"));
     m_csv->setToolTip(trad("Fichier CSV standard : virgule entre les champs, point décimal"));
     m_projet->setText(trad("Enregistrer le projet…"));
-    m_projet->setToolTip(trad("Enregistre la vidéo utilisée, le repère, l'échelle et les mesures, pour continuer plus tard"));
+    m_projet->setToolTip(trad("Enregistre le chemin de la vidéo, le repère, l'échelle et les mesures, pour continuer plus tard"));
     m_tableau->maj();
 }

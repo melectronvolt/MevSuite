@@ -9,5 +9,5 @@ Exec=mevcine %f
 Icon=mevcine
 Terminal=false
 Categories=Education;Physics;Qt;
-MimeType=video/mp4;video/quicktime;video/x-msvideo;video/x-matroska;video/webm;video/3gpp;
+MimeType=application/x-mevcine;video/mp4;video/quicktime;video/x-msvideo;video/x-matroska;video/webm;video/3gpp;
 Keywords=physique;mécanique;pointage;vidéo;physics;video;

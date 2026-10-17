@@ -13,6 +13,7 @@
 #include "app/modelingpanel.h"
 #include "app/pyexamples.h"
 #include "app/quantitiespanel.h"
+#include "app/savefile.h"
 #include "app/scripting.h"
 #include "app/scriptpanel.h"
 #include "app/statspanel.h"
@@ -678,7 +679,7 @@ void MainWindow::buildMenus()
         }
     });
 
-    QMenu *an = menuBar()->addMenu(u"&Analyse"_s);
+    QMenu *an = menuBar()->addMenu(u"Ana&lyse"_s);
     an->addAction(icons::get("model"), u"Modélisation"_s, this, [this] { openTab(TabKey{TabKey::Modeling}); });
     an->addAction(icons::get("stats"), u"Statistiques"_s, this, [this] { openTab(TabKey{TabKey::Statistics}); });
     an->addSeparator();
@@ -717,7 +718,7 @@ void MainWindow::buildMenus()
         m_pythonMenu->addAction(icons::get("export"), u"Exporter vers Python (Capytale)…"_s, this, [this] { dialogs::pythonExport(*this); });
     });
 
-    m_windowsMenu = menuBar()->addMenu(u"Fe&nêtres"_s);
+    m_windowsMenu = menuBar()->addMenu(u"Fenê&tres"_s);
     connect(m_windowsMenu, &QMenu::aboutToShow, this, [this] {
         m_windowsMenu->clear();
         auto add = [this](const char *icon, const QString &text, const TabKey &k) {
@@ -1043,12 +1044,14 @@ double MainWindow::maxUiZoom() const
 
 void MainWindow::setUiZoom(double zoom)
 {
-    const double z = std::clamp(zoom, UI_ZOOM_MIN, maxUiZoom());
+    // L'agrandissement demandé est retenu ; celui qui s'affiche est borné par la largeur de la
+    // fenêtre, et revient à la demande quand la fenêtre s'élargit (`resizeEvent`), comme MeVSono.
+    const double z = std::clamp(zoom, UI_ZOOM_MIN, UI_ZOOM_MAX);
     if (z != m_store.prefs.uiZoom) {
         m_store.prefs.uiZoom = z;
         m_store.prefs.save();
     }
-    applyUiZoom(z);
+    applyUiZoom(std::min(z, maxUiZoom()));
 }
 
 void MainWindow::applyUiZoom(double zoom)
@@ -2068,7 +2071,7 @@ bool MainWindow::save(bool saveAs, const QString &to)
     // écrit à côté, puis mis à la place de l'ancien fichier : un échec (disque plein, clé USB
     // retirée) laisse le document précédent intact
     QSaveFile f(path);
-    if (!f.open(QIODevice::WriteOnly) || f.write(bytes) != bytes.size() || !f.commit()) {
+    if (!f.open(QIODevice::WriteOnly) || !writeAll(f, bytes) || !f.commit()) {
         m_store.message(u"Enregistrement impossible : %1 ; le fichier précédent n'a pas été modifié"_s.arg(f.errorString()), icons::Status::Error);
         return false;
     }
@@ -2108,7 +2111,7 @@ bool MainWindow::writeCsv(const QString &path, const std::vector<QId> &ids, cons
 {
     const QByteArray bytes = csv::encodeText(csv::exportText(m_store.ws.doc, ids, opts), encoding);
     QSaveFile f(path);
-    if (!f.open(QIODevice::WriteOnly) || f.write(bytes) != bytes.size() || !f.commit()) {
+    if (!f.open(QIODevice::WriteOnly) || !writeAll(f, bytes) || !f.commit()) {
         m_store.message(u"Export impossible : %1"_s.arg(f.errorString()), icons::Status::Error);
         return false;
     }

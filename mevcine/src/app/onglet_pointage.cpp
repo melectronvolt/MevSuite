@@ -801,8 +801,10 @@ void ControlesPointage::maj()
         const QSize d = a.video->dimensions();
         const double duree = a.image_max / std::max(a.fps, 1e-9);
         m_nom_video->setText(QFileInfo(a.filename).fileName());
-        m_info_video->setText(trad("{} × {} px · {} images · {} s", d.width(), d.height(), a.image_max,
-                                   nombre_local(duree, 3)));
+        m_info_video->setText(a.image_max > 1 ? trad("{} × {} px · {} images · {} s", d.width(), d.height(), a.image_max,
+                                                     nombre_local(duree, 3))
+                                              : trad("{} × {} px · {} image · {} s", d.width(), d.height(), a.image_max,
+                                                     nombre_local(duree, 3)));
     }
     const QString aide_ips = trad("Le nombre d'images par seconde est détecté automatiquement. Pour une vidéo au ralenti, "
                                   "indiquez la cadence de prise de vue (par exemple 240).");

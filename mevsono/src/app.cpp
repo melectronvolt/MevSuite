@@ -3,6 +3,7 @@
 #include "about.h"
 #include "format.h"
 #include "help.h"
+#include "savefile.h"
 #include "settingsdialog.h"
 #include "signalplot.h"
 #include "spectrumplot.h"
@@ -247,7 +248,17 @@ MainWindow::MainWindow(const Settings &settings, const SettingsFiles &files, con
     m_tabs->setObjectName(u"tabs"_s);
     m_tabs->setDocumentMode(true);
     m_tabs->setExpanding(false);
-    m_tabs->setFocusPolicy(Qt::NoFocus);
+    // au clavier : Tab mène aux onglets (flèches pour changer), et Ctrl + Tab passe à l'autre activité
+    m_tabs->setFocusPolicy(Qt::TabFocus);
+    for (const QKeySequence &keys :
+         {QKeySequence(Qt::CTRL | Qt::Key_Tab), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Backtab),
+          QKeySequence(Qt::CTRL | Qt::Key_PageDown), QKeySequence(Qt::CTRL | Qt::Key_PageUp)}) {
+        auto *shortcut = new QShortcut(keys, this);
+        connect(shortcut, &QShortcut::activated, this, [this] {
+            if (m_tabs->isVisible())
+                m_tabs->setCurrentIndex(1 - m_tabs->currentIndex());
+        });
+    }
     m_tabs->addTab(icons::periodTab(), QString());
     m_tabs->addTab(icons::frequenciesTab(), QString());
     m_tabs->setCurrentIndex(m_session.tool == Tool::Period ? 0 : 1);
@@ -472,6 +483,12 @@ void MainWindow::sizeMenuCorner()
     for (QToolButton *button : m_cornerButtons) {
         button->setIconSize(QSize(icon, icon));
         button->setFixedHeight(height);
+    }
+    // La barre de menus ne revoit la place du coin que quand on le lui redonne : il garderait sinon sa
+    // taille d'avant, trop petite pour les boutons agrandis (comme MeVReg).
+    if (QWidget *corner = menuBar()->cornerWidget(Qt::TopRightCorner)) {
+        corner->adjustSize();
+        menuBar()->setCornerWidget(corner, Qt::TopRightCorner);
     }
     menuBar()->updateGeometry();
 }
@@ -766,6 +783,7 @@ QWidget *MainWindow::buildSidePanel()
     expert->addWidget(m_f0None);
     // Tout le panneau défile : le tableau prend la hauteur de ses lignes, sans défilement propre.
     m_harmonicsTable = new QTableWidget(0, 5, m_expertBox);
+    m_harmonicsTable->setObjectName(u"harmonics"_s);
     m_harmonicsTable->verticalHeader()->hide();
     m_harmonicsTable->setAlternatingRowColors(true);
     m_harmonicsTable->setShowGrid(false);
@@ -1153,6 +1171,16 @@ void MainWindow::refreshHarmonics(const std::vector<dsp::Harmonic> &harmonics)
         }
     }
     m_harmonicsTable->resizeRowsToContents();
+    // Colonnes à la largeur de leur contenu (la dernière prend la place qui reste), et le tableau assez
+    // large pour toutes : le panneau s'élargit d'autant, au lieu de cacher les dernières colonnes.
+    QHeaderView *header = m_harmonicsTable->horizontalHeader();
+    header->setStretchLastSection(false);
+    m_harmonicsTable->resizeColumnsToContents();
+    int width = 2 * m_harmonicsTable->frameWidth();
+    for (int c = 0; c < header->count(); ++c)
+        width += header->sectionSize(c);
+    header->setStretchLastSection(true);
+    m_harmonicsTable->setMinimumWidth(width);
     m_harmonicsTable->setFixedHeight(m_harmonicsTable->horizontalHeader()->height()
                                      + m_harmonicsTable->verticalHeader()->length()
                                      + 2 * m_harmonicsTable->frameWidth());
@@ -1355,12 +1383,16 @@ void MainWindow::loadPath(const QString &path)
     m_loadingPath = path;
     setStatus(tr().loading(QDir::toNativeSeparators(path)));
     // Décodage dans un fil de fond : la fenêtre reste réactive pendant le chargement d'un long son.
-    m_loader.setFuture(QtConcurrent::run(audio::load, path));
+    m_cancelLoad = false;
+    m_loader.setFuture(QtConcurrent::run(audio::load, path, &m_cancelLoad));
     refresh();
 }
 
 void MainWindow::onLoaded()
 {
+    // chargement interrompu par la fermeture de la fenêtre
+    if (m_cancelLoad)
+        return;
     const Tr &t = tr();
     audio::LoadResult result;
     try {
@@ -1382,13 +1414,16 @@ void MainWindow::onLoaded()
     m_appliedParams.lastDir = m_session.params.lastDir;
     settingsChanged();
     QString status = t.loaded(result.audio->name, soundInfo(t, *result.audio));
-    const bool truncated = result.audio->truncated, damaged = result.audio->damaged;
+    const bool truncated = result.audio->truncated, damaged = result.audio->damaged,
+               invalid = result.audio->invalidSamples;
     if (truncated)
         status += u" — "_s + t.truncated;
     if (damaged)
         status += u" — "_s + t.damaged;
+    if (invalid)
+        status += u" — "_s + t.invalidSamples;
     setAudio(std::move(*result.audio));
-    setStatus(status, truncated || damaged ? icons::Status::Warning : icons::Status::Success);
+    setStatus(status, truncated || damaged || invalid ? icons::Status::Warning : icons::Status::Success);
 }
 
 void MainWindow::loadExample(audio::Example example)
@@ -1503,7 +1538,8 @@ void MainWindow::play()
     const audio::Audio &sound = m_session.loaded->audio;
     if (const auto error = m_player.play(*clip, sound.signal(clip->channel), sound.rate)) {
         const Tr &t = tr();
-        setStatus(t.playFailed(error->noDevice ? t.noAudioOutput : error->message), icons::Status::Error);
+        setStatus(t.playFailed(error->noDevice ? t.noAudioOutput : t.audioFailures[size_t(error->failure)]),
+                  icons::Status::Error);
     }
     updatePlayback();
 }
@@ -1544,7 +1580,7 @@ std::optional<double> MainWindow::playhead() const
 void MainWindow::updatePlayback()
 {
     if (const auto error = m_player.update())
-        setStatus(tr().playFailed(*error), icons::Status::Error);
+        setStatus(tr().playFailed(tr().audioFailures[size_t(*error)]), icons::Status::Error);
     m_signal->setPlayhead(playhead());
     refreshTransport();
     // la tête de lecture avance
@@ -1605,7 +1641,7 @@ void MainWindow::saveCsv(const QString &csv, const QString &title, const QString
         }
     }
     QSaveFile file(path);
-    if (file.open(QIODevice::WriteOnly) && file.write(csv.toUtf8()) >= 0 && file.commit())
+    if (file.open(QIODevice::WriteOnly) && writeAll(file, csv.toUtf8()) && file.commit())
         setStatus(t.exported(QDir::toNativeSeparators(path)), icons::Status::Success);
     else
         setStatus(t.exportFailed(file.errorString()), icons::Status::Error);
@@ -1772,6 +1808,9 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    // un chargement en cours (ffmpeg peut-être bloqué) est interrompu : le programme se termine
+    m_cancelLoad = true;
+    m_loader.waitForFinished();
     m_player.stop();
     writeSettings();
     event->accept();

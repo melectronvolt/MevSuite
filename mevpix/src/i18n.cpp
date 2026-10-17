@@ -83,6 +83,9 @@ const Tr FR = {
     .unexpectedError = u"Erreur inattendue pendant l'opération."_s,
     .fatalError =
         [](const QString &e, const QString &log) {
+            if (log.isEmpty())
+                return u"MeVPix a rencontré une erreur imprévue et doit se fermer.\n\n%1\n\nLes détails n'ont pas pu être enregistrés."_s
+                    .arg(e);
             return u"MeVPix a rencontré une erreur imprévue et doit se fermer.\n\n%1\n\nLes détails ont été enregistrés dans :\n%2"_s
                 .arg(e, log);
         },
@@ -93,17 +96,19 @@ const Tr FR = {
     .loading = [](const QString &p) { return u"Chargement de « %1 »…"_s.arg(p); },
     .openFailed = [](const QString &p, const QString &e) { return u"Impossible d'ouvrir « %1 » : %2"_s.arg(p, e); },
     .unsupportedFormat =
-        u"format d'image non pris en charge. Utilisez PNG, JPEG, BMP, TIFF ou WebP (convertissez les photos HEIC d'iPhone en JPEG)."_s,
+        u"format d'image non pris en charge par cette installation. Convertissez l'image en PNG ou en JPEG (les photos HEIC "
+        u"d'iPhone aussi)."_s,
     .imageLoaded =
         [](const QString &n, int w, int h) {
             return u"Image « %1 » (%2 × %3 px). Commencez par tracer l'étalon."_s.arg(n, QString::number(w), QString::number(h));
         },
     .settingsFailed = [](const QString &e) { return u"Impossible d'enregistrer les réglages : %1"_s.arg(e); },
+    .folderFailed = [](const QString &d) { return u"impossible de créer le dossier « %1 »"_s.arg(d); },
     .zoomInfo = [](const QString &z) { return u"Zoom : %1 %"_s.arg(z); },
     .zoomTip = u"Molette : zoomer. Bouton « Ajuster à la fenêtre » : revoir toute l'image."_s,
     .replaceImage =
         [](const QString &n) {
-            return u"Ouvrir « %1 » ?\nL'étalonnage et les mesures de l'image actuelle seront effacés."_s.arg(n);
+            return u"Ouvrir « %1 » ?\nL'étalonnage, les mesures et la coupe de l'image actuelle seront effacés."_s.arg(n);
         },
     .openAnyway = u"Ouvrir la nouvelle image"_s,
     .cancel = u"Annuler"_s,
@@ -155,7 +160,8 @@ const Tr FR = {
     .cursorsHint = u"Glissez A et B le long de la coupe sur l'image, ou cliquez/glissez sur le graphique."_s,
     .saturated =
         [](const QString &p) {
-            return u"⚠ %1 % de la coupe est saturée (valeur 255) : l'intensité réelle y est plus grande que celle affichée."_s
+            return u"⚠ %1 % de la coupe est saturée (valeur 254 ou 255) : l'intensité réelle y est peut-être plus grande que "
+                   u"celle affichée."_s
                 .arg(p);
         },
     .axisX = [](const QString &u) { return u"position le long de la coupe (%1)"_s.arg(u); },
@@ -214,6 +220,8 @@ const Tr EN = {
     .unexpectedError = u"Unexpected error during the operation."_s,
     .fatalError =
         [](const QString &e, const QString &log) {
+            if (log.isEmpty())
+                return u"MeVPix hit an unexpected error and must close.\n\n%1\n\nThe details could not be saved."_s.arg(e);
             return u"MeVPix hit an unexpected error and must close.\n\n%1\n\nDetails were saved to:\n%2"_s.arg(e, log);
         },
     .chooseImage = u"Choose an image…"_s,
@@ -223,21 +231,22 @@ const Tr EN = {
     .loading = [](const QString &p) { return u"Loading “%1”…"_s.arg(p); },
     .openFailed = [](const QString &p, const QString &e) { return u"Cannot open “%1”: %2"_s.arg(p, e); },
     .unsupportedFormat =
-        u"unsupported image format. Use PNG, JPEG, BMP, TIFF or WebP (convert iPhone HEIC photos to JPEG)."_s,
+        u"image format not supported by this installation. Convert the image to PNG or JPEG (iPhone HEIC photos too)."_s,
     .imageLoaded =
         [](const QString &n, int w, int h) {
             return u"Image “%1” (%2 × %3 px). Start by drawing the reference."_s.arg(n, QString::number(w), QString::number(h));
         },
     .settingsFailed = [](const QString &e) { return u"Cannot save settings: %1"_s.arg(e); },
+    .folderFailed = [](const QString &d) { return u"cannot create the folder “%1”"_s.arg(d); },
     .zoomInfo = [](const QString &z) { return u"Zoom: %1%"_s.arg(z); },
     .zoomTip = u"Mouse wheel: zoom. “Fit to window” button: see the whole image again."_s,
     .replaceImage =
         [](const QString &n) {
-            return u"Open “%1”?\nThe calibration and measurements of the current image will be cleared."_s.arg(n);
+            return u"Open “%1”?\nThe calibration, measurements and profile line of the current image will be cleared."_s.arg(n);
         },
     .openAnyway = u"Open the new image"_s,
     .cancel = u"Cancel"_s,
-    .quitWithMeasures = u"Quit MeVPix?\nThe measurements and the cut will be lost. To keep them: “📋 Copy the table”, "
+    .quitWithMeasures = u"Quit MeVPix?\nThe measurements and the profile line will be lost. To keep them: “📋 Copy the table”, "
                         u"or “💾 Export the profile (CSV)…”."_s,
     .quitAnyway = u"Quit"_s,
     .welcomeDropHint = u"or drag an image onto the window"_s,
@@ -282,7 +291,7 @@ const Tr EN = {
     .cursorsHint = u"Drag A and B along the line on the image, or click/drag on the graph."_s,
     .saturated =
         [](const QString &p) {
-            return u"⚠ %1% of the line is saturated (value 255): the real intensity there is higher than shown."_s.arg(p);
+            return u"⚠ %1% of the line is saturated (value 254 or 255): the real intensity there may be higher than shown."_s.arg(p);
         },
     .axisX = [](const QString &u) { return u"position along the line (%1)"_s.arg(u); },
     .axisY = u"intensity"_s,

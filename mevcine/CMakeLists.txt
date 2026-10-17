@@ -34,6 +34,7 @@ add_library(mevcine_core STATIC
     src/detect.cpp src/detect.h
     src/echelle.h
     src/export.cpp src/export.h
+    src/fichier.h
     src/format.cpp src/format.h
     src/hdr.cpp src/hdr.h
     src/i18n.cpp src/i18n.h

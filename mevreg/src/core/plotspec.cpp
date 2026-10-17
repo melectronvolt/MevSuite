@@ -114,9 +114,9 @@ QString FitSpec::settingsKey() const
     if (range)
         s += QString::number(range->first, 'g', 17) + u',' + QString::number(range->second, 'g', 17);
     for (const auto &[n, v] : fixed)
-        s += u"|f" + n + u'=' + QString::number(v, 'g', 17);
+        s += u"|f"_s + n + u'=' + QString::number(v, 'g', 17);
     for (const auto &[n, v] : initial)
-        s += u"|i" + n + u'=' + QString::number(v, 'g', 17);
+        s += u"|i"_s + n + u'=' + QString::number(v, 'g', 17);
     return s;
 }
 

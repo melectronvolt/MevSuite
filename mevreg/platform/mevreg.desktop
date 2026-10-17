@@ -7,5 +7,5 @@ Exec=mevreg %f
 Icon=mevreg
 Terminal=false
 Categories=Education;Physics;Qt;
-MimeType=text/csv;
+MimeType=application/x-mevreg;text/csv;
 Keywords=physique;chimie;tableur;graphe;modélisation;régression;python;

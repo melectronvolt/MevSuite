@@ -43,15 +43,10 @@ Rgb pixel(const QImage &img, int i, int j)
     return {double(p[0]), double(p[1]), double(p[2])};
 }
 
-/// Le pixel (i, j) couvre [i, i+1[ × [j, j+1[ : son centre est en (i + 0,5 ; j + 0,5).
-Rgb nearest(const QImage &img, double x, double y)
-{
-    const int i = std::min(static_cast<int>(std::max(std::floor(x), 0.0)), img.width() - 1);
-    const int j = std::min(static_cast<int>(std::max(std::floor(y), 0.0)), img.height() - 1);
-    return pixel(img, i, j);
-}
-
-double bilinear(const QImage &img, Channel channel, double x, double y)
+/// Valeur interpolée en (x, y). Le pixel (i, j) couvre [i, i+1[ × [j, j+1[ : son centre est en
+/// (i + 0,5 ; j + 0,5). `saturated` devient vrai si l'un des pixels qui comptent dans la valeur est
+/// écrêté, pas seulement le plus proche : un voisin écrêté la fausse aussi.
+double bilinear(const QImage &img, Channel channel, double x, double y, bool &saturated)
 {
     const int w = img.width(), h = img.height();
     x = std::clamp(x - 0.5, 0.0, double(w - 1));
@@ -59,9 +54,15 @@ double bilinear(const QImage &img, Channel channel, double x, double y)
     const int x0 = static_cast<int>(std::floor(x)), y0 = static_cast<int>(std::floor(y));
     const int x1 = std::min(x0 + 1, w - 1), y1 = std::min(y0 + 1, h - 1);
     const double fx = x - x0, fy = y - y0;
-    const auto v = [&](int i, int j) { return channelValue(channel, pixel(img, i, j)); };
-    return v(x0, y0) * (1.0 - fx) * (1.0 - fy) + v(x1, y0) * fx * (1.0 - fy) + v(x0, y1) * (1.0 - fx) * fy
-         + v(x1, y1) * fx * fy;
+    const auto v = [&](int i, int j, double weight) {
+        const Rgb px = pixel(img, i, j);
+        // poids de l'ordre de l'arrondi : le pixel ne compte pas
+        if (weight > 1e-9 && isSaturated(channel, px))
+            saturated = true;
+        return channelValue(channel, px) * weight;
+    };
+    return v(x0, y0, (1.0 - fx) * (1.0 - fy)) + v(x1, y0, fx * (1.0 - fy)) + v(x0, y1, (1.0 - fx) * fy)
+         + v(x1, y1, fx * fy);
 }
 
 /// Arrondi à 6 chiffres significatifs, écrit sans zéros superflus.
@@ -109,8 +110,7 @@ Profile sampleProfile(const QImage &img, const Segment &seg, int bandWidth, Chan
         double sum = 0.0;
         for (double o : offsets) {
             const QPointF q = p + normal * o;
-            saturated = saturated || isSaturated(channel, nearest(img, q.x(), q.y()));
-            sum += bilinear(img, channel, q.x(), q.y());
+            sum += bilinear(img, channel, q.x(), q.y(), saturated);
         }
         if (saturated)
             ++profile.saturated;

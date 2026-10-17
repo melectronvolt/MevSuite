@@ -605,6 +605,10 @@ private slots:
         const int titre = a.menuBar()->actionGeometry(a.menuBar()->actions().first()).height();
         QCOMPARE(a.findChild<QToolButton *>(u"theme"_s)->iconSize().height(), std::min(28, titre - 4));
         QCOMPARE(a.findChild<QToolButton *>(u"theme"_s)->height(), titre);
+        // et le coin a la place de ses boutons agrandis
+        QWidget *coin = a.menuBar()->cornerWidget(Qt::TopRightCorner);
+        QVERIFY2(coin->width() >= coin->sizeHint().width() && coin->height() >= titre,
+                 qUtf8Printable(u"%1 × %2 pour %3 × %4"_s.arg(coin->width()).arg(coin->height()).arg(coin->sizeHint().width()).arg(titre)));
         verifie_panneau(a, u"guide agrandi"_s);
         rendu(a, u"68_guide_agrandi"_s);
         a.change_mode(Mode::Expert);
@@ -1300,8 +1304,9 @@ private slots:
         QVERIFY(tout.contains(u"Rémi MEVAERE"_s));
         QVERIFY(tout.contains(u"mailto:suite@sciences-physiques.net"_s));
         QVERIFY(textes.contains(u"version %1"_s.arg(a_propos::VERSION)));
-        // les composants libres utilisés, avec leur licence
-        QVERIFY(textes.contains(u"Composants libres utilisés"_s));
+        // les logiciels libres utilisés, avec leur licence, puis le fichier de réglages (comme MeVSono)
+        QVERIFY(textes.contains(u"Logiciels libres utilisés"_s));
+        QVERIFY(tout.contains(QDir::toNativeSeparators(prefs::fichier_conf()).toHtmlEscaped()));
         for (const QString &ressource : {u"pymecavideo"_s, u"Qt "_s, u"FFmpeg"_s, u"GCC"_s, u"mingw-w64"_s, u"LGPL-3.0-only"_s})
             QVERIFY2(tout.contains(ressource), qUtf8Printable(ressource));
         // la notice de licence de pymecavideo, gardée

@@ -12,6 +12,7 @@
 #include <QStringList>
 
 #include <array>
+#include <atomic>
 #include <optional>
 #include <vector>
 
@@ -47,6 +48,8 @@ struct Audio {
     bool truncated = false;
     /// Le décodage s'est arrêté sur une erreur (fichier abîmé) : seul le début du son est là.
     bool damaged = false;
+    /// Des échantillons n'étaient pas des nombres finis (fichier abîmé) : ils valent 0.
+    bool invalidSamples = false;
 
     /// Voies de même longueur (les plus longues sont raccourcies) et leur moyenne.
     static Audio make(QString name, double rate, std::vector<std::vector<float>> channels, bool truncated);
@@ -74,8 +77,9 @@ struct LoadResult {
     QString message;
 };
 
-/// Lit un fichier son ou vidéo. Peut être appelé depuis un fil de fond.
-LoadResult load(const QString &path);
+/// Lit un fichier son ou vidéo. Peut être appelé depuis un fil de fond ; `cancel` (fermeture de la
+/// fenêtre) interrompt la lecture et la conversion par ffmpeg.
+LoadResult load(const QString &path, const std::atomic_bool *cancel = nullptr);
 
 /// Écrit un fichier WAV 16 bits (mono ou stéréo) : essais, et exemples à écouter.
 bool writeWav(const QString &path, int rate, const std::vector<std::vector<float>> &channels);

@@ -508,10 +508,11 @@ void ImportDialog::updateSummary()
             where = u"au tableur "_s + quoted(t->name.toHtmlEscaped());
         else
             where = u"à un nouveau tableur "_s + quoted(QFileInfo(m_path).completeBaseName().toHtmlEscaped());
-        lines << html(ok, u"✓ %1 grandeur%2, %3 ligne%4 de valeurs, seront ajoutée%2 %5."_s.arg(sel.columns.size())
+        lines << html(ok, u"✓ %1 grandeur%2 (%3 ligne%4 de valeurs) %5 ajoutée%2 %6."_s.arg(sel.columns.size())
                               .arg(plural(static_cast<qsizetype>(sel.columns.size())))
                               .arg(values)
                               .arg(plural(static_cast<qsizetype>(values)))
+                              .arg(sel.columns.size() > 1 ? u"seront"_s : u"sera"_s)
                               .arg(where));
     }
     // cases illisibles des colonnes importées
@@ -532,15 +533,16 @@ void ImportDialog::updateSummary()
         }
     }
     if (bad > 0) {
-        QString t = u"⚠ %1 case%2 ne %3 pas des nombres (en rouge ci-dessus) : elle%2 resteront vide%2. Première : ligne %4, colonne %5, %6."_s.arg(bad)
-                        .arg(plural(bad), bad > 1 ? u"sont"_s : u"est"_s)
-                        .arg(first.line + 1)
-                        .arg(first.column + 1)
-                        .arg(quoted(first.text.toHtmlEscaped()));
-        if (bad == 1)
-            t.replace(u"elle resteront vide"_s, u"elle restera vide"_s);
-        if (other > 0)
-            t += u" Avec le séparateur décimal %1, %2 d'entre elles seraient lues."_s.arg(otherDecimal == csv::Decimal::Point ? u"« point »"_s : u"« virgule »"_s).arg(other);
+        const QString place = u"ligne %1, colonne %2, %3"_s.arg(first.line + 1).arg(first.column + 1).arg(quoted(first.text.toHtmlEscaped()));
+        QString t = bad > 1 ? u"⚠ %1 cases ne contiennent pas de nombre (en rouge ci-dessus) : elles resteront vides. Première : %2."_s.arg(bad).arg(place)
+                            : u"⚠ 1 case ne contient pas de nombre (en rouge ci-dessus) : elle restera vide (%1)."_s.arg(place);
+        const QString decimal = otherDecimal == csv::Decimal::Point ? u"« point »"_s : u"« virgule »"_s;
+        if (bad == 1 && other == 1)
+            t += u" Avec le séparateur décimal %1, elle serait lue."_s.arg(decimal);
+        else if (other == 1)
+            t += u" Avec le séparateur décimal %1, l'une d'elles serait lue."_s.arg(decimal);
+        else if (other > 1)
+            t += u" Avec le séparateur décimal %1, %2 d'entre elles seraient lues."_s.arg(decimal).arg(other);
         lines << html(warn, t);
     }
     if (m_reading.ragged > 0 && m_reading.usualWidth > 0)

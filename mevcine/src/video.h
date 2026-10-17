@@ -25,7 +25,9 @@
 #include <QImage>
 #include <QSize>
 #include <QString>
+#include <QThread>
 
+#include <atomic>
 #include <cstddef>
 #include <deque>
 #include <expected>
@@ -96,8 +98,12 @@ QImage tourne(const QImage &img, int rotation);
 class VideoReader {
 public:
     /// Ouvre une vidéo ; échoue si ffprobe ne la reconnaît pas ou si ffmpeg ne sait pas en décoder la
-    /// première image.
-    static std::expected<std::unique_ptr<VideoReader>, QString> ouvre(const QString &chemin);
+    /// première image. `annule`, regardé pendant les attentes de ffprobe et de ffmpeg, interrompt
+    /// l'ouverture (faite dans un autre fil que celui de la fenêtre).
+    static std::expected<std::unique_ptr<VideoReader>, QString> ouvre(const QString &chemin,
+                                                                       const std::atomic_bool *annule = nullptr);
+    /// confie le décodage au fil `fil` : la vidéo, ouverte dans un autre fil, est lue dans celui-ci
+    void confie_au_fil(QThread *fil);
     ~VideoReader();
     VideoReader(const VideoReader &) = delete;
     VideoReader &operator=(const VideoReader &) = delete;

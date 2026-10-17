@@ -116,6 +116,8 @@ n'est pas signé numériquement. Cliquer sur « Informations complémentaires »
 même ».
 
 Les réglages sont rangés dans %APPDATA%\\MeVSuite. Logiciel libre : voir le fichier de licence.
+Bibliothèques livrées (Qt sous licence LGPL version 3…) : leurs licences et leurs versions sont dans
+le dossier licences ; leurs sources sont celles des paquets MSYS2 indiqués (https://packages.msys2.org).
 FIN
 crlf "$BUILD/LISEZMOI.txt" "$DOSSIER/LISEZMOI.txt"
 
@@ -148,6 +150,32 @@ while [ $encore = 1 ]; do
         done < <(objdump -p "$f" | sed -n 's/^[[:space:]]*DLL Name: //p' | tr -d '\r')
     done < <(find "$DOSSIER" \( -iname '*.exe' -o -iname '*.dll' -o -iname '*.pyd' \) -print0)
 done
+
+# Notices des bibliothèques livrées (Qt, Python, compilateur…) : pour chaque DLL venue de MSYS2, la
+# licence de son paquet, dans licences/<paquet>, et la liste des paquets avec leur version (leurs
+# sources : https://packages.msys2.org). ffmpeg a la sienne, dans ffmpeg/.
+mkdir -p "$DOSSIER/licences"
+declare -A paquets=()
+while IFS= read -r -d '' f; do
+    case $f in
+        "$DOSSIER"/plugins/*) origine=$GREFFONS/${f#"$DOSSIER"/plugins/} ;;
+        *) origine=$PREFIXE/bin/$(basename "$f") ;;
+    esac
+    [ -f "$origine" ] || continue
+    paquet=$(pacman -Qqo "$origine" 2>/dev/null) || continue
+    paquets[$paquet]=1
+done < <(find "$DOSSIER" -iname '*.dll' -not -path "$DOSSIER/ffmpeg/*" -print0)
+: > "$DOSSIER/licences/PAQUETS.txt"
+for paquet in "${!paquets[@]}"; do
+    court=${paquet#"${MINGW_PACKAGE_PREFIX:-mingw-w64-ucrt-x86_64}-"}
+    if [ -d "$PREFIXE/share/licenses/$court" ]; then
+        mkdir -p "$DOSSIER/licences/$court"
+        cp -r "$PREFIXE/share/licenses/$court/." "$DOSSIER/licences/$court/"
+    fi
+    pacman -Q "$paquet" >> "$DOSSIER/licences/PAQUETS.txt"
+done
+sort -o "$DOSSIER/licences/PAQUETS.txt" "$DOSSIER/licences/PAQUETS.txt"
+sed -i 's/\r*$/\r/' "$DOSSIER/licences/PAQUETS.txt"
 echo "== $NOM $VERSION : $(find "$DOSSIER" -type f | wc -l) fichiers, $(du -sh "$DOSSIER" | cut -f1)"
 
 # essai : le programme démarre sans écran (et, pour MeVReg, Python trouve sa bibliothèque), sans
@@ -177,6 +205,7 @@ case $APP in
 esac
 EXTENSION=
 [ "$APP" = mevreg ] && EXTENSION=phy
+[ "$APP" = mevcine ] && EXTENSION=mevcine
 # MSYS2 ne doit pas prendre les options /D… pour des chemins
 MSYS2_ARG_CONV_EXCL='*' "$ISCC" /Q \
     "/DAppNom=$NOM" "/DAppExe=$APP.exe" "/DAppVersion=$VERSION" "/DAppId=$APPID" \

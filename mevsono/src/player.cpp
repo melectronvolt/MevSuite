@@ -23,12 +23,12 @@ constexpr double FADE = 0.005;
 /// ne réclame plus de son.
 constexpr qint64 CLOSE_AFTER = 250;
 
-void setError(PlaybackShared &shared, const QString &message)
+void setError(PlaybackShared &shared, AudioFailure failure)
 {
     {
         const std::lock_guard lock(shared.errorMutex);
         if (!shared.error)
-            shared.error = message;
+            shared.error = failure;
     }
     shared.done = true;
 }
@@ -87,13 +87,13 @@ private:
     std::vector<float> m_buffer;
 };
 
-QString describe(QtAudio::Error error)
+AudioFailure failure(QtAudio::Error error)
 {
     switch (error) {
-    case QtAudio::OpenError: return u"audio output: open error"_s;
-    case QtAudio::IOError: return u"audio output: I/O error"_s;
-    case QtAudio::FatalError: return u"audio output: fatal error"_s;
-    default: return u"audio output error"_s;
+    case QtAudio::OpenError: return AudioFailure::Open;
+    case QtAudio::IOError: return AudioFailure::InputOutput;
+    case QtAudio::FatalError: return AudioFailure::Fatal;
+    default: return AudioFailure::Other;
     }
 }
 
@@ -140,12 +140,12 @@ public:
     }
 
     /// Erreur à l'ouverture, ou pendant la lecture.
-    std::optional<QString> error() const
+    std::optional<AudioFailure> error() const
     {
         const QtAudio::Error e = m_sink->error();
         if (e == QtAudio::NoError)
             return std::nullopt;
-        return describe(e);
+        return failure(e);
     }
 
     double played() const override { return double(m_sink->processedUSecs()) / 1e6; }
@@ -336,13 +336,13 @@ void Player::close(Output output)
     m_closing.emplace_back(std::move(output), since);
 }
 
-std::optional<QString> Player::update()
+std::optional<AudioFailure> Player::update()
 {
     std::erase_if(m_closing, [](const auto &c) { return c.first.shared->done || c.second.elapsed() >= CLOSE_AFTER; });
     if (!playing())
         return std::nullopt;
     m_output.device->poll();
-    std::optional<QString> error;
+    std::optional<AudioFailure> error;
     {
         const std::lock_guard lock(m_output.shared->errorMutex);
         error = std::exchange(m_output.shared->error, std::nullopt);

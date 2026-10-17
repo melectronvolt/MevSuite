@@ -1,5 +1,7 @@
 #include "settings.h"
 
+#include "savefile.h"
+
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
@@ -127,9 +129,9 @@ Settings Settings::load(const SettingsFiles &files)
 QString Settings::save(const QString &path) const
 {
     if (!QDir().mkpath(QFileInfo(path).absolutePath()))
-        return u"%1 : mkdir"_s.arg(QDir::toNativeSeparators(QFileInfo(path).absolutePath()));
+        return texts(resolveLang(lang)).folderFailed(QDir::toNativeSeparators(QFileInfo(path).absolutePath()));
     QSaveFile file(path);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text) || file.write(toText().toUtf8()) < 0 || !file.commit())
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text) || !writeAll(file, toText().toUtf8()) || !file.commit())
         return file.errorString();
     return {};
 }

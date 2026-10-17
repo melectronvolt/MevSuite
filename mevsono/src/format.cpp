@@ -94,7 +94,7 @@ QString fmtDuration(double t, QChar dec)
     if (t < 60.0)
         return fmtNum(t, 3, dec) + u" s"_s;
     const auto s = static_cast<long long>(std::llround(t));
-    return u"%1 min %2 s"_s.arg(s / 60).arg(s % 60, 2, 10, u'0');
+    return u"%1 min %2 s"_s.arg(s / 60).arg(s % 60, 2, 10, QChar(u'0'));
 }
 
 QString fmtFreqShort(double f, QChar dec)

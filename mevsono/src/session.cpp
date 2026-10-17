@@ -249,7 +249,8 @@ QString soundInfo(const Tr &tr, const audio::Audio &audio)
 QString harmonicsTable(const Tr &tr, std::span<const dsp::Harmonic> harmonics)
 {
     const QChar d = tr.decimal;
-    QString out = QStringList{tr.colRank, tr.colFreq, tr.colRatio, tr.colAmp, tr.colRel}.join(u'\t') + u'\n';
+    // l'amplitude relative est en pour cent (le signe % est dans les cases du tableau affiché)
+    QString out = QStringList{tr.colRank, tr.colFreq, tr.colRatio, tr.colAmp, tr.colRel + u" (%)"_s}.join(u'\t') + u'\n';
     if (harmonics.empty())
         return out;
     // rapport à la fondamentale : son pic s'il y en a un, sinon sa fréquence attendue (fondamentale

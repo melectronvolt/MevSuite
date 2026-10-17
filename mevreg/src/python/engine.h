@@ -74,8 +74,12 @@ struct ScriptError {
 struct ScriptOutput {
     QString stdoutText;
     std::optional<ScriptError> error;
-    /// Grandeurs créées par `grandeur(nom, valeurs, unité)`, dans l'ordre.
+    /// Grandeurs créées par `grandeur(nom, valeurs, unité)`, dans l'ordre (les dernières valeurs de
+    /// chaque nom).
     std::vector<NamedValues> quantities;
+    /// Valeurs de chacun de ces appels, dans l'ordre (ordres « grandeur », champ « indice ») : un nom
+    /// repris après un renommage garde ses deux séries.
+    std::vector<NamedValues> given;
     std::vector<FigureMsg> figures;
     /// Fenêtres de dessin (module `fenetre`).
     std::vector<DrawingMsg> drawings;

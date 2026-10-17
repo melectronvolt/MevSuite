@@ -1,6 +1,7 @@
 #include "crash.h"
 
 #include "about.h"
+#include "savefile.h"
 
 #include <QApplication>
 #include <QDir>
@@ -37,12 +38,12 @@ QString writeLog(const QString &message)
         return {};
     const QString text = u"%1 %2 (%3 %4)\n%5\n"_s.arg(about::NAME, about::VERSION, QSysInfo::productType(),
                                                        QSysInfo::currentCpuArchitecture(), message);
-    return file.write(text.toUtf8()) >= 0 ? QDir::toNativeSeparators(g_log) : QString();
+    return writeAll(file, text.toUtf8()) && file.flush() ? QDir::toNativeSeparators(g_log) : QString();
 }
 
 void show(const QString &message, const QString &log)
 {
-    const QString text = texts(g_lang).fatalError(message, log.isEmpty() ? u"—"_s : log);
+    const QString text = texts(g_lang).fatalError(message, log);
     std::fprintf(stderr, "%s\n", text.toLocal8Bit().constData());
     // Boîte de message seulement depuis le fil de l'interface, et si l'affichage fonctionne.
     if (qobject_cast<QApplication *>(QCoreApplication::instance())

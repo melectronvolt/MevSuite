@@ -933,6 +933,10 @@ private Q_SLOTS:
         run(u"import mevreg as mr\nmr.supprimer(\"x\")\nmr.creer(\"x\", [2, 3])\n"_s);
         QVERIFY(store.ws.doc.byName(u"x"_s));
         QCOMPARE(store.ws.doc.byName(u"x"_s)->values, (std::vector<double>{2.0, 3.0}));
+        // créer, renommer, recréer sous le même nom : chaque grandeur garde les valeurs de sa création
+        run(u"import mevreg as mr\nmr.creer(\"r\", [1])\nmr.renommer(\"r\", \"a\")\nmr.creer(\"r\", [2])\n"_s);
+        QCOMPARE(store.ws.doc.byName(u"a"_s)->values, (std::vector<double>{1.0}));
+        QCOMPARE(store.ws.doc.byName(u"r"_s)->values, (std::vector<double>{2.0}));
         // script lié qui lit x par mr.valeurs : relancé quand x change
         const ViewId linked = run(u"import mevreg as mr\nmr.creer(\"y\", mr.valeurs(\"x\") * 10)\n"_s);
         QCOMPARE(store.ws.doc.byName(u"y"_s)->values, (std::vector<double>{20.0, 30.0}));
@@ -1283,7 +1287,7 @@ mr.effacer_annotations("G")
         QVERIFY(g->detached());
         QMenu *windows = nullptr;
         for (QAction *a : win.menuBar()->actions())
-            if (a->text() == u"Fe&nêtres")
+            if (a->text() == u"Fenê&tres")
                 windows = a->menu();
         QVERIFY(windows);
         Q_EMIT windows->aboutToShow();
@@ -1360,7 +1364,7 @@ mr.effacer_annotations("G")
         QVERIFY(store.ws.graph(gk.id));
         QMenu *windows = nullptr;
         for (QAction *a : win.menuBar()->actions())
-            if (a->text() == u"Fe&nêtres")
+            if (a->text() == u"Fenê&tres")
                 windows = a->menu();
         QVERIFY(windows);
         Q_EMIT windows->aboutToShow();
@@ -2050,10 +2054,15 @@ mr.effacer_annotations("G")
         win.setUiZoom(3.0);
         settle();
         QCOMPARE(win.uiZoom(), 2.0);
+        // c'est l'agrandissement demandé qui est enregistré
+        QCOMPARE(store.prefs.uiZoom, 3.0);
         win.resize(1500, 1000);
         settle();
         QCOMPARE(win.uiZoom(), 1.5);
-        QCOMPARE(store.prefs.uiZoom, 2.0);
+        QCOMPARE(store.prefs.uiZoom, 3.0);
+        win.resize(3000, 1100);
+        settle();
+        QCOMPARE(win.uiZoom(), 3.0);
         win.resize(2000, 1100);
         settle();
         QCOMPARE(win.uiZoom(), 2.0);

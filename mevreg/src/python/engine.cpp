@@ -267,6 +267,7 @@ ScriptOutput execute(PyObject *runner, std::uint64_t id, const QString &code, co
     }
     HostOutput &host = hostOutput();
     out.quantities = std::move(host.quantities);
+    out.given = std::move(host.given);
     out.figures = std::move(host.figures);
     out.drawings = std::move(host.drawings);
     out.commands = std::move(host.commands);

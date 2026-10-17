@@ -16,6 +16,9 @@ namespace python {
 /// Ce que le script envoie au logiciel pendant son exécution.
 struct HostOutput {
     std::vector<NamedValues> quantities;
+    /// Valeurs de chaque appel à `grandeur()` (`mr.creer`), dans l'ordre : l'ordre « grandeur » du
+    /// script renvoie à la sienne par son indice.
+    std::vector<NamedValues> given;
     std::vector<FigureMsg> figures;
     std::vector<DrawingMsg> drawings;
     /// Paramètres du document (utilisables dans les cartes).

@@ -1,5 +1,7 @@
 #include "prefs.h"
 
+#include "fichier.h"
+
 #include <QDateTime>
 #include <QDir>
 #include <QFile>
@@ -24,7 +26,7 @@ const QStringList REGLAGES_DU_POSTE = {u"langue"_s,         u"niveaudbg"_s,     
 QString ecrit(const QString &chemin, const QString &texte)
 {
     QSaveFile f(chemin);
-    if (!f.open(QIODevice::WriteOnly) || f.write(texte.toUtf8()) < 0 || !f.commit())
+    if (!f.open(QIODevice::WriteOnly) || !ecrit_tout(f, texte.toUtf8()) || !f.commit())
         return f.errorString();
     return {};
 }

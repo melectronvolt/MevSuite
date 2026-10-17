@@ -42,6 +42,7 @@
 #include <QTranslator>
 
 #include <array>
+#include <atomic>
 #include <deque>
 #include <memory>
 #include <optional>
@@ -167,6 +168,9 @@ public:
     QString empreinte_sauvee;
     /// l'utilisateur a confirmé qu'il quittait sans enregistrer
     bool fermeture_confirmee = false;
+    /// une vidéo est en cours d'ouverture (dans un autre fil) ; la fermeture de la fenêtre l'interrompt
+    bool ouverture_en_cours = false;
+    std::atomic_bool ouverture_annulee = false;
     /// la sauvegarde automatique : dernier texte écrit
     QString secours_texte;
     /// la dernière sauvegarde de secours a échoué (l'élève en a été averti)

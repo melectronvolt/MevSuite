@@ -208,6 +208,18 @@ private slots:
         QCOMPARE(sampleProfile(img, seg, 5, Channel::Luminance).saturated, 21);
     }
 
+    void saturationOfInterpolatedNeighbours()
+    {
+        // Colonne 0 rouge écrêtée, colonne 1 noire ; en x = 1,1 le pixel le plus proche est noir, mais
+        // la valeur interpolée prend 40 % du rouge : la coupe est signalée saturée.
+        const QImage img = makeImage(2, 20, [](int x, int) { return x == 0 ? QColor(255, 0, 0) : QColor(0, 0, 0); });
+        const Segment seg{{1.1, 0.5}, {1.1, 19.5}};
+        const Profile red = sampleProfile(img, seg, 1, Channel::Red);
+        QVERIFY(near(red.values[0], 102.0, 1e-3));
+        QCOMPARE(red.saturated, 20);
+        QCOMPARE(sampleProfile(img, Segment{{1.5, 0.5}, {1.5, 19.5}}, 1, Channel::Red).saturated, 0);
+    }
+
     void valueAtPicksNearestSample()
     {
         const Profile p{1.0, {0.0, 10.0, 20.0}, 0};
@@ -409,6 +421,15 @@ private slots:
         s.calibInput = u"10"_s;
         s.calibUnit = Unit::Centimetre; // unité changée sans valider
         QVERIFY(s.calibPending());
+        QVERIFY(s.hasWork());
+    }
+
+    void cutAloneIsWork()
+    {
+        // une coupe tracée sans étalon ni mesure est aussi du travail à protéger
+        Session s;
+        QVERIFY(!s.hasWork());
+        s.cut = Segment{{10.5, 40.5}, {110.5, 40.5}};
         QVERIFY(s.hasWork());
     }
 };

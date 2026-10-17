@@ -19,8 +19,11 @@
 #include <QTemporaryDir>
 #include <QTest>
 
+#include <algorithm>
+#include <array>
 #include <cmath>
 #include <functional>
+#include <limits>
 #include <numbers>
 #include <thread>
 
@@ -132,6 +135,31 @@ private slots:
             // la fondamentale reste juste, même avec les lobes secondaires
             const auto f0 = fundamental(p, sp->df(), 20.0);
             QVERIFY(f0 && std::abs(*f0 - 1000.3) < dfMax);
+        }
+    }
+
+    void peakAmplitudeAnywhereBetweenBins()
+    {
+        // une sinusoïde d'amplitude 0,5, placée tous les dixièmes de raie entre deux raies, avec ou
+        // sans complétion par des zéros : l'amplitude du pic reste 0,5 à 0,5 % près, pour chaque fenêtre
+        for (Window w : ALL_WINDOWS) {
+            for (const auto &[samples, fftSize] : std::vector<std::pair<size_t, size_t>>{{8192, 8192}, {4096, 8192}}) {
+                const double df = RATE / double(fftSize);
+                for (int i = 0; i <= 10; ++i) {
+                    const double f = (std::round(440.0 / df) + 0.1 * i) * df;
+                    std::vector<float> x(samples);
+                    for (size_t n = 0; n < samples; ++n)
+                        x[n] = float(0.5 * std::sin(2.0 * std::numbers::pi * f * double(n) / RATE + 0.3));
+                    const auto sp = spectrum(x, RATE, {w, fftSize});
+                    QVERIFY(sp);
+                    std::vector<Peak> p = peaks(*sp, w, PeakParams{});
+                    QVERIFY(!p.empty());
+                    std::ranges::stable_sort(p, [](const Peak &a, const Peak &b) { return a.amplitude > b.amplitude; });
+                    const QString where = u"%1, %2 / %3, f = %4"_s.arg(windowCode(w)).arg(samples).arg(fftSize).arg(f);
+                    QVERIFY2(std::abs(p[0].amplitude - 0.5) < 0.0025, qPrintable(where + u" : A = "_s + QString::number(p[0].amplitude)));
+                    QVERIFY2(std::abs(p[0].freq - f) < 0.1 * df, qPrintable(where + u" : f = "_s + QString::number(p[0].freq)));
+                }
+            }
         }
     }
 
@@ -329,6 +357,74 @@ private slots:
         QVERIFY(r.audio);
         QCOMPARE(r.audio->len(), size_t(100));
         QCOMPARE(r.audio->peak(), 0.0f);
+    }
+
+    /// Fichier WAV fait à la main : en-tête « fmt » (`tag` 1 : entiers, 3 : flottants), bloc « data »
+    /// de taille annoncée `declared`, ses octets `data`, puis `after`.
+    static QString rawWav(const QTemporaryDir &dir, const QString &name, quint16 tag, quint16 bits, quint32 declared,
+                          const QByteArray &data, const QByteArray &after = {})
+    {
+        const auto u16 = [](quint16 v) { return QByteArray(reinterpret_cast<const char *>(&v), 2); };
+        const auto u32 = [](quint32 v) { return QByteArray(reinterpret_cast<const char *>(&v), 4); };
+        const quint32 rate = 8000;
+        const quint16 block = bits / 8;
+        QByteArray body = QByteArray("WAVEfmt ", 8) + u32(16) + u16(tag) + u16(1) + u32(rate) + u32(rate * block)
+                        + u16(block) + u16(bits) + QByteArray("data", 4) + u32(declared) + data + after;
+        const QString path = dir.filePath(name);
+        QFile f(path);
+        if (f.open(QIODevice::WriteOnly))
+            f.write(QByteArray("RIFF", 4) + u32(quint32(body.size())) + body);
+        return path;
+    }
+
+    void wavEmptyDataFollowedByMetadataIsNotSound()
+    {
+        // bloc « data » vide puis bloc LIST : pas de son (les métadonnées ne sont pas des échantillons)
+        QTemporaryDir dir;
+        const quint32 listSize = 24;
+        const QByteArray list = QByteArray("LIST", 4) + QByteArray(reinterpret_cast<const char *>(&listSize), 4)
+                              + QByteArray("INFOINAM\x0f\0\0\0un titre sans son\0", 24);
+        const audio::LoadResult r = audio::load(rawWav(dir, u"vide.wav"_s, 1, 16, 0, {}, list));
+        QVERIFY(!r.audio);
+        QCOMPARE(r.error, audio::LoadError::NoAudio);
+        // taille 0 suivie d'échantillons (fichier écrit en continu) : tout est lu
+        QByteArray samples;
+        for (int i = 0; i < 200; ++i) {
+            const qint16 v = qint16(i % 2 ? 1000 : -1000);
+            samples += QByteArray(reinterpret_cast<const char *>(&v), 2);
+        }
+        const audio::LoadResult streamed = audio::load(rawWav(dir, u"continu.wav"_s, 1, 16, 0, samples));
+        QVERIFY(streamed.audio);
+        QCOMPARE(streamed.audio->len(), size_t(200));
+        QVERIFY(!streamed.audio->damaged);
+    }
+
+    void wavShorterThanDeclaredIsDamaged()
+    {
+        // 1 000 échantillons annoncés, 100 présents : enregistrement coupé, signalé
+        QTemporaryDir dir;
+        const audio::LoadResult r = audio::load(rawWav(dir, u"coupe.wav"_s, 1, 16, 2000, QByteArray(200, '\0')));
+        QVERIFY(r.audio);
+        QCOMPARE(r.audio->len(), size_t(100));
+        QVERIFY(r.audio->damaged);
+        const audio::LoadResult whole = audio::load(rawWav(dir, u"entier.wav"_s, 1, 16, 200, QByteArray(200, '\0')));
+        QVERIFY(whole.audio && !whole.audio->damaged);
+    }
+
+    void wavNonFiniteSamplesAreZeroed()
+    {
+        QTemporaryDir dir;
+        QByteArray data;
+        for (int i = 0; i < 128; ++i) {
+            const float v = std::array{0.0f, 0.5f, std::numeric_limits<float>::quiet_NaN(),
+                                       std::numeric_limits<float>::infinity()}[size_t(i % 4)];
+            data += QByteArray(reinterpret_cast<const char *>(&v), 4);
+        }
+        const audio::LoadResult r = audio::load(rawWav(dir, u"nan.wav"_s, 3, 32, quint32(data.size()), data));
+        QVERIFY(r.audio);
+        QVERIFY(r.audio->invalidSamples);
+        QCOMPARE(r.audio->peak(), 0.5f);
+        QVERIFY(std::ranges::all_of(*r.audio->mix, [](float v) { return std::isfinite(v); }));
     }
 
     void readsFloatAnd24BitWav()
@@ -585,12 +681,13 @@ private slots:
         QElapsedTimer clock;
         clock.start();
         const auto error = player.play(clip, a.mix, a.rate);
-        QVERIFY2(!error, qPrintable(error ? error->message : QString()));
+        const Tr &tr = texts(Lang::Fr);
+        QVERIFY2(!error, qPrintable(error ? tr.audioFailures[size_t(error->failure)] : QString()));
         // position entendue au fil du temps, comparée à l'horloge
         while (player.playing()) {
             QCoreApplication::processEvents();
             if (const auto e = player.update())
-                QFAIL(qPrintable(*e));
+                QFAIL(qPrintable(tr.audioFailures[size_t(*e)]));
             if (const auto at = player.position())
                 qInfo("%6.3f s : position %6.3f s", double(clock.nsecsElapsed()) / 1e9, *at / a.rate);
             std::this_thread::sleep_for(std::chrono::milliseconds(50));
@@ -809,6 +906,7 @@ private slots:
         QCOMPARE(csv, u"t (s),signal\n1.000000,0.250000\n1.000023,-0.500000\n"_s);
         const std::vector<Harmonic> h = {{1, 440.0, Peak{440.0, 0.5}}, {2, 880.0, std::nullopt}};
         const QStringList table = harmonicsTable(tr, h).split(u'\n');
+        QCOMPARE(table[0], u"Rang\tf (Hz)\tf / f₁\tA (dB)\tA / A₁ (%)"_s);
         QCOMPARE(table[1], u"1\t440,00\t1,0000\t-6,02\t100,00"_s);
         QCOMPARE(table[2], u"2\t\t\t\t"_s);
         // fondamentale absente (220 Hz, sans pic) : rapports à sa fréquence, pas d'amplitude relative

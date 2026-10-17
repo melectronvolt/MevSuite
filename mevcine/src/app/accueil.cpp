@@ -194,7 +194,7 @@ void PageAccueil::maj()
     m_sous_titre->setText(trad("Étude cinématique de vidéos"));
     m_simplifie->textes(trad("Mode simplifié"), trad("Pas à pas, pour débuter"));
     m_expert->textes(trad("Mode expert"), trad("Toutes les fonctions"));
-    m_remarque->setText(trad("Le mode se change à tout moment, sans perdre les mesures."));
+    m_remarque->setText(trad("Le mode se change à tout moment (le mode simplifié ne suit qu'un objet)."));
     meme_taille(m_simplifie, m_expert);
 }
 

@@ -556,7 +556,41 @@ private Q_SLOTS:
         check(user, {3.0, 2.0, 0.5}, x, 0.01, 0.03);
         // échelles physiques : décharge (τ = 1 ms) et son à 440 Hz
         check(k(MK::Discharge), {5.0, 0.0, 1e-3, 0.0}, linspace(0, 5e-3, 250), 0.02, 0.02);
+        // charge en nanosecondes, durées en seconde : le pas de dérivation suit la constante de temps
+        check(k(MK::Charge), {2.3, 0.0, 1e-9, 0.4}, linspace(0, 5e-9, 81), 0.0, 1e-6);
         check(k(MK::Sine), {0.8, 1.0 / 440.0, 1.0, 0.0}, linspace(0, 0.02, 400), 0.01, 0.02);
+    }
+
+    /// Parabole sur des abscisses très loin de zéro (x ≈ 10⁹) : les coefficients en x perdent leurs
+    /// chiffres utiles ; R² est celui du polynôme donné, et un avertissement le signale.
+    void polynomialFarFromZero()
+    {
+        fit::ModelKind kind;
+        kind.type = fit::ModelKind::Parabola;
+        const auto model = fit::Model::make(kind, u"x"_s, {});
+        QVERIFY(model);
+        for (const double x0 : {0.0, 1e9}) {
+            std::vector<double> xs, ys;
+            for (int i = 0; i <= 20; ++i) {
+                const double t = i / 20.0;
+                xs.push_back(x0 + t);
+                ys.push_back(2.0 * t * t + 3.0 * t + 4.0);
+            }
+            QString err;
+            const auto r = fit::fit(*model, xs, ys, {{}, std::nullopt}, &err);
+            QVERIFY2(r, qPrintable(err));
+            const auto f = model->eval(r->params, xs);
+            double ssr = 0.0, mean = 0.0, sst = 0.0;
+            for (size_t i = 0; i < xs.size(); ++i) {
+                ssr += (ys[i] - f[i]) * (ys[i] - f[i]);
+                mean += ys[i] / double(xs.size());
+            }
+            for (double y : ys)
+                sst += (y - mean) * (y - mean);
+            // R² annoncé : celui des coefficients donnés
+            QVERIFY2(std::abs(r->r2 - (1.0 - ssr / sst)) < 1e-6, qPrintable(u"x0 = %1 : R² = %2"_s.arg(x0).arg(r->r2)));
+            QCOMPARE(r->warning.isEmpty(), x0 == 0.0);
+        }
     }
 
     void affineUncertainties()
@@ -901,6 +935,17 @@ private Q_SLOTS:
         QCOMPARE(csv::splitLine(u"\"a;b\";\"c\"\"d\"; e "_s, u';'), (QStringList{u"a;b"_s, u"c\"d"_s, u"e"_s}));
         // fins de ligne des anciens Mac, marque d'ordre des octets, lignes vides de la fin
         QCOMPARE(csv::textLines(QString(QChar(0xfeff)) + u"a\r1\r\r"_s), (QStringList{u"a"_s, u"1"_s}));
+        // un nom entre guillemets sur deux lignes reste dans sa ligne (le saut devient une espace) ; un
+        // guillemet qui ne se ferme jamais ne réunit pas les lignes
+        QCOMPARE(csv::textLines(u"t (s),\"U (V\r\ncrête)\"\r\n0,1\r\n"_s), (QStringList{u"t (s),\"U (V crête)\""_s, u"0,1"_s}));
+        QCOMPARE(csv::textLines(u"a;\"b\n1;2\n"_s), (QStringList{u"a;\"b"_s, u"1;2"_s}));
+        {
+            const QStringList two = csv::textLines(u"t (s),\"U (V\ncrête)\"\n0,1.5\n1,2.5\n"_s);
+            const csv::Reading head = csv::read(two, csv::detect(two));
+            QCOMPARE(head.columns.size(), size_t(2));
+            QCOMPARE(head.columns[1].name, u"U"_s);
+            QCOMPARE(head.columns[1].unit, u"V crête"_s);
+        }
 
         // titre, noms, unités sur leur ligne, ligne vide, case illisible, ligne d'un autre nombre de cases
         const QStringList lines = csv::textLines(u"Pendule\ntemps;angle\ns;°\n0;1,5\n;\n0,1;x\n0,2;1,2;9\n"_s);
@@ -1047,7 +1092,8 @@ private Q_SLOTS:
         line.kind = Annotation::Line;
         Annotation text;
         text.kind = Annotation::Text;
-        text.text = u"note"_s;
+        // texte sur deux lignes : le saut de ligne est échappé dans la chaîne Python
+        text.text = u"note\nsur deux lignes"_s;
         p.annotations = {v, line, text};
         updateFits(p, ws.doc);
         ws.addScript(u"import mevreg as mr\nmr.creer(\"z\", [3])\n"_s);
@@ -1055,7 +1101,7 @@ private Q_SLOTS:
         QVERIFY2(s.contains(u"yerr=[lo, hi]"_s), qPrintable(s));
         QVERIFY(s.contains(u"label=\"mon modèle\""_s));
         QVERIFY(s.contains(u"xm = np.linspace(0.5, 1.5, 300)"_s));
-        QVERIFY(s.contains(u".axvline(1.0"_s) && s.contains(u".axline((0.0, 0.0), (1.0, 1.0)"_s) && s.contains(u".text(0.0, 0.0, \"note\""_s));
+        QVERIFY(s.contains(u".axvline(1.0"_s) && s.contains(u".axline((0.0, 0.0), (1.0, 1.0)"_s) && s.contains(u".text(0.0, 0.0, \"note\\nsur deux lignes\""_s));
         QVERIFY(s.contains(u"# Ce script utilise le module mevreg"_s) && s.contains(u"# import mevreg as mr"_s));
         QVERIFY(s.contains(u"class_ = "_s) && s.contains(u"class__ = "_s));
         // exécution : numpy réel, matplotlib muet

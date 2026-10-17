@@ -78,6 +78,8 @@ struct Tr {
     QString unsupportedFormat;
     QString (*imageLoaded)(const QString &, int, int);
     QString (*settingsFailed)(const QString &);
+    /// Dossier qui n'a pas pu être créé (réglages, notice).
+    QString (*folderFailed)(const QString &);
     /// Zoom de l'image en pourcentage, à droite de la barre d'état, et sa bulle d'aide.
     QString (*zoomInfo)(const QString &);
     QString zoomTip;

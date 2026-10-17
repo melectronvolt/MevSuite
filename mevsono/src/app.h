@@ -19,6 +19,7 @@
 #include <QTranslator>
 
 #include <array>
+#include <atomic>
 #include <optional>
 #include <vector>
 
@@ -228,6 +229,8 @@ private:
     std::vector<ScaledFont> m_fonts;
 
     QFutureWatcher<audio::LoadResult> m_loader;
+    /// fermeture de la fenêtre : le chargement en cours s'arrête (ffmpeg compris)
+    std::atomic_bool m_cancelLoad = false;
     QString m_loadingPath;
     /// Message à rétablir quand une boîte de dialogue est annulée.
     StatusMessage m_idleStatus;

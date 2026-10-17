@@ -279,9 +279,10 @@ def retirer_tangentes(graphe):
 class Resultat:
     """Résultat d'une modélisation : r.a, r["a"], r.incertitudes["a"], r.r2, r.equation."""
 
-    def __init__(self, noms, valeurs, incertitudes, r2, n, equation):
+    def __init__(self, noms, valeurs, incertitudes, r2, n, equation, fixes=()):
         self.parametres = dict(zip(noms, valeurs))
         self.incertitudes = dict(zip(noms, incertitudes))
+        self.fixes = set(fixes)
         self.r2 = r2
         self.n = n
         self.equation = equation
@@ -299,8 +300,14 @@ class Resultat:
         lignes = [self.equation]
         for k, v in self.parametres.items():
             u = self.incertitudes.get(k)
-            lignes.append("  %s = %.6g ± %.2g" % (k, v, u) if u == u else "  %s = %.6g (fixé)" % (k, v))
-        lignes.append("  R² = %.6f, %d points" % (self.r2, self.n))
+            if k in self.fixes:
+                lignes.append("  %s = %.6g (fixé)" % (k, v))
+            elif u == u:
+                lignes.append("  %s = %.6g ± %.2g" % (k, v, u))
+            else:
+                # deux points pour deux paramètres, paramètres liés : pas d'incertitude
+                lignes.append("  %s = %.6g (incertitude non calculable)" % (k, v))
+        lignes.append("  R² = %.6f, %d point%s" % (self.r2, self.n, "s" if self.n > 1 else ""))
         return "\n".join(lignes)
 
 
@@ -322,12 +329,12 @@ def modeliser(y, x, modele="affine", degre=3, plage=None, graphe=None, nom=None)
             if not re.search(r"\b%s\b" % re.escape(x), m):
                 expression = re.sub(r"\bx\b", x, m)
     rng = None if plage is None else (float(plage[0]), float(plage[1]))
-    noms, vals, incs, r2, n, equation, erreur = _r._ajuster(type_, int(degre), expression, x, _donnees[x][0], y, _donnees[y][0], rng)
+    noms, vals, incs, r2, n, equation, erreur, fixes = _r._ajuster(type_, int(degre), expression, x, _donnees[x][0], y, _donnees[y][0], rng)
     if erreur:
         raise ValueError("modélisation impossible : " + erreur)
     _ordre("modeliser", x=x, y=y, type=type_, degre=int(degre), expression=expression,
            plage=None if rng is None else list(rng), graphe=None if graphe is None else str(graphe), nom=nom)
-    return Resultat(noms, vals, incs, r2, n, equation)
+    return Resultat(noms, vals, incs, r2, n, equation, fixes)
 
 
 # --- fenêtres ------------------------------------------------------------------------------

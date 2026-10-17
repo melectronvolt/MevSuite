@@ -55,7 +55,8 @@ std::pair<double, double> SignalPlot::defaultX() const
 
 std::pair<double, double> SignalPlot::rangeY() const
 {
-    const double height = m_session.loaded ? m_session.loaded->peak * 1.1 : 1.0;
+    // un silence (ou presque) garde une échelle à graduations courtes, qui tiennent dans la marge
+    const double height = m_session.loaded ? std::max(m_session.loaded->peak * 1.1, 1e-4) : 1.0;
     return {-height, height};
 }
 

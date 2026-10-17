@@ -1,6 +1,7 @@
 #include "erreurs.h"
 
 #include "app/a_propos.h"
+#include "fichier.h"
 #include "i18n.h"
 #include "prefs.h"
 
@@ -26,16 +27,17 @@ namespace {
 QtMessageHandler g_gestionnaire_precedent = nullptr;
 std::atomic_flag g_deja_signale = ATOMIC_FLAG_INIT;
 
-/// ajoute l'erreur au journal ; renvoie le chemin du journal
+/// ajoute l'erreur au journal ; renvoie le chemin du journal, vide si l'écriture a échoué
 QString ecrit_journal(const QString &message)
 {
     const QString journal = prefs::fichier_journal_erreurs();
     QDir().mkpath(prefs::dossier_conf());
     QFile f(journal);
-    if (f.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
-        const QString date = prefs::horodatage(QDateTime::currentSecsSinceEpoch());
-        f.write(u"[%1] MeVCine %2 (C++, Qt)\n%3\n\n"_s.arg(date, a_propos::VERSION, message).toUtf8());
-    }
+    if (!f.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
+        return {};
+    const QString date = prefs::horodatage(QDateTime::currentSecsSinceEpoch());
+    if (!ecrit_tout(f, u"[%1] MeVCine %2 (C++, Qt)\n%3\n\n"_s.arg(date, a_propos::VERSION, message).toUtf8()) || !f.flush())
+        return {};
     return QDir::toNativeSeparators(journal);
 }
 
@@ -80,13 +82,19 @@ void signale(const QString &message)
     // une seule boîte de dialogue, même si plusieurs fils d'exécution s'arrêtent en même temps
     if (!g_deja_signale.test_and_set()) {
         const QString journal = ecrit_journal(message);
-        QString texte = trad("MeVCine a rencontré une erreur interne et doit s'arrêter.\n\n{}\n\nLe détail est dans le "
-                             "fichier :\n{}",
-                             message, journal);
+        QString texte = journal.isEmpty()
+            ? trad("MeVCine a rencontré une erreur interne et doit s'arrêter.\n\n{}\n\nLe détail n'a pas pu être "
+                   "enregistré.",
+                   message)
+            : trad("MeVCine a rencontré une erreur interne et doit s'arrêter.\n\n{}\n\nLe détail est dans le "
+                   "fichier :\n{}",
+                   message, journal);
+        // la sauvegarde automatique peut dater un peu (ou d'une séance précédente) : on ne promet pas
+        // qu'elle contient tout
         if (QFileInfo(prefs::fichier_secours()).isFile())
             texte += u"\n\n"_s
-                + trad("Le travail en cours a été sauvegardé automatiquement : relancez MeVCine, puis "
-                       "Fichier › Récupérer le travail précédent…");
+                + trad("Une sauvegarde automatique est disponible : relancez MeVCine, puis Fichier › Récupérer le "
+                       "travail précédent… Les toutes dernières modifications peuvent y manquer.");
         std::fprintf(stderr, "%s\n", qUtf8Printable(texte));
         // boîte de message seulement depuis le fil de l'interface
         if (qobject_cast<QApplication *>(QCoreApplication::instance())

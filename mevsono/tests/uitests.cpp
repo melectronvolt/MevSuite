@@ -15,6 +15,7 @@
 #include <QCheckBox>
 #include <QComboBox>
 #include <QDir>
+#include <QHeaderView>
 #include <QLabel>
 #include <QMenu>
 #include <QMenuBar>
@@ -27,6 +28,7 @@
 #include <QStackedWidget>
 #include <QStatusBar>
 #include <QTabBar>
+#include <QTableWidget>
 #include <QTest>
 #include <QToolBar>
 #include <QToolButton>
@@ -346,6 +348,12 @@ private slots:
         QVERIFY(!panelButtons().contains(u"🎵 Exemples ▾"_s));
         QVERIFY(!panelButtons().contains(u"Zoom sur l'extrait"_s));
         QVERIFY(!panelButtons().contains(u"⚙ Réglages…"_s));
+        // au clavier : Ctrl + Tab passe d'une activité à l'autre, et l'onglet reçoit le focus par Tab
+        QCOMPARE(tabs->focusPolicy(), Qt::TabFocus);
+        QTest::keyClick(w.get(), Qt::Key_Tab, Qt::ControlModifier);
+        QCOMPARE(tabs->currentIndex(), 1);
+        QTest::keyClick(w.get(), Qt::Key_Tab, Qt::ControlModifier);
+        QCOMPARE(tabs->currentIndex(), 0);
         showTab(*w, Tool::Extract);
         QVERIFY(w->spectrumPlot()->isVisibleTo(w.get()));
         QVERIFY(shows(w.get(), u"Extrait analysé"_s) && !shows(w.get(), u"Mesure d'une période"_s));
@@ -532,6 +540,23 @@ private slots:
         QVERIFY(!showsPart(w.get(), u"Zoomez sur le signal"_s));
         QVERIFY(showsPart(w.get(), u"Autocorrélation : T\u00a0≈"_s));
         QCOMPARE(harmonicsFound(*w), (std::vector<size_t>{1, 2, 3, 4, 5, 6}));
+        // tableau des harmoniques : chaque colonne a la largeur de son contenu, et le panneau s'élargit
+        // pour le montrer en entier
+        auto *table = w->findChild<QTableWidget *>(u"harmonics"_s);
+        auto *side = w->findChild<QScrollArea *>(u"sidePanel"_s);
+        QVERIFY(table && table->isVisible() && side);
+        const auto tableFits = [&] {
+            const QHeaderView *h = table->horizontalHeader();
+            for (int c = 0; c < h->count(); ++c) {
+                int need = h->sectionSizeHint(c);
+                for (int r = 0; r < table->rowCount(); ++r)
+                    need = std::max(need, table->fontMetrics().horizontalAdvance(table->item(r, c)->text()));
+                if (h->sectionSize(c) < need || h->sectionViewportPosition(c) + h->sectionSize(c) > table->viewport()->width())
+                    return false;
+            }
+            return side->widget()->width() <= side->viewport()->width();
+        };
+        QVERIFY(QTest::qWaitFor(tableFits, 1000));
         // repères des harmoniques : désactivés par défaut
         QVERIFY(!Settings().harmonicMarks);
         hoverBesideTheFirstPeak(*w);

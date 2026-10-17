@@ -1,9 +1,11 @@
 #include "a_propos.h"
 
 #include "i18n.h"
+#include "prefs.h"
 
 #include <QApplication>
 #include <QDialogButtonBox>
+#include <QDir>
 #include <QFrame>
 #include <QLabel>
 #include <QMessageBox>
@@ -123,24 +125,8 @@ FenetreAPropos::FenetreAPropos(QWidget *parent)
     lc->addSpacing(10);
     lc->addWidget(separation(contenu));
 
-    titre(trad("Licence"));
-    lc->addWidget(texte(trad("MeVCine est un logiciel libre : vous pouvez le redistribuer et le modifier selon les termes "
-                             "de la licence GPL (GNU General Public License) publiée par la Free Software Foundation, "
-                             "version 3 ou (à votre choix) toute version ultérieure. Il est distribué dans l'espoir qu'il "
-                             "sera utile, mais SANS AUCUNE GARANTIE."),
-                        contenu));
-    auto *copyright = texte(u"Copyright (C) 2026 Rémi MEVAERE\n"
-                            "Code adapté de pymecavideo : Copyright (C) 2007-2016 Jean-Baptiste Butet <ashashiwa@gmail.com>,\n"
-                            "Copyright (C) 2007-2023 Georges Khaznadar <georgesk@debian.org>"_s,
-                            contenu);
-    copyright->setTextFormat(Qt::PlainText);
-    copyright->setFont(petite);
-    lc->addWidget(copyright);
-    lc->addWidget(texte(u"<a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">https://www.gnu.org/licenses/gpl-3.0.html</a>"_s,
-                        contenu));
-
-    // les composants libres : nom (lien vers le site), puis rôle et licence
-    titre(trad("Composants libres utilisés"));
+    // les logiciels libres : nom (lien vers le site), puis rôle et licence
+    titre(trad("Logiciels libres utilisés"));
     const QString discret = palette().color(QPalette::PlaceholderText).name();
     QString lignes;
     for (const Composant &c : composants()) {
@@ -154,6 +140,32 @@ FenetreAPropos::FenetreAPropos(QWidget *parent)
     auto *note = texte(trad("Le bouton « À propos de Qt » donne la licence de Qt et ses composants."), contenu);
     note->setFont(petite);
     lc->addWidget(note);
+
+    titre(trad("Licence"));
+    lc->addWidget(texte(trad("MeVCine est un logiciel libre : vous pouvez le redistribuer et le modifier selon les termes "
+                             "de la licence GPL (GNU General Public License) publiée par la Free Software Foundation, "
+                             "version 3 ou (à votre choix) toute version ultérieure. Il est distribué dans l'espoir qu'il "
+                             "sera utile, mais SANS AUCUNE GARANTIE."),
+                        contenu));
+    auto *copyright = texte(u"Copyright (C) 2026 Rémi MEVAERE\n"_s + trad("Code adapté de pymecavideo :")
+                                + u" Copyright (C) 2007-2016 Jean-Baptiste Butet <ashashiwa@gmail.com>,\n"
+                                  "Copyright (C) 2007-2023 Georges Khaznadar <georgesk@debian.org>"_s,
+                            contenu);
+    copyright->setTextFormat(Qt::PlainText);
+    copyright->setFont(petite);
+    lc->addWidget(copyright);
+    lc->addWidget(texte(u"<a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">https://www.gnu.org/licenses/gpl-3.0.html</a>"_s,
+                        contenu));
+
+    // où sont les réglages, comme dans les autres logiciels de la suite
+    lc->addWidget(separation(contenu));
+    auto *reglages = texte(u"<span style=\"color:%1\">%2</span> <code>%3</code>"_s.arg(
+                               discret, trad("Fichier de réglages :").toHtmlEscaped(),
+                               QDir::toNativeSeparators(prefs::fichier_conf()).toHtmlEscaped()),
+                           contenu);
+    reglages->setTextFormat(Qt::RichText);
+    reglages->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    lc->addWidget(reglages);
     lc->addStretch(1);
 
     auto *defile = new QScrollArea(this);

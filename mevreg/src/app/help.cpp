@@ -1,4 +1,5 @@
 #include "app/help.h"
+#include "app/savefile.h"
 
 #include <QDesktopServices>
 #include <QDir>
@@ -24,7 +25,7 @@ QString write(const QString &page, QString *error)
     const QString dir = QDir(QDir::tempPath()).filePath(DIR_NAME);
     QString problem;
     if (!QDir().mkpath(dir))
-        problem = u"%1 : mkdir"_s.arg(QDir::toNativeSeparators(dir));
+        problem = u"impossible de créer le dossier « %1 »"_s.arg(QDir::toNativeSeparators(dir));
     for (const QString &name : files()) {
         if (!problem.isEmpty())
             break;
@@ -37,7 +38,7 @@ QString write(const QString &page, QString *error)
         if (name.endsWith(u".html"_s))
             content.replace("{{version}}", MEVREG_VERSION);
         QSaveFile out(QDir(dir).filePath(name));
-        if (!out.open(QIODevice::WriteOnly) || out.write(content) < 0 || !out.commit())
+        if (!out.open(QIODevice::WriteOnly) || !writeAll(out, content) || !out.commit())
             problem = out.errorString();
     }
     if (!problem.isEmpty()) {

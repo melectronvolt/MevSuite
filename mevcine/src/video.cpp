@@ -7,13 +7,16 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QElapsedTimer>
 #include <QProcess>
+#include <QScopeGuard>
 #include <QStandardPaths>
 
 #include <algorithm>
 #include <cmath>
 #include <cstring>
 #include <format>
+#include <utility>
 
 using namespace Qt::StringLiterals;
 
@@ -32,6 +35,33 @@ constexpr int SAUT_MAX = 25;
 /// écart relatif à l'intervalle habituel entre deux trames au-delà duquel on considère que la
 /// cadence est variable
 constexpr double TOLERANCE_CADENCE = 0.25;
+/// durée d'une tranche d'attente pendant une ouverture annulable (ms)
+constexpr int TRANCHE = 50;
+
+/// pendant `VideoReader::ouvre`, dans le fil qui ouvre la vidéo : l'indicateur qui l'interrompt
+thread_local const std::atomic_bool *t_annule = nullptr;
+
+/// Attend la fin du programme (`fin`) ou des données à lire, au plus `ms` millisecondes ; faux si le
+/// délai est dépassé. Pendant une ouverture annulable, l'attente se fait par tranches courtes : une
+/// annulation l'arrête aussitôt (faux aussi).
+bool attend(QProcess &p, bool fin, int ms)
+{
+    const auto attente = [&](int t) { return fin ? p.waitForFinished(t) : p.waitForReadyRead(t); };
+    if (!t_annule)
+        return attente(ms);
+    QElapsedTimer chrono;
+    chrono.start();
+    while (!t_annule->load()) {
+        const qint64 reste = ms < 0 ? TRANCHE : ms - chrono.elapsed();
+        if (reste <= 0)
+            return false;
+        if (attente(static_cast<int>(std::min<qint64>(TRANCHE, reste))))
+            return true;
+        if (p.state() == QProcess::NotRunning)
+            return false;
+    }
+    return false;
+}
 
 /// message d'erreur quand un programme de ffmpeg ne peut pas être lancé
 QString erreur_lancement(const QString &programme, const QProcess &p)
@@ -131,7 +161,7 @@ std::expected<QJsonObject, QString> lance_ffprobe(const QString &chemin, bool co
     auto p = lance(u"ffprobe"_s, args);
     if (!p->waitForStarted(-1))
         return std::unexpected(erreur_lancement(u"ffprobe"_s, *p));
-    if (!p->waitForFinished(ATTENTE_MAX)) {
+    if (!attend(*p, true, ATTENTE_MAX)) {
         p->kill();
         p->waitForFinished(5000);
         return std::unexpected(trad("ffprobe ne répond pas : la vidéo est peut-être abîmée, ou sur un support trop lent"));
@@ -154,7 +184,7 @@ std::vector<double> dates_des_trames(const QString &chemin)
     if (!p->waitForStarted(-1))
         return {};
     // trop long : les dates restent inconnues (cadence régulière supposée)
-    if (!p->waitForFinished(ATTENTE_MAX)) {
+    if (!attend(*p, true, ATTENTE_MAX)) {
         p->kill();
         p->waitForFinished(5000);
         return {};
@@ -479,7 +509,7 @@ struct VideoReader::Flux {
         QProcess &p = *processus;
         p.setReadChannel(QProcess::StandardOutput);
         while (p.bytesAvailable() == 0) {
-            if (!p.waitForReadyRead(ATTENTE_IMAGE))
+            if (!attend(p, false, ATTENTE_IMAGE))
                 break;
         }
         return p.read(dest, n);
@@ -492,7 +522,7 @@ struct VideoReader::Flux {
         p.setReadChannel(QProcess::StandardError);
         std::optional<QByteArray> l;
         while (!p.canReadLine()) {
-            if (!p.waitForReadyRead(ATTENTE_IMAGE))
+            if (!attend(p, false, ATTENTE_IMAGE))
                 break;
         }
         if (p.canReadLine())
@@ -529,8 +559,12 @@ VideoReader::VideoReader(const QString &chemin, VideoInfo info_)
 
 VideoReader::~VideoReader() = default;
 
-std::expected<std::unique_ptr<VideoReader>, QString> VideoReader::ouvre(const QString &chemin)
+std::expected<std::unique_ptr<VideoReader>, QString> VideoReader::ouvre(const QString &chemin,
+                                                                      const std::atomic_bool *annule)
 {
+    // l'indicateur vaut pour toutes les attentes de ce fil pendant l'ouverture
+    const std::atomic_bool *avant = std::exchange(t_annule, annule);
+    const auto retablit = qScopeGuard([avant] { t_annule = avant; });
     auto meta = sonde(chemin);
     if (!meta)
         return std::unexpected(meta.error());
@@ -564,6 +598,12 @@ std::expected<std::unique_ptr<VideoReader>, QString> VideoReader::ouvre(const QS
     lecteur->met_en_cache(0, *premiere);
     lecteur->m_flux = std::move(flux);
     return lecteur;
+}
+
+void VideoReader::confie_au_fil(QThread *fil)
+{
+    if (m_flux)
+        m_flux->processus->moveToThread(fil);
 }
 
 void VideoReader::set_rotation(int rotation)

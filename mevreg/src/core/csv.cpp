@@ -124,11 +124,54 @@ QStringList textLines(const QString &raw)
     QString text = raw;
     if (text.startsWith(QChar(0xfeff)))
         text.remove(0, 1);
-    // fins de ligne Windows, Unix, ou des anciens Mac (retour chariot seul)
-    QStringList lines = text.contains(u'\n') ? text.split(u'\n') : text.split(u'\r');
-    for (QString &l : lines)
-        if (l.endsWith(u'\r'))
-            l.chop(1);
+    // Fins de ligne Windows, Unix, ou des anciens Mac (retour chariot seul). Un champ entre guillemets
+    // peut passer à la ligne (« "U (V⏎crête)" ») : il reste dans sa ligne, le saut devenant une espace.
+    // Un guillemet jamais fermé n'en est pas un : la suite est découpée sans en tenir compte.
+    QStringList lines;
+    QString cur;
+    bool quoted = false;
+    qsizetype start = 0;
+    QChar previous = u'\n';
+    for (qsizetype i = 0; i < text.size(); ++i) {
+        const QChar c = text[i];
+        const bool newline = c == u'\n' || c == u'\r';
+        if (newline && c == u'\r' && i + 1 < text.size() && text[i + 1] == u'\n')
+            ++i;
+        if (quoted) {
+            if (c == u'"' && i + 1 < text.size() && text[i + 1] == u'"') {
+                cur += u"\"\""_s;
+                ++i;
+                continue;
+            }
+            if (c == u'"')
+                quoted = false;
+            cur += newline ? QChar(u' ') : c;
+            continue;
+        }
+        if (newline) {
+            lines << cur;
+            cur.clear();
+            previous = u'\n';
+            start = i + 1;
+            continue;
+        }
+        // guillemet en début de champ : après un début de ligne, une virgule, un point-virgule, une
+        // tabulation (et des espaces)
+        if (c == u'"' && (previous == u'\n' || previous == u',' || previous == u';' || previous == u'\t'))
+            quoted = true;
+        cur += c;
+        if (!c.isSpace() || c == u'\t')
+            previous = c;
+    }
+    if (quoted) {
+        QStringList rest = text.mid(start).contains(u'\n') ? text.mid(start).split(u'\n') : text.mid(start).split(u'\r');
+        for (QString &l : rest)
+            if (l.endsWith(u'\r'))
+                l.chop(1);
+        lines << rest;
+    } else {
+        lines << cur;
+    }
     while (!lines.isEmpty() && lines.back().trimmed().isEmpty())
         lines.removeLast();
     return lines;

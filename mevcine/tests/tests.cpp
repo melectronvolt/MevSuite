@@ -594,6 +594,28 @@ private slots:
             QVERIFY(proche(*ay[i], -10.0));
     }
 
+    void acceleration_a_cadence_variable()
+    {
+        // chute libre aux dates réelles d'une vidéo dont des images manquent : l'accélération reste
+        // g à chaque image, et non g × (Δtᵢ + Δtᵢ₋₁) / (2Δtᵢ)
+        Pointage p;
+        const std::vector<double> instants{0, 1, 2, 4, 5, 6, 8, 9};
+        p.dimensionne(1, 0.04, int(instants.size()));
+        p.instants = instants;
+        p.origine = {0, 0};
+        p.echelle = {{0, 0}, {0, 100}, 0.1};
+        for (int i = 0; i < p.len(); ++i) {
+            const double t = p.date(i);
+            // l'axe y de l'image va vers le bas : y(t) = −g t² / 2 en mètres, 1 000 px par mètre
+            p.pointe(1, {0, 1000.0 * 9.81 * t * t / 2.0}, i);
+        }
+        const auto s = grandeurs(p);
+        const auto ay = std::find_if(s.begin(), s.end(), [](const Serie &x) { return x.nom == u"ay"_s; })->valeurs;
+        QCOMPARE(ay[1], std::nullopt);
+        for (int i = 2; i < p.len(); ++i)
+            QVERIFY2(proche(*ay[i], -9.81, 1e-9), qPrintable(u"i=%1 ay=%2"_s.arg(i).arg(*ay[i])));
+    }
+
     void tableau()
     {
         const Tableau t = Tableau::construit(chute());

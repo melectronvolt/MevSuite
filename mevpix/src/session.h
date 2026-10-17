@@ -48,8 +48,8 @@ struct Session {
     std::optional<Calibration> calibFromInputs() const;
     /// Vrai si l'étalon, la longueur ou l'unité ont changé depuis la validation.
     bool calibPending() const;
-    /// Vrai si changer d'image ferait perdre un étalonnage ou des mesures.
-    bool hasWork() const { return calibration.has_value() || !measures.empty(); }
+    /// Vrai si changer d'image ferait perdre un étalonnage, des mesures ou une coupe.
+    bool hasWork() const { return calibration.has_value() || !measures.empty() || cut.has_value(); }
     /// Une nouvelle image invalide l'étalonnage et les tracés précédents.
     void setImage(std::shared_ptr<const LoadedImage> img);
 

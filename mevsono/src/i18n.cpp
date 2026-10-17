@@ -134,6 +134,9 @@ const Tr FR = {
     .unexpectedError = u"Erreur inattendue."_s,
     .fatalError =
         [](const QString &e, const QString &log) {
+            if (log.isEmpty())
+                return u"MeVSono a rencontré une erreur imprévue et doit se fermer.\n\n%1\n\nLes détails n'ont pas pu être enregistrés."_s
+                    .arg(e);
             return u"MeVSono a rencontré une erreur imprévue et doit se fermer.\n\n%1\n\nLes détails ont été enregistrés dans :\n%2"_s
                 .arg(e, log);
         },
@@ -149,6 +152,7 @@ const Tr FR = {
     .loaded = [](const QString &name, const QString &info) { return u"« %1 » : %2."_s.arg(name, info); },
     .truncated = u"seules les 30 premières minutes sont lues"_s,
     .damaged = u"la suite du fichier est illisible : seul le début est lu"_s,
+    .invalidSamples = u"des valeurs du fichier sont illisibles : elles sont mises à 0"_s,
     .mono = u"mono"_s,
     .stereo = u"stéréo"_s,
     .channelsN = [](size_t n) { return u"%1 voies"_s.arg(n); },
@@ -179,6 +183,9 @@ const Tr FR = {
     .stopTip = u"Arrêter : la prochaine lecture repartira du début."_s,
     .playFailed = [](const QString &e) { return u"Impossible d'écouter le son : %1"_s.arg(e); },
     .noAudioOutput = u"aucune sortie audio (haut-parleurs ou casque) n'est disponible."_s,
+    .audioFailures = {u"la sortie audio ne s'ouvre pas."_s, u"la sortie audio ne répond plus."_s,
+                      u"la sortie audio est en panne."_s, u"erreur de la sortie audio."_s},
+    .folderFailed = [](const QString &d) { return u"impossible de créer le dossier « %1 »"_s.arg(d); },
     .periodHeading = u"Mesure d'une période"_s,
     .periodHint =
         u"Zoomez sur le signal, puis glissez d'un point du motif au même point d'un motif suivant : vous obtenez t₁, t₂ et la durée Δt."_s,
@@ -206,7 +213,10 @@ const Tr FR = {
     .autocorrelation = u"Autocorrélation :"_s,
     .autocorrelationTip = u"Période trouvée par le logiciel, par autocorrélation de l'extrait A–B."_s,
     .noPeriod = u"pas de période nette"_s,
-    .extractInfo = [](const QString &t, size_t n) { return u"Extrait : %1 (%2 échantillons)"_s.arg(t, frInt(n)); },
+    .extractInfo =
+        [](const QString &t, size_t n) {
+            return (n == 1 ? u"Extrait : %1 (%2 échantillon)"_s : u"Extrait : %1 (%2 échantillons)"_s).arg(t, frInt(n));
+        },
     .computing = u"Calcul du spectre…"_s,
     .fftInfo = [](size_t n, const QString &w) { return u"FFT sur %1 points, fenêtre %2"_s.arg(frInt(n), w); },
     .segmentsInfo = [](size_t k, size_t n) { return u"Moyenne de %1 segments de %2 échantillons"_s.arg(k).arg(frInt(n)); },
@@ -215,7 +225,7 @@ const Tr FR = {
         u"Écart entre deux raies calculées par la FFT : fréquence d'échantillonnage / taille de la FFT. La fréquence des pics est affinée par interpolation, bien en dessous."_s,
     .resolutionLabel = u"Finesse de l'analyse"_s,
     .resolutionTip =
-        u"Fréquence d'échantillonnage / nombre d'échantillons analysés (≈ 1 / durée de l'extrait) : deux fréquences plus proches ne sont pas séparées. Pour l'améliorer, allongez l'extrait."_s,
+        u"Fréquence d'échantillonnage / nombre d'échantillons d'un segment analysé (≈ 1 / durée de l'extrait, s'il n'est pas découpé en segments) : deux fréquences plus proches ne sont pas séparées. Pour l'améliorer, allongez l'extrait, ou augmentez la taille de la FFT."_s,
     .fundamentalHeading = u"Fondamentale et harmoniques"_s,
     .f0Auto = u"(automatique)"_s,
     .f0Manual = u"(à la main)"_s,
@@ -252,8 +262,8 @@ const Tr FR = {
         },
     .setFft = u"Taille de la FFT"_s,
     .fftTip =
-        u"Automatique : tout l'extrait est analysé d'un seul tenant (complété par des zéros). Une taille fixée plus petite que l'extrait découpe l'extrait en segments qui se recouvrent de moitié, et moyenne leurs spectres : le spectre est plus lisse, mais moins fin."_s,
-    .fftAuto = u"automatique (tout l'extrait)"_s,
+        u"Automatique : l'extrait est analysé d'un seul tenant (complété par des zéros) jusqu'à 262\u202F144 échantillons. Un extrait plus long, ou une taille fixée plus petite que l'extrait, est découpé en segments qui se recouvrent de moitié, et leurs spectres sont moyennés : le spectre est plus lisse, mais moins fin."_s,
+    .fftAuto = u"automatique"_s,
     .fftPoints = [](size_t n) { return u"%1 points"_s.arg(frInt(n)); },
     .setThreshold = u"Seuil de détection des pics"_s,
     .thresholdTip =
@@ -361,6 +371,8 @@ const Tr EN = {
     .unexpectedError = u"Unexpected error."_s,
     .fatalError =
         [](const QString &e, const QString &log) {
+            if (log.isEmpty())
+                return u"MeVSono hit an unexpected error and must close.\n\n%1\n\nThe details could not be saved."_s.arg(e);
             return u"MeVSono hit an unexpected error and must close.\n\n%1\n\nDetails were saved to:\n%2"_s.arg(e, log);
         },
     .chooseSound = u"Choose a sound or video file…"_s,
@@ -375,6 +387,7 @@ const Tr EN = {
     .loaded = [](const QString &name, const QString &info) { return u"“%1”: %2."_s.arg(name, info); },
     .truncated = u"only the first 30 minutes are read"_s,
     .damaged = u"the rest of the file is unreadable: only the beginning is read"_s,
+    .invalidSamples = u"some values in the file are unreadable: they are set to 0"_s,
     .mono = u"mono"_s,
     .stereo = u"stereo"_s,
     .channelsN = [](size_t n) { return u"%1 channels"_s.arg(n); },
@@ -403,6 +416,9 @@ const Tr EN = {
     .stopTip = u"Stop: the next playback starts from the beginning."_s,
     .playFailed = [](const QString &e) { return u"Cannot play the sound: %1"_s.arg(e); },
     .noAudioOutput = u"no audio output (speakers or headphones) is available."_s,
+    .audioFailures = {u"the audio output cannot be opened."_s, u"the audio output stopped responding."_s,
+                      u"the audio output has failed."_s, u"audio output error."_s},
+    .folderFailed = [](const QString &d) { return u"cannot create the folder “%1”"_s.arg(d); },
     .periodHeading = u"Measuring a period"_s,
     .periodHint =
         u"Zoom in on the signal, then drag from a point of one pattern to the same point of a later pattern: you get t₁, t₂ and the duration Δt."_s,
@@ -428,7 +444,10 @@ const Tr EN = {
     .autocorrelation = u"Autocorrelation:"_s,
     .autocorrelationTip = u"Period found by the software, by autocorrelation of the A–B extract."_s,
     .noPeriod = u"no clear period"_s,
-    .extractInfo = [](const QString &t, size_t n) { return u"Extract: %1 (%2 samples)"_s.arg(t, enInt(n)); },
+    .extractInfo =
+        [](const QString &t, size_t n) {
+            return (n == 1 ? u"Extract: %1 (%2 sample)"_s : u"Extract: %1 (%2 samples)"_s).arg(t, enInt(n));
+        },
     .computing = u"Computing the spectrum…"_s,
     .fftInfo = [](size_t n, const QString &w) { return u"%1-point FFT, %2 window"_s.arg(enInt(n), w); },
     .segmentsInfo = [](size_t k, size_t n) { return u"Average of %1 segments of %2 samples"_s.arg(k).arg(enInt(n)); },
@@ -437,7 +456,7 @@ const Tr EN = {
         u"Spacing between two lines computed by the FFT: sampling rate / FFT size. Peak frequencies are refined by interpolation, to much better than that."_s,
     .resolutionLabel = u"Analysis resolution"_s,
     .resolutionTip =
-        u"Sampling rate / number of samples analysed (≈ 1 / duration of the extract): two closer frequencies are not separated. To improve it, lengthen the extract."_s,
+        u"Sampling rate / number of samples in an analysed segment (≈ 1 / duration of the extract, if it is not split into segments): two closer frequencies are not separated. To improve it, lengthen the extract, or increase the FFT size."_s,
     .fundamentalHeading = u"Fundamental and harmonics"_s,
     .f0Auto = u"(automatic)"_s,
     .f0Manual = u"(manual)"_s,
@@ -473,8 +492,8 @@ const Tr EN = {
         },
     .setFft = u"FFT size"_s,
     .fftTip =
-        u"Automatic: the whole extract is analysed in one go (padded with zeros). A fixed size smaller than the extract splits it into half-overlapping segments and averages their spectra: the spectrum is smoother, but less fine."_s,
-    .fftAuto = u"automatic (whole extract)"_s,
+        u"Automatic: the extract is analysed in one go (padded with zeros) up to 262,144 samples. A longer extract, or a fixed size smaller than the extract, is split into half-overlapping segments whose spectra are averaged: the spectrum is smoother, but less fine."_s,
+    .fftAuto = u"automatic"_s,
     .fftPoints = [](size_t n) { return u"%1 points"_s.arg(enInt(n)); },
     .setThreshold = u"Peak detection threshold"_s,
     .thresholdTip =

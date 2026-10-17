@@ -2,8 +2,8 @@
 // harmoniques, période par autocorrélation, passages par zéro.
 //
 // Le spectre est un spectre d'amplitude : une sinusoïde d'amplitude A y donne un pic de hauteur A,
-// quelle que soit la fenêtre (la pondération est compensée). Les fréquences des pics sont affinées
-// par interpolation, bien en dessous de l'écart entre deux raies de la FFT.
+// quelle que soit la fenêtre (la pondération est compensée), et quelle que soit sa fréquence entre
+// deux raies de la FFT (amplitude et fréquence des pics affinées d'après la réponse de la fenêtre).
 
 #pragma once
 
@@ -99,9 +99,10 @@ struct PeakParams {
     bool operator==(const PeakParams &) const = default;
 };
 
-/// Pics du spectre : maxima locaux au-dessus du seuil, affinés par interpolation parabolique du
-/// logarithme de l'amplitude (exacte pour un lobe gaussien, très bonne pour les fenêtres usuelles).
-/// Triés par fréquence croissante.
+/// Pics du spectre : maxima locaux au-dessus du seuil, affinés d'après la réponse de la fenêtre (le
+/// rapport de la raie du maximum à sa plus grande voisine donne la place du sommet entre les raies, puis
+/// son amplitude) : justes pour une sinusoïde, où qu'elle tombe entre deux raies. Fenêtre à sommet
+/// plat : fréquence par le barycentre du lobe. Triés par fréquence croissante.
 std::vector<Peak> peaks(const Spectrum &sp, Window window, const PeakParams &params);
 
 /// Écart toléré entre un pic et la fréquence n × f0 attendue d'un harmonique.

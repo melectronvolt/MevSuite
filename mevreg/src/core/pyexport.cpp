@@ -170,9 +170,24 @@ std::pair<QString, bool> fmtString(const CurveSpec &c)
 
 QString quote(const QString &s)
 {
-    QString e = s;
-    e.replace(u"\\"_s, u"\\\\"_s);
-    e.replace(u"\""_s, u"\\\""_s);
+    // chaîne Python entre guillemets : antislash, guillemet et caractères de contrôle (un texte de
+    // graphe sur deux lignes) échappés
+    QString e;
+    e.reserve(s.size() + 2);
+    for (const QChar c : s) {
+        switch (c.unicode()) {
+        case u'\\': e += u"\\\\"_s; break;
+        case u'"': e += u"\\\""_s; break;
+        case u'\n': e += u"\\n"_s; break;
+        case u'\r': e += u"\\r"_s; break;
+        case u'\t': e += u"\\t"_s; break;
+        default:
+            if (c.unicode() < 0x20 || c.unicode() == 0x7f)
+                e += u"\\x%1"_s.arg(int(c.unicode()), 2, 16, QChar(u'0'));
+            else
+                e += c;
+        }
+    }
     return u'"' + e + u'"';
 }
 

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Type des documents de MeVReg, installé dans share/mime/packages : un double clic les ouvre. -->
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/x-mevreg">
+    <comment>Espace de travail MeVReg</comment>
+    <comment xml:lang="en">MeVReg workspace</comment>
+    <icon name="mevreg"/>
+    <glob pattern="*.phy"/>
+  </mime-type>
+</mime-info>

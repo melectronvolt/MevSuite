@@ -1,5 +1,7 @@
 #include "help.h"
 
+#include "savefile.h"
+
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -18,10 +20,10 @@ QString page(Lang lang)
 }
 
 /// Écrit tous les fichiers ; le marqueur `{{version}}` des pages est remplacé par la version du programme.
-QString writeAll(const QString &dir)
+QString writeFiles(const QString &dir, Lang lang)
 {
     if (!QDir().mkpath(dir))
-        return u"%1 : mkdir"_s.arg(QDir::toNativeSeparators(dir));
+        return texts(lang).folderFailed(QDir::toNativeSeparators(dir));
     for (const QString &name : files()) {
         QFile resource(u":/help/"_s + name);
         if (!resource.open(QIODevice::ReadOnly))
@@ -30,7 +32,7 @@ QString writeAll(const QString &dir)
         if (name.endsWith(u".html"_s))
             content.replace("{{version}}", MEVSONO_VERSION);
         QSaveFile out(QDir(dir).filePath(name));
-        if (!out.open(QIODevice::WriteOnly) || out.write(content) < 0 || !out.commit())
+        if (!out.open(QIODevice::WriteOnly) || !writeAll(out, content) || !out.commit())
             return out.errorString();
     }
     return {};
@@ -54,7 +56,7 @@ QString write(Lang lang, const SettingsFiles &settings, QString *error)
 
     QString lastError = u"no writable directory"_s;
     for (const QString &dir : dirs) {
-        lastError = writeAll(dir);
+        lastError = writeFiles(dir, lang);
         if (lastError.isEmpty())
             return QDir(dir).filePath(page(lang));
     }

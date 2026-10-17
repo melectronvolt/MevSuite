@@ -100,7 +100,7 @@ Les tests (Qt Test) :
   d'exemple : ouvrir, étalonner sur 2 cm du papier millimétré, mesurer la tache centrale (20,2 mm),
   profil d'intensité avec A et B sur les minima, boutons de thème et de langue. Il vérifie aussi le
   style commun : page d'accueil sans chevauchement à la taille minimale, boutons de droite de la
-  barre d'outils, barre d'état d'une ligne, panneau jamais rogné (interface agrandie comprise).
+  barre de menus, barre d'état d'une ligne, panneau jamais rogné (interface agrandie comprise).
   Chaque étape est rendue dans `build/captures/` ; les images de la notice en viennent :
 
   ```sh

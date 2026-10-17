@@ -11,6 +11,14 @@
 
 using namespace Qt::StringLiterals;
 
+namespace {
+
+/// Plus petite échelle des amplitudes : le spectre d'un silence garde des graduations courtes, qui
+/// tiennent dans la marge.
+constexpr double MIN_AMPLITUDE = 1e-4;
+
+} // namespace
+
 SpectrumPlot::SpectrumPlot(Session &session, const Analyzer &analyzer, QWidget *parent)
     : PlotWidget(parent)
     , m_session(session)
@@ -75,7 +83,7 @@ double SpectrumPlot::toY(double a) const
 {
     if (!decibels())
         return a;
-    const double maxA = std::max(analysis() ? analysis()->spectrum.maxAmplitude() : 1.0, 1e-12);
+    const double maxA = std::max(analysis() ? analysis()->spectrum.maxAmplitude() : 1.0, MIN_AMPLITUDE);
     return std::max(toDb(a), toDb(maxA) - DB_RANGE);
 }
 
@@ -93,7 +101,7 @@ std::pair<double, double> SpectrumPlot::defaultX() const
 
 std::pair<double, double> SpectrumPlot::rangeY() const
 {
-    const double maxA = std::max(analysis() ? analysis()->spectrum.maxAmplitude() : 1.0, 1e-12);
+    const double maxA = std::max(analysis() ? analysis()->spectrum.maxAmplitude() : 1.0, MIN_AMPLITUDE);
     if (decibels())
         return {toDb(maxA) - DB_RANGE, toDb(maxA) + 6.0};
     return {0.0, maxA * 1.15};

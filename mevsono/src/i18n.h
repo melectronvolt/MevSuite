@@ -97,6 +97,8 @@ struct Tr {
     QString truncated;
     /// Son lu en partie : le décodage s'est arrêté sur une erreur.
     QString damaged;
+    /// Échantillons qui ne sont pas des nombres (fichier flottant abîmé), mis à 0.
+    QString invalidSamples;
     QString mono;
     QString stereo;
     QString (*channelsN)(size_t);
@@ -127,6 +129,10 @@ struct Tr {
     QString stopTip;
     QString (*playFailed)(const QString &);
     QString noAudioOutput;
+    /// Pannes de la sortie audio, dans l'ordre de `AudioFailure` (player.h).
+    std::array<QString, 4> audioFailures;
+    /// Dossier qui n'a pas pu être créé (réglages, notice).
+    QString (*folderFailed)(const QString &);
     QString periodHeading;
     QString periodHint;
     QString axisTime;

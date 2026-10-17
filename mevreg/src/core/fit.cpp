@@ -453,6 +453,8 @@ std::pair<std::vector<double>, std::vector<std::vector<double>>> unscalePoly(con
     return {d, jac};
 }
 
+double ssrOf(const Model &model, const std::vector<double> &p, const std::vector<double> &xs, const std::vector<double> &ys);
+
 std::optional<FitResult> fitLinear(const Model &model, const std::vector<double> &xs, const std::vector<double> &ys,
                                    const std::vector<std::optional<double>> &fixed, const std::vector<size_t> &freeIdx, QString *error)
 {
@@ -515,10 +517,24 @@ std::optional<FitResult> fitLinear(const Model &model, const std::vector<double>
     }
     const size_t dof = n > freeIdx.size() ? n - freeIdx.size() : 0;
     const double s2 = dof > 0 ? ssr / static_cast<double>(dof) : NAN;
+    bool imprecise = false;
     if (poly && !anyFixed) {
         // retour aux coefficients en x : p(u) avec u = (x − m)/s
         const auto [cx, jac] = unscalePoly(polyAscending(model, p), shift, scale);
         pFinal = polyAscending(model, cx); // la parabole s'écrit dans l'ordre inverse
+        // Abscisses très loin de zéro (x ≈ 10⁹ pour des écarts de 1) : les coefficients en x perdent
+        // les chiffres utiles, et le polynôme qu'ils donnent ne passe plus par les points. R² est
+        // alors celui de ce polynôme, avec un avertissement.
+        const double ssrX = ssrOf(model, pFinal, xs, ys);
+        double mean = 0.0, sst = 0.0;
+        for (double y : ys)
+            mean += y / static_cast<double>(n);
+        for (double y : ys)
+            sst += (y - mean) * (y - mean);
+        if (!(ssrX <= ssr + 1e-6 * sst)) {
+            imprecise = true;
+            ssr = ssrX;
+        }
         if (cov) {
             const auto order = polyOrder(model);
             const size_t k = cx.size();
@@ -544,6 +560,8 @@ std::optional<FitResult> fitLinear(const Model &model, const std::vector<double>
     r.iterations = 1;
     if (!cov)
         r.warning = u"paramètres non indépendants : incertitudes indéterminées"_s;
+    else if (imprecise)
+        r.warning = u"abscisses trop loin de zéro : les coefficients sont imprécis ; décalez les abscisses (par exemple x − x₀)"_s;
     return r;
 }
 
@@ -566,11 +584,27 @@ Matrix jacobian(const Model &model, const std::vector<double> &p, const std::vec
     std::vector<double> q = p;
     for (size_t c = 0; c < freeIdx.size(); ++c) {
         const size_t k = freeIdx[c];
-        const double h = 1e-6 * std::abs(p[k]) + 1e-9;
-        q[k] = p[k] + h;
-        const auto fp = model.eval(q, xs);
-        q[k] = p[k] - h;
-        const auto fm = model.eval(q, xs);
+        // Pas relatif au paramètre : une constante de temps de 1 ns (en secondes) ne se dérive pas avec
+        // un pas de 1e-9. Un pas qui ne change pas le modèle (petit paramètre ajouté à de grandes
+        // valeurs) est agrandi jusqu'à ce que l'écart dépasse les erreurs d'arrondi.
+        double h = p[k] != 0.0 ? 1e-6 * std::abs(p[k]) : 1e-9;
+        std::vector<double> fp, fm;
+        for (int tries = 0;; ++tries) {
+            q[k] = p[k] + h;
+            fp = model.eval(q, xs);
+            q[k] = p[k] - h;
+            fm = model.eval(q, xs);
+            double change = 0.0, size = 0.0;
+            for (size_t i = 0; i < n; ++i) {
+                if (std::isfinite(fp[i]) && std::isfinite(fm[i])) {
+                    change = std::max(change, std::abs(fp[i] - fm[i]));
+                    size = std::max({size, std::abs(fp[i]), std::abs(fm[i])});
+                }
+            }
+            if (change > 1e-9 * size || tries == 6)
+                break;
+            h *= 1000.0;
+        }
         q[k] = p[k];
         for (size_t i = 0; i < n; ++i) {
             const double d = (fp[i] - fm[i]) / (2.0 * h);
@@ -600,27 +634,40 @@ std::optional<FitResult> levenbergMarquardt(const Model &model, const std::vecto
         for (size_t i = 0; i < n; ++i)
             r[i] = ys[i] - f[i];
         const Matrix jac = jacobian(model, p, xs, freeIdx);
-        const Matrix a = jac.gram();
-        const auto g = jac.tMulVec(r);
+        Matrix a = jac.gram();
+        auto g = jac.tMulVec(r);
         double maxDiag = 0.0;
         for (size_t i = 0; i < freeIdx.size(); ++i)
             maxDiag = std::max(maxDiag, a(i, i));
         if (maxDiag == 0.0)
             break;
+        // Système équilibré (diagonale de 1) : avec des paramètres d'ordres de grandeur très
+        // différents (A ≈ 2 V et τ ≈ 1e-9 s), il paraîtrait singulier à la résolution. La solution est
+        // la même : (JᵀJ + λ diag(JᵀJ)) δ = Jᵀr.
+        std::vector<double> d(freeIdx.size(), 1.0);
+        for (size_t i = 0; i < freeIdx.size(); ++i) {
+            if (a(i, i) > 0.0 && std::isfinite(a(i, i)))
+                d[i] = std::sqrt(a(i, i));
+        }
+        for (size_t i = 0; i < freeIdx.size(); ++i) {
+            g[i] /= d[i];
+            for (size_t j = 0; j < freeIdx.size(); ++j)
+                a(i, j) /= d[i] * d[j];
+        }
         bool improved = false;
         while (lambda < 1e16) {
             Matrix m = a;
             for (size_t i = 0; i < freeIdx.size(); ++i)
-                m(i, i) += lambda * std::max(a(i, i), 1e-12 * maxDiag);
+                m(i, i) += lambda * std::max(a(i, i), 1e-12);
             if (auto delta = linalg::solve(m, g)) {
                 std::vector<double> q = p;
                 for (size_t c = 0; c < freeIdx.size(); ++c)
-                    q[freeIdx[c]] += (*delta)[c];
+                    q[freeIdx[c]] += (*delta)[c] / d[c];
                 const double sNew = ssrOf(model, q, xs, ys);
                 if (sNew < s) {
                     bool smallStep = true;
                     for (size_t c = 0; c < freeIdx.size(); ++c) {
-                        if (std::abs((*delta)[c]) > 1e-10 * (std::abs(p[freeIdx[c]]) + 1e-12))
+                        if (std::abs((*delta)[c] / d[c]) > 1e-10 * (std::abs(p[freeIdx[c]]) + 1e-12))
                             smallStep = false;
                     }
                     const double rel = (s - sNew) / std::max(s, std::numeric_limits<double>::min());

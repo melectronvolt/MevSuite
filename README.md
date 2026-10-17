@@ -37,7 +37,7 @@ pour MeVCine (et MeVSono sous Windows). Les paquets `.deb` et `.rpm` utilisent l
 ## Compiler
 
 Il faut CMake 3.21 ou plus récent, Ninja, un compilateur C++ 20 (C++ 23 pour MeVCine : GCC 14 ou
-plus récent) et Qt 6.8 ou plus récent (6.5 suffit pour MeVReg).
+plus récent) et Qt 6.8 ou plus récent.
 
 | Système | Paquets pour les quatre logiciels |
 |---------|-----------------------------------|

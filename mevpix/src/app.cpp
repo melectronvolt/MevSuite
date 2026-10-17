@@ -4,6 +4,7 @@
 #include "canvas.h"
 #include "help.h"
 #include "plot.h"
+#include "savefile.h"
 #include "style.h"
 #include "theme.h"
 
@@ -228,6 +229,7 @@ MainWindow::MainWindow(const Settings &settings, const SettingsFiles &files, con
     // fond transparent : celui de `SideBackground`
     m_side->viewport()->setAutoFillBackground(false);
     m_side->widget()->setAutoFillBackground(false);
+    m_side->widget()->installEventFilter(this);
     sideLayout->addWidget(m_side);
 
     m_vsplit = new QSplitter(Qt::Vertical, this);
@@ -429,6 +431,12 @@ void MainWindow::sizeMenuCorner()
     for (QToolButton *button : m_cornerButtons) {
         button->setIconSize(QSize(icon, icon));
         button->setFixedHeight(height);
+    }
+    // La barre de menus ne revoit la place du coin que quand on le lui redonne : il garderait sinon sa
+    // taille d'avant, trop petite pour les boutons agrandis (comme MeVReg).
+    if (QWidget *corner = menuBar()->cornerWidget(Qt::TopRightCorner)) {
+        corner->adjustSize();
+        menuBar()->setCornerWidget(corner, Qt::TopRightCorner);
     }
     menuBar()->updateGeometry();
 }
@@ -1143,13 +1151,15 @@ void MainWindow::onLoaded()
     }
     m_lastDir = QFileInfo(m_loadingPath).absolutePath();
     settingsChanged();
-    // Image chargée en attente de confirmation : l'actuelle porte un étalonnage ou des mesures.
+    // Image chargée en attente de confirmation : l'actuelle porte un étalonnage, des mesures ou une
+    // coupe (Entrée annule, comme à la fermeture).
     if (m_session.hasWork()) {
         QMessageBox box(QMessageBox::Question, about::NAME, t.replaceImage(result.image->name), QMessageBox::NoButton,
                         this);
+        box.setObjectName(u"confirmReplace"_s);
         QPushButton *open = box.addButton(t.openAnyway, QMessageBox::AcceptRole);
         QPushButton *cancel = box.addButton(t.cancel, QMessageBox::RejectRole);
-        box.setDefaultButton(open);
+        box.setDefaultButton(cancel);
         box.setEscapeButton(cancel);
         box.exec();
         if (box.clickedButton() != open) {
@@ -1278,7 +1288,7 @@ void MainWindow::exportCsv()
         }
     }
     QSaveFile file(path);
-    if (file.open(QIODevice::WriteOnly) && file.write(csv.toUtf8()) >= 0 && file.commit())
+    if (file.open(QIODevice::WriteOnly) && writeAll(file, csv.toUtf8()) && file.commit())
         setStatus(t.exported(QDir::toNativeSeparators(path)), icons::Status::Success);
     else
         setStatus(t.exportFailed(file.errorString()), icons::Status::Error);
@@ -1428,6 +1438,10 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
     // le message a changé de largeur : il tient peut-être sur une ligne de plus ou de moins
     if (watched == m_statusLabel && event->type() == QEvent::Resize)
         QTimer::singleShot(0, this, &MainWindow::fitStatusBar);
+    // Nouvelle mise en page du panneau (police agrandie, outil, textes) : sa largeur minimale n'est
+    // connue qu'à ce moment, après les événements qui suivent le changement.
+    if (m_side && watched == m_side->widget() && event->type() == QEvent::LayoutRequest)
+        fitSidePanel();
     return QMainWindow::eventFilter(watched, event);
 }
 

@@ -1,5 +1,7 @@
 #include "audio.h"
 
+#include "savefile.h"
+
 #include <QAudioBuffer>
 #include <QAudioDecoder>
 #include <QCoreApplication>
@@ -58,6 +60,15 @@ Audio Audio::make(QString name, double rate, std::vector<std::vector<float>> cha
     audio.name = std::move(name);
     audio.rate = rate;
     audio.truncated = truncated;
+    // un échantillon infini ou « NaN » (fichier flottant abîmé) fausserait tout le signal et le spectre
+    for (auto &c : channels) {
+        for (float &v : c) {
+            if (!std::isfinite(v)) {
+                v = 0.0f;
+                audio.invalidSamples = true;
+            }
+        }
+    }
     if (channels.size() == 1) {
         channels[0].resize(len);
         auto mono = std::make_shared<const std::vector<float>>(std::move(channels[0]));
@@ -168,6 +179,26 @@ Decode decoder(quint16 tag, int bits)
     return nullptr;
 }
 
+/// Vrai si le fichier, de `from` à la fin, n'est qu'une suite de blocs RIFF (identifiant de quatre
+/// caractères, taille qui mène au bloc suivant puis à la fin du fichier) : des métadonnées LIST ou
+/// id3, et non des échantillons. Le fichier revient ensuite à `from`.
+bool onlyChunks(QFile &file, qint64 from)
+{
+    const qint64 end = file.size();
+    qint64 pos = from;
+    bool ok = pos + 8 <= end;
+    while (ok && pos + 8 <= end) {
+        file.seek(pos);
+        const QByteArray header = file.read(8);
+        ok = header.size() == 8 && std::all_of(header.begin(), header.begin() + 4, [](char c) { return c >= 0x20 && c <= 0x7e; });
+        const quint32 size = ok ? le32(header.constData() + 4) : 0;
+        pos += 8 + qint64(size) + (size % 2);
+    }
+    file.seek(from);
+    // l'octet de bourrage d'un dernier bloc de taille impaire manque parfois
+    return ok && (pos == end || pos == end + 1);
+}
+
 /// Lit un fichier WAV (PCM 8, 16, 24 ou 32 bits, ou flottant). Vide si ce n'est pas un fichier WAV
 /// que ce lecteur sait lire (le décodeur de Qt essaie alors).
 std::optional<LoadResult> readWav(QFile &file, const QString &name)
@@ -216,10 +247,19 @@ std::optional<LoadResult> readWav(QFile &file, const QString &name)
         return std::nullopt;
 
     // le bloc des données seulement : des métadonnées (LIST, id3…) suivent souvent le son. Taille
-    // absente ou fausse (fichier écrit en continu, coupé) : jusqu'à la fin du fichier
-    qint64 available = file.size() - file.pos();
-    if (dataSize != 0 && dataSize != 0xFFFFFFFFu && qint64(dataSize) < available)
-        available = dataSize;
+    // absente (fichier écrit en continu) : jusqu'à la fin du fichier, sauf si ce qui suit n'est que des
+    // blocs de métadonnées (le bloc des données est alors vide). Taille plus grande que le fichier :
+    // enregistrement coupé, signalé.
+    const qint64 start = file.pos();
+    qint64 available = file.size() - start;
+    bool cut = false;
+    if (dataSize == 0 && onlyChunks(file, start))
+        return LoadResult{std::nullopt, LoadError::NoAudio, {}};
+    // (0xFFFFFFFF, 0x7FFFFFFF : tailles provisoires d'un fichier écrit en continu)
+    if (dataSize != 0 && dataSize < 0x7FFFFFFFu) {
+        cut = qint64(dataSize) > available;
+        available = std::min(available, qint64(dataSize));
+    }
     const qint64 frames = available / blockAlign;
     const double maxFrames = std::ceil(MAX_SECONDS * rate);
     const bool truncated = double(frames) > maxFrames;
@@ -243,7 +283,9 @@ std::optional<LoadResult> readWav(QFile &file, const QString &name)
     }
     if (channels[0].empty())
         return LoadResult{std::nullopt, LoadError::NoAudio, {}};
-    return LoadResult{Audio::make(name, double(rate), std::move(channels), truncated), LoadError::Other, {}};
+    Audio audio = Audio::make(name, double(rate), std::move(channels), truncated);
+    audio.damaged = cut && !truncated;
+    return LoadResult{std::move(audio), LoadError::Other, {}};
 }
 
 // ------------------------------------------------------------------ autres formats (Qt Multimedia)
@@ -284,7 +326,7 @@ void append(const QAudioBuffer &buffer, std::vector<std::vector<float>> &channel
 }
 
 /// Décode le son par Qt Multimedia (FFmpeg) : la première piste audio d'un fichier son ou vidéo.
-LoadResult decodeWithQt(const QString &path, const QString &name)
+LoadResult decodeWithQt(const QString &path, const QString &name, const std::atomic_bool *cancel)
 {
     QAudioDecoder decoder;
     if (!decoder.isSupported())
@@ -295,6 +337,11 @@ LoadResult decodeWithQt(const QString &path, const QString &name)
     std::optional<QAudioDecoder::Error> failure;
     QEventLoop loop;
     QObject::connect(&decoder, &QAudioDecoder::bufferReady, &loop, [&] {
+        if (cancel && cancel->load()) {
+            decoder.stop();
+            loop.quit();
+            return;
+        }
         while (decoder.bufferAvailable() && !truncated) {
             const QAudioBuffer buffer = decoder.read();
             if (buffer.isValid())
@@ -318,6 +365,8 @@ LoadResult decodeWithQt(const QString &path, const QString &name)
     decoder.start();
     if (!failure && !finished)
         loop.exec();
+    if (cancel && cancel->load())
+        return {std::nullopt, LoadError::Other, {}};
     const bool empty = channels.empty() || channels[0].empty() || !(rate > 0.0);
     // fin de fichier abîmée : on garde ce qui a été lu, en le signalant
     if (!empty) {
@@ -363,7 +412,7 @@ struct Converted {
 
 /// Convertit la première piste audio de `path` en un fichier WAV temporaire. Vide : pas de ffmpeg.
 /// Sous Windows, Qt lance ffmpeg sans fenêtre de console (le programme n'en a pas).
-std::optional<Converted> convertWithFfmpeg(const QString &path)
+std::optional<Converted> convertWithFfmpeg(const QString &path, const std::atomic_bool *cancel)
 {
     static std::atomic<unsigned> next = 0;
     const QString wav = QDir(QDir::tempPath())
@@ -377,7 +426,18 @@ std::optional<Converted> convertWithFfmpeg(const QString &path)
     process.start();
     if (!process.waitForStarted())
         return std::nullopt;
-    process.waitForFinished(-1);
+    // Sans limite de durée (un long son se convertit lentement), mais la fermeture de la fenêtre arrête
+    // ffmpeg : sinon le programme attendrait la fin d'un ffmpeg bloqué pour se terminer.
+    while (!process.waitForFinished(100)) {
+        if (process.state() == QProcess::NotRunning)
+            break;
+        if (cancel && cancel->load()) {
+            process.kill();
+            process.waitForFinished();
+            QFile::remove(wav);
+            return Converted{{}, LoadError::Other};
+        }
+    }
     if (process.exitStatus() == QProcess::NormalExit && process.exitCode() == 0 && QFileInfo(wav).isFile())
         return Converted{wav, std::nullopt};
     QFile::remove(wav);
@@ -387,7 +447,7 @@ std::optional<Converted> convertWithFfmpeg(const QString &path)
 
 } // namespace
 
-LoadResult load(const QString &path)
+LoadResult load(const QString &path, const std::atomic_bool *cancel)
 {
     const QString name = QFileInfo(path).fileName().isEmpty() ? path : QFileInfo(path).fileName();
     QFile file(path);
@@ -396,11 +456,11 @@ LoadResult load(const QString &path)
     if (auto wav = readWav(file, name))
         return std::move(*wav);
     file.close();
-    LoadResult result = decodeWithQt(path, name);
+    LoadResult result = decodeWithQt(path, name, cancel);
     if (result.audio || result.error == LoadError::Other)
         return result;
     // le décodeur ne connaît pas le format, ou le fichier n'a pas de piste qu'il sait décoder
-    const auto converted = convertWithFfmpeg(path);
+    const auto converted = convertWithFfmpeg(path, cancel);
     if (!converted)
         return result;
     if (converted->error)
@@ -436,7 +496,7 @@ bool writeWav(const QString &path, int rate, const std::vector<std::vector<float
             stream << qint16(std::clamp(c[i], -1.0f, 1.0f) * 32767.0f);
     }
     QSaveFile file(path);
-    return file.open(QIODevice::WriteOnly) && file.write(out) == out.size() && file.commit();
+    return file.open(QIODevice::WriteOnly) && writeAll(file, out) && file.commit();
 }
 
 // ------------------------------------------------------------------ sons d'exemple

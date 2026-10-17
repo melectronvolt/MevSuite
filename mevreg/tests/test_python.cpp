@@ -78,6 +78,28 @@ print(df.t.tolist())
         QVERIFY(out.stdoutText.contains(u"[0.0, 1.0, 2.0, 3.0]"_s));
     }
 
+    void miniPandasLikePandas()
+    {
+        // comme pandas : cumul qui saute les cases vides, to_dict par étiquette, lignes filtrées ou
+        // triées qui gardent leurs étiquettes
+        const ScriptOutput out = run(uR"py(import numpy as np
+import pandas as pd
+print(pd.Series([1, np.nan, 2]).cumsum().tolist())
+print(pd.DataFrame({"x": [1, 2, 3]}).to_dict(), pd.DataFrame({"x": [1, 2]}).to_dict("list"))
+df = pd.DataFrame({"x": [10, 20, 30]})
+print(df[df["x"] > 10].index, df.sort_values("x", ascending=False).index)
+print(pd.DataFrame({"x": [30, 10, 20]}).sort_values("x").index)
+print(df[df["x"] > 10].reset_index(drop=True).index, df.dropna().index)
+)py"_s);
+        QVERIFY2(!out.error, out.error ? qPrintable(out.error->traceback) : "");
+        const QStringList l = out.stdoutText.split(u'\n');
+        QCOMPARE(l.value(0), u"[1.0, nan, 3.0]"_s);
+        QCOMPARE(l.value(1), u"{'x': {0: 1.0, 1: 2.0, 2: 3.0}} {'x': [1.0, 2.0]}"_s);
+        QCOMPARE(l.value(2), u"[1, 2] [2, 1, 0]"_s);
+        QCOMPARE(l.value(3), u"[1, 2, 0]"_s);
+        QCOMPARE(l.value(4), u"[0, 1] [0, 1, 2]"_s);
+    }
+
     void listsAndArraysBecomeQuantities()
     {
         // une liste de nombres ou un tableau numpy devient une grandeur, sans unité ; grandeur()

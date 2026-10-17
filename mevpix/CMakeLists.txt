@@ -31,6 +31,7 @@ add_library(mevpix_core STATIC
     src/i18n.cpp src/i18n.h
     src/model.cpp src/model.h
     src/profile.cpp src/profile.h
+    src/savefile.h
     src/session.cpp src/session.h
     src/settings.cpp src/settings.h
     src/view.cpp src/view.h

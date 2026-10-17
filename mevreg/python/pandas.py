@@ -153,7 +153,10 @@ class Series(_np.ndarray):
         return Series(_np.round(self.values, decimals), name=self.name)
 
     def cumsum(self):
-        return Series(_np.cumsum(self.values), name=self.name)
+        # comme pandas : une case vide reste vide, et le cumul continue après elle
+        a = self.values
+        vide = _np.isnan(a)
+        return Series(_np.where(vide, NA, _np.cumsum(_np.where(vide, 0.0, a))), index=self.index, name=self.name)
 
     def diff(self):
         a = self.values
@@ -306,12 +309,9 @@ class DataFrame:
                 raise KeyError("pas de colonne « %s » (colonnes : %s)" % (k, ", ".join(self._cols)))
             return Series(self._cols[k], index=self._index, name=k)
         if isinstance(k, (list, tuple)):
-            return DataFrame({c: self[c] for c in k})
-        if isinstance(k, slice):
-            return self._rows(k)
-        # tableau de booléens : les lignes où il est vrai
-        mask = _np.array(k)
-        return DataFrame({c: a[mask] for c, a in self._cols.items()})
+            return DataFrame({c: self[c] for c in k}, index=self._index)
+        # tranche, ou tableau de booléens : les lignes où il est vrai
+        return self._rows(k)
 
     def __getattr__(self, name):
         cols = self.__dict__.get("_cols", {})
@@ -333,7 +333,28 @@ class DataFrame:
         del self._cols[k]
 
     def _rows(self, k):
-        out = DataFrame({c: a[k] for c, a in self._cols.items()})
+        """Lignes choisies par une tranche, des booléens ou des positions, avec leurs étiquettes
+        (comme pandas : filtrer ou trier ne renumérote pas les lignes)."""
+        labels = self.index
+        if isinstance(k, slice):
+            kept = labels[k]
+        else:
+            k = _np.array(k)
+            if k.dtype == "bool":
+                kept = [l for l, m in zip(labels, k.tolist()) if m]
+            else:
+                kept = [labels[int(i)] for i in k.tolist()]
+        out = DataFrame({c: a[k] for c, a in self._cols.items()}, index=kept)
+        out.attrs = dict(self.attrs)
+        return out
+
+    def reset_index(self, drop=False):
+        """Lignes numérotées de nouveau à partir de 0 ; sans drop=True, les anciennes étiquettes
+        deviennent la colonne « index »."""
+        out = DataFrame({} if drop else {"index": _floats([float(l) if not isinstance(l, str) else NA for l in self.index])})
+        for c, a in self._cols.items():
+            out._cols[c] = a.copy()
+        out._pad()
         out.attrs = dict(self.attrs)
         return out
 
@@ -374,7 +395,7 @@ class DataFrame:
         order = _np.argsort(self._cols[by])
         if not ascending:
             order = order[::-1]
-        return DataFrame({c: a[order] for c, a in self._cols.items()})
+        return self._rows(order)
 
     def assign(self, **colonnes):
         out = self.copy()
@@ -451,8 +472,20 @@ class DataFrame:
 
     __str__ = __repr__
 
-    def to_dict(self):
-        return {c: a.tolist() for c, a in self._cols.items()}
+    def to_dict(self, orient="dict"):
+        """Comme pandas : {colonne: {étiquette: valeur}} ; orient="list" : {colonne: [valeurs]} ;
+        "records" : une liste de lignes {colonne: valeur} ; "index" : {étiquette: {colonne: valeur}}."""
+        labels = self.index
+        if orient == "dict":
+            return {c: dict(zip(labels, a.tolist())) for c, a in self._cols.items()}
+        if orient == "list":
+            return {c: a.tolist() for c, a in self._cols.items()}
+        rows = [{c: float(self._cols[c]._b.get(i)) for c in self.columns} for i in range(len(self))]
+        if orient == "records":
+            return rows
+        if orient == "index":
+            return dict(zip(labels, rows))
+        raise ValueError("to_dict : orient vaut \"dict\", \"list\", \"records\" ou \"index\"")
 
     def to_numpy(self):
         return self.values

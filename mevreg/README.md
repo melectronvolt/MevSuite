@@ -141,7 +141,7 @@ change :
   `recent`. La virgule décimale n'est pas un réglage : elle suit la langue (français : virgule).
 - **Thème clair ou sombre** : celui du bureau (`theme = auto`), suivi pendant que le programme tourne
   (sous Linux, lu auprès du portail du bureau `org.freedesktop.appearance`), tant que le bouton
-  soleil / lune de la barre d'outils n'a pas servi. Palette sombre commune à la suite. En thème
+  soleil / lune de la barre de menus n'a pas servi. Palette sombre commune à la suite. En thème
   sombre, les graphes passent sur fond sombre (réglage dans les préférences) ; les exports restent
   sur fond blanc.
 - **Annuler** : les modifications du code d'un script ne sont pas des étapes d'annulation du
@@ -150,7 +150,7 @@ change :
 
 ## Compilation
 
-Prérequis : CMake ≥ 3.21, un compilateur C++ 20 (GCC ≥ 13 ou Clang ≥ 17), Qt ≥ 6.5 (modules Core,
+Prérequis : CMake ≥ 3.21, un compilateur C++ 20 (GCC ≥ 13 ou Clang ≥ 17), Qt ≥ 6.8 (modules Core,
 Gui, Widgets, Svg, PrintSupport, Concurrent, Test, et DBus sous Linux) et Python ≥ 3.10 avec ses
 fichiers de développement.
 
@@ -167,7 +167,8 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-Options : `-DMEVREG_APP=OFF` compile seulement le cœur et ses tests (sans Qt Widgets),
+Options : `-DMEVREG_APP=OFF` compile seulement le cœur et ses tests (sans la fenêtre ; Qt Widgets
+reste nécessaire, pour Qt Print Support),
 `-DMEVREG_TESTS=OFF` ne compile pas les tests.
 
 Les tests (Qt Test, `tests/`) : `test_core` (formules, document, modélisation, statistiques, FFT,

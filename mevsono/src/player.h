@@ -27,6 +27,9 @@ struct Clip {
     bool operator==(const Clip &) const = default;
 };
 
+/// Panne de la sortie audio (le texte affiché est traduit : `Tr::audioFailures`).
+enum class AudioFailure { Open, InputOutput, Fatal, Other };
+
 /// Partagé entre l'interface et le fil audio.
 struct PlaybackShared {
     /// Pause ou arrêt demandé : le son s'éteint en fondu.
@@ -35,7 +38,7 @@ struct PlaybackShared {
     std::atomic<bool> done = false;
     /// Erreur de la sortie audio pendant la lecture.
     std::mutex errorMutex;
-    std::optional<QString> error;
+    std::optional<AudioFailure> error;
 };
 
 /// Travail du fil audio : recopier la plage du signal sur toutes les voies de la sortie, à la
@@ -74,7 +77,7 @@ private:
 struct PlayError {
     /// Ni haut-parleurs ni casque (ou pas de serveur de son).
     bool noDevice = false;
-    QString message;
+    AudioFailure failure = AudioFailure::Other;
 };
 
 /// Sortie audio ouverte : la détruire coupe le son.
@@ -106,7 +109,7 @@ public:
     void stop();
     /// À appeler régulièrement : ferme les sorties éteintes, et s'arrête en fin de lecture. Renvoie
     /// l'erreur de la sortie audio, si elle s'est produite pendant la lecture.
-    std::optional<QString> update();
+    std::optional<AudioFailure> update();
 
     /// Position de lecture, en échantillons du son : celle qu'on entend, ou celle de la pause.
     std::optional<double> position() const;
