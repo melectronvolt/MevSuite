@@ -76,13 +76,14 @@ Audio Audio::make(QString name, double rate, std::vector<std::vector<float>> cha
         audio.channels = {mono};
         return audio;
     }
+    // somme en double : deux voies flottantes énormes (fichier abîmé) ne donnent pas un infini
     std::vector<float> mix(len, 0.0f);
-    const float k = float(channels.size());
+    const double k = double(channels.size());
     for (size_t i = 0; i < len; ++i) {
-        float sum = 0.0f;
+        double sum = 0.0;
         for (const auto &c : channels)
             sum += c[i];
-        mix[i] = sum / k;
+        mix[i] = float(sum / k);
     }
     audio.mix = std::make_shared<const std::vector<float>>(std::move(mix));
     for (auto &c : channels) {
@@ -200,8 +201,9 @@ bool onlyChunks(QFile &file, qint64 from)
 }
 
 /// Lit un fichier WAV (PCM 8, 16, 24 ou 32 bits, ou flottant). Vide si ce n'est pas un fichier WAV
-/// que ce lecteur sait lire (le décodeur de Qt essaie alors).
-std::optional<LoadResult> readWav(QFile &file, const QString &name)
+/// que ce lecteur sait lire (le décodeur de Qt essaie alors). `cancel` (fermeture de la fenêtre)
+/// interrompt la lecture d'un long fichier, sur une clé USB ou un partage lent.
+std::optional<LoadResult> readWav(QFile &file, const QString &name, const std::atomic_bool *cancel)
 {
     const QByteArray riff = file.read(12);
     if (riff.size() < 12 || !riff.startsWith("RIFF") || riff.mid(8, 4) != "WAVE")
@@ -269,6 +271,8 @@ std::optional<LoadResult> readWav(QFile &file, const QString &name)
         c.reserve(size_t(wanted));
     constexpr qint64 CHUNK = 65536;
     for (qint64 done = 0; done < wanted;) {
+        if (cancel && cancel->load())
+            return LoadResult{std::nullopt, LoadError::Other, {}};
         const qint64 n = std::min(CHUNK, wanted - done);
         const QByteArray block = file.read(n * blockAlign);
         const qint64 got = block.size() / blockAlign;
@@ -453,7 +457,7 @@ LoadResult load(const QString &path, const std::atomic_bool *cancel)
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly))
         return {std::nullopt, LoadError::Other, file.errorString()};
-    if (auto wav = readWav(file, name))
+    if (auto wav = readWav(file, name, cancel))
         return std::move(*wav);
     file.close();
     LoadResult result = decodeWithQt(path, name, cancel);
@@ -468,7 +472,7 @@ LoadResult load(const QString &path, const std::atomic_bool *cancel)
     QFile wavFile(converted->wav);
     std::optional<LoadResult> decoded;
     if (wavFile.open(QIODevice::ReadOnly))
-        decoded = readWav(wavFile, name);
+        decoded = readWav(wavFile, name, cancel);
     wavFile.close();
     QFile::remove(converted->wav);
     return decoded ? std::move(*decoded) : LoadResult{std::nullopt, LoadError::Unsupported, {}};

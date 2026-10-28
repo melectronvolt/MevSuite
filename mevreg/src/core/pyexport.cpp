@@ -428,12 +428,17 @@ QString exportScript(const Workspace &ws)
                                 return pyName(doc.name(*q->uncertainty));
                             return QString();
                         };
+                        // barres positives, comme dans MeVReg (matplotlib refuse les négatives)
                         const bool sided = (low && doc.get(*low)) || (high && doc.get(*high));
                         if (!sided)
-                            return q->uncertainty && doc.get(*q->uncertainty) ? pyName(doc.name(*q->uncertainty)) : QString();
-                        const QString zero = u"np.zeros(len("_s + pyName(q->name) + u"))"_s;
-                        const QString lo = nameOf(low), hi = nameOf(high);
-                        return u"["_s + (lo.isEmpty() ? zero : lo) + u", "_s + (hi.isEmpty() ? zero : hi) + u"]"_s;
+                            return q->uncertainty && doc.get(*q->uncertainty) ? u"np.abs("_s + pyName(doc.name(*q->uncertainty)) + u")"_s
+                                                                             : QString();
+                        // chaque côté à la taille des valeurs : une incertitude constante est un nombre
+                        const QString shape = u"np.shape("_s + pyName(q->name) + u")"_s;
+                        const auto side = [&](const QString &n) {
+                            return n.isEmpty() ? u"np.zeros("_s + shape + u")"_s : u"np.abs(np.broadcast_to("_s + n + u", "_s + shape + u"))"_s;
+                        };
+                        return u"["_s + side(nameOf(low)) + u", "_s + side(nameOf(high)) + u"]"_s;
                     };
                     QString err;
                     if (const QString e = errorOf(yq, c.errYLow, c.errYHigh); !e.isEmpty())

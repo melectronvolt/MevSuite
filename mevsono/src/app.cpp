@@ -304,7 +304,9 @@ MainWindow::MainWindow(const Settings &settings, const SettingsFiles &files, con
         connect(action, &QAction::triggered, this, [this, step] { setUiZoom(step(m_uiZoom)); });
         addAction(action);
     };
-    const auto zoomIn = [](double z) { return std::round(z * 10.0 + 1.0) / 10.0; };
+    // agrandir : pas sous l'agrandissement demandé (celui affiché, borné par une fenêtre étroite,
+    // peut être plus petit ; le retenu ne doit pas baisser)
+    const auto zoomIn = [this](double z) { return std::max(m_uiZoomWanted, std::round(z * 10.0 + 1.0) / 10.0); };
     zoomShortcut(QKeySequence::ZoomIn, zoomIn);
     zoomShortcut(QKeySequence(Qt::CTRL | Qt::Key_Equal), zoomIn);
     zoomShortcut(QKeySequence::ZoomOut, [](double z) { return std::round(z * 10.0 - 1.0) / 10.0; });
@@ -322,6 +324,10 @@ MainWindow::MainWindow(const Settings &settings, const SettingsFiles &files, con
 
 MainWindow::~MainWindow()
 {
+    // un chargement en cours lit m_cancelLoad : il est interrompu et attendu (fenêtre détruite sans
+    // closeEvent, comme dans les essais)
+    m_cancelLoad = true;
+    m_loader.waitForFinished();
     // le son se coupe avant que les échantillons et la fenêtre disparaissent
     m_player.stop();
 }
@@ -1808,9 +1814,9 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    // un chargement en cours (ffmpeg peut-être bloqué) est interrompu : le programme se termine
+    // un chargement en cours (ffmpeg peut-être bloqué, long fichier sur une clé USB) est interrompu ;
+    // le destructeur l'attend, fenêtre déjà fermée
     m_cancelLoad = true;
-    m_loader.waitForFinished();
     m_player.stop();
     writeSettings();
     event->accept();

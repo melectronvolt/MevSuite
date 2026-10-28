@@ -11,6 +11,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QMessageBox>
+#include <QProcess>
 #include <QThread>
 
 #include <atomic>
@@ -45,6 +46,7 @@ namespace {
 
 QtMessageHandler g_gestionnaire_precedent = nullptr;
 std::atomic_flag g_deja_signale = ATOMIC_FLAG_INIT;
+QString g_relance; // programme relancé pour montrer la boîte (vide : aucun)
 
 /// fin de l'en-tête d'une erreur du journal, après la date
 QString suite_entete()
@@ -83,10 +85,13 @@ void montre(const QString &message, const QString &journal)
             + trad("Une sauvegarde automatique est disponible : relancez MeVCine, puis Fichier › Récupérer le "
                    "travail précédent… Les toutes dernières modifications peuvent y manquer.");
     std::fprintf(stderr, "%s\n", qUtf8Printable(texte));
-    // boîte de message seulement depuis le fil de l'interface
+    // boîte de message depuis le fil de l'interface ; ailleurs (fil de calcul), c'est une copie du
+    // programme qui la montre
     if (qobject_cast<QApplication *>(QCoreApplication::instance())
         && QThread::currentThread() == QCoreApplication::instance()->thread())
         QMessageBox::critical(nullptr, trad("Erreur interne de MeVCine"), texte);
+    else if (!g_relance.isEmpty())
+        QProcess::startDetached(g_relance, {u"--crash"_s, journal, message});
 }
 
 void sur_terminate()
@@ -181,13 +186,15 @@ const char *nom_exception(DWORD code)
     return nullptr;
 }
 
-void ecrit(HANDLE f, const char *donnees, std::size_t taille)
+/// faux si l'écriture a échoué (disque plein…)
+bool ecrit(HANDLE f, const char *donnees, std::size_t taille)
 {
     DWORD ecrits = 0;
     while (taille > 0 && WriteFile(f, donnees, static_cast<DWORD>(taille), &ecrits, nullptr) && ecrits > 0) {
         donnees += ecrits;
         taille -= ecrits;
     }
+    return taille == 0;
 }
 
 /// une ligne de la pile d'appels : « module(+0xdécalage) »
@@ -227,9 +234,14 @@ wchar_t *ajoute(wchar_t *sortie, const wchar_t *texte)
 
 LONG WINAPI sur_exception(EXCEPTION_POINTERS *info)
 {
+    const DWORD code = info && info->ExceptionRecord ? info->ExceptionRecord->ExceptionCode : 0;
+    // exception C++ que rien n'a rattrapée (codes de GCC) : elle repart, et le programme appelle
+    // std::terminate (sur_terminate, qui note son message), comme avec le gestionnaire de démarrage
+    // de MinGW que celui-ci remplace
+    if ((code & 0x20FFFFFF) == 0x20474343 && !(info->ExceptionRecord->ExceptionFlags & EXCEPTION_NONCONTINUABLE))
+        return EXCEPTION_CONTINUE_EXECUTION;
     // un plantage pendant la boîte d'une erreur fatale : rien de plus
     if (!g_deja_signale.test_and_set()) {
-        const DWORD code = info && info->ExceptionRecord ? info->ExceptionRecord->ExceptionCode : 0;
         char *cause = ecrit_nombre(ecrit_texte(g_cause, "Exception 0x"), code, 16);
         if (const char *nom = nom_exception(code))
             cause = ecrit_texte(ecrit_texte(ecrit_texte(cause, " ("), nom), ")");
@@ -240,16 +252,15 @@ LONG WINAPI sur_exception(EXCEPTION_POINTERS *info)
                                                          FILE_ATTRIBUTE_NORMAL, nullptr);
         if (f != INVALID_HANDLE_VALUE) {
             char entete[64];
-            ecrit(f, entete, static_cast<std::size_t>(ecrit_entete(entete) - entete));
-            ecrit(f, g_suite_entete.constData(), static_cast<std::size_t>(g_suite_entete.size()));
-            ecrit(f, g_cause, std::strlen(g_cause));
-            ecrit(f, "\n", 1);
+            const bool ecrite = ecrit(f, entete, static_cast<std::size_t>(ecrit_entete(entete) - entete))
+                && ecrit(f, g_suite_entete.constData(), static_cast<std::size_t>(g_suite_entete.size()))
+                && ecrit(f, g_cause, std::strlen(g_cause)) && ecrit(f, "\n", 1);
             void *appels[62];
             const USHORT n = CaptureStackBackTrace(0, 62, appels, nullptr);
             for (USHORT i = 0; i < n; ++i)
                 ecrit_appel(f, appels[i]);
             ecrit(f, "\n", 1);
-            note = CloseHandle(f) != 0;
+            note = CloseHandle(f) != 0 && ecrite;
         }
         if (!g_programme.empty()) {
             // "programme" --crash "journal" "cause"
@@ -281,10 +292,13 @@ LONG WINAPI sur_exception(EXCEPTION_POINTERS *info)
     return EXCEPTION_EXECUTE_HANDLER;
 }
 
-void installe_plantage(const QString &journal, bool relance)
+void installe_plantage(const QString &journal, const QString &programme)
 {
     g_journal = QDir::toNativeSeparators(journal).toStdWString();
-    g_programme = relance ? QDir::toNativeSeparators(QCoreApplication::applicationFilePath()).toStdWString() : std::wstring();
+    g_programme = QDir::toNativeSeparators(programme).toStdWString();
+    // débordement de la pile : de quoi écrire le journal et relancer le programme
+    ULONG reserve = 64 * 1024;
+    SetThreadStackGuarantee(&reserve);
     SetUnhandledExceptionFilter(sur_exception);
 }
 
@@ -294,15 +308,17 @@ QByteArray g_journal;
 QByteArray g_programme; // vide : pas de relance
 alignas(16) char g_pile_signal[1 << 16]; // un débordement de la pile plante aussi
 
-void ecrit(int fd, const char *donnees, std::size_t taille)
+/// faux si l'écriture a échoué (disque plein…)
+bool ecrit(int fd, const char *donnees, std::size_t taille)
 {
     while (taille > 0) {
         const ssize_t n = ::write(fd, donnees, taille);
         if (n <= 0)
-            return;
+            return false;
         donnees += n;
         taille -= static_cast<std::size_t>(n);
     }
+    return true;
 }
 
 const char *nom_signal(int sig)
@@ -338,16 +354,15 @@ void sur_signal(int sig)
         const int fd = g_journal.isEmpty() ? -1 : ::open(g_journal.constData(), O_WRONLY | O_CREAT | O_APPEND | O_CLOEXEC, 0644);
         if (fd >= 0) {
             char entete[64];
-            ecrit(fd, entete, static_cast<std::size_t>(ecrit_entete(entete) - entete));
-            ecrit(fd, g_suite_entete.constData(), static_cast<std::size_t>(g_suite_entete.size()));
-            ecrit(fd, g_cause, std::strlen(g_cause));
-            ecrit(fd, "\n", 1);
+            const bool ecrite = ecrit(fd, entete, static_cast<std::size_t>(ecrit_entete(entete) - entete))
+                && ecrit(fd, g_suite_entete.constData(), static_cast<std::size_t>(g_suite_entete.size()))
+                && ecrit(fd, g_cause, std::strlen(g_cause)) && ecrit(fd, "\n", 1);
 #ifdef ERREURS_PILE
             void *appels[64];
             backtrace_symbols_fd(appels, backtrace(appels, 64), fd);
 #endif
             ecrit(fd, "\n", 1);
-            note = ::close(fd) == 0;
+            note = ::close(fd) == 0 && ecrite;
         }
         if (!g_programme.isEmpty() && copie_processus() == 0) {
             sigset_t aucun;
@@ -365,12 +380,10 @@ void sur_signal(int sig)
     ::raise(sig);
 }
 
-void installe_plantage(const QString &journal, bool relance)
+void installe_plantage(const QString &journal, const QString &programme)
 {
     g_journal = QFile::encodeName(journal);
-    // AppImage : l'image elle-même (son dossier monté disparaît avec le programme)
-    const QString appimage = qEnvironmentVariable("APPIMAGE");
-    g_programme = !relance ? QByteArray() : QFile::encodeName(appimage.isEmpty() ? QCoreApplication::applicationFilePath() : appimage);
+    g_programme = QFile::encodeName(programme);
 #ifdef ERREURS_PILE
     // premier appel ici : il charge une bibliothèque, ce qui alloue de la mémoire
     void *appel = nullptr;
@@ -390,6 +403,22 @@ void installe_plantage(const QString &journal, bool relance)
 
 #endif
 
+/// programme relancé pour montrer la boîte. AppImage : l'image elle-même (son dossier monté
+/// disparaît avec le programme) ; APPIMAGE passe aussi aux programmes qu'une AppImage lance : il ne
+/// compte que pour un programme de son dossier (APPDIR)
+QString programme_relance()
+{
+    const QString programme = QCoreApplication::applicationFilePath();
+    const QString appimage = qEnvironmentVariable("APPIMAGE");
+    if (appimage.isEmpty())
+        return programme;
+    const QString appdir = qEnvironmentVariable("APPDIR");
+    if (appdir.isEmpty())
+        return appimage;
+    const QString dossier = QFileInfo(appdir).canonicalFilePath();
+    return !dossier.isEmpty() && programme.startsWith(dossier + u'/') ? appimage : programme;
+}
+
 } // namespace
 
 void installe(bool relance)
@@ -398,7 +427,8 @@ void installe(bool relance)
     g_gestionnaire_precedent = qInstallMessageHandler(sur_message);
     g_suite_entete = suite_entete().toUtf8();
     QDir().mkpath(prefs::dossier_conf());
-    installe_plantage(prefs::fichier_journal_erreurs(), relance);
+    g_relance = relance ? programme_relance() : QString();
+    installe_plantage(prefs::fichier_journal_erreurs(), g_relance);
 }
 
 void signale(const QString &message)

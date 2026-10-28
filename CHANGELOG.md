@@ -3,7 +3,7 @@
 Les changements visibles des quatre logiciels de la MevSuite, qui partagent un même numéro de
 version. Les plus récents en haut ; « Non publié » : ce qui sera dans la prochaine version.
 
-## [Non publié]
+## [0.3.0] — 2026-10-28
 
 ### MeVReg
 
@@ -25,7 +25,8 @@ version. Les plus récents en haut ; « Non publié » : ce qui sera dans la pro
   exports CSV et Python.
 - **Python** :
   - les ordres de `mevreg` sont faits dans l'ordre du script, créations de grandeurs comprises
-    (`mr.supprimer("x")` puis `mr.creer("x", …)` supprimait x) ;
+    (`mr.supprimer("x")` puis `mr.creer("x", …)` supprimait x) ; une grandeur créée puis tracée par
+    le script (`plt.plot`) garde son unité et va dans le tableur des résultats ;
   - un script lié qui lit les grandeurs par `mevreg` (`mr.valeurs("x")`) est relancé quand elles
     changent ;
   - « Arrêter » retire aussi un script qui attendait son tour ;
@@ -37,8 +38,10 @@ version. Les plus récents en haut ; « Non publié » : ce qui sera dans la pro
   - avec des cases vides, dérivées et primitives les sautent comme dans MeVReg (fonctions `deriv` et
     `integ` ajoutées au script) ; `integ (y, t)` écrit avec une espace est reconnu ;
   - deux grandeurs aux noms proches d'un mot réservé (`class`, `class_`) restent deux variables ;
-  - les graphes gardent les incertitudes choisies côté par côté, les droites et les textes, la méthode
-    des tangentes, l'étendue de la courbe des modèles et leur nom dans la légende.
+  - les graphes gardent les incertitudes choisies côté par côté (une incertitude constante d'un côté
+    comprise), les droites et les textes, la méthode des tangentes, l'étendue de la courbe des
+    modèles et leur nom dans la légende ; les barres d'incertitude sont positives, comme dans
+    MeVReg (matplotlib refuse les négatives).
 - **Coller dans le tableur** : les cases qui ne sont pas des nombres (laissées vides) sont signalées,
   avec la première valeur en cause.
 - **Export CSV** : un nom ou une unité qui contient le séparateur (« V, crête ») est mis entre
@@ -48,7 +51,9 @@ version. Les plus récents en haut ; « Non publié » : ce qui sera dans la pro
   - `mr.axes(…, ymin=0)` : une seule borne suffit, l'autre suit les valeurs tracées ;
   - `mr.courbe(…, x_bas=, x_haut=, y_bas=, y_haut=)` : une grandeur d'incertitude pour chaque côté ;
   - droites et textes verrouillables (`verrou=True`), `mr.effacer_annotations`, `mr.tangentes` et
-    `mr.retirer_tangentes` ; deux exemples de plus dans Python → Exemples.
+    `mr.retirer_tangentes` ; deux exemples de plus dans Python → Exemples ;
+  - `mr.exporter_csv(…, separateur=",")` écrit les nombres avec un point (la virgule décimale les
+    coupait en deux colonnes).
 - **Notice** : dans le tableau des raccourcis, Entrée (descendre) et Tab (passer à droite) sont
   séparés.
 - **Document reçu** : ses scripts Python ne se lancent qu'après accord (un script peut lire, modifier
@@ -87,7 +92,8 @@ version. Les plus récents en haut ; « Non publié » : ce qui sera dans la pro
   servaient deux fois).
 - **Préférences** : la case « Demander s'il faut cacher ou fermer un tableur, un graphe, un script ou
   un dessin » et sa bulle décrivent les deux choix.
-- **Grandeur calculée** : l'aide dit que le point et la virgule décimale sont acceptés.
+- **Grandeur calculée** : l'aide dit que le point et la virgule décimale sont acceptés ; le panneau
+  Calculs accepte aussi la virgule décimale (`0,05*x` donnait une erreur).
 - **Compilation** : Qt 6.8 au moins (Qt 6.5, annoncé, ne suffisait pas).
 - **Linux** : les documents `.phy` s'ouvrent d'un double clic (type de fichier installé avec le
   paquet).
@@ -98,7 +104,9 @@ version. Les plus récents en haut ; « Non publié » : ce qui sera dans la pro
   confirmation avant de perdre des mesures la protège aussi.
 - Une sauvegarde automatique impossible est signalée (une fois) : le travail n'est plus protégé.
 - Cadence presque régulière (certains téléphones : 40 puis 44 ms) : les dates réelles des images sont
-  utilisées, au lieu d'une cadence moyenne.
+  utilisées, au lieu d'une cadence moyenne. Les arrondis des dates enregistrées dans le fichier (à la
+  milliseconde dans les MKV et les WebM) ne comptent pas : une vidéo à cadence fixe garde des dates
+  régulières.
 - Ouverture d'une vidéo : curseur d'attente ; une vidéo dont l'examen ne finit pas est déclarée
   illisible au bout de deux minutes, au lieu de figer la fenêtre.
 - La notice s'ouvre depuis une copie dans le dossier temporaire du système, comme dans les autres
@@ -111,8 +119,9 @@ version. Les plus récents en haut ; « Non publié » : ce qui sera dans la pro
   restaient sur une feuille blanche), couleurs des objets éclaircies pour s'y voir.
 - Accélération juste quand l'intervalle entre deux images change (image perdue, cadence variable des
   téléphones) : elle était fausse jusqu'à 50 % aux images qui suivent un saut.
-- Ouverture d'une vidéo : l'examen se fait à part, la fenêtre reste dessinée ; la fermer pendant ce
-  temps interrompt l'ouverture (il fallait attendre la fin de ffprobe, jusqu'à deux minutes).
+- Ouverture d'une vidéo : l'examen se fait à part, la fenêtre reste dessinée ; clics, touches et
+  fichiers déposés sont ignorés pendant ce temps, et fermer la fenêtre interrompt l'ouverture (il
+  fallait attendre la fin de ffprobe, jusqu'à deux minutes).
 - Un projet dont la longueur de l'étalon n'est pas valide (0) est refusé avec un message (il
   s'ouvrait avec des positions infinies).
 - « À propos » : même présentation que dans les autres logiciels (logiciels libres utilisés,
@@ -142,13 +151,14 @@ version. Les plus récents en haut ; « Non publié » : ce qui sera dans la pro
   des pics est aussi plus juste.
 - WAV : un bloc de données vide suivi de métadonnées n'est plus lu comme un son (fondamentale
   inventée) ; un enregistrement coupé (plus court que la taille annoncée) est signalé ; des valeurs
-  illisibles (NaN, infinies) sont mises à 0 et signalées.
+  illisibles (NaN, infinies) sont mises à 0 et signalées ; deux voies aux valeurs énormes (fichier
+  flottant abîmé) ne donnent plus un mélange infini.
 - Tableau des harmoniques : toutes ses colonnes se voient, le panneau s'élargit pour elles (f/f₁,
   A (dB) et A/A₁ étaient coupées) ; copié, l'en-tête de la dernière colonne est « A / A₁ (%) ».
 - Clavier : `Ctrl` + `Tab` (ou `Ctrl` + `Page suivante`) passe d'une activité à l'autre, et `Tab`
   mène aux onglets.
-- Fermer la fenêtre pendant une conversion par ffmpeg arrête ffmpeg (le programme restait ouvert
-  tant qu'un ffmpeg bloqué ne finissait pas).
+- Fermer la fenêtre pendant un chargement l'interrompt : ffmpeg est arrêté (le programme restait
+  ouvert tant qu'un ffmpeg bloqué ne finissait pas), la lecture d'un long fichier WAV aussi.
 - Son silencieux : graduations courtes, lisibles (elles débordaient sur les titres des axes).
 - Textes : l'aide de la taille de la FFT et de la finesse parle du découpage en segments (au-delà
   de 262 144 échantillons) ; « 1 échantillon » au singulier ; pannes de la sortie audio et dossier
@@ -167,6 +177,8 @@ version. Les plus récents en haut ; « Non publié » : ce qui sera dans la pro
 - Export CSV : comme dans MeVSono, plus de fichier sans extension.
 - Ouvrir une autre image demande confirmation aussi quand seule une coupe est tracée ; « Annuler »
   est le bouton par défaut, comme à la fermeture (Entrée remplaçait l'image).
+- Une image déposée pendant un chargement est ignorée (« Chargement… » restait affiché après
+  « Annuler »).
 - Profil d'intensité : l'alerte de saturation tient compte de tous les pixels qui comptent dans la
   valeur interpolée (un voisin écrêté n'était pas vu) ; elle annonce « 254 ou 255 », et une intensité
   réelle « peut-être » plus grande.
@@ -193,7 +205,11 @@ version. Les plus récents en haut ; « Non publié » : ce qui sera dans la pro
   cause et la pile d'appels dans son journal (`mevpix.log`, `mevcine.log`, `mevreg.log`,
   `mevsono.log`, dans le dossier des réglages), puis un message dit où le trouver. Jusque-là, seules
   les erreurs internes détectées par le logiciel y étaient notées. MeVReg, qui n'avait pas de
-  journal, en a un.
+  journal, en a un. Une erreur interne dans un calcul de fond est montrée aussi ; un journal qui n'a
+  pas pu être écrit (disque plein) n'est pas annoncé.
+- Windows : une erreur interne (exception) est notée avec son message, au lieu d'un simple code.
+- Agrandissement de l'interface : `Ctrl` + dans une fenêtre trop étroite pour l'afficher ne fait plus
+  baisser l'agrandissement retenu.
 
 ## [0.2.0] — 2026-10-16
 

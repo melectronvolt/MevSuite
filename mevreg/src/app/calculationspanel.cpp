@@ -363,9 +363,11 @@ void CalculationsPanel::rebuild()
         grid->addWidget(error, 1, 1, 1, 4);
         grid->setColumnStretch(1, 1);
         connect(formula, &QLineEdit::editingFinished, this, [&store, id, formula] {
+            // virgule décimale acceptée, comme dans les boîtes de dialogue
+            const QString fx = dialogs::formulaText(formula->text());
             const Quantity *qq = store.ws.doc.get(id);
-            if (qq && qq->formula && formula->text() != *qq->formula)
-                store.edit([&](Workspace &ws) { ws.doc.setFormula(id, formula->text()); });
+            if (qq && qq->formula && fx != *qq->formula)
+                store.edit([&](Workspace &ws) { ws.doc.setFormula(id, fx); });
         });
         connect(unit, &QLineEdit::editingFinished, this, [&store, id, unit] {
             const Quantity *qq = store.ws.doc.get(id);

@@ -47,9 +47,12 @@ struct VideoInfo {
     /// dimensions des images décodées, sans rotation demandée par l'utilisateur
     int largeur = 0;
     int hauteur = 0;
-    /// vrai si les trames ne sont pas régulièrement espacées dans le temps : chaque trame est alors
-    /// une image, à sa date réelle
+    /// vrai si les trames ne sont pas régulièrement espacées dans le temps (images perdues, cadence
+    /// qui change avec la lumière…), ce qui est signalé
     bool cadence_variable = false;
+    /// vrai si les dates réelles des trames servent : cadence variable, ou presque régulière
+    /// (téléphones : 40 puis 44 ms…). Chaque trame est alors une image, à sa date réelle.
+    bool dates_reelles = false;
     /// cadence de prise de vue indiquée par le fichier, quand elle diffère de la cadence de lecture
     /// (vidéos au ralenti ou en accéléré des téléphones Android)
     std::optional<double> fps_capture;
@@ -68,7 +71,7 @@ struct VideoInfo {
     int trame(int i) const;
     /// la trame (à partir de 0) dont la date est la plus proche de `t`
     int trame_de_date(double t) const;
-    /// Si la cadence est variable, la date de chaque image depuis la première, comptée en intervalles
+    /// Avec les dates réelles, la date de chaque image depuis la première, comptée en intervalles
     /// habituels (1 / fps) : 0 ; 1,02 ; 3,01... Sinon (images régulières), rien.
     std::optional<std::vector<double>> instants() const;
 };
@@ -90,6 +93,10 @@ std::optional<double> rationnel(const QString &s);
 /// lumière...), c'est-à-dire si un intervalle au moins s'écarte de l'intervalle médian, renvoie
 /// l'intervalle habituel entre deux trames.
 std::optional<double> cadence_variable(const std::vector<double> &dates);
+/// Vrai si les dates des trames s'écartent d'une cadence régulière de plus que leurs arrondis :
+/// 2 % d'un intervalle, plus la précision `pas` des dates du conteneur (sa base de temps, en
+/// seconde ; une milliseconde pour les MKV et les WebM).
+bool cadence_presque_reguliere(const std::vector<double> &dates, double pas);
 /// nom lisible d'un codec, d'après le nom donné par ffprobe
 QString nom_codec(const QString &codec);
 /// applique une rotation dans le sens horaire (0, 90, 180 ou 270 degrés)

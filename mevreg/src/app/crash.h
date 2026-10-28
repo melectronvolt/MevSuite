@@ -14,8 +14,8 @@
 namespace crash {
 
 /// Installe les gestionnaires d'erreur fatale (exception non rattrapée, `qFatal`) et de plantage :
-/// journal, puis boîte de message si l'erreur survient dans le fil de l'interface. `relaunch` faux
-/// (essais) : pas de relance après un plantage.
+/// journal, puis boîte de message (montrée par une copie du programme, relancée avec `--crash`, si
+/// l'erreur survient hors du fil de l'interface). `relaunch` faux (essais) : pas de relance.
 void install(const QString &logPath, bool relaunch = true);
 
 /// Journal et boîte de message, puis fermeture.

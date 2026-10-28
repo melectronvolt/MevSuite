@@ -290,7 +290,9 @@ MainWindow::MainWindow(const Settings &settings, const SettingsFiles &files, con
         connect(action, &QAction::triggered, this, [this, step] { setUiZoom(step(m_uiZoom)); });
         addAction(action);
     };
-    const auto zoomIn = [](double z) { return std::round(z * 10.0 + 1.0) / 10.0; };
+    // agrandir : pas sous l'agrandissement demandé (celui affiché, borné par une fenêtre étroite,
+    // peut être plus petit ; le retenu ne doit pas baisser)
+    const auto zoomIn = [this](double z) { return std::max(m_uiZoomWanted, std::round(z * 10.0 + 1.0) / 10.0); };
     zoomShortcut(QKeySequence::ZoomIn, zoomIn);
     zoomShortcut(QKeySequence(Qt::CTRL | Qt::Key_Equal), zoomIn);
     zoomShortcut(QKeySequence::ZoomOut, [](double z) { return std::round(z * 10.0 - 1.0) / 10.0; });
@@ -1199,6 +1201,10 @@ void MainWindow::dragLeaveEvent(QDragLeaveEvent *)
 void MainWindow::dropEvent(QDropEvent *event)
 {
     m_dropOverlay->hide();
+    // une image se charge déjà : le dépôt est ignoré (le message à rétablir après le chargement
+    // reste celui d'avant)
+    if (busy())
+        return;
     for (const QUrl &url : event->mimeData()->urls()) {
         if (url.isLocalFile()) {
             event->acceptProposedAction();

@@ -1049,7 +1049,7 @@ private Q_SLOTS:
         // t a une case vide : la dérivée de l'export la saute, comme MeVReg
         QVERIFY(s.contains(u"def deriv(y, x):"_s));
         QVERIFY(s.indexOf(u"v = deriv(x, t)"_s) < s.indexOf(u"Ec = 0.5*m*v**2"_s));
-        QVERIFY(s.contains(u"ax.errorbar(t, x, yerr=u_x"_s));
+        QVERIFY2(s.contains(u"ax.errorbar(t, x, yerr=np.abs(u_x)"_s), qPrintable(s));
         QVERIFY(s.contains(u"ax2 = ax.twinx()"_s));
         QVERIFY(s.contains(u"xm = np.linspace("_s));
         QVERIFY(s.contains(u"plt.show()"_s));
@@ -1070,6 +1070,9 @@ private Q_SLOTS:
         ws.doc.addCalculated(u"d"_s, QString(), u"class_ - class"_s);
         const QId lo = *ws.doc.addExperimental(u"lo"_s, QString(), {0.1, 0.1, 0.1});
         const QId hi = *ws.doc.addExperimental(u"hi"_s, QString(), {0.3, 0.3, 0.3});
+        // incertitude constante (un nombre dans l'export) d'un côté, une grandeur de l'autre
+        const QId w = *ws.doc.addExperimental(u"w"_s, QString(), {2, 3, 4});
+        ws.doc.createUncertainty(w, u"0.05"_s);
         ws.doc.recompute();
         const ViewId g = ws.addGraph();
         Plot &p = ws.graphMut(g)->plots[0];
@@ -1077,6 +1080,9 @@ private Q_SLOTS:
         c.errors = ErrorBars::Vertical;
         c.errYLow = lo;
         c.errYHigh = hi;
+        CurveSpec &cw = p.addCurve(t, w);
+        cw.errors = ErrorBars::Vertical;
+        cw.errYHigh = hi;
         fit::ModelKind affine;
         affine.type = fit::ModelKind::Affine;
         FitSpec f = FitSpec::make(affine, t, y, PALETTE[3]);
@@ -1098,7 +1104,7 @@ private Q_SLOTS:
         updateFits(p, ws.doc);
         ws.addScript(u"import mevreg as mr\nmr.creer(\"z\", [3])\n"_s);
         const QString s = pyexport::exportScript(ws);
-        QVERIFY2(s.contains(u"yerr=[lo, hi]"_s), qPrintable(s));
+        QVERIFY2(s.contains(u"yerr=[np.abs(np.broadcast_to(lo, np.shape(y))), np.abs(np.broadcast_to(hi, np.shape(y)))]"_s), qPrintable(s));
         QVERIFY(s.contains(u"label=\"mon modèle\""_s));
         QVERIFY(s.contains(u"xm = np.linspace(0.5, 1.5, 300)"_s));
         QVERIFY(s.contains(u".axvline(1.0"_s) && s.contains(u".axline((0.0, 0.0), (1.0, 1.0)"_s) && s.contains(u".text(0.0, 0.0, \"note\\nsur deux lignes\""_s));
@@ -1116,7 +1122,16 @@ private Q_SLOTS:
             file.write(text.toUtf8());
         };
         write(u"matplotlib/__init__.py"_s, QString());
-        write(u"matplotlib/pyplot.py"_s, u"class _Muet:\n"
+        // errorbar vérifie les barres comme matplotlib : nombre, ou tableau (n) ou (2, n), positif
+        write(u"matplotlib/pyplot.py"_s, u"import numpy as np\n"
+                                         "class _Muet:\n"
+                                         "    def errorbar(self, x, y, yerr=None, xerr=None, **k):\n"
+                                         "        for e, v in ((yerr, y), (xerr, x)):\n"
+                                         "            if e is not None:\n"
+                                         "                a = np.asarray(e, dtype=float)\n"
+                                         "                assert a.ndim == 0 or a.shape in ((len(v),), (2, len(v))), a.shape\n"
+                                         "                assert not (a < 0).any()\n"
+                                         "        return _Muet()\n"
                                          "    def __getattr__(self, nom):\n"
                                          "        return lambda *a, **k: (0.0, 1.0) if nom == 'get_xlim' else _Muet()\n"
                                          "def __getattr__(nom):\n"

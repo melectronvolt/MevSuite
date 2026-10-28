@@ -52,6 +52,8 @@
 
 #include <cstdint>
 #include <memory>
+#include <stdexcept>
+#include <thread>
 
 #ifdef Q_OS_LINUX
 #include <sys/prctl.h>
@@ -67,6 +69,16 @@ namespace {
 #endif
     volatile std::uintptr_t adresse = 0;
     *reinterpret_cast<volatile int *>(adresse) = 0;
+    std::abort();
+}
+
+/// exception que rien ne rattrape, dans un fil de calcul (essai du journal), sans fichier core
+[[noreturn]] void lance_dans_un_fil()
+{
+#ifdef Q_OS_LINUX
+    prctl(PR_SET_DUMPABLE, 0);
+#endif
+    std::thread([] { throw std::runtime_error("essai d'exception"); }).join();
     std::abort();
 }
 
@@ -463,6 +475,14 @@ private slots:
         QVERIFY(QFileInfo(QDir(copie).filePath(u"fr/index.html"_s)).isFile());
         QVERIFY(QFileInfo(QDir(copie).filePath(u"en/images/pointage.jpg"_s)).isFile());
         QVERIFY(QFileInfo(QDir(copie).filePath(u"help.css"_s)).isFile());
+        // la version de la notice est celle du programme
+        {
+            QFile page(QDir(copie).filePath(u"fr/index.html"_s));
+            QVERIFY(page.open(QIODevice::ReadOnly));
+            const QByteArray texte = page.readAll();
+            QVERIFY(texte.contains("version " MEVCINE_VERSION));
+            QVERIFY(!texte.contains("{{version}}"));
+        }
         rendu(*app, u"00_accueil"_s);
         // pas de vidéo rouverte d'office : l'écran d'ouverture, avec un seul bouton (pas de vidéos
         // d'exemple : chacun ouvre les siennes)
@@ -1769,6 +1789,30 @@ private slots:
 #else
         QCOMPARE(lignes[1], u"Signal 11 (SIGSEGV)"_s);
 #endif
+    }
+
+    void journal_d_une_exception()
+    {
+        // exception que rien ne rattrape, dans un fil de calcul : le journal reçoit son message
+        // (sous Windows, le gestionnaire de plantage la laisse repartir vers std::terminate)
+        if (qEnvironmentVariableIsSet("MEVSUITE_ESSAI_EXCEPTION")) {
+            erreurs::installe(false);
+            lance_dans_un_fil();
+        }
+        QTemporaryDir conf;
+        QVERIFY(conf.isValid());
+        QProcess enfant;
+        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+        env.insert(u"MEVSUITE_ESSAI_EXCEPTION"_s, u"1"_s);
+        env.insert(u"MEVCINE_CONF"_s, conf.path());
+        enfant.setProcessEnvironment(env);
+        enfant.start(QCoreApplication::applicationFilePath(), {u"journal_d_une_exception"_s});
+        QVERIFY(enfant.waitForFinished(60000));
+        QVERIFY(enfant.exitStatus() == QProcess::CrashExit || enfant.exitCode() != 0);
+        const QStringList lignes = lit_texte(conf.filePath(u"mevcine.log"_s)).split(u'\n', Qt::SkipEmptyParts);
+        QVERIFY2(lignes.size() >= 2, qUtf8Printable(lignes.join(u'\n')));
+        QVERIFY2(lignes[0].contains(u"] MeVCine "_s + a_propos::VERSION), qUtf8Printable(lignes[0]));
+        QCOMPARE(lignes[1], u"essai d'exception"_s);
     }
 };
 

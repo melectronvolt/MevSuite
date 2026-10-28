@@ -42,6 +42,7 @@
 #include <cstdint>
 #include <functional>
 #include <memory>
+#include <stdexcept>
 #include <thread>
 
 #ifdef Q_OS_LINUX
@@ -60,6 +61,16 @@ namespace {
 #endif
     volatile std::uintptr_t address = 0;
     *reinterpret_cast<volatile int *>(address) = 0;
+    std::abort();
+}
+
+/// Exception que rien ne rattrape, dans un fil de calcul (essai du journal), sans fichier core.
+[[noreturn]] void throwInThread()
+{
+#ifdef Q_OS_LINUX
+    prctl(PR_SET_DUMPABLE, 0);
+#endif
+    std::thread([] { throw std::runtime_error("essai d'exception"); }).join();
     std::abort();
 }
 
@@ -636,6 +647,12 @@ private slots:
         w->resize(1000, 800);
         QTest::qWait(50);
         QVERIFY2(std::abs(ratio() - 1000.0 / 860.0) < 0.01, qPrintable(QString::number(ratio())));
+        // Ctrl + dans la fenêtre étroite : rien ne change, et l'agrandissement retenu ne baisse pas
+        for (QAction *a : w->actions())
+            if (a->shortcut() == QKeySequence(QKeySequence::ZoomIn))
+                a->trigger();
+        QTest::qWait(30);
+        QVERIFY2(std::abs(ratio() - 1000.0 / 860.0) < 0.01, qPrintable(QString::number(ratio())));
         w->resize(1400, 800);
         QTest::qWait(50);
         QVERIFY2(std::abs(ratio() - 1.5) < 0.01, qPrintable(QString::number(ratio())));
@@ -845,6 +862,32 @@ private slots:
 #else
         QCOMPARE(lines[1], u"Signal 11 (SIGSEGV)"_s);
 #endif
+    }
+
+    /// Exception que rien ne rattrape, dans un fil de calcul : le journal reçoit son message (sous
+    /// Windows, le gestionnaire de plantage la laisse repartir vers std::terminate).
+    void uncaughtExceptionLog()
+    {
+        if (const QString log = qEnvironmentVariable("MEVSUITE_ESSAI_EXCEPTION"); !log.isEmpty()) {
+            crash::install(log, Lang::Fr, false);
+            throwInThread();
+        }
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+        const QString log = dir.filePath(u"mevsono.log"_s);
+        QProcess child;
+        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+        env.insert(u"MEVSUITE_ESSAI_EXCEPTION"_s, log);
+        child.setProcessEnvironment(env);
+        child.start(QCoreApplication::applicationFilePath(), {u"uncaughtExceptionLog"_s});
+        QVERIFY(child.waitForFinished(60000));
+        QVERIFY(child.exitStatus() == QProcess::CrashExit || child.exitCode() != 0);
+        QFile file(log);
+        QVERIFY(file.open(QIODevice::ReadOnly));
+        const QStringList lines = QString::fromUtf8(file.readAll()).split(u'\n', Qt::SkipEmptyParts);
+        QVERIFY2(lines.size() >= 2, qPrintable(lines.join(u'\n')));
+        QVERIFY(lines[0].startsWith(u"MeVSono "_s + about::VERSION));
+        QCOMPARE(lines[1], u"essai d'exception"_s);
     }
 };
 

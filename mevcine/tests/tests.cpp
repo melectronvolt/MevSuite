@@ -437,13 +437,37 @@ private slots:
         v.fps = 1.0 / 0.042;
         v.dates = {0.0, 0.040, 0.084, 0.124, 0.168};
         QVERIFY(!cadence_variable(v.dates));
+        QVERIFY(::cadence_presque_reguliere(v.dates, 1.0 / 90000));
+        v.dates_reelles = true;
         const auto instants = v.instants();
         QVERIFY(instants);
         QVERIFY(proche((*instants)[1] / v.fps, 0.040, 1e-9) && proche((*instants)[2] / v.fps, 0.084, 1e-9));
+        // chaque trame est une image, à sa date
+        QCOMPARE(v.trame(3), 3);
+        // une cadence qui dérive lentement (30 puis 25 images/s) : chaque intervalle reste proche de
+        // l'habituel, mais les dates s'éloignent de la cadence moyenne
+        std::vector<double> derive{0.0};
+        for (int k = 1; k < 60; ++k)
+            derive.push_back(derive.back() + (k < 30 ? 1.0 / 30 : 1.0 / 25));
+        QVERIFY(!cadence_variable(derive));
+        QVERIFY(::cadence_presque_reguliere(derive, 1.0 / 90000));
+        // cadence fixe : les arrondis des dates ne comptent pas (MKV et WebM à la milliseconde, à 30,
+        // 60 et 240 images/s ; MP4 en 1/600 s à 29,97 images/s)
         VideoInfo fixe;
         fixe.fps = 30.0;
         fixe.dates = {0.0, 0.033, 0.067, 0.100, 0.133, 0.167, 0.200};
+        QVERIFY(!::cadence_presque_reguliere(fixe.dates, 0.001));
         QVERIFY(!fixe.instants());
+        for (double cadence : {60.0, 240.0}) {
+            std::vector<double> ms;
+            for (int k = 0; k < 600; ++k)
+                ms.push_back(std::round(k * 1000.0 / cadence) / 1000.0);
+            QVERIFY(!::cadence_presque_reguliere(ms, 0.001));
+        }
+        std::vector<double> ntsc;
+        for (int k = 0; k < 600; ++k)
+            ntsc.push_back(std::round(k * 20.02) / 600.0);
+        QVERIFY(!::cadence_presque_reguliere(ntsc, 1.0 / 600));
         Pointage p;
         p.dimensionne(1, 1.0 / v.fps, 5);
         p.instants = instants;
@@ -1125,6 +1149,7 @@ private slots:
                 QVERIFY(sequentielles[1] != sequentielles[0]);
             } else {
                 QVERIFY2(!v.info.cadence_variable, qUtf8Printable(nom));
+                QVERIFY2(!v.info.dates_reelles, qUtf8Printable(nom));
             }
             for (int i : {n, 2, n / 2, 7, n - 1, 1}) {
                 v.oublie_cache_et_flux();

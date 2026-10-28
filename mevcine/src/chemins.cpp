@@ -6,6 +6,7 @@
 #include <QDirIterator>
 #include <QFile>
 #include <QFileInfo>
+#include <QSaveFile>
 #include <QStandardPaths>
 #include <QUrl>
 
@@ -71,8 +72,20 @@ QString copie_aide(QString *erreur)
         const QString f = it.next();
         const QString dest = QDir(cible).filePath(source.relativeFilePath(f));
         QDir().mkpath(QFileInfo(dest).absolutePath());
-        QFile::remove(dest);
-        if (!QFile::copy(f, dest)) {
+        // pages : le marqueur {{version}} est remplacé par la version du programme
+        bool ecrit = false;
+        if (f.endsWith(u".html"_s)) {
+            QFile page(f);
+            QSaveFile sortie(dest);
+            if (page.open(QIODevice::ReadOnly) && sortie.open(QIODevice::WriteOnly)) {
+                const QByteArray texte = page.readAll().replace("{{version}}", MEVCINE_VERSION);
+                ecrit = sortie.write(texte) == texte.size() && sortie.commit();
+            }
+        } else {
+            QFile::remove(dest);
+            ecrit = QFile::copy(f, dest);
+        }
+        if (!ecrit) {
             if (erreur)
                 *erreur = QDir::toNativeSeparators(dest);
             return {};

@@ -149,14 +149,19 @@ QStringList ffprobe()
     return {u"-v"_s, u"error"_s, u"-select_streams"_s, u"V:0"_s};
 }
 
+QString ffprobe_ne_repond_pas()
+{
+    return trad("ffprobe ne répond pas : la vidéo est peut-être abîmée, ou sur un support trop lent");
+}
+
 std::expected<QJsonObject, QString> lance_ffprobe(const QString &chemin, bool compte_paquets)
 {
     QStringList args = ffprobe();
     if (compte_paquets)
         args << u"-count_packets"_s;
     args << u"-show_entries"_s
-         << u"stream=codec_name,width,height,r_frame_rate,avg_frame_rate,nb_frames,nb_read_packets,duration,"
-            "color_transfer:format=duration:format_tags"_s
+         << u"stream=codec_name,width,height,r_frame_rate,avg_frame_rate,time_base,nb_frames,nb_read_packets,"
+            "duration,color_transfer:format=duration:format_tags"_s
          << u"-of"_s << u"json"_s << chemin;
     auto p = lance(u"ffprobe"_s, args);
     if (!p->waitForStarted(-1))
@@ -164,7 +169,7 @@ std::expected<QJsonObject, QString> lance_ffprobe(const QString &chemin, bool co
     if (!attend(*p, true, ATTENTE_MAX)) {
         p->kill();
         p->waitForFinished(5000);
-        return std::unexpected(trad("ffprobe ne répond pas : la vidéo est peut-être abîmée, ou sur un support trop lent"));
+        return std::unexpected(ffprobe_ne_repond_pas());
     }
     if (p->exitStatus() != QProcess::NormalExit || p->exitCode() != 0)
         return std::unexpected(QString::fromUtf8(p->readAllStandardError()).trimmed());
@@ -176,21 +181,21 @@ std::expected<QJsonObject, QString> lance_ffprobe(const QString &chemin, bool co
 }
 
 /// dates de présentation des trames d'une vidéo, en seconde, dans l'ordre, d'après les paquets du
-/// flux (sans décoder) ; vide si elles sont inconnues
-std::vector<double> dates_des_trames(const QString &chemin)
+/// flux (sans décoder) ; vide si elles sont inconnues. Trop long : une erreur (supposer la cadence
+/// régulière fausserait en silence les dates d'une vidéo à cadence variable).
+std::expected<std::vector<double>, QString> dates_des_trames(const QString &chemin)
 {
     auto p = lance(u"ffprobe"_s, ffprobe() << u"-show_entries"_s << u"packet=pts_time,size,flags"_s << u"-of"_s
                                             << u"csv=p=0"_s << chemin);
     if (!p->waitForStarted(-1))
-        return {};
-    // trop long : les dates restent inconnues (cadence régulière supposée)
+        return std::vector<double>();
     if (!attend(*p, true, ATTENTE_MAX)) {
         p->kill();
         p->waitForFinished(5000);
-        return {};
+        return std::unexpected(ffprobe_ne_repond_pas());
     }
     if (p->exitStatus() != QProcess::NormalExit || p->exitCode() != 0)
-        return {};
+        return std::vector<double>();
     std::vector<double> dates;
     const QString sortie = QString::fromUtf8(p->readAllStandardOutput());
     for (QStringView ligne : QStringView(sortie).split(u'\n')) {
@@ -207,7 +212,7 @@ std::vector<double> dates_des_trames(const QString &chemin)
         const double t = pts.toDouble(&ok);
         // une seule date inconnue rend les autres inutilisables
         if (!ok || !std::isfinite(t))
-            return {};
+            return std::vector<double>();
         dates.push_back(t);
     }
     std::sort(dates.begin(), dates.end());
@@ -235,16 +240,23 @@ std::expected<VideoInfo, QString> sonde(const QString &chemin)
     std::optional<double> duree = flottant(flux[u"duration"_s]);
     if (!duree)
         duree = flottant(format[u"duration"_s]);
-    info.dates = dates_des_trames(chemin);
+    auto dates_lues = dates_des_trames(chemin);
+    if (!dates_lues)
+        return std::unexpected(dates_lues.error());
+    info.dates = std::move(*dates_lues);
     const auto intervalle = cadence_variable(info.dates);
     info.cadence_variable = intervalle.has_value();
     // la cadence habituelle, et non la moyenne, faussée par les images perdues : c'est celle de la
     // caméra
     if (intervalle)
         info.fps = 1.0 / *intervalle;
+    // cadence presque régulière (téléphones : 40 puis 44 ms…) : les dates réelles des trames, plus
+    // justes qu'une cadence moyenne
+    info.dates_reelles = info.cadence_variable
+        || cadence_presque_reguliere(info.dates, rationnel(flux[u"time_base"_s].toString()).value_or(0.0));
     const auto &dates = info.dates;
     long long nb_images = 0;
-    if (info.cadence_variable) {
+    if (info.dates_reelles) {
         nb_images = static_cast<long long>(dates.size());
     } else if (dates.size() > 1) {
         nb_images = std::llround((dates.back() - dates.front()) * info.fps) + 1;
@@ -293,7 +305,7 @@ int VideoInfo::trame(int i) const
     if (dates.empty())
         return i;
     const int n = static_cast<int>(dates.size());
-    if (cadence_variable)
+    if (dates_reelles)
         return std::min(i, n - 1);
     const double t = dates[0] + (i + 0.5) / fps;
     const int k = static_cast<int>(std::upper_bound(dates.begin(), dates.end(), t) - dates.begin());
@@ -315,18 +327,8 @@ int VideoInfo::trame_de_date(double t) const
 
 std::optional<std::vector<double>> VideoInfo::instants() const
 {
-    if (dates.size() < 2)
+    if (dates.size() < 2 || !dates_reelles)
         return std::nullopt;
-    // cadence presque régulière (téléphones : 40 puis 44 ms…) : les dates réelles des images, plus
-    // justes qu'une cadence moyenne ; une vidéo à cadence fixe garde des dates régulières (les
-    // arrondis des horodatages restent sous 2 % d'un intervalle)
-    if (!cadence_variable) {
-        double ecart = 0.0;
-        for (size_t k = 0; k < dates.size(); ++k)
-            ecart = std::max(ecart, std::abs((dates[k] - dates[0]) * fps - double(k)));
-        if (ecart < 0.02)
-            return std::nullopt;
-    }
     std::vector<double> res;
     res.reserve(dates.size());
     for (double d : dates)
@@ -443,6 +445,34 @@ std::optional<double> cadence_variable(const std::vector<double> &dates)
         }
     }
     return somme / n;
+}
+
+bool cadence_presque_reguliere(const std::vector<double> &dates, double pas)
+{
+    const size_t n = dates.size();
+    if (n < 3)
+        return false;
+    // droite des moindres carrés : date = moyenne + (k - k moyen) × intervalle
+    const double k_moyen = (n - 1) / 2.0;
+    double d_moyenne = 0.0;
+    for (double d : dates)
+        d_moyenne += d;
+    d_moyenne /= double(n);
+    double num = 0.0, den = 0.0;
+    for (size_t k = 0; k < n; ++k) {
+        num += (double(k) - k_moyen) * (dates[k] - d_moyenne);
+        den += (double(k) - k_moyen) * (double(k) - k_moyen);
+    }
+    const double intervalle = num / den;
+    if (!(intervalle > 0.0))
+        return false;
+    // les dates sont arrondies à la base de temps du conteneur, puis à la microseconde par ffprobe
+    const double seuil = 0.02 * intervalle + std::max(pas, 1e-6);
+    for (size_t k = 0; k < n; ++k) {
+        if (std::abs(dates[k] - (d_moyenne + (double(k) - k_moyen) * intervalle)) > seuil)
+            return true;
+    }
+    return false;
 }
 
 QString nom_codec(const QString &codec)
@@ -589,6 +619,7 @@ std::expected<std::unique_ptr<VideoReader>, QString> VideoReader::ouvre(const QS
         if (!info.dates.empty() && std::abs(*t - info.dates[0]) > 0.5 / info.fps) {
             info.dates.clear();
             info.cadence_variable = false;
+            info.dates_reelles = false;
         }
         info.t0 = *t;
     }

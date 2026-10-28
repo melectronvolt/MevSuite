@@ -379,9 +379,9 @@ def enregistrer(chemin=None):
 
 def exporter_csv(chemin, grandeurs=None, separateur=";", virgule=True):
     """Grandeurs (toutes par défaut) dans un fichier CSV : séparateur ";" "," ou "\\t",
-    virgule décimale ou point."""
+    virgule décimale ou point (toujours le point avec le séparateur ",", qui couperait les nombres)."""
     _ordre("exporter_csv", chemin=str(chemin), grandeurs=None if grandeurs is None else _noms(grandeurs),
-           separateur=separateur, virgule=bool(virgule))
+           separateur=separateur, virgule=bool(virgule) and separateur != ",")
 
 
 def exporter_graphe(nom, chemin):

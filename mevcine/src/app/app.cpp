@@ -121,6 +121,41 @@ protected:
     }
 };
 
+/// Pendant l'ouverture d'une vidéo, clics, touches, raccourcis, molette et dépôts de fichiers sont
+/// ignorés ; la fermeture de la fenêtre passe et interrompt l'ouverture. (Une boucle d'attente sans
+/// les « événements de l'utilisateur » retiendrait aussi la demande de fermeture du bureau.)
+class SansSaisie : public QObject {
+public:
+    SansSaisie() { qApp->installEventFilter(this); }
+
+protected:
+    bool eventFilter(QObject *, QEvent *e) override
+    {
+        switch (e->type()) {
+        case QEvent::MouseButtonPress:
+        case QEvent::MouseButtonRelease:
+        case QEvent::MouseButtonDblClick:
+        case QEvent::Wheel:
+        case QEvent::KeyPress:
+        case QEvent::KeyRelease:
+        case QEvent::ShortcutOverride:
+        case QEvent::Shortcut:
+        case QEvent::ContextMenu:
+        case QEvent::DragEnter:
+        case QEvent::DragMove:
+        case QEvent::Drop:
+        case QEvent::TouchBegin:
+        case QEvent::TouchUpdate:
+        case QEvent::TouchEnd:
+        case QEvent::TabletPress:
+        case QEvent::TabletRelease:
+            return true;
+        default:
+            return false;
+        }
+    }
+};
+
 } // namespace
 
 QString nom_etat(Etat e)
@@ -431,7 +466,7 @@ bool App::ouvre_video(const QString &chemin_donne, int rotation)
     const QString chemin = chemins::absolu(chemin_donne);
     // L'examen d'une grande vidéo (ffprobe en compte les paquets) peut prendre du temps, surtout sur une
     // clé USB : il se fait dans un autre fil, avec le curseur d'attente. La fenêtre se redessine, mais
-    // ni clic ni touche n'agissent avant la fin ; la fermer interrompt l'ouverture.
+    // ni clic ni touche n'agissent avant la fin (SansSaisie) ; la fermer interrompt l'ouverture.
     using Ouverture = std::expected<std::unique_ptr<VideoReader>, QString>;
     QApplication::setOverrideCursor(Qt::WaitCursor);
     ouverture_annulee = false;
@@ -446,8 +481,10 @@ bool App::ouvre_video(const QString &chemin_donne, int rotation)
     QFutureWatcher<Ouverture> fin;
     connect(&fin, &QFutureWatcherBase::finished, &attente, &QEventLoop::quit);
     fin.setFuture(tache);
-    if (!tache.isFinished())
-        attente.exec(QEventLoop::ExcludeUserInputEvents);
+    if (!tache.isFinished()) {
+        const SansSaisie sans_saisie;
+        attente.exec();
+    }
     tache.waitForFinished();
     Ouverture lecteur = tache.takeResult();
     ouverture_en_cours = false;
@@ -1893,7 +1930,11 @@ void App::construit_raccourcis()
         raccourci(QKeySequence(Qt::Key_PageUp), [this] { touche_image(-1); }),
     };
     // Ctrl + / Ctrl − / Ctrl 0 : l'agrandissement de l'interface, de 50 à 300 %
-    const auto plus = [this] { change_agrandissement(std::round(m_agrandissement * 10.0 + 1.0) / 10.0); };
+    // agrandir : pas sous l'agrandissement voulu (celui affiché, borné par une fenêtre étroite, peut
+    // être plus petit ; le retenu ne doit pas baisser)
+    const auto plus = [this] {
+        change_agrandissement(std::max(m_agrandissement_voulu, std::round(m_agrandissement * 10.0 + 1.0) / 10.0));
+    };
     m_raccourcis_image << raccourci(QKeySequence::ZoomIn, plus) << raccourci(QKeySequence(Qt::CTRL | Qt::Key_Equal), plus)
                        << raccourci(QKeySequence::ZoomOut,
                                     [this] { change_agrandissement(std::round(m_agrandissement * 10.0 - 1.0) / 10.0); })

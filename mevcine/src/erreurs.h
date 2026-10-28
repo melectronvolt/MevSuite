@@ -15,7 +15,8 @@
 namespace erreurs {
 
 /// Installe les gestionnaires d'erreur fatale (exception non rattrapée, `qFatal`) et de plantage ;
-/// `relance` faux (essais) : pas de relance après un plantage.
+/// hors du fil de l'interface, la boîte est montrée par une copie du programme, relancée avec
+/// `--crash`. `relance` faux (essais) : pas de relance.
 void installe(bool relance = true);
 
 /// Journal et boîte de message, puis fermeture.

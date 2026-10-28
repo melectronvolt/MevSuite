@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QMessageBox>
+#include <QProcess>
 #include <QSysInfo>
 #include <QThread>
 
@@ -42,6 +43,7 @@ namespace {
 QString g_log;
 QtMessageHandler g_previousHandler = nullptr;
 std::atomic_flag g_reporting = ATOMIC_FLAG_INIT;
+QString g_relaunch; // programme relancé pour montrer la boîte (vide : aucun)
 
 /// Première ligne du journal : logiciel, version, système.
 QString header()
@@ -67,10 +69,13 @@ void show(const QString &message, const QString &log)
     QString text = u"MeVReg a rencontré une erreur imprévue et doit se fermer.\n\n%1\n\n"_s.arg(message);
     text += log.isEmpty() ? u"Les détails n'ont pas pu être enregistrés."_s : u"Les détails ont été enregistrés dans :\n%1"_s.arg(log);
     std::fprintf(stderr, "%s\n", text.toLocal8Bit().constData());
-    // Boîte de message seulement depuis le fil de l'interface, et si l'affichage fonctionne.
+    // Boîte de message depuis le fil de l'interface, si l'affichage fonctionne ; ailleurs (fil de
+    // calcul), c'est une copie du programme qui la montre.
     if (qobject_cast<QApplication *>(QCoreApplication::instance())
         && QThread::currentThread() == QCoreApplication::instance()->thread())
         QMessageBox::critical(nullptr, about::NAME, text);
+    else if (!g_relaunch.isEmpty())
+        QProcess::startDetached(g_relaunch, {u"--crash"_s, log, message});
 }
 
 void onTerminate()
@@ -148,13 +153,15 @@ const char *exceptionName(DWORD code)
     return nullptr;
 }
 
-void put(HANDLE file, const char *data, std::size_t size)
+/// Faux si l'écriture a échoué (disque plein…).
+bool put(HANDLE file, const char *data, std::size_t size)
 {
     DWORD written = 0;
     while (size > 0 && WriteFile(file, data, static_cast<DWORD>(size), &written, nullptr) && written > 0) {
         data += written;
         size -= written;
     }
+    return size == 0;
 }
 
 /// Une ligne de la pile d'appels : « module(+0xdécalage) ».
@@ -194,9 +201,14 @@ wchar_t *append(wchar_t *out, const wchar_t *text)
 
 LONG WINAPI onException(EXCEPTION_POINTERS *info)
 {
+    const DWORD code = info && info->ExceptionRecord ? info->ExceptionRecord->ExceptionCode : 0;
+    // exception C++ que rien n'a rattrapée (codes de GCC) : elle repart, et le programme appelle
+    // std::terminate (onTerminate, qui note son message), comme avec le gestionnaire de démarrage
+    // de MinGW que celui-ci remplace
+    if ((code & 0x20FFFFFF) == 0x20474343 && !(info->ExceptionRecord->ExceptionFlags & EXCEPTION_NONCONTINUABLE))
+        return EXCEPTION_CONTINUE_EXECUTION;
     // un plantage pendant la boîte d'une erreur fatale : rien de plus
     if (!g_reporting.test_and_set()) {
-        const DWORD code = info && info->ExceptionRecord ? info->ExceptionRecord->ExceptionCode : 0;
         char *cause = putNumber(putText(g_cause, "Exception 0x"), code, 16);
         if (const char *name = exceptionName(code))
             cause = putText(putText(putText(cause, " ("), name), ")");
@@ -206,14 +218,13 @@ LONG WINAPI onException(EXCEPTION_POINTERS *info)
                                               : CreateFileW(g_logPath.c_str(), GENERIC_WRITE, FILE_SHARE_READ, nullptr, CREATE_ALWAYS,
                                                             FILE_ATTRIBUTE_NORMAL, nullptr);
         if (file != INVALID_HANDLE_VALUE) {
-            put(file, g_header.constData(), static_cast<std::size_t>(g_header.size()));
-            put(file, g_cause, std::strlen(g_cause));
-            put(file, "\n", 1);
+            const bool written = put(file, g_header.constData(), static_cast<std::size_t>(g_header.size()))
+                && put(file, g_cause, std::strlen(g_cause)) && put(file, "\n", 1);
             void *frames[62];
             const USHORT n = CaptureStackBackTrace(0, 62, frames, nullptr);
             for (USHORT i = 0; i < n; ++i)
                 putFrame(file, frames[i]);
-            logged = CloseHandle(file) != 0;
+            logged = CloseHandle(file) != 0 && written;
         }
         if (!g_program.empty()) {
             // "programme" --crash "journal" "cause"
@@ -245,10 +256,13 @@ LONG WINAPI onException(EXCEPTION_POINTERS *info)
     return EXCEPTION_EXECUTE_HANDLER;
 }
 
-void installCrashHandler(const QString &logPath, bool relaunch)
+void installCrashHandler(const QString &logPath, const QString &program)
 {
     g_logPath = logPath.isEmpty() ? std::wstring() : QDir::toNativeSeparators(logPath).toStdWString();
-    g_program = relaunch ? QDir::toNativeSeparators(QCoreApplication::applicationFilePath()).toStdWString() : std::wstring();
+    g_program = QDir::toNativeSeparators(program).toStdWString();
+    // débordement de la pile : de quoi écrire le journal et relancer le programme
+    ULONG reserve = 64 * 1024;
+    SetThreadStackGuarantee(&reserve);
     SetUnhandledExceptionFilter(onException);
 }
 
@@ -258,15 +272,17 @@ QByteArray g_logPath;
 QByteArray g_program; // vide : pas de relance
 alignas(16) char g_signalStack[1 << 16]; // un débordement de la pile plante aussi
 
-void put(int fd, const char *data, std::size_t size)
+/// Faux si l'écriture a échoué (disque plein…).
+bool put(int fd, const char *data, std::size_t size)
 {
     while (size > 0) {
         const ssize_t n = ::write(fd, data, size);
         if (n <= 0)
-            return;
+            return false;
         data += n;
         size -= static_cast<std::size_t>(n);
     }
+    return true;
 }
 
 const char *signalName(int sig)
@@ -301,14 +317,13 @@ void onSignal(int sig)
         bool logged = false;
         const int fd = g_logPath.isEmpty() ? -1 : ::open(g_logPath.constData(), O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, 0644);
         if (fd >= 0) {
-            put(fd, g_header.constData(), static_cast<std::size_t>(g_header.size()));
-            put(fd, g_cause, std::strlen(g_cause));
-            put(fd, "\n", 1);
+            const bool written = put(fd, g_header.constData(), static_cast<std::size_t>(g_header.size()))
+                && put(fd, g_cause, std::strlen(g_cause)) && put(fd, "\n", 1);
 #ifdef CRASH_BACKTRACE
             void *frames[64];
             backtrace_symbols_fd(frames, backtrace(frames, 64), fd);
 #endif
-            logged = ::close(fd) == 0;
+            logged = ::close(fd) == 0 && written;
         }
         if (!g_program.isEmpty() && forkProcess() == 0) {
             sigset_t none;
@@ -326,12 +341,10 @@ void onSignal(int sig)
     ::raise(sig);
 }
 
-void installCrashHandler(const QString &logPath, bool relaunch)
+void installCrashHandler(const QString &logPath, const QString &program)
 {
     g_logPath = logPath.isEmpty() ? QByteArray() : QFile::encodeName(logPath);
-    // AppImage : l'image elle-même (son dossier monté disparaît avec le programme)
-    const QString appImage = qEnvironmentVariable("APPIMAGE");
-    g_program = !relaunch ? QByteArray() : QFile::encodeName(appImage.isEmpty() ? QCoreApplication::applicationFilePath() : appImage);
+    g_program = QFile::encodeName(program);
 #ifdef CRASH_BACKTRACE
     // premier appel ici : il charge une bibliothèque, ce qui alloue de la mémoire
     void *frame = nullptr;
@@ -351,6 +364,22 @@ void installCrashHandler(const QString &logPath, bool relaunch)
 
 #endif
 
+/// Programme relancé pour montrer la boîte. AppImage : l'image elle-même (son dossier monté
+/// disparaît avec le programme) ; APPIMAGE passe aussi aux programmes qu'une AppImage lance : il ne
+/// compte que pour un programme de son dossier (APPDIR).
+QString relaunchProgram()
+{
+    const QString program = QCoreApplication::applicationFilePath();
+    const QString appImage = qEnvironmentVariable("APPIMAGE");
+    if (appImage.isEmpty())
+        return program;
+    const QString appDir = qEnvironmentVariable("APPDIR");
+    if (appDir.isEmpty())
+        return appImage;
+    const QString dir = QFileInfo(appDir).canonicalFilePath();
+    return !dir.isEmpty() && program.startsWith(dir + u'/') ? appImage : program;
+}
+
 } // namespace
 
 void install(const QString &logPath, bool relaunch)
@@ -361,7 +390,8 @@ void install(const QString &logPath, bool relaunch)
     g_header = header().toUtf8();
     if (!logPath.isEmpty())
         QDir().mkpath(QFileInfo(logPath).absolutePath());
-    installCrashHandler(logPath, relaunch);
+    g_relaunch = relaunch ? relaunchProgram() : QString();
+    installCrashHandler(logPath, g_relaunch);
 }
 
 void report(const QString &message)

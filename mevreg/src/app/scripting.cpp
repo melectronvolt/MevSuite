@@ -430,24 +430,39 @@ void addCurve(Workspace &ws, Plot &plot, QId x, QId y, const QJsonObject &o, QSt
     plot.x.autoScale = plot.y.autoScale = true;
 }
 
-/// Grandeur du script (`grandeur()`, `mr.creer`) mise dans le document ; `newIds` reçoit celles
-/// qui n'existaient pas.
-void applyQuantity(Workspace &ws, ViewId script, const python::NamedValues &q, Applied &res, std::vector<QId> &newIds)
+/// Grandeur du script (`grandeur()`, `mr.creer`) mise dans le document ; `given` reçoit son
+/// identifiant.
+void applyQuantity(Workspace &ws, ViewId script, const python::NamedValues &q, Applied &res, std::vector<QId> &given)
 {
-    const bool existed = ws.doc.byName(q.name) != nullptr;
     QString err;
     if (auto id = upsert(ws, script, q.name, q.unit, q.values, &err)) {
-        if (!existed)
-            newIds.push_back(*id);
+        if (std::find(given.begin(), given.end(), *id) == given.end())
+            given.push_back(*id);
     } else {
         res.messages << err;
+    }
+}
+
+/// Ordre « grandeur » (`grandeur()`, `mr.creer`) : les valeurs de cet appel ; à défaut, les
+/// dernières données sous ce nom.
+void applyGiven(Workspace &ws, ViewId script, const python::ScriptOutput &out, const QJsonObject &o, Applied &res,
+                std::vector<QId> &given)
+{
+    const QString name = o.value(u"nom"_s).toString();
+    const qint64 k = o.value(u"indice"_s).toInteger(-1);
+    if (k >= 0 && k < static_cast<qint64>(out.given.size()) && out.given[static_cast<size_t>(k)].name == name) {
+        applyQuantity(ws, script, out.given[static_cast<size_t>(k)], res, given);
+    } else {
+        for (const auto &q : out.quantities)
+            if (q.name == name)
+                applyQuantity(ws, script, q, res, given);
     }
 }
 
 /// Ordres du module `mevreg`, dans l'ordre du script : ceux qui touchent le document sont faits
 /// ici (les grandeurs données par `grandeur()` ou `mr.creer` à leur place, repère « grandeur »), les
 /// autres (fenêtres, fichiers, messages) passent à la fenêtre principale.
-void applyCommands(Workspace &ws, ViewId script, const python::ScriptOutput &out, Applied &res, std::vector<QId> &newIds)
+void applyCommands(Workspace &ws, ViewId script, const python::ScriptOutput &out, Applied &res, std::vector<QId> &given)
 {
     const QJsonArray &commands = out.commands;
     auto quantity = [&](const QJsonObject &o, const QString &key) -> std::optional<QId> {
@@ -462,15 +477,7 @@ void applyCommands(Workspace &ws, ViewId script, const python::ScriptOutput &out
         const QString order = o.value(u"ordre"_s).toString();
         const QString name = o.value(u"nom"_s).toString();
         if (order == u"grandeur") {
-            // les valeurs de cet appel ; à défaut, les dernières données sous ce nom
-            const qint64 k = o.value(u"indice"_s).toInteger(-1);
-            if (k >= 0 && k < static_cast<qint64>(out.given.size()) && out.given[static_cast<size_t>(k)].name == name) {
-                applyQuantity(ws, script, out.given[static_cast<size_t>(k)], res, newIds);
-            } else {
-                for (const auto &q : out.quantities)
-                    if (q.name == name)
-                        applyQuantity(ws, script, q, res, newIds);
-            }
+            applyGiven(ws, script, out, o, res, given);
         } else if (order == u"calculer") {
             const QString formula = o.value(u"formule"_s).toString(), unit = o.value(u"unite"_s).toString();
             if (const Quantity *q = ws.doc.byName(name)) {
@@ -716,7 +723,11 @@ Applied applyOutput(Workspace &ws, ViewId script, const python::ScriptOutput &ou
 {
     Applied res;
     const QString scriptName = ws.script(script) ? ws.script(script)->name : QString();
-    std::vector<QId> newIds;
+    // les grandeurs d'avant le script : les autres, données par le script, sont nouvelles
+    QSet<QId> before;
+    for (const Quantity &q : ws.doc.quantities)
+        before.insert(q.id);
+    std::vector<QId> given;
     // variables du script devenues grandeurs à sa fin (listes, tableaux) : d'abord, pour que les
     // ordres puissent s'en servir ; celles données par grandeur() ou mr.creer le sont à leur place
     // parmi les ordres
@@ -726,7 +737,24 @@ Applied applyOutput(Workspace &ws, ViewId script, const python::ScriptOutput &ou
             ordered.insert(v.toObject().value(u"nom"_s).toString());
     for (const auto &q : out.quantities)
         if (!ordered.contains(q.name))
-            applyQuantity(ws, script, q, res, newIds);
+            applyQuantity(ws, script, q, res, given);
+    // celles-ci aussi avant les graphes du script, qui les tracent (sinon un graphe créerait la
+    // grandeur sans son unité, ou une copie « _py » d'une grandeur que le script a modifiée), sauf si
+    // un ordre plus tôt supprime, renomme ou calcule une grandeur de ce nom : leur place compte
+    {
+        Applied first;
+        QSet<QString> moved;
+        for (const QJsonValue &v : out.commands) {
+            const QJsonObject o = v.toObject();
+            const QString order = o.value(u"ordre"_s).toString(), name = o.value(u"nom"_s).toString();
+            if (order == u"grandeur" && !moved.contains(name)) {
+                applyGiven(ws, script, out, o, first, given);
+            } else if (order == u"supprimer" || order == u"renommer" || order == u"calculer") {
+                moved.insert(name);
+                moved.insert(o.value(u"nouveau"_s).toString());
+            }
+        }
+    }
     for (const auto &fig : out.figures) {
         const auto [gid, created] = upsertFigure(ws, script, fig, res.messages);
         if (fig.savefig)
@@ -734,10 +762,12 @@ Applied applyOutput(Workspace &ws, ViewId script, const python::ScriptOutput &ou
         else if (created)
             res.openGraphs.push_back(gid);
     }
-    applyCommands(ws, script, out, res, newIds);
-    // nouvelles grandeurs : dans le tableur des résultats du script
+    applyCommands(ws, script, out, res, given);
+    // nouvelles grandeurs (toujours là) : dans le tableur des résultats du script
     std::vector<QId> orphans;
-    for (QId id : newIds) {
+    for (QId id : given) {
+        if (before.contains(id) || !ws.doc.get(id))
+            continue;
         const bool shown = std::any_of(ws.tables.begin(), ws.tables.end(), [&](const TableView &t) {
             return std::find(t.columns.begin(), t.columns.end(), id) != t.columns.end();
         });

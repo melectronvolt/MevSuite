@@ -1032,7 +1032,9 @@ void MainWindow::buildZoom()
         connect(action, &QAction::triggered, this, [this, step] { setUiZoom(step(m_uiZoom)); });
         addAction(action);
     };
-    const auto zoomIn = [](double z) { return std::round(z * 10.0 + 1.0) / 10.0; };
+    // agrandir : pas sous l'agrandissement demandé (celui affiché, borné par une fenêtre étroite,
+    // peut être plus petit ; le retenu ne doit pas baisser)
+    const auto zoomIn = [this](double z) { return std::max(m_store.prefs.uiZoom, std::round(z * 10.0 + 1.0) / 10.0); };
     zoomShortcut(QKeySequence::ZoomIn, zoomIn);
     zoomShortcut(QKeySequence(Qt::CTRL | Qt::Key_Equal), zoomIn);
     zoomShortcut(QKeySequence::ZoomOut, [](double z) { return std::round(z * 10.0 - 1.0) / 10.0; });

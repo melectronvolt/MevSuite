@@ -185,7 +185,7 @@ mr.incertitude("x", 0.005)</code></pre>
 <tr><td><code>mr.tableau(noms=None)</code></td><td>les grandeurs (toutes, ou celles nommées) dans un DataFrame pandas ; unités dans <code>df.attrs["unites"]</code></td></tr>
 <tr><td><code>mr.importer(df, tableur=None)</code></td><td>chaque colonne du DataFrame devient une grandeur (en-tête <code>"t (s)"</code> : nom t, unité s) ; renvoie leurs noms</td></tr>
 <tr><td><code>mr.lire_csv(chemin, tableur=None, sep=None, decimal=None)</code></td><td>importe un fichier CSV (séparateurs devinés s'ils ne sont pas donnés) ; renvoie le DataFrame lu</td></tr>
-<tr><td><code>mr.exporter_csv(chemin, grandeurs=None, separateur=";", virgule=True)</code></td><td>grandeurs (toutes par défaut) dans un fichier CSV ; <code>virgule=False</code> : point décimal</td></tr>
+<tr><td><code>mr.exporter_csv(chemin, grandeurs=None, separateur=";", virgule=True)</code></td><td>grandeurs (toutes par défaut) dans un fichier CSV ; <code>virgule=False</code> : point décimal (toujours avec <code>separateur=","</code>)</td></tr>
 </tbody>
 </table>
 <p>Les chemins relatifs partent du dossier du document enregistré.</p>
