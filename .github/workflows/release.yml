@@ -8,7 +8,7 @@
 # - Windows x64 : version portable (.zip) et installateur Inno Setup, compilés avec MSYS2 UCRT64 ;
 #   le programme est essayé dans son dossier, l'installateur installé puis désinstallé en silence.
 #
-# L'étiquette doit porter la version des quatre CMakeLists.txt (v0.3.0 pour 0.3.0). Lancé à la
+# L'étiquette doit porter la version des quatre CMakeLists.txt (v0.3.1 pour 0.3.1). Lancé à la
 # main (onglet Actions), le workflow fabrique et essaie sans publier : les fichiers sont dans les
 # « artifacts » de l'exécution.
 name: Release

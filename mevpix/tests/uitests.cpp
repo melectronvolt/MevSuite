@@ -235,6 +235,9 @@ private slots:
     void initTestCase()
     {
         QVERIFY2(QFileInfo::exists(EXAMPLE), qPrintable(EXAMPLE));
+        // curseur de texte qui ne clignote pas : les captures (images de la notice) sont les mêmes d'une
+        // fois à l'autre
+        QApplication::setCursorFlashTime(0);
     }
 
     /// Fenêtre de départ : pas agrandie, menus Fichier et Aide seulement (la langue et le thème sont
@@ -262,6 +265,13 @@ private slots:
         // sans image : la page d'accueil, outils grisés, pas d'échelle ni d'image dans la barre d'état
         QVERIFY(welcomeShown(*w));
         QVERIFY(!toolbarAction(*w, u"📏 Étalonner"_s)->isEnabled());
+        // le bouton d'ouverture de la barre d'outils garde ses points de suspension
+        {
+            auto *bar = w->findChild<QToolBar *>(u"toolbar"_s);
+            auto *open = bar ? qobject_cast<QToolButton *>(bar->widgetForAction(toolbarAction(*w, u"📂 Ouvrir une image…"_s))) : nullptr;
+            QVERIFY(open);
+            QCOMPARE(open->text(), u"📂 Ouvrir une image…"_s);
+        }
         QVERIFY(!w->findChild<QLabel *>(u"scale"_s)->isVisibleTo(w.get()));
         QVERIFY(!w->findChild<QLabel *>(u"imageStatus"_s)->isVisibleTo(w.get()));
         capture(w.get(), u"01_fr_accueil"_s);
@@ -286,6 +296,10 @@ private slots:
         QTest::qWait(30);
         const auto *side = w->findChild<QScrollArea *>(u"sidePanel"_s);
         QVERIFY2(side->width() >= 290, qPrintable(QString::number(side->width())));
+        // page d'accueil en anglais, au lancement (image de la notice anglaise)
+        auto en = harness(Lang::En);
+        QVERIFY(welcomeShown(*en));
+        capture(en.get(), u"11_en_accueil"_s);
     }
 
     /// Page d'accueil épurée : logo, nom, sous-titre, un bouton, une ligne ; tout tient sans
@@ -501,7 +515,7 @@ private slots:
         QVERIFY(toolbarAction(*w, texts(Lang::En).toolCalibrate));
         QCOMPARE(button->toolTip(), u"Language: English. Click to switch to French (français)."_s);
         QCOMPARE(w->findChild<QPushButton *>(u"welcomeOpen"_s)->text(), u"📂 Open an image…"_s);
-        capture(w.get(), u"11_en_accueil"_s);
+        capture(w.get(), u"15_en_langue"_s);
         button->click();
         QCOMPARE(w->lang(), Lang::Fr);
     }

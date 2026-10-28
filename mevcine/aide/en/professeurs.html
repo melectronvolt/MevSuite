@@ -5,16 +5,18 @@
 
 <h2 id="deploiement">Deploying MeVCine in a computer room</h2>
 <ul>
-  <li><strong>No installation</strong>: copy the MeVCine folder onto a USB stick, a network folder or the disk of
-  each computer (see <a href="installer.html">Installing</a>). It needs no administrator rights, and writes only in
-  the user's configuration folder.</li>
+  <li><strong>On Windows, two versions</strong> (see <a href="installer.html">Installing</a>): the portable
+  version, a folder to copy onto a USB stick, a network folder or the disk of each computer, with no installation
+  and no administrator rights; or the installer, for all the users of the computer, which can be deployed with no
+  question (WAPT, GPO). MeVCine writes only in the user's configuration folder.</li>
   <li><strong>A shortcut for the students</strong>: to <code>mevcine.exe --simple</code> (or
-  <code>mevcine --simple</code>), to open simple mode directly; a video can be added:
+  <code>mevcine --simple</code>), to always open simple mode; without this option, MeVCine takes the mode used last
+  time, which a student may have changed. A video can be added:
   <code>mevcine.exe --simple \\server\physics\fall.mp4</code>.</li>
   <li><strong>Shared computers</strong>: MeVCine never reopens the last video; every student starts from a clean
-  screen. The language, the theme, the unit of the reference, the window size and the last video folder are
-  remembered per account. So is the automatic backup: with a shared account, <em>Recover previous work</em> gives
-  back the work of the last student on that computer.</li>
+  screen. The language, the theme, the mode, the unit of the reference, the window size and the last video folder
+  are remembered per account. So is the automatic backup: with a shared account, <em>Recover previous work…</em>
+  gives back the work of the last student on that computer.</li>
   <li><strong>A shared configuration folder</strong>: the <code>MEVCINE_CONF</code> variable (in a <code>.bat</code>
   launcher, for instance) points to another folder, on the stick or the network. See
   <a href="reglages.html">Settings</a>.</li>
@@ -85,8 +87,8 @@ plt.show()</pre>
 <h2 id="contact">Contact, languages, contributing</h2>
 <p>MeVCine is written by <strong>Rémi MEVAERE</strong>:
 <a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>. A remark, a video that does not open,
-an idea for the classroom: write, attaching if possible the error log (<a href="reglages.html#configuration">Settings</a>)
-and the video.</p>
+an idea for the classroom: write, attaching if possible the error log, <code>mevcine.log</code>
+(<a href="reglages.html#configuration">Settings</a>), and the video.</p>
 <p>The interface and the user guide exist in French and English. The translations are gettext files
 (<code>data/lang/*.po</code>, editable with Poedit); the user guide is made of HTML pages (<code>aide/<i>language</i>/</code>,
 assembled by <code>scripts/site-aide.py</code>). The code is in C++ with Qt; the <code>README.md</code> file explains
@@ -94,5 +96,7 @@ how to build it and run the tests.</p>
 
 <h2 id="licence">Licence</h2>
 <p>MeVCine is <strong>free software</strong>, under the GNU GPL version 3 or later: you may copy it, hand it out to
-students and modify it freely. It includes open-source components (Qt, FFmpeg…): <em>Help › About</em> lists them,
-with their licences; the <em>About Qt</em> button gives that of Qt.</p>
+students and modify it freely. It includes open-source components (Qt, FFmpeg…): <em>Help › About MeVCine…</em>
+lists them, with their licences, and gives the path of the settings file; <em>Help › About Qt…</em> gives the licence
+of Qt. On Windows, the <code>licences</code> folder of the program holds the licences of the shipped libraries, and
+<code>ffmpeg/LICENSE.txt</code> that of ffmpeg.</p>

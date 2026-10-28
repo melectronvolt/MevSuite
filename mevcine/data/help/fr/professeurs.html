@@ -45,16 +45,18 @@
 
 <h2 id="deploiement">Déployer MeVCine dans une salle</h2>
 <ul>
-  <li><strong>Aucune installation</strong> : copiez le dossier de MeVCine sur une clé USB, un dossier réseau ou le
-  disque de chaque poste (voir <a href="installer.html">Installer</a>). Il ne demande pas de droits
-  d'administrateur, et n'écrit que dans le dossier de configuration de l'utilisateur.</li>
+  <li><strong>Sous Windows, deux versions</strong> (voir <a href="installer.html">Installer</a>) : la version
+  portable, un dossier à copier sur une clé USB, un dossier réseau ou le disque de chaque poste, sans installation
+  ni droits d'administrateur ; ou l'installateur, pour tous les utilisateurs du poste, déployable sans question
+  (WAPT, GPO). MeVCine n'écrit que dans le dossier de configuration de l'utilisateur.</li>
   <li><strong>Un raccourci pour les élèves</strong> : vers <code>mevcine.exe --simple</code> (ou
-  <code>mevcine --simple</code>), pour arriver directement en mode simplifié ; on peut y ajouter une vidéo :
+  <code>mevcine --simple</code>), pour arriver toujours en mode simplifié ; sans cette option, MeVCine reprend le
+  mode de la dernière fois, qu'un élève a pu changer. On peut y ajouter une vidéo :
   <code>mevcine.exe --simple \\serveur\physique\chute.mp4</code>.</li>
   <li><strong>Postes partagés</strong> : MeVCine ne rouvre jamais la dernière vidéo ; chaque élève part d'un écran
-  propre. La langue, le thème, l'unité de l'étalon, la taille de la fenêtre et le dernier dossier de vidéos sont
-  retenus par compte. La sauvegarde automatique aussi : avec un compte commun, <em>Récupérer le travail
-  précédent</em> rend le travail du dernier élève passé sur le poste.</li>
+  propre. La langue, le thème, le mode, l'unité de l'étalon, la taille de la fenêtre et le dernier dossier de
+  vidéos sont retenus par compte. La sauvegarde automatique aussi : avec un compte commun, <em>Récupérer le travail
+  précédent…</em> rend le travail du dernier élève passé sur le poste.</li>
   <li><strong>Un dossier de configuration commun</strong> : la variable <code>MEVCINE_CONF</code> (dans un fichier
   <code>.bat</code> de lancement, par exemple) désigne un autre dossier, sur la clé ou le réseau. Voir
   <a href="reglages.html">Réglages</a>.</li>
@@ -127,8 +129,8 @@ plt.show()</pre>
 <h2 id="contact">Contact, langues, contribuer</h2>
 <p>MeVCine est écrit par <strong>Rémi MEVAERE</strong> :
 <a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>. Une remarque, une vidéo qui ne
-s'ouvre pas, une idée pour la classe : écrivez, en joignant si possible le journal des erreurs
-(<a href="reglages.html#configuration">Réglages</a>) et la vidéo.</p>
+s'ouvre pas, une idée pour la classe : écrivez, en joignant si possible le journal des erreurs,
+<code>mevcine.log</code> (<a href="reglages.html#configuration">Réglages</a>), et la vidéo.</p>
 <p>L'interface et la notice existent en français et en anglais. Les traductions sont des fichiers gettext
 (<code>data/lang/*.po</code>, modifiables avec Poedit) ; la notice est faite de pages HTML
 (<code>aide/<i>langue</i>/</code>, assemblées par <code>scripts/site-aide.py</code>). Le code est en C++ avec Qt ;
@@ -137,8 +139,10 @@ le fichier <code>README.md</code> explique comment le compiler et lancer les tes
 <h2 id="licence">Licence</h2>
 <p>MeVCine est un <strong>logiciel libre</strong>, sous licence GNU GPL version 3 ou ultérieure : vous pouvez le
 copier, le distribuer aux élèves et le modifier librement. Il intègre des composants libres (Qt, FFmpeg…) :
-<em>Aide › À propos</em> en donne la liste, avec leurs licences ; le bouton <em>À propos de Qt</em> donne celle de
-Qt.</p>
+<em>Aide › À propos de MeVCine…</em> en donne la liste, avec leurs licences, et le chemin du fichier de réglages ;
+<em>Aide › À propos de Qt…</em> donne la licence de Qt. Sous Windows, le dossier <code>licences</code> du
+programme contient les licences des bibliothèques livrées, et <code>ffmpeg/LICENSE.txt</code> celle de
+ffmpeg.</p>
 <nav class="voisins">
 <a class="precedent" href="faq.html"><small>◀ Page précédente</small>Questions fréquentes</a>
 <a class="suivant" href="installer.html"><small>Page suivante ▶</small>Installer</a>

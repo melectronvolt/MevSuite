@@ -9,24 +9,27 @@ minutes.</p>
 
 <h2 id="mesurer">1. Measuring with MeVCine</h2>
 <ol class="steps">
-  <li>Start MeVCine, choose <strong>Simple mode</strong>, then <span class="btn">📂 Open a video…</span> and
-  choose the video given by your teacher (here <code>Principe_inertie.avi</code>: a puck on a table, with an 85 cm
-  yellow ruler).</li>
-  <li><strong>Origin</strong>: click on the left end of the yellow ruler. <span class="btn">Next ▶</span></li>
-  <li><strong>Axes</strong>: choose “x to the right, y upward”. <span class="btn">Next ▶</span></li>
-  <li><strong>Scale</strong>: <span class="btn">Select the reference</span>, click on both ends of the yellow
-  ruler; type <code>85</code>, choose <code>cm</code>, <span class="btn">Confirm</span>.
+  <li>Start MeVCine. At the bottom right, the status bar must say “Simple mode” (otherwise: <em>Mode › Simple mode
+  (step by step)</em> menu). Then <span class="btn">📂 Open a video…</span> and choose the video given by your
+  teacher (here <code>Principe_inertie.avi</code>: a puck on a table, with an 85 cm yellow ruler on the first
+  frame).</li>
+  <li><strong>Origin</strong>: on the first frame, click on the left end of the yellow ruler.
   <span class="btn">Next ▶</span></li>
-  <li><strong>Marking</strong>: with the slider, go to the first frame where the puck has left the hand (around
-  frame 3). Click on the <strong>centre</strong> of the puck, frame after frame, looking at the magnifier, until it
-  leaves the frame. <span class="btn">Finish marking ▶</span></li>
+  <li><strong>Axes</strong>: choose “x to the right, y upward”. <span class="btn">Next ▶</span></li>
+  <li><strong>Scale</strong>: still on the first frame (the ruler is only on it),
+  <span class="btn">Select the reference</span>, click on both ends of the yellow ruler; type <code>85</code>, choose <code>cm</code>, <span class="btn">Confirm</span>.
+  <span class="btn">Next ▶</span></li>
+  <li><strong>Marking</strong>: with the slider, go to frame 15: the puck is far from the hand, and its speed
+  hardly changes any more. Click on the <strong>centre</strong> of the puck, frame after frame, looking at the
+  magnifier, up to frame 27, the last one where it is whole (13 points). <span class="btn">Finish marking ▶</span></li>
   <li><strong>Table</strong>: check the values; redo with ⌖ a measurement that looks wrong.
   <span class="btn">Next ▶</span></li>
   <li><strong>Export</strong>: <span class="btn">📋 Copy for Python</span>.</li>
 </ol>
-<p class="tip">Before exporting, switch to expert mode (<em>Mode</em> menu), <em>Trajectories</em> tab, and
-tick <em>Show the velocity vectors</em>: arrows of the same length, in the same direction, already suggest a straight
-uniform motion. Then switch back to simple mode: nothing is lost.</p>
+<p class="tip">Before exporting, switch to expert mode (<em>Mode › Expert mode (all features)</em>),
+<em>Trajectories</em> tab, and tick <em>Show the velocity vectors</em>: arrows of the same length, in the same
+direction, already suggest a straight uniform motion. Then switch back to simple mode (<em>Mode › Simple mode (step
+by step)</em>): nothing is lost.</p>
 
 <h2 id="python">2. Working with Python</h2>
 <p>Paste the copied text (<kbd>Ctrl</kbd>+<kbd>V</kbd>) at the beginning of a program, then add:</p>

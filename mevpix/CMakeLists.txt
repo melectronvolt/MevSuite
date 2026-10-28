@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 
 project(mevpix
-    VERSION 0.3.0
+    VERSION 0.3.1
     DESCRIPTION "Mesures de longueurs sur n'importe quelle image : étalonnage, mesures, profil d'intensité"
     LANGUAGES CXX)
 
@@ -49,6 +49,7 @@ qt_add_resources(mevpix_core help
     BASE assets/help
     FILES
         assets/help/fr.html assets/help/en.html assets/help/help.css
+        assets/help/accueil-fr.jpg assets/help/accueil-en.jpg
         assets/help/fenetre-fr.jpg assets/help/etalonnage-fr.jpg assets/help/profil-fr.jpg
         assets/help/fenetre-en.jpg assets/help/etalonnage-en.jpg assets/help/profil-en.jpg
 )

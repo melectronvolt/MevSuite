@@ -16,13 +16,14 @@
 #include <QCheckBox>
 #include <QComboBox>
 #include <QDir>
+#include <QDoubleSpinBox>
 #include <QFile>
 #include <QHeaderView>
 #include <QLabel>
+#include <QLineEdit>
 #include <QMenu>
 #include <QMenuBar>
 #include <QMouseEvent>
-#include <QPainter>
 #include <QProcess>
 #include <QPushButton>
 #include <QScrollArea>
@@ -97,22 +98,11 @@ QString captures()
     return dir;
 }
 
-void capture(QWidget *w, const QString &name, QWidget *overlay = nullptr)
+/// Rendu d'une fenêtre (fenêtre principale, ou fenêtre des réglages seule) dans `captures/`.
+void capture(QWidget *w, const QString &name)
 {
     QTest::qWait(30);
-    QImage image = w->grab().toImage();
-    // fenêtre des réglages : dessinée au milieu de la fenêtre principale
-    if (overlay) {
-        const QImage dialog = overlay->grab().toImage();
-        const QRect place((image.width() - dialog.width()) / 2, (image.height() - dialog.height()) / 2, dialog.width(),
-                          dialog.height());
-        QPainter painter(&image);
-        // ombre et bord, comme une fenêtre posée sur la fenêtre principale
-        painter.fillRect(place.translated(4, 4), QColor(0, 0, 0, 60));
-        painter.drawImage(place.topLeft(), dialog);
-        painter.setPen(overlay->palette().color(QPalette::Mid));
-        painter.drawRect(place.adjusted(0, 0, -1, -1));
-    }
+    const QImage image = w->grab().toImage();
     if (!image.save(QDir(captures()).filePath(name + u".png"_s)))
         qWarning("capture impossible : %s", qPrintable(name));
 }
@@ -149,6 +139,21 @@ void hover(QWidget *widget, QPointF pos)
     QCoreApplication::processEvents();
 }
 
+/// La souris quitte le graphique : plus de réticule.
+void leave(QWidget *widget)
+{
+    QEvent event(QEvent::Leave);
+    QApplication::sendEvent(widget, &event);
+    QCoreApplication::processEvents();
+}
+
+/// Attend que le panneau des mesures montre tout son contenu (il s'élargit en quelques mises en page).
+bool sidePanelFits(MainWindow &w)
+{
+    auto *side = w.findChild<QScrollArea *>(u"sidePanel"_s);
+    return QTest::qWaitFor([&] { return side->widget()->width() <= side->viewport()->width(); }, 1000);
+}
+
 void drag(QWidget *widget, QPointF start, QPointF end)
 {
     hover(widget, start);
@@ -177,6 +182,8 @@ void showTab(MainWindow &w, Tool tool)
 void hoverBesideTheFirstPeak(MainWindow &w)
 {
     SpectrumPlot *plot = w.spectrumPlot();
+    // le panneau des mesures finit de s'élargir (le spectre se décale) avant le survol
+    QTest::qWait(50);
     hover(plot, QPointF(plot->screenX(445.0), plot->plotRect().center().y()));
     const auto peak = plot->hoverPeak();
     QVERIFY2(peak, "pic le plus proche du réticule");
@@ -315,10 +322,17 @@ class UiTests : public QObject {
     Q_OBJECT
 
 private slots:
+    void initTestCase()
+    {
+        // curseur de texte qui ne clignote pas : les captures (images de la notice) sont les mêmes d'une
+        // fois à l'autre
+        QApplication::setCursorFlashTime(0);
+    }
+
     void startScreen()
     {
         auto w = harness(Lang::Fr, false);
-        // menus ; à leur droite, sur la même ligne : notice, thème, langue ; pas de barre d'outils
+        // menus ; à leur droite, sur la même ligne : thème et langue ; pas de barre d'outils
         QStringList titles;
         for (QAction *a : w->menuBar()->actions())
             titles << a->text();
@@ -364,7 +378,7 @@ private slots:
         QCOMPARE(tabs->currentIndex(), 0);
         QVERIFY(!w->spectrumPlot()->isVisibleTo(w.get()));
         QVERIFY(shows(w.get(), u"Mesure d'une période"_s) && !shows(w.get(), u"Extrait analysé"_s));
-        // en haut du panneau de gauche : ouvrir, exemples, tout voir ; zoom sur l'extrait pour les fréquences
+        // en haut du panneau de gauche : ouvrir, tout voir ; zoom sur l'extrait pour les fréquences
         auto *side = w->findChild<QScrollArea *>(u"sidePanel"_s);
         const auto panelButtons = [&] {
             QStringList texts;
@@ -592,12 +606,25 @@ private slots:
         QVERIFY(!Settings().harmonicMarks);
         hoverBesideTheFirstPeak(*w);
         capture(w.get(), u"02_flute_expert"_s);
-        // décibels et axe logarithmique (menu Affichage), repères des harmoniques (réglages)
-        menu(*w, u"en décibels (dB)"_s);
-        menu(*w, u"logarithmique"_s);
+        // fenêtre des réglages, aux valeurs par défaut (image de la notice : la fenêtre seule)
+        leave(w->spectrumPlot());
         menu(*w, u"⚙ Réglages…"_s);
         SettingsDialog *dialog = w->settingsDialog();
         QVERIFY(dialog && dialog->isVisible());
+        // seuil des pics : le signe moins « − », comme ailleurs dans MeVSono ; le trait d'union se tape
+        {
+            auto *threshold = dialog->findChild<QDoubleSpinBox *>();
+            QVERIFY(threshold);
+            QCOMPARE(threshold->text(), u"−40,0 dB"_s);
+            threshold->findChild<QLineEdit *>()->selectAll();
+            QTest::keyClicks(threshold, u"-55,5"_s);
+            QCOMPARE(threshold->value(), -55.5);
+            threshold->setValue(-40.0);
+        }
+        capture(dialog, u"02_reglages"_s);
+        // décibels et axe logarithmique (menu Affichage), repères des harmoniques (réglages)
+        menu(*w, u"en décibels (dB)"_s);
+        menu(*w, u"logarithmique"_s);
         QCheckBox *marks = nullptr;
         for (QCheckBox *box : dialog->findChildren<QCheckBox *>()) {
             if (box->text() == u"Afficher les repères n × f₁")
@@ -826,12 +853,25 @@ private slots:
         measureOnSquareWave(*w, true);
         hover(w->signalPlot(), signalAt(*w, 0.511));
         capture(w.get(), u"11_en_measure"_s);
+    }
+
+    /// Mode expert en anglais, comme en français (images de la notice) : fondamentale, tableau des
+    /// harmoniques, fenêtre des réglages.
+    void englishExpertMode()
+    {
+        auto w = harness(Lang::En, true);
+        load(*w, audio::Example::Flute);
         showTab(*w, Tool::Extract);
-        menu(*w, u"Expert"_s);
+        QVERIFY(shows(w.get(), u"Fundamental and harmonics"_s));
+        QVERIFY(shows(w.get(), u"f₁ = 440.0 Hz"_s));
+        QCOMPARE(harmonicsFound(*w), (std::vector<size_t>{1, 2, 3, 4, 5, 6}));
+        QVERIFY(sidePanelFits(*w));
+        hoverBesideTheFirstPeak(*w);
+        capture(w.get(), u"12_en_expert"_s);
+        leave(w->spectrumPlot());
         menu(*w, u"⚙ Settings…"_s);
         QVERIFY(w->settingsDialog() && shows(w->settingsDialog(), u"Window function"_s));
-        QVERIFY(waitAnalysis(*w));
-        capture(w.get(), u"12_en_settings"_s, w->settingsDialog());
+        capture(w->settingsDialog(), u"12_en_settings"_s);
     }
 
     // Plantage (accès mémoire invalide) : le journal reçoit la cause et la pile d'appels. L'essai se

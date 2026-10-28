@@ -47,14 +47,19 @@
 
 <h2 id="video">The video does not open</h2>
 <dl class="faq">
-  <dt>“Unreadable video: the video is in HEVC (H.265) format, which ffmpeg could not decode”</dt>
-  <dd>The ffmpeg in use does not know this format. Check that the <code>ffmpeg</code> folder is next to the program,
-  or install a complete ffmpeg. Otherwise, convert the video to H.264:
+  <dt>“Unreadable video”: “The video is in HEVC (H.265) format, which ffmpeg could not decode”</dt>
+  <dd>The ffmpeg in use does not know this format. Check that the <code>ffmpeg</code> folder is next to the program
+  (Windows, AppImage), or install a complete ffmpeg (on Fedora, the one from RPM Fusion: see
+  <a href="installer.html#linux">Installing</a>). Otherwise, convert the video to H.264:
   <pre>ffmpeg -i video.mov -c:v libx264 -pix_fmt yuv420p -an video.mp4</pre>
   (or with HandBrake, VLC…). A conversion may lose the frame rate of a slow-motion video.</dd>
   <dt>“the program ffprobe cannot be found: ffmpeg must be installed to read videos”</dt>
   <dd>Neither the <code>ffmpeg</code> folder next to the program, nor an installed ffmpeg. Copy the complete MeVCine
   folder again, or install ffmpeg (<code>sudo apt install ffmpeg</code>, <code>sudo dnf install ffmpeg</code>…).</dd>
+  <dt>“ffprobe does not respond: the video may be damaged, or on too slow a medium”</dt>
+  <dd>Examining the video was not over after two minutes. Copy the video to the computer's disk (not a USB stick
+  or a slow network folder), then open it again; if the message comes back, the file is damaged: re-encode it with
+  the command above.</dd>
   <dt>“this file is not a video”, “this file contains no video”</dt>
   <dd>The file is something else (an image, a sound), or it is damaged. Try to play it with VLC.</dd>
   <dt>“cannot determine the number of frames”</dt>
@@ -69,9 +74,10 @@
 <h2 id="affichage">The window does not open</h2>
 <dl class="faq">
   <dt>“This application failed to start because no Qt platform plugin could be initialized”</dt>
-  <dd>The Qt libraries are incomplete. On Windows, the <code>platforms</code> folder (with <code>qwindows.dll</code>)
-  must be next to <code>mevcine.exe</code>: copy the complete folder again. On Linux, install the MeVCine package,
-  or use the AppImage (see <a href="installer.html#linux">Installing</a>).</dd>
+  <dd>The Qt libraries are incomplete. On Windows, the <code>plugins</code> folder (with
+  <code>plugins\platforms\qwindows.dll</code>) and the <code>qt.conf</code> file must be next to
+  <code>mevcine.exe</code>: copy the complete folder again. On Linux, install the MeVCine package, or use the
+  AppImage (see <a href="installer.html#linux">Installing</a>).</dd>
   <dt>Nothing happens on double-click (Windows)</dt>
   <dd>SmartScreen may have blocked the program: start it again, then <em>More info › Run anyway</em>. Also check
   that the antivirus has not quarantined it.</dd>
@@ -84,25 +90,34 @@
 <dl class="faq">
   <dt>No window opens with <em>Open a video…</em> (Linux)</dt>
   <dd>MeVCine uses the desktop dialogs, otherwise Qt's. Meanwhile, drag the video onto the window, or start
-  <code>./mevcine video.mp4</code>.</dd>
+  <code>mevcine video.mp4</code>.</dd>
   <dt>“File too old”</dt>
   <dd>An old <code>.mecavideo</code> file from before version 7.3: its format cannot be read.</dd>
   <dt>“Unreadable project”</dt>
-  <dd>The file is not a MeVCine project, or it is damaged.</dd>
+  <dd>The file is not a MeVCine project, or it is damaged (for instance, a zero length of the reference: “The
+  length of the reference (0 m) is not valid.”).</dd>
+  <dt>“Video not found”</dt>
+  <dd>The project only holds the path of the video: put the video next to the project file, then reopen it.</dd>
   <dt>“Error while saving”</dt>
-  <dd>The folder cannot be written to (write-protected stick, full network folder, permissions). Choose another
-  folder, for instance <em>Documents</em>.</dd>
+  <dd>The folder cannot be written to (write-protected or full stick, full network folder, permissions); the
+  message gives the cause. A file that already existed stays intact. Choose another folder, for instance
+  <em>Documents</em>.</dd>
+  <dt>“Automatic backup impossible”</dt>
+  <dd>The configuration folder cannot be written to (full disk, permissions). The work is no longer protected: save
+  the project (<em>File › Save the project…</em>) elsewhere, then free some space or fix the permissions (see
+  <a href="reglages.html#configuration">Settings</a>).</dd>
 </dl>
 
 <h2 id="interne">An internal error, a crash</h2>
 <dl class="faq">
   <dt>“MeVCine internal error”</dt>
-  <dd>The program met an unexpected error and stops. The details are in <code>mevcine-erreurs.log</code>
-  (<a href="reglages.html#configuration">configuration folder</a>): send it to
+  <dd>The program met an unexpected error, or it crashed, and stops. The message says where the log is:
+  <code>mevcine.log</code>, in the <a href="reglages.html#configuration">configuration folder</a>, with the date, the
+  cause and, for a crash, the call stack. Send it to
   <a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>, with the video if possible.</dd>
   <dt>Recovering the work in progress</dt>
-  <dd>Start MeVCine again, then <em>File › Recover previous work…</em>: the automatic backup (at most two seconds
-  before the stop) comes back.</dd>
+  <dd>Start MeVCine again, then <em>File › Recover previous work…</em>: the automatic backup comes back (the very
+  latest changes, two seconds at most, may be missing).</dd>
   <dt>“Error reading the configuration”</dt>
   <dd>The <code>mevcine.ini</code> file is damaged: MeVCine starts from a fresh configuration. Nothing serious.</dd>
 </dl>

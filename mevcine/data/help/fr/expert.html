@@ -44,10 +44,10 @@
 </header>
 
 <p>Le mode expert donne accès à tout : plusieurs objets, suivi automatique, trajectoires, vecteurs vitesse,
-chronophotographie, changement de référentiel, grapheur. On y passe par le menu <em>Mode › Mode expert</em> ;
-les mesures faites en mode simplifié sont gardées. Les
-quatre onglets, dans l'ordre du travail : <strong>1. Pointage</strong>, <strong>2. Coordonnées</strong>,
-<strong>3. Trajectoires</strong>, <strong>4. Grapheur</strong>. Les trois derniers s'ouvrent une fois le pointage
+chronophotographie, changement de référentiel, grapheur. On y passe par le menu <em>Mode › Mode expert (toutes
+les fonctions)</em> ; les mesures faites en mode simplifié sont gardées, et le pointage continue. Les quatre
+onglets, dans l'ordre du travail : <strong>Pointage</strong>, <strong>Coordonnées</strong>,
+<strong>Trajectoires</strong>, <strong>Grapheur</strong>. Les trois derniers s'ouvrent une fois le pointage
 démarré.</p>
 
 <h2 id="pointage">Onglet Pointage</h2>
@@ -67,7 +67,8 @@ démarré.</p>
   <dt>3. Échelle — <span class="btn">Définir l'échelle</span></dt>
   <dd>Tracez l'étalon sur l'image (deux clics, ou un glisser), puis donnez sa longueur et son unité (mm, cm ou m)
   dans la petite fenêtre. À côté du bouton : « 85 cm pour 353 px », ou « non définie : les mesures sont en
-  pixel ». Voir <a href="echelle.html">L'échelle</a>.</dd>
+  pixel ». Le bouton devient ensuite <span class="btn">Refaire l'échelle</span>. Voir
+  <a href="echelle.html">L'échelle</a>.</dd>
 </dl>
 <p>Pendant le choix de l'origine ou de l'étalon, la consigne s'affiche sous ces boutons, en orange, avec
 <span class="btn">Annuler</span>.</p>
@@ -90,21 +91,24 @@ démarré.</p>
   <dt>Vidéo</dt>
   <dd>Le nom de la vidéo, ses dimensions, son nombre d'images, sa durée ; et les <em>Images par seconde</em>,
   détectées dans la vidéo. Pour un ralenti, indiquez la cadence de prise de vue (par exemple 240). « Cadence
-  variable » signale des images irrégulièrement espacées : leurs dates réelles sont utilisées.</dd>
+  variable », en orange, signale des images irrégulièrement espacées (téléphone) : leurs dates réelles sont
+  utilisées, et les <em>Images par seconde</em> ne donnent que la cadence habituelle de la caméra. Voir
+  <a href="video.html#cadence">Cadence variable</a>.</dd>
   <dt><span class="btn">Tout recommencer</span></dt>
   <dd>Efface les mesures, l'échelle et le repère ; la vidéo reste ouverte. MeVCine demande confirmation s'il y a
   des mesures.</dd>
 </dl>
 <p>Sous l'image : ⟲ ⟳ tournent la vidéo d'un quart de tour (avant l'échelle et le pointage) ; le numéro de l'image
 et la glissière ; ↶ ↷ annulent ou rétablissent le dernier point ; <span class="btn">Plein écran</span>
-(<kbd>F11</kbd>), pendant le pointage.</p>
+(<kbd>F11</kbd>), pendant le pointage. La barre d'état, en bas, dit ce qu'il faut faire
+(« Cliquez sur l'objet », « Cliquez sur l'objet 2 »…).</p>
 <h3 id="plein-ecran">Pointer en plein écran</h3>
 <p><span class="btn">Plein écran</span> donne tout l'écran à l'image. La loupe et les coordonnées restent
 affichées dans un cadre, en haut de l'image : il passe de l'autre côté quand la souris s'en approche, pour ne
 jamais cacher l'objet. La consigne est sous la loupe ; en bas, le choix de l'image,
 <span class="btn">✕ Quitter le plein écran</span> (<kbd>Échap</kbd>), qui revient à la fenêtre sans arrêter le
 pointage, et <span class="btn">⏹ Arrêter le pointage</span>. Le plein écran existe aussi en mode simplifié, à
-l'étape 4.</p>
+l'étape 4 : voir <a href="simplifie.html#plein-ecran">Pointer en plein écran</a>, avec une image.</p>
 
 <h3 id="suivi">Le suivi automatique</h3>
 <ol class="steps">
@@ -128,9 +132,9 @@ taille ou passe devant un fond semblable.</p>
 objet, en mètre (<code>x1</code>, <code>y1</code>, <code>x2</code>… avec plusieurs objets). Le bouton
 <strong>⌖</strong> d'une ligne refait cette mesure : l'onglet <em>Pointage</em> s'ouvre sur l'image, le point
 est entouré ; cliquez sur l'objet, et vous revenez au tableau.</p>
-<p>Au-dessus, sur une ligne : <span class="btn">📋 Copier pour Python</span>,
-<span class="btn">💾 Enregistrer en CSV…</span>, <span class="btn">Enregistrer le projet…</span> ; la souris posée
-sur un bouton dit ce qu'il fait. Voir
+<p>Au-dessus, sur une ligne, <em>Exporter les mesures :</em> <span class="btn">📋 Copier pour Python</span> (« ✔
+Copié » le confirme), <span class="btn">💾 Enregistrer en CSV…</span>, <span class="btn">Enregistrer le
+projet…</span> ; la souris posée sur un bouton dit ce qu'il fait. Voir
 <a href="exports.html">Exporter les mesures</a>.</p>
 
 <h2 id="trajectoires">Onglet Trajectoires</h2>
@@ -148,10 +152,11 @@ vitesses.</figcaption>
   souris</em> ne dessine que le vecteur du point survolé.</dd>
   <dt>Chronophotographie</dt>
   <dd>Les points sur une image de la vidéo (<em>Image n°</em> choisit laquelle), avec l'intervalle Δt entre
-  deux images, la date de l'image, et l'étalon en bleu.</dd>
+  deux images (« Δt habituel » si la cadence est variable), la date de l'image, et l'étalon en bleu.</dd>
   <dt>Chronogramme</dt>
-  <dd>Les points seuls, sur fond blanc, nommés M0, M1, M2…, avec l'étalon : prêt à imprimer pour un travail sur
-  papier.</dd>
+  <dd>Les points seuls, nommés M0, M1, M2…, avec l'étalon, sur le fond des graphiques : blanc en thème clair,
+  sombre en thème sombre. Pour l'imprimer et travailler sur papier, passez d'abord au thème clair (le
+  soleil, en haut à droite).</dd>
   <dt><span class="btn">Enregistrer</span></dt>
   <dd>Enregistre le dessin comme image (PNG ou JPEG).</dd>
   <dt>Changement de référentiel</dt>
@@ -164,18 +169,18 @@ vitesses.</figcaption>
 <figure>
 <img src="images/expert-grapheur.jpg" alt="L'onglet Grapheur : x en fonction de t, points et lignes">
 <figcaption>x en fonction de t : le titre, et la légende de chaque axe avec son unité. La ligne d'aide, sous le
-graphique, rappelle les gestes : la molette zoome, un glisser déplace le graphique, un double-clic le
-recadre.</figcaption>
+graphique, rappelle les gestes : la molette zoome, un glisser déplace le graphique, un double-clic montre tout le
+graphique.</figcaption>
 </figure>
 <p>En haut, choisissez ce qu'il faut tracer (<em>Tracer</em>) et en fonction de quoi (<em>en fonction de</em>,
 <code>t</code> d'office) : <code>t</code>, <code>x</code>, <code>y</code>, la vitesse <code>|v|</code> et ses
 composantes <code>vx</code>, <code>vy</code>, l'accélération <code>|a|</code>, <code>ax</code>, <code>ay</code>.
-Le graphique, vide au départ, se trace aussitôt, avec son titre et les légendes de ses axes. Trois styles : points
-seuls, points et lignes, lignes seules. <span class="btn">Enregistrer</span> écrit le graphique en PNG, titre
-compris.</p>
+Le graphique, vide au départ, se trace aussitôt, avec son titre et les légendes de ses axes. Trois styles
+(<em>Style</em>) : <em>Points seuls</em>, <em>Points et lignes</em>, <em>Lignes seules</em>.
+<span class="btn">Enregistrer</span> écrit le graphique en PNG, titre compris.</p>
 <p class="note">Les vitesses et accélérations du grapheur sont des estimations rapides, par différences entre deux
-images successives. Elles servent à explorer le mouvement et ne sont pas exportées : le calcul propre, c'est à
-vous de le faire, à partir des positions.</p>
+images successives, avec la vraie date de chaque image. Elles servent à explorer le mouvement et ne sont pas
+exportées : le calcul propre, c'est à vous de le faire, à partir des positions.</p>
 
 <h2 id="projets">Enregistrer, reprendre</h2>
 <p><em>Fichier › Enregistrer le projet…</em> (<kbd>Ctrl</kbd>+<kbd>S</kbd>) garde tout ;

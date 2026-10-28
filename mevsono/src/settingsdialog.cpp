@@ -23,13 +23,37 @@ using namespace Qt::StringLiterals;
 
 namespace {
 
+/// Valeur négative écrite avec le signe moins « − », comme ailleurs dans MeVSono (−8,5 dB) ; la saisie
+/// accepte aussi le trait d'union du clavier.
+class MinusSpinBox : public QDoubleSpinBox {
+public:
+    using QDoubleSpinBox::QDoubleSpinBox;
+
+protected:
+    QString textFromValue(double value) const override
+    {
+        QString text = QDoubleSpinBox::textFromValue(value);
+        if (text.startsWith(u'-'))
+            text.replace(0, 1, u"−"_s);
+        return text;
+    }
+    double valueFromText(const QString &text) const override
+    {
+        return QDoubleSpinBox::valueFromText(QString(text).replace(u"−"_s, u"-"_s));
+    }
+    QValidator::State validate(QString &text, int &pos) const override
+    {
+        QString typed = QString(text).replace(u"−"_s, u"-"_s);
+        return QDoubleSpinBox::validate(typed, pos);
+    }
+};
+
+/// Titre d'une partie : demi-gras, à la taille normale, comme les titres des panneaux.
 QLabel *heading(QWidget *parent)
 {
     auto *label = new QLabel(parent);
     QFont font = label->font();
-    font.setBold(true);
-    if (font.pointSizeF() > 0.0)
-        font.setPointSizeF(font.pointSizeF() * 1.2);
+    font.setWeight(QFont::DemiBold);
     label->setFont(font);
     return label;
 }
@@ -76,7 +100,7 @@ SettingsDialog::SettingsDialog(Settings &settings, QWidget *parent)
     for (size_t i = 0; i < dsp::FFT_SIZES.size(); ++i)
         m_fft->addItem(QString());
     m_thresholdLabel = new QLabel(this);
-    m_threshold = new QDoubleSpinBox(this);
+    m_threshold = new MinusSpinBox(this);
     m_threshold->setRange(-100.0, -10.0);
     m_threshold->setSingleStep(0.5);
     m_threshold->setDecimals(1);
@@ -220,8 +244,12 @@ void SettingsDialog::load()
     const Settings &s = m_settings;
     m_window->setCurrentIndex(indexOf(dsp::ALL_WINDOWS, s.window));
     m_fft->setCurrentIndex(indexOf(dsp::FFT_SIZES, s.fftSize));
-    m_threshold->setValue(s.thresholdDb);
-    m_harmonics->setValue(s.harmonics);
+    // champ en cours de saisie : sa valeur n'est pas réécrite (chaque chiffre tapé relance l'analyse,
+    // qui recharge les réglages ; le texte tapé serait remplacé au milieu de la saisie)
+    if (m_threshold->value() != s.thresholdDb)
+        m_threshold->setValue(s.thresholdDb);
+    if (m_harmonics->value() != s.harmonics)
+        m_harmonics->setValue(s.harmonics);
     m_channel->setCurrentIndex(indexOf(audio::ALL_CHANNELS, s.channel));
     m_snap->setChecked(s.snapZero);
     (s.db ? m_ampDb : m_ampLinear)->setChecked(true);

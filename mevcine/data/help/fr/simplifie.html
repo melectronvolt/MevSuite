@@ -92,7 +92,7 @@ curseur devient une main), puis glissez.</p>
   (<code>mm</code>, <code>cm</code> ou <code>m</code>), puis <span class="btn">Valider</span> (ou
   <kbd>Entrée</kbd>). On peut aussi écrire l'unité après le nombre : <code>85 cm</code>.</li>
 </ol>
-<p>« ✔ Échelle : 85 cm pour 353 pixels » confirme ; l'étalon reste dessiné sur l'image, avec sa longueur. Les
+<p>« ✔ Échelle : 85 cm pour 353 pixels. » confirme ; l'étalon reste dessiné sur l'image, avec sa longueur. Les
 positions sont ensuite données <strong>en mètre</strong>, quelle que soit l'unité de l'étalon. Comment choisir un
 bon étalon, et toutes les écritures permises : <a href="echelle.html">L'échelle</a>.</p>
 
@@ -114,18 +114,35 @@ bon étalon, et toutes les écritures permises : <a href="echelle.html">L'échel
   point et revient sur son image ; ↷ (<kbd>Ctrl</kbd>+<kbd>Y</kbd>) le rétablit.</li>
   <li>Inutile de pointer toute la vidéo : arrêtez-vous quand le mouvement est fini. En revanche, on ne saute pas
   d'image.</li>
-  <li><span class="btn">Plein écran</span>, sous l'image (<kbd>F11</kbd>) : l'image occupe tout l'écran, la loupe
-  reste affichée. <kbd>Échap</kbd> revient à la fenêtre.</li>
   <li><strong>Vidéo au ralenti ?</strong> Ouvrez cette rubrique si la vidéo a été filmée au ralenti, et indiquez
   la cadence de prise de vue (par exemple 240 images par seconde). Voir
-  <a href="video.html#ralenti">Les ralentis</a>.</li>
+  <a href="video.html#ralenti">Au ralenti</a>.</li>
+  <li>« Cadence variable : les dates réelles des images sont utilisées. » : la vidéo vient d'un téléphone dont les
+  images ne sont pas régulièrement espacées. Rien à faire : MeVCine prend la vraie date de chaque image. Voir
+  <a href="video.html#cadence">Cadence variable</a>.</li>
 </ul>
 <p>Quand c'est fini : <span class="btn">Terminer le pointage ▶</span>.</p>
+
+<h3 id="plein-ecran">Pointer en plein écran</h3>
+<figure>
+<img src="images/plein-ecran.jpg" alt="Le pointage en plein écran : l'image sur tout l'écran, la loupe et la consigne dans un cadre en haut à gauche, les boutons en bas">
+<figcaption>En plein écran : la loupe et la consigne restent affichées, dans un cadre posé sur l'image.</figcaption>
+</figure>
+<p><span class="btn">Plein écran</span>, sous l'image (<kbd>F11</kbd>) : l'image occupe tout l'écran, et les
+points sont plus faciles à viser. La loupe, les coordonnées et la consigne restent affichées dans un cadre, en haut
+de l'image ; quand la souris s'en approche, il passe de l'autre côté, pour ne jamais cacher l'objet. On pointe
+comme dans la fenêtre : un clic sur l'objet, et l'image suivante s'affiche.</p>
+<ul>
+  <li>En bas : le choix de l'image, ↶ ↷ pour annuler ou rétablir le dernier point.</li>
+  <li><span class="btn">✕ Quitter le plein écran</span> (<kbd>Échap</kbd> ou <kbd>F11</kbd>) revient à la
+  fenêtre ; le pointage continue.</li>
+  <li><span class="btn">Terminer le pointage ▶</span> revient à la fenêtre, à l'étape 5.</li>
+</ul>
 
 <h2 id="tableau">Étape 5 : le tableau des mesures</h2>
 <p>Pour chaque image pointée : la date <code>t</code> en seconde, et les coordonnées <code>x</code> et
 <code>y</code> en mètre, dans votre repère. La première image pointée est à t = 0 ; avec une vidéo à
-25 images par seconde, les dates avancent de 0,040 s en 0,040 s.</p>
+25 images par seconde, les dates avancent de 0,040 s en 0,040 s (sauf si la cadence est variable).</p>
 <p><strong>Une mesure est fausse ?</strong> Cliquez sur <strong>⌖</strong> dans sa ligne : son image s'affiche,
 le point à refaire est entouré d'orange ; cliquez sur l'objet. MeVCine revient ensuite où vous en étiez.
 <span class="btn">Annuler (Échap)</span> renonce.</p>

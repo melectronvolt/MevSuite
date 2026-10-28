@@ -732,6 +732,8 @@ void MainWindow::retranslate()
     const Tr &t = tr();
     m_menuFile->setTitle(t.menuFile);
     m_actOpen->setText(t.openImage);
+    // le bouton de la barre d'outils garde les points de suspension, comme l'accueil et le menu
+    m_actOpen->setIconText(t.openImage);
     m_actQuit->setText(t.menuQuit);
     // Le soleil ou la lune et le drapeau montrent le thème et la langue affichés.
     const bool dark = isDark(QApplication::palette());

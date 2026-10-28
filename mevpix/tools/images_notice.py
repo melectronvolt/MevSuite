@@ -18,6 +18,8 @@ AIDE = os.path.join(RACINE, "assets", "help")
 
 # rendu de l'essai → image de la notice
 IMAGES = [
+    ("01_fr_accueil.png", "accueil-fr.jpg"),
+    ("11_en_accueil.png", "accueil-en.jpg"),
     ("02_fr_mesure.png", "fenetre-fr.jpg"),
     ("02_fr_etalonnage.png", "etalonnage-fr.jpg"),
     ("02_fr_profil.png", "profil-fr.jpg"),

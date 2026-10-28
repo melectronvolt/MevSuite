@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(MeVReg VERSION 0.3.0 DESCRIPTION "Traitement de données pour les TP de physique-chimie" LANGUAGES CXX)
+project(MeVReg VERSION 0.3.1 DESCRIPTION "Traitement de données pour les TP de physique-chimie" LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -102,7 +102,9 @@ if(MEVREG_APP)
         FILES
             assets/help/notice.html assets/help/python.html assets/help/help.css
             assets/help/accueil.jpg assets/help/fenetre.jpg assets/help/tableur.jpg assets/help/import-csv.jpg
-            assets/help/graphe.jpg assets/help/modele.jpg assets/help/python.jpg
+            assets/help/incertitude.jpg assets/help/graphe.jpg assets/help/modele.jpg assets/help/tangentes.jpg
+            assets/help/export-csv.jpg assets/help/menu-fenetres.jpg assets/help/scripts-recus.jpg
+            assets/help/python.jpg
     )
     # thème du bureau suivi par le portail freedesktop (Linux)
     if(UNIX AND NOT APPLE)

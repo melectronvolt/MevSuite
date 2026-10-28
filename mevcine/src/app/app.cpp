@@ -519,13 +519,13 @@ bool App::ouvre_video(const QString &chemin_donne, int rotation)
             message(trad("Vidéo au ralenti"),
                     trad("Cette vidéo au ralenti a été filmée à {} images par seconde, et se lit à {} images par seconde.\n\n"
                          "Les dates sont calculées avec la cadence de prise de vue : {} images par seconde. "
-                         "On peut la corriger dans le champ « images par seconde ».",
+                         "On peut la corriger dans le champ « Images par seconde » (partie « Vidéo au ralenti ? » en mode simplifié).",
                          filmee, lue, filmee));
         else
             message(trad("Vidéo en accéléré"),
                     trad("Cette vidéo en accéléré a été filmée à {} images par seconde, et se lit à {} images par seconde.\n\n"
                          "Les dates sont calculées avec la cadence de prise de vue : {} images par seconde. "
-                         "On peut la corriger dans le champ « images par seconde ».",
+                         "On peut la corriger dans le champ « Images par seconde » (partie « Vidéo au ralenti ? » en mode simplifié).",
                          filmee, lue, filmee));
     }
     return true;
@@ -2005,8 +2005,8 @@ void App::maj_menus()
     m_ouvrir->setToolTip(trad("Ouvrir une vidéo (Ctrl+O)"));
     m_mode_simplifie->setToolTip(trad("Mode simplifié : pas à pas, un seul objet. Les mesures de l'objet 1 sont gardées."));
     m_mode_expert->setToolTip(trad("Mode expert : toutes les fonctions. Les mesures sont gardées."));
-    // À droite de la barre des menus : la notice, puis le soleil ou la lune et le drapeau, qui montrent
-    // le thème et la langue affichés
+    // la notice (menu Aide) ; à droite de la barre des menus, le soleil ou la lune et le drapeau, qui
+    // montrent le thème et la langue affichés
     m_notice->setToolTip(trad("Ouvrir la notice d'utilisation dans le navigateur, à la page de ce que vous faites (F1)"));
     const bool sombre = dessin::sombre(QApplication::palette());
     m_theme->setIcon(icones::theme(sombre));

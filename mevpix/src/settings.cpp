@@ -109,9 +109,19 @@ SettingsFiles SettingsFiles::locate()
         migrate(dir);
         files.user = QDir(dir).filePath(FILE_NAME);
     }
-    const QString admin = QDir(QCoreApplication::applicationDirPath()).filePath(FILE_NAME);
-    if (QFileInfo(admin).isFile())
-        files.admin = admin;
+    // réglages imposés (salle informatique, parc) : sous Linux dans /etc/MeVSuite (les paquets
+    // mettent le programme dans /usr/bin, une AppImage ne se modifie pas), sinon à côté du programme
+    QStringList admin;
+#ifndef Q_OS_WIN
+    admin << u"/etc/MeVSuite/"_s + FILE_NAME;
+#endif
+    admin << QDir(QCoreApplication::applicationDirPath()).filePath(FILE_NAME);
+    for (const QString &path : admin) {
+        if (QFileInfo(path).isFile()) {
+            files.admin = path;
+            break;
+        }
+    }
     return files;
 }
 

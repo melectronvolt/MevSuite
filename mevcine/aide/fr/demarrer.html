@@ -1,38 +1,54 @@
 <header class="title">
 <h1>Démarrer</h1>
-<p>Lancer MeVCine, choisir le mode, ouvrir une vidéo</p>
+<p>Lancer MeVCine, ouvrir une vidéo, choisir le mode</p>
 </header>
 
 <h2 id="lancer">Lancer MeVCine</h2>
 <p>Double-cliquez sur MeVCine (ou sur le raccourci préparé par votre professeur). Un écran de démarrage
 s'affiche deux secondes ; un clic le fait disparaître tout de suite.</p>
+<p>MeVCine s'ouvre dans le mode de la dernière fois (le <strong>mode simplifié</strong> au premier lancement), et
+propose tout de suite d'ouvrir une vidéo.</p>
 <figure>
-<img src="images/accueil.png" alt="L'écran d'accueil : le logo, puis deux cartes, Mode simplifié et Mode expert">
-<figcaption>L'écran d'accueil : choisissez votre mode de travail.</figcaption>
+<img src="images/sans-video.png" alt="La fenêtre au lancement : le logo, le bouton Ouvrir une vidéo, et en bas à droite le mode simplifié">
+<figcaption>Au lancement : le bouton pour ouvrir une vidéo. En bas à droite, le mode de travail.</figcaption>
 </figure>
-<p>Cliquez sur la carte <strong>Mode simplifié</strong> (pas à pas, pour débuter) ou sur la carte
-<strong>Mode expert</strong> (toutes les fonctions). En cas de doute, prenez le mode simplifié : on passe de l'un à
-l'autre à tout moment, sans perdre les mesures, avec le menu <em>Mode</em>.</p>
 
 <h2 id="ouvrir">Ouvrir une vidéo</h2>
-<figure>
-<img src="images/sans-video.png" alt="L'écran sans vidéo : le bouton Ouvrir une vidéo">
-<figcaption>Avant d'ouvrir une vidéo.</figcaption>
-</figure>
 <ul>
   <li><span class="btn">📂 Ouvrir une vidéo…</span> : la vôtre, filmée avec un téléphone ou un appareil photo
-  (<kbd>Ctrl</kbd>+<kbd>O</kbd>) ;</li>
+  (aussi <em>Fichier › Ouvrir une vidéo…</em>, ou <kbd>Ctrl</kbd>+<kbd>O</kbd>) ;</li>
   <li>ou <strong>glissez le fichier de la vidéo</strong> sur la fenêtre de MeVCine.</li>
 </ul>
+<p>Une grande vidéo met quelques secondes à s'ouvrir : le curseur d'attente s'affiche, et la fenêtre ne réagit
+pas avant la fin. Patientez.</p>
 <p>MeVCine lit les vidéos des téléphones (iPhone, Android) et des appareils photo, même filmées en portrait ou au
 ralenti. Si la vidéo est couchée, vous pourrez la tourner à l'étape 1. Si un message « Vidéo illisible »
 s'affiche, demandez à votre professeur, ou voyez la page <a href="video.html">Filmer un mouvement</a>.</p>
 
-<h2 id="projet">Reprendre un travail</h2>
+<h2 id="mode">Choisir le mode</h2>
+<figure class="etroite">
+<img src="images/menu-mode.png" alt="Le menu Mode ouvert : Mode simplifié (pas à pas), coché, et Mode expert (toutes les fonctions)">
+<figcaption>Le menu <em>Mode</em> : le point marque le mode affiché.</figcaption>
+</figure>
 <ul>
-  <li><em>Fichier › Ouvrir un projet…</em> rouvre un travail enregistré (on peut aussi glisser le fichier
-  de projet sur la fenêtre) : la vidéo, le repère, l'échelle et les mesures reviennent. La vidéo doit être à côté du fichier
-  de projet, ou à sa place d'origine.</li>
+  <li><em>Mode › Mode simplifié (pas à pas)</em> : les six étapes, une par une, pour un seul objet. Pour débuter,
+  et pour la plupart des TP. Voir <a href="simplifie.html">Le mode simplifié</a>.</li>
+  <li><em>Mode › Mode expert (toutes les fonctions)</em> : plusieurs objets, suivi automatique, trajectoires,
+  grapheur. Voir <a href="expert.html">Le mode expert</a>.</li>
+</ul>
+<p>On change de mode à tout moment, <strong>sans perdre les mesures</strong> (le mode simplifié ne garde que
+l'objet 1). La barre d'état rappelle le mode, en bas à droite, et MeVCine le retient pour la prochaine fois.</p>
+
+<h2 id="projet">Reprendre un travail</h2>
+<figure class="etroite">
+<img src="images/menu-fichier.png" alt="Le menu Fichier ouvert : ouvrir une vidéo, ouvrir un projet, récupérer le travail précédent, enregistrer le projet, copier pour Python, enregistrer en CSV, quitter">
+<figcaption>Le menu <em>Fichier</em>.</figcaption>
+</figure>
+<ul>
+  <li><em>Fichier › Ouvrir un projet…</em> rouvre un travail enregistré (on peut aussi glisser le fichier de
+  projet sur la fenêtre) : la vidéo, le repère, l'échelle et les mesures reviennent. La vidéo doit être à côté du
+  fichier de projet, ou à sa place d'origine. Si MeVCine est installé sur l'ordinateur, un double clic sur le
+  fichier <code>.mevcine</code> l'ouvre aussi.</li>
   <li><em>Fichier › Récupérer le travail précédent…</em> rouvre la <strong>sauvegarde automatique</strong>, après
   une fermeture malencontreuse ou un plantage. Voir <a href="exports.html#securite">Rien ne se perd sans
   prévenir</a>.</li>
@@ -42,11 +58,13 @@ s'affiche, demandez à votre professeur, ou voyez la page <a href="video.html">F
 <h2 id="barre">Les menus</h2>
 <p>Tout en haut, les menus :</p>
 <table>
-  <tr><th><em>Fichier</em></th><td>ouvrir une vidéo, ouvrir ou enregistrer un projet (vidéo,
-  repère, échelle, mesures, pour continuer plus tard), copier pour Python, enregistrer en CSV</td></tr>
-  <tr><th><em>Édition</em></th><td>annuler ou rétablir le dernier point, tout recommencer</td></tr>
-  <tr><th><em>Mode</em></th><td>changer de mode, sans perdre les mesures</td></tr>
-  <tr><th><em>Aide</em></th><td>cette notice (<kbd>F1</kbd> : à la page de ce que vous faites), « À propos »</td></tr>
+  <tr><th><em>Fichier</em></th><td>ouvrir une vidéo ; ouvrir un projet, récupérer le travail précédent, enregistrer
+  le projet (vidéo, repère, échelle, mesures, pour continuer plus tard) ; copier pour Python, enregistrer en CSV ;
+  quitter</td></tr>
+  <tr><th><em>Édition</em></th><td>annuler le dernier point, le rétablir, tout recommencer</td></tr>
+  <tr><th><em>Mode</em></th><td>mode simplifié ou mode expert, sans perdre les mesures</td></tr>
+  <tr><th><em>Aide</em></th><td><em>Notice d'utilisation…</em> : cette notice (<kbd>F1</kbd> : à la page de ce que
+  vous faites) ; <em>À propos de MeVCine…</em> ; <em>À propos de Qt…</em></td></tr>
 </table>
 <p>Tout à droite, sur la même ligne :</p>
 <table>

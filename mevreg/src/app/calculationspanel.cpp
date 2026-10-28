@@ -148,7 +148,7 @@ CalculationsPanel::CalculationsPanel(MainWindow &win, QWidget *parent) : QWidget
     for (const auto &f : expr::functions())
         html += u"<tr><td><code>%1</code></td><td>%2</td></tr>"_s.arg(QString::fromUtf16(f.signature).toHtmlEscaped(), QString::fromUtf16(f.description).toHtmlEscaped());
     html += u"<tr><td><code>pi</code></td><td>π = 3,14159…</td></tr><tr><td><code>^ ou **</code></td><td>puissance : v^2</td></tr></table>"
-            "<p>Le séparateur décimal est le point : 0.5*m*v^2. Les angles sont en radians.</p>"_s;
+            "<p>Nombres décimaux : avec un point ou une virgule (0.5*m*v^2 ou 0,5*m*v^2). Les angles sont en radians.</p>"_s;
     auto *helpText = new QLabel(html, content);
     helpText->setWordWrap(true);
     helpText->setTextInteractionFlags(Qt::TextSelectableByMouse);
@@ -394,7 +394,8 @@ void CalculationsPanel::rebuild()
 
 void CalculationsPanel::addFormula()
 {
-    const QString text = m_newFormula->text().trimmed();
+    // virgule décimale acceptée, comme dans les boîtes de dialogue
+    const QString text = dialogs::formulaText(m_newFormula->text());
     if (text.isEmpty())
         return;
     Store &store = m_win.store();

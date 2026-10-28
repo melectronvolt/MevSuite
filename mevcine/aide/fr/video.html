@@ -41,11 +41,14 @@
   cadence de <strong>prise de vue</strong> qui compte. Les téléphones Android l'écrivent dans le fichier : MeVCine
   l'utilise d'office, et le dit (« Vidéo au ralenti »). Un iPhone ne l'écrit pas toujours : indiquez vous-même la
   cadence de prise de vue, dans <em>Vidéo au ralenti ?</em> (étape 4 du mode simplifié) ou <em>Images par
-  seconde</em> (mode expert). Les dates du tableau sont recalculées aussitôt.</dd>
-  <dt>Cadence variable</dt>
-  <dd>Beaucoup de téléphones perdent des images, ou filment moins vite quand la lumière baisse. MeVCine le détecte
-  (« Cadence variable ») et utilise la date réelle de chaque image : les intervalles du tableau ne sont alors pas
-  tous égaux, et c'est normal.</dd>
+  seconde</em> (mode expert). Les dates du tableau sont recalculées aussitôt. De même, une vidéo en accéléré est
+  annoncée (« Vidéo en accéléré »).</dd>
+  <dt id="cadence">Cadence variable</dt>
+  <dd>Beaucoup de téléphones ne filment pas à une cadence parfaitement régulière : par exemple 40 ms, puis 44 ms
+  entre deux images ; ou ils perdent des images, ou filment moins vite quand la lumière baisse. MeVCine le détecte
+  (« Cadence variable ») et utilise la <strong>date réelle</strong> de chaque image : les intervalles du tableau ne
+  sont alors pas tous égaux, et c'est normal. Les vitesses et accélérations du grapheur en tiennent compte ; faites
+  de même dans vos calculs, avec les dates du tableau.</dd>
   <dt>HDR</dt>
   <dd>Les vidéos HDR (iPhone récents) sont converties en couleurs ordinaires : elles ne paraissent pas délavées.</dd>
 </dl>
@@ -53,4 +56,5 @@
 <h2 id="formats">Les formats</h2>
 <p>MeVCine lit les formats des téléphones, des appareils photo et des webcams : MP4, MOV, AVI, MKV, WebM, 3GP, MTS…,
 en H.264, HEVC (H.265), AV1, VP9, ProRes, Motion JPEG. Les très grandes vidéos (4K) s'ouvrent, mais plus
-lentement : pour un TP, une vidéo en 1080p suffit largement.</p>
+lentement : pour un TP, une vidéo en 1080p suffit largement. Une vidéo que MeVCine n'arrive pas à examiner en
+deux minutes (fichier abîmé, clé USB trop lente) est déclarée illisible : copiez-la d'abord sur l'ordinateur.</p>

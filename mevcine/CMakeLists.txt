@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 
 project(mevcine
-    VERSION 0.3.0
+    VERSION 0.3.1
     DESCRIPTION "MeVCine : étude cinématique de vidéos pour le lycée (pointage, repère, échelle, export CSV et listes Python)"
     LANGUAGES CXX)
 

@@ -2,7 +2,7 @@
 
 Quatre logiciels libres pour les TP de physique-chimie au lycée, par Rémi MEVAERE. Ils sont
 écrits en C++ avec Qt 6 et fonctionnent sous Linux et Windows. Version actuelle :
-0.3.0 ; les changements de chaque version sont notés dans [`CHANGELOG.md`](CHANGELOG.md).
+0.3.1 ; les changements de chaque version sont notés dans [`CHANGELOG.md`](CHANGELOG.md).
 
 | Logiciel | Rôle | Langues | Licence | Dossier |
 |----------|------|---------|---------|---------|
@@ -18,6 +18,23 @@ pour les dossiers, les programmes et les fichiers (`mevpix`…).
 
 Les premières versions, écrites en Rust (interface egui) sous les noms PixMev, CineMev, RegMev et
 SpectralMev, ont été remplacées par ces versions C++.
+
+| MeVPix | MeVCine |
+|--------|---------|
+| <img src="mevpix/assets/help/fenetre-fr.jpg" alt="MeVPix : mesure de la tache centrale d'une figure de diffraction" width="420"> | <img src="mevcine/data/help/fr/images/pointage.jpg" alt="MeVCine : pointage d'un palet image par image" width="420"> |
+| **MeVReg** | **MeVSono** |
+| <img src="mevreg/assets/help/fenetre.jpg" alt="MeVReg : tableur, graphe et modélisation de la décharge d'un condensateur" width="420"> | <img src="mevsono/assets/help/fenetre-fr.jpg" alt="MeVSono : signal et spectre d'un son de flûte" width="420"> |
+
+## Utiliser
+
+- **Notice** : menu **Aide → Notice d'utilisation** (touche `F1`), dans le navigateur. Elle
+  s'adresse d'abord aux élèves (prise en main pas à pas), puis aux professeurs (installation sur un
+  parc, réglages, idées pour la classe).
+- **Réglages** : un seul dossier pour les quatre logiciels, `~/.config/MeVSuite/` sous Linux,
+  `%APPDATA%\MeVSuite\` sous Windows, avec un fichier par logiciel (`mevpix.ini`…).
+- **Erreurs** : après une erreur imprévue ou un plantage, le logiciel note la cause dans son journal
+  (`mevpix.log`, `mevcine.log`, `mevreg.log`, `mevsono.log`, dans ce même dossier) et dit où le
+  trouver. Joindre ce fichier à un signalement : suite@sciences-physiques.net.
 
 ## Télécharger et installer
 

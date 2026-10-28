@@ -61,11 +61,11 @@ précisément qu'à l'œil.</p>
 <svg viewBox="0 0 1280 800" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, sans-serif">
   <image href="fenetre-fr.jpg" width="1280" height="800"/>
   <g font-weight="700" font-size="22" text-anchor="middle">
-    <circle cx="875" cy="39" r="16" fill="#0b5cad"/><text x="875" y="47" fill="#fff">1</text>
+    <circle cx="800" cy="40" r="16" fill="#0b5cad"/><text x="800" y="48" fill="#fff">1</text>
     <circle cx="1200" cy="16" r="16" fill="#0b5cad"/><text x="1200" y="24" fill="#fff">2</text>
     <circle cx="268" cy="74" r="16" fill="#0b5cad"/><text x="268" y="82" fill="#fff">3</text>
-    <circle cx="1245" cy="90" r="16" fill="#0b5cad"/><text x="1245" y="98" fill="#fff">4</text>
-    <circle cx="930" cy="783" r="16" fill="#0b5cad"/><text x="930" y="791" fill="#fff">5</text>
+    <circle cx="1240" cy="276" r="16" fill="#0b5cad"/><text x="1240" y="284" fill="#fff">4</text>
+    <circle cx="950" cy="784" r="16" fill="#0b5cad"/><text x="950" y="792" fill="#fff">5</text>
   </g>
 </svg>
 <figcaption>MeVPix après l'étalonnage et une première mesure (<a href="fenetre-fr.jpg">image en grand</a>).</figcaption>
@@ -75,16 +75,17 @@ précisément qu'à l'œil.</p>
   (<span class="btn">📏 Étalonner</span>, <span class="btn">📐 Mesurer</span>,
   <span class="btn">📈 Profil d'intensité</span>), revoir toute l'image
   (<span class="btn">🔍 Ajuster à la fenêtre</span>) ; puis l'échelle de l'image.</li>
-  <li><span class="num">2</span><strong>Thème et langue</strong> : le soleil (thème clair) ou la lune
-  (thème sombre), et le drapeau de la langue. Un clic passe à l'autre thème ou à l'autre langue.</li>
+  <li><span class="num">2</span><strong>Thème et langue</strong>, à droite des menus : le soleil
+  (thème clair) ou la lune (thème sombre), et le drapeau de la langue. Un clic passe à l'autre thème
+  ou à l'autre langue.</li>
   <li><span class="num">3</span><strong>Panneau de l'outil</strong> : ce qu'il faut faire, puis les
   résultats (échelle, tableau des mesures, curseurs du profil).</li>
-  <li><span class="num">4</span><strong>L'image</strong>, avec les segments de l'outil choisi :
-  l'étalon en jaune (Étalonner), les mesures en bleu (Mesurer) ou la ligne de coupe en rose (Profil
-  d'intensité).</li>
+  <li><span class="num">4</span><strong>L'image</strong>, avec les tracés de l'outil choisi :
+  l'étalon en jaune (Étalonner), les mesures en turquoise (Mesurer) ou la ligne de coupe en rose
+  (Profil d'intensité). Les tracés des autres outils sont cachés, pas effacés.</li>
   <li><span class="num">5</span><strong>Barre d'état</strong> : à gauche, ce qu'il faut faire ensuite
   ou ce qui vient de se passer (en vert, une réussite ; en rouge, un problème) ; à droite, l'image
-  ouverte et son zoom.</li>
+  ouverte, sa taille en pixels et son zoom.</li>
 </ol>
 <div class="tip"><p><strong>Perdu ?</strong> Lisez la barre d'état, en bas de la fenêtre : elle
 indique toujours l'étape suivante.</p></div>
@@ -94,13 +95,18 @@ indique toujours l'étape suivante.</p></div>
 <h2>3. Mesurer en trois étapes</h2>
 
 <h3>Étape 1 : ouvrir l'image</h3>
-<p>Au démarrage, MeVPix montre sa page d'accueil. Cliquez sur
-<span class="btn">📂 Ouvrir une image…</span>, au milieu de la fenêtre ou dans la barre d'outils (ou
-<kbd>Ctrl</kbd>+<kbd>O</kbd>), ou glissez le fichier de l'image sur la fenêtre. MeVPix lit les
-images PNG, JPEG, BMP, TIFF et WebP (TIFF : pas dans la version AppImage pour Linux).</p>
+<p>Au démarrage, MeVPix montre sa page d'accueil.</p>
+<figure class="ecran">
+<a href="accueil-fr.jpg"><img src="accueil-fr.jpg" alt="Page d'accueil de MeVPix : le bouton Ouvrir une image" width="1024" height="640"></a>
+<figcaption>La page d'accueil : ouvrir une image.</figcaption>
+</figure>
+<p>Cliquez sur <span class="btn">📂 Ouvrir une image…</span>, au milieu de la fenêtre ou dans la
+barre d'outils (ou <kbd>Ctrl</kbd>+<kbd>O</kbd>), ou glissez le fichier de l'image sur la fenêtre.
+MeVPix lit les images PNG, JPEG, BMP, TIFF et WebP (TIFF : pas dans la version AppImage pour
+Linux).</p>
 <div class="note"><p><strong>Photo d'iPhone (HEIC)</strong> : MeVPix ne la lit pas. Envoyez-vous la
-photo par courriel (elle arrive en JPEG), ou réglez l'appareil photo sur « Formats → Le plus
-compatible ».</p></div>
+photo par courriel (elle arrive en JPEG), ou réglez l'appareil photo sur « Formats → Le plus
+compatible ».</p></div>
 
 <h3>Étape 2 : étalonner</h3>
 <p>L'étalonnage apprend à MeVPix combien mesure un pixel de l'image. Il se fait pour chaque
@@ -110,10 +116,10 @@ image.</p>
   <li>Tracez un segment, <strong>clic gauche maintenu</strong>, d'un bout à l'autre d'un objet dont
   vous connaissez la longueur : lignes du papier millimétré, graduations d'une règle, échelle d'une
   image de microscope. Avec <kbd>Maj</kbd> enfoncée, le segment reste horizontal ou vertical.</li>
-  <li>Saisissez sa <strong>longueur réelle</strong> (par exemple « 20 ») et choisissez
+  <li>Saisissez sa <strong>longueur réelle</strong> (par exemple « 20 ») et choisissez
   l'<strong>unité</strong> (µm, mm, cm ou m).</li>
   <li>Cliquez sur <span class="btn">✔ Valider l'étalonnage</span>, ou appuyez sur
-  <kbd>Entrée</kbd>. L'échelle s'affiche dans la barre d'outils (« Échelle : 1 px = 0,0206 mm ») et
+  <kbd>Entrée</kbd>. L'échelle s'affiche dans la barre d'outils (« Échelle : 1 px = 0,0206 mm ») et
   MeVPix passe à l'outil Mesurer.</li>
 </ol>
 <figure class="ecran">
@@ -125,15 +131,28 @@ on saisit 20, unité mm, puis on valide.</figcaption>
 <h3>Étape 3 : mesurer</h3>
 <p>Avec l'outil <span class="btn">📐 Mesurer</span>, chaque segment tracé (clic gauche maintenu)
 devient une mesure. Sa longueur s'affiche sur l'image (M1, M2…) et dans le tableau du panneau (voir
-la figure de la <a href="#fenetre">section 2</a>).</p>
+la figure de la <a href="#fenetre">partie 2</a>).</p>
 <ul>
   <li><strong>Corriger une mesure</strong> : attrapez une extrémité (poignée ronde) et déplacez-la.</li>
   <li><strong>Supprimer une mesure</strong> : la corbeille 🗑 à côté de la mesure, ou
   <kbd>Ctrl</kbd>+<kbd>Z</kbd> pour la dernière ; <span class="btn">Tout effacer</span> les
   supprime toutes.</li>
-  <li><strong>Garder les résultats</strong> : <span class="btn">📋 Copier le tableau</span>, puis
-  <kbd>Ctrl</kbd>+<kbd>V</kbd> dans un tableur, Regressi ou votre compte rendu.</li>
 </ul>
+
+<h3>Garder ses résultats</h3>
+<ul>
+  <li><strong>Les mesures</strong> : <span class="btn">📋 Copier le tableau</span>, puis
+  <kbd>Ctrl</kbd>+<kbd>V</kbd> dans un tableur (LibreOffice Calc, Excel, MeVReg, Regressi) ou dans
+  votre compte rendu. Le tableau a deux colonnes : « Mesure » et « Longueur (mm) ».</li>
+  <li><strong>Le profil d'intensité</strong> : <span class="btn">💾 Exporter le profil (CSV)…</span>
+  (<a href="#profil">partie 5</a>).</li>
+  <li><strong>L'image avec ses tracés</strong> : faites une capture d'écran (sous Windows,
+  <kbd>Windows</kbd>+<kbd>Maj</kbd>+<kbd>S</kbd> ; sous Linux, la touche
+  <kbd>Impr. écran</kbd>).</li>
+</ul>
+<div class="warn"><p><strong>MeVPix n'enregistre pas votre travail.</strong> Fermer MeVPix ou ouvrir
+une autre image efface l'étalonnage, les mesures et la coupe. Copiez-les avant : MeVPix le rappelle
+par une question, et « Annuler » est le choix par défaut.</p></div>
 </section>
 
 <section id="precision">
@@ -154,14 +173,15 @@ la figure de la <a href="#fenetre">section 2</a>).</p>
   <strong>bien en face</strong> : sinon la perspective fausse les longueurs.</li>
 </ul>
 <h3>Précision du résultat</h3>
-<p>MeVPix affiche trois chiffres significatifs (« 20,2 mm ») : c'est un arrondi, pas une
+<p>MeVPix affiche trois chiffres significatifs (« 20,2 mm ») : c'est un arrondi, pas une
 incertitude. L'incertitude vient surtout du <strong>pointage</strong>, environ 1 pixel à chaque
-extrémité. Avec l'échelle « 1 px = 0,0206 mm », c'est environ 0,04 mm sur une mesure. Pointer les
+extrémité. Avec l'échelle « 1 px = 0,0206 mm », c'est environ 0,04 mm sur une mesure. Pointer les
 mêmes extrémités plusieurs fois montre la dispersion de vos mesures.</p>
-<div class="warn"><p><strong>Étalon modifié ?</strong> Si vous déplacez l'étalon ou changez sa
-longueur ou son unité, un avertissement ⚠ demande de valider à nouveau. Après la validation, les
-mesures déjà tracées sont recalculées : rien n'est perdu.</p></div>
-<p>Sans étalonnage, les longueurs sont en pixels (« px ») et l'avertissement « ⚠ Non étalonné »
+<div class="warn"><p><strong>Étalon modifié ?</strong> Si vous déplacez l'étalon, même un peu, ou
+changez sa longueur ou son unité, l'échelle passe en orange avec ⚠ et le panneau demande de valider
+à nouveau. En attendant, les mesures gardent l'ancienne échelle ; après la validation, elles sont
+recalculées : rien n'est perdu.</p></div>
+<p>Sans étalonnage, les longueurs sont en pixels (« px ») et l'avertissement « ⚠ Non étalonné »
 reste affiché.</p>
 </section>
 
@@ -171,12 +191,17 @@ reste affiché.</p>
 d'une ligne de coupe. Sur une figure de diffraction ou d'interférences, les creux de la courbe
 sont les franges sombres.</p>
 <ol class="steps">
-  <li>Choisissez l'outil : le graphique apparaît sous l'image.</li>
+  <li>Choisissez l'outil : le graphique apparaît sous l'image. (Un second clic sur le bouton revient
+  à l'outil Mesurer.)</li>
   <li>Tracez la <strong>ligne de coupe</strong> sur l'image, le long de la figure (clic gauche
-  maintenu ; <kbd>Maj</kbd> pour une ligne horizontale).</li>
+  maintenu ; <kbd>Maj</kbd> pour une ligne horizontale). Une nouvelle ligne remplace la
+  précédente.</li>
   <li>Placez les <strong>curseurs A et B</strong> : glissez-les sur l'image (ils restent sur la
-  ligne de coupe), ou cliquez et glissez sur le graphique.</li>
-  <li>Lisez à gauche leurs positions et l'écart <strong>Δx = |x<sub>B</sub> − x<sub>A</sub>|</strong>.</li>
+  ligne de coupe), ou cliquez et glissez sur le graphique (le curseur le plus proche vient sous la
+  souris).</li>
+  <li>Lisez à gauche leurs positions <em>x</em>, leurs intensités <em>I</em> et l'écart
+  <strong>Δx = |x<sub>B</sub> − x<sub>A</sub>|</strong>. Les positions se comptent depuis le début
+  de la ligne de coupe, là où vous avez commencé à la tracer.</li>
 </ol>
 <figure class="ecran">
 <a href="profil-fr.jpg"><img src="profil-fr.jpg" alt="Ligne de coupe, curseurs A et B sur les minima, graphique du profil" width="1024" height="640"></a>
@@ -184,27 +209,37 @@ sont les franges sombres.</p>
 encadrent la tache centrale : Δx = 20,2 mm. Le haut de la courbe est plat : la photo est saturée
 au centre, mais les minima restent bien visibles.</figcaption>
 </figure>
+<div class="tip"><p><strong>Papier millimétré</strong> : chaque ligne du papier qui croise la coupe
+fait un petit creux étroit sur la courbe (un par millimètre). Ce ne sont pas des franges : placez
+A et B sur les minima que vous voyez sur l'image.</p></div>
 <h3>Canal et épaisseur</h3>
 <ul>
   <li><strong>Canal</strong> : la luminance (gris) combine les trois couleurs ; le canal
   <strong>Rouge</strong> fait souvent mieux ressortir les franges d'un laser rouge.</li>
   <li><strong>Épaisseur</strong> : l'intensité est moyennée sur une bande de part et d'autre de la
-  ligne de coupe. 10 à 20 px atténuent le quadrillage du papier et le bruit de la photo.</li>
+  ligne de coupe (dessinée en rose pâle). 10 à 20 px atténuent le bruit de la photo et les lignes
+  du papier parallèles à la coupe.</li>
 </ul>
 <h3>Saturation</h3>
-<p>« ⚠ … % de la coupe est saturée » : la photo y atteint la valeur maximale 255 et l'intensité
-réelle est plus grande que celle affichée. C'est fréquent au centre d'une figure de diffraction.
-Les positions des minima restent justes ; les hauteurs des maxima saturés, non.</p>
+<p>« ⚠ … % de la coupe est saturée (valeur 254 ou 255) » : la photo y atteint la valeur maximale, et
+l'intensité réelle y est peut-être plus grande que celle affichée. C'est fréquent au centre d'une
+figure de diffraction. Les positions des minima restent justes ; les hauteurs des maxima saturés,
+non. Pour les mesurer, refaites la photo moins lumineuse (baissez l'exposition de l'appareil).</p>
 <h3>Le graphique</h3>
 <ul>
   <li>Molette : zoom ; <kbd>Maj</kbd>+molette : déplacement ; double-clic : revoir toute la
   courbe.</li>
-  <li>Survoler la courbe affiche la position et l'intensité du point.</li>
+  <li>Au survol, un réticule donne la position <em>x</em> et l'intensité <em>I</em> sous la
+  souris.</li>
 </ul>
 <h3>Exporter le profil</h3>
 <p><span class="btn">💾 Exporter le profil (CSV)…</span> enregistre la courbe dans un fichier à deux
-colonnes : la position <code>x</code> et l'intensité <code>I</code> (de 0 à 255). Il s'ouvre dans
-LibreOffice Calc, Excel ou Regressi. En Python :</p>
+colonnes : la position <code>x</code> (dans l'unité de l'étalon, en px sans étalonnage) et
+l'intensité <code>I</code> (de 0 à 255), un point par pixel de la coupe. Le nom proposé est
+<code>profil.csv</code>, dans le dossier de l'image ; si vous tapez un nom sans « .csv », MeVPix
+l'ajoute, et il demande avant de remplacer un fichier qui existe déjà. Le fichier s'ouvre dans
+LibreOffice Calc, Excel, MeVReg ou Regressi. Avec l'interface en français, les colonnes sont
+séparées par « ; » et les nombres ont une virgule. En Python :</p>
 <pre><code>import pandas as pd
 profil = pd.read_csv("profil.csv", sep=";", decimal=",")
 profil.plot(x="x (mm)", y="I")</code></pre>
@@ -221,7 +256,7 @@ petites. Quand <em>D</em> est grand devant <em>L</em> :</p>
   bien en face. Notez <em>λ</em> (écrit sur le laser) et mesurez <em>D</em>.</li>
   <li><strong>Ouvrez</strong> la photo dans MeVPix.</li>
   <li><strong>Étalonnez</strong> sur les lignes épaisses du papier millimétré (une tous les
-  centimètres) : par exemple 2 cm, soit « 20 » et l'unité mm.</li>
+  centimètres) : par exemple 2 cm, soit « 20 » et l'unité mm.</li>
   <li><strong>Mesurez <em>L</em></strong> d'un minimum sombre à l'autre autour de la tache centrale,
   avec l'outil Mesurer, ou mieux avec le profil d'intensité (curseurs A et B sur les deux minima :
   <em>L</em> = Δx).</li>
@@ -244,7 +279,7 @@ la distance entre <em>N</em> + 1 franges et divisez par <em>N</em> pour obtenir 
 <tbody>
 <tr><td>Tracer un segment</td><td>clic gauche maintenu</td></tr>
 <tr><td>Segment horizontal ou vertical</td><td>maintenir <kbd>Maj</kbd> pendant le tracé</td></tr>
-<tr><td>Corriger une extrémité, déplacer A ou B</td><td>attraper la poignée ronde et glisser</td></tr>
+<tr><td>Corriger une extrémité, déplacer A ou B sur l'image</td><td>attraper la poignée ronde et glisser</td></tr>
 <tr><td>Annuler le tracé en cours</td><td><kbd>Échap</kbd></td></tr>
 <tr><td>Zoomer</td><td>molette, centrée sur la souris</td></tr>
 <tr><td>Déplacer l'image</td><td>clic droit maintenu</td></tr>
@@ -252,8 +287,9 @@ la distance entre <em>N</em> + 1 franges et divisez par <em>N</em> pour obtenir 
 <tr><td>Ouvrir une image</td><td><kbd>Ctrl</kbd>+<kbd>O</kbd>, ou glisser-déposer</td></tr>
 <tr><td>Valider l'étalonnage</td><td><kbd>Entrée</kbd> dans le champ de longueur</td></tr>
 <tr><td>Supprimer la dernière mesure</td><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> (outil Mesurer)</td></tr>
-<tr><td>Agrandir ou réduire les textes</td><td><kbd>Ctrl</kbd>+<kbd>+</kbd>, <kbd>Ctrl</kbd>+<kbd>−</kbd> ; <kbd>Ctrl</kbd>+<kbd>0</kbd> : taille normale</td></tr>
+<tr><td>Placer A ou B sur le graphique</td><td>clic ou glisser : le curseur le plus proche suit</td></tr>
 <tr><td>Graphique du profil</td><td>molette : zoom ; <kbd>Maj</kbd>+molette : déplacement ; double-clic : tout revoir</td></tr>
+<tr><td>Agrandir ou réduire les textes</td><td><kbd>Ctrl</kbd>+<kbd>+</kbd>, <kbd>Ctrl</kbd>+<kbd>−</kbd> ; <kbd>Ctrl</kbd>+<kbd>0</kbd> : taille normale</td></tr>
 <tr><td>Ouvrir cette notice</td><td><kbd>F1</kbd>, ou <em>Aide › Notice d'utilisation…</em></td></tr>
 </tbody>
 </table>
@@ -262,16 +298,27 @@ la distance entre <em>N</em> + 1 franges et divisez par <em>N</em> pour obtenir 
 <section id="problemes">
 <h2>8. En cas de problème</h2>
 <dl class="faq">
-<dt>Le bouton « Valider l'étalonnage » reste grisé.</dt>
+<dt>Le bouton « Valider l'étalonnage » reste grisé.</dt>
 <dd>Il manque le segment (tracez-le sur l'image), ou la longueur n'est pas un nombre positif. Tapez
-seulement le nombre (« 20 », pas « 20 mm ») : l'unité se choisit dans la liste à côté.</dd>
+seulement le nombre (« 20 », pas « 20 mm ») : l'unité se choisit dans la liste à côté.</dd>
 
-<dt>Les longueurs s'affichent en « px ».</dt>
+<dt>Les longueurs s'affichent en « px ».</dt>
 <dd>L'image n'est pas étalonnée : faites l'étape 2. Les mesures déjà tracées seront converties.</dd>
 
-<dt>« Format d'image non pris en charge ».</dt>
-<dd>Le fichier n'est pas une image PNG, JPEG, BMP, TIFF ou WebP. Une photo d'iPhone (HEIC) ou un PDF
-doit d'abord être converti en JPEG.</dd>
+<dt>L'échelle est en orange, avec ⚠.</dt>
+<dd>L'étalon, sa longueur ou son unité a changé depuis la validation. Revenez à
+<span class="btn">📏 Étalonner</span> et cliquez sur <span class="btn">✔ Valider l'étalonnage</span>.</dd>
+
+<dt>« Impossible d'ouvrir … : format d'image non pris en charge ».</dt>
+<dd>MeVPix ne sait pas lire ce fichier : ce n'est pas une image PNG, JPEG, BMP, TIFF ou WebP (la
+version AppImage ne lit pas le TIFF). Convertissez-le en PNG ou en JPEG ; de même pour une photo
+d'iPhone (HEIC) ou un PDF.</dd>
+
+<dt>Mes mesures ne sont plus sur l'image.</dt>
+<dd>Chaque outil ne montre que ses tracés : revenez à <span class="btn">📐 Mesurer</span> (de même,
+l'étalon est avec <span class="btn">📏 Étalonner</span> et la coupe avec
+<span class="btn">📈 Profil d'intensité</span>). Si vous avez ouvert une autre image, elles sont
+effacées : MeVPix avait demandé avant.</dd>
 
 <dt>La molette ne zoome pas.</dt>
 <dd>La souris doit être au-dessus de l'image, pas du panneau ni du graphique.</dd>
@@ -286,12 +333,9 @@ d'écrire dans un champ.</dd>
 <dt>Le graphique du profil est vide.</dt>
 <dd>Tracez une ligne de coupe sur l'image avec l'outil Profil d'intensité.</dd>
 
-<dt>Mes mesures ont disparu.</dt>
-<dd>Ouvrir une autre image efface l'étalonnage et les mesures (MeVPix demande d'abord
-confirmation). Copiez le tableau des mesures avant de changer d'image.</dd>
-
 <dt>Le programme s'est fermé tout seul.</dt>
-<dd>Une erreur imprévue s'est produite. Relancez MeVPix et prévenez votre professeur.</dd>
+<dd>Une erreur imprévue s'est produite (« MeVPix a rencontré une erreur imprévue et doit se
+fermer »). Relancez MeVPix et prévenez votre professeur.</dd>
 </dl>
 </section>
 
@@ -302,22 +346,32 @@ confirmation). Copiez le tableau des mesures avant de changer d'image.</dd>
 
 <section id="installer">
 <h2>9. Installer et utiliser en classe</h2>
+<p>Les fichiers d'installation sont sur la page des versions :
+<a href="https://github.com/melectronvolt/MevSuite/releases">github.com/melectronvolt/MevSuite/releases</a>.</p>
 <ul>
   <li><strong>Windows, sans installation</strong> : MeVPix tient dans un dossier (archive
-  <code>.zip</code>), à copier sur le poste, le réseau du lycée ou une clé USB ; lancer
-  <code>mevpix.exe</code>. Il fonctionne hors connexion, notice comprise. Au premier lancement sur un
-  poste, Windows peut afficher « Windows a protégé votre ordinateur », car MeVPix n'est pas signé
-  numériquement : cliquez sur « Informations complémentaires », puis « Exécuter quand même ». Pour
-  ouvrir une image directement : clic droit sur l'image → « Ouvrir avec… » → MeVPix.</li>
-  <li><strong>Windows, installateur</strong> : <code>MeVPix-<i>version</i>-windows-x64-setup.exe</code> installe
-  MeVPix pour tous les utilisateurs dans <code>Program Files\MeVSuite</code>, avec un raccourci dans le menu
-  Démarrer ; il se désinstalle par les Paramètres de Windows. Déploiement sur un parc (WAPT, GPO) :
-  options <code>/VERYSILENT /SUPPRESSMSGBOXES /NORESTART</code>.</li>
+  <code>MeVPix-<i>version</i>-windows-x64.zip</code>), à copier sur le poste, le réseau du lycée ou
+  une clé USB ; lancer <code>mevpix.exe</code>. Il fonctionne hors connexion, notice comprise. Au
+  premier lancement sur un poste, Windows peut afficher « Windows a protégé votre ordinateur », car
+  MeVPix n'est pas signé numériquement : cliquez sur « Informations complémentaires », puis
+  « Exécuter quand même ». Pour ouvrir une image directement : clic droit sur l'image →
+  « Ouvrir avec… » → MeVPix.</li>
+  <li><strong>Windows, installateur</strong> : <code>MeVPix-<i>version</i>-windows-x64-setup.exe</code>
+  (droits d'administrateur) installe MeVPix pour tous les utilisateurs dans
+  <code>C:\Program Files\MeVSuite\MeVPix</code>, avec un raccourci dans le menu Démarrer (dossier
+  MeVSuite) ; il se désinstalle par les Paramètres de Windows. Une nouvelle version remplace
+  l'ancienne ; les réglages des utilisateurs sont gardés.</li>
+  <li><strong>Déploiement sur un parc</strong> (WAPT, GPO), sans fenêtre ni question : installation,
+  puis désinstallation :
+<pre><code>MeVPix-<i>version</i>-windows-x64-setup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART
+"C:\Program Files\MeVSuite\MeVPix\unins000.exe" /VERYSILENT /SUPPRESSMSGBOXES /NORESTART</code></pre></li>
   <li><strong>Linux</strong> : paquet <code>.deb</code> (Ubuntu, Debian), <code>.rpm</code> (Fedora),
-  ou <code>.AppImage</code>, qui se lance sans installation (le rendre exécutable).</li>
+  ou <code>.AppImage</code>, qui se lance sans installation (le rendre exécutable). L'AppImage ne lit
+  pas les images TIFF.</li>
   <li><strong>Grandes photos</strong> : une photo de téléphone (12 à 50 Mpx) s'ouvre en quelques
-  secondes (« Chargement… » dans la barre d'état). L'affichage est réduit si besoin, mais les
-  mesures et le profil utilisent toujours les pixels d'origine.</li>
+  secondes (« Chargement… » dans la barre d'état). L'affichage est réduit si besoin, mais les
+  mesures et le profil utilisent toujours les pixels d'origine. Une photo prise en mode portrait
+  est remise droite.</li>
   <li><strong>Vidéoprojecteur</strong> : <kbd>Ctrl</kbd>+<kbd>+</kbd> agrandit les textes et les
   boutons (l'agrandissement est plafonné pour que les panneaux restent visibles) ;
   <kbd>Ctrl</kbd>+<kbd>0</kbd> revient à la taille normale.</li>
@@ -341,14 +395,16 @@ utilisateur et modifiable à la main ; le supprimer rétablit les valeurs par d�
 </tbody>
 </table>
 <p><strong>Réglages imposés</strong> (salle informatique, clé USB) : un fichier <code>mevpix.ini</code>
-placé à côté de <code>mevpix.exe</code> est lu à chaque lancement et l'emporte sur les réglages de
-l'utilisateur ; MeVPix ne l'écrit jamais. Par exemple :</p>
+est lu à chaque lancement et l'emporte sur les réglages de l'utilisateur ; MeVPix ne l'écrit
+jamais. Sous Windows, il se place dans le dossier de <code>mevpix.exe</code>
+(<code>C:\Program Files\MeVSuite\MeVPix</code> avec l'installateur, ou le dossier de la version
+portable) ; sous Linux, dans <code>/etc/MeVSuite/</code> (paquets et AppImage). Par exemple :</p>
 <pre><code>language = fr
 theme = light</code></pre>
 <p>impose le français et le thème clair sur tous les postes. Les clés possibles sont celles du
 fichier de l'utilisateur ; <code>language</code> et <code>theme</code> acceptent aussi
-<code>auto</code> (langue ou thème du système). Les chemins des deux fichiers sont affichés dans
-<strong>Aide → À propos de MeVPix</strong>.</p>
+<code>auto</code> (langue ou thème du système). <strong>Aide › À propos de MeVPix…</strong> affiche
+le chemin du fichier de l'utilisateur, et celui du fichier imposé s'il existe.</p>
 <p>Les quatre logiciels de la suite (MeVPix, MeVCine, MeVReg, MeVSono) rangent leurs réglages dans
 ce même dossier <code>MeVSuite</code>. La notice est écrite à chaque ouverture dans le dossier
 temporaire du système (<code>mevpix-help</code>) : on peut l'imprimer ou l'enregistrer depuis le
@@ -358,13 +414,14 @@ navigateur.</p>
 <section id="apropos">
 <h2>11. Erreurs, contact et licence</h2>
 <p><strong>Erreur imprévue</strong> : MeVPix affiche un message avant de se fermer et enregistre le
-détail dans <code>mevpix.log</code>, dans le même dossier que <code>mevpix.ini</code>. Joignez ce
-fichier à votre signalement.</p>
+détail (la cause et, après un plantage, la pile d'appels) dans <code>mevpix.log</code>, dans le
+même dossier que <code>mevpix.ini</code> ; le message donne son chemin. Le journal ne garde que la
+dernière erreur : joignez-le à votre signalement.</p>
 <p><strong>Contact</strong> : Rémi MEVAERE, <a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>.
 Remarques, idées d'amélioration et problèmes sont les bienvenus.</p>
 <p><strong>Licence</strong> : MeVPix est un logiciel libre, distribué sous licence MIT ; il est écrit
 en C++ avec la bibliothèque libre Qt (licence LGPL version 3). Les composants utilisés et leur
-licence sont indiqués dans <strong>Aide → À propos de MeVPix…</strong> ; <strong>Aide → À propos
+licence sont indiqués dans <strong>Aide › À propos de MeVPix…</strong> ; <strong>Aide › À propos
 de Qt…</strong> donne la version de Qt et ses conditions de licence.</p>
 <footer>MeVPix {{version}} — notice intégrée au logiciel, disponible hors connexion.</footer>
 </section>

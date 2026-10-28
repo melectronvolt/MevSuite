@@ -264,6 +264,53 @@ class TestsInterface : public QObject {
         image.save(dossier.filePath(nom + u".png"_s));
     }
 
+    /// enregistre l'image d'une fenêtre à elle (le plein écran)
+    void rendu_fenetre(QWidget *w, const QString &nom)
+    {
+        attend();
+        const QDir dossier(QString::fromUtf8(MEVCINE_RENDUS_TESTS));
+        QDir().mkpath(dossier.path());
+        w->grab().save(dossier.filePath(nom + u".png"_s));
+    }
+
+    /// enregistre le haut de la fenêtre avec un menu déroulé sous son titre, comme à l'écran ; `actif`
+    /// : l'entrée mise en évidence, comme sous la souris
+    void rendu_menu(App &app, const QString &titre, const QString &nom, const QString &actif = {})
+    {
+        attend();
+        QAction *entree = nullptr;
+        for (QAction *a : app.menuBar()->actions()) {
+            if (a->menu() && a->text() == titre)
+                entree = a;
+        }
+        QVERIFY2(entree, qUtf8Printable(titre));
+        QMenu *menu = entree->menu();
+        app.menuBar()->setActiveAction(entree);
+        attend();
+        for (QAction *a : menu->actions()) {
+            if (!actif.isEmpty() && a->text() == actif)
+                menu->setActiveAction(a);
+        }
+        attend();
+        QPixmap image = app.grab();
+        const QPixmap deroule = menu->grab();
+        const QPoint pos = app.menuBar()->mapTo(&app, app.menuBar()->actionGeometry(entree).bottomLeft() + QPoint(0, 1));
+        const QRect r(pos, deroule.size());
+        {
+            QPainter p(&image);
+            p.fillRect(r.adjusted(3, 3, 4, 4), QColor(0, 0, 0, 50));
+            p.drawPixmap(pos, deroule);
+        }
+        menu->hide();
+        app.menuBar()->setActiveAction(nullptr);
+        attend();
+        // le haut à gauche de la fenêtre : la barre des menus et le menu déroulé, avec un peu de marge
+        const QRect garde(0, 0, std::min(image.width(), r.right() + 1 + 80), std::min(image.height(), r.bottom() + 1 + 30));
+        const QDir dossier(QString::fromUtf8(MEVCINE_RENDUS_TESTS));
+        QDir().mkpath(dossier.path());
+        image.copy(garde).save(dossier.filePath(nom + u".png"_s));
+    }
+
     /// la zone de l'image de la vidéo affichée
     ZoneVideo *zone(App &app)
     {
@@ -451,6 +498,13 @@ class TestsInterface : public QObject {
     }
 
 private slots:
+    void initTestCase()
+    {
+        // curseur de texte qui ne clignote pas : les rendus (images de la notice) sont les mêmes d'une
+        // fois à l'autre, au lieu de montrer le curseur ou non selon l'instant
+        QApplication::setCursorFlashTime(0);
+    }
+
     void init()
     {
         i18n::choisit(Langue::Francais);
@@ -1661,7 +1715,8 @@ private slots:
 
     /// Le mode simplifié dans chaque langue : les étapes se suivent avec les intitulés traduits, et le
     /// texte copié pour Python a ses commentaires dans la langue. En anglais, aucun texte affiché
-    /// n'est resté en français.
+    /// n'est resté en français. Les rendus (81 à 94) sont les captures de la notice
+    /// (scripts/captures-aide.py) : le palet de la vidéo y est pointé comme le ferait un élève.
     void guide_dans_chaque_langue()
     {
         // seuls noms propres accentués permis en anglais
@@ -1670,9 +1725,9 @@ private slots:
         for (Langue langue : TOUTES_LES_LANGUES) {
             const QString code = i18n::code(langue);
             {
+                // au lancement, sans choix du mode : l'écran qui propose d'ouvrir une vidéo
                 auto app = fenetre({}, std::nullopt, langue);
                 QCOMPARE(i18n::langue(), langue);
-                rendu(*app, u"80_%1_accueil"_s.arg(code));
                 QVERIFY(bouton(*app, trad("📂 Ouvrir une vidéo…")));
                 rendu(*app, u"91_%1_sans_video"_s.arg(code));
             }
@@ -1699,10 +1754,39 @@ private slots:
             textes << textes_affiches(a);
             rendu(a, u"82_%1_echelle"_s.arg(code));
             QVERIFY(clique(a, trad("Suivant ▶")));
-            for (int i = 0; i < 4; ++i)
-                clic_image(a, {365.0 - 16.0 * i, 110.0});
+            // comme un élève : le palet, lâché par la main, glisse seul à partir de l'image 15 ; un
+            // clic sur son centre, image après image (positions relevées sur la vidéo)
+            a.change_image(15);
+            a.rafraichit();
+            attend();
+            for (const Vecteur p : {Vecteur(170, 108), Vecteur(183, 107), Vecteur(197, 107), Vecteur(214, 107)})
+                clic_image(a, p);
+            QCOMPARE(a.index, 19);
+            // la souris sur le palet de l'image suivante : la loupe le montre
+            ZoneVideo *z = zone(a);
+            souris(z, QEvent::MouseMove, z->vue().ecran({228, 107}), Qt::NoButton, Qt::NoButton);
             textes << textes_affiches(a);
             rendu(a, u"85_%1_pointage"_s.arg(code));
+            // le plein écran, pour pointer : la loupe et la consigne dans un cadre posé sur l'image
+            QVERIFY(clique(a, trad("Plein écran")));
+            QVERIFY(a.plein_ecran());
+            textes << textes_affiches(a);
+            {
+                PleinEcran *pe = a.m_plein_ecran;
+                // l'écran de la plateforme sans écran (offscreen) est carré : pour la notice, la
+                // fenêtre prend la forme d'un écran
+                pe->setWindowState(Qt::WindowNoState);
+                pe->resize(1280, 800);
+                attend();
+                ZoneVideo *zp = pe->zone();
+                souris(zp, QEvent::MouseMove, zp->vue().ecran({228, 107}), Qt::NoButton, Qt::NoButton);
+                QVERIFY(!pe->cadre_a_droite());
+                rendu_fenetre(pe, u"92_%1_plein_ecran"_s.arg(code));
+                QTest::keyClick(pe, Qt::Key_Escape);
+                attend();
+            }
+            QVERIFY(!a.plein_ecran());
+            QCOMPARE(a.pointage.nb_images_pointees(), 4);
             // les nombres du tableau suivent la langue : 0.040 en anglais, 0,040 ailleurs
             const Tableau t = Tableau::construit(a.pointage);
             QCOMPARE(t.lignes[1][0], langue == Langue::Anglais ? u"0.040"_s : u"0,040"_s);
@@ -1716,9 +1800,24 @@ private slots:
             verifie_python(texte, u"assert len(lst_x) == 4"_s);
             textes << textes_affiches(a);
             rendu(a, u"83_%1_export"_s.arg(code));
-            // le mode expert, avec les mêmes mesures : ses quatre onglets
+            // les menus Fichier (la sauvegarde automatique est là : « Récupérer le travail
+            // précédent… » est actif) et Mode, ouverts comme sous la souris
+            QVERIFY(QFileInfo(prefs::fichier_secours()).isFile());
+            rendu_menu(a, trad("Fichier"), u"93_%1_menu_fichier"_s.arg(code));
+            rendu_menu(a, trad("Mode"), u"94_%1_menu_mode"_s.arg(code), trad("Mode expert (toutes les fonctions)"));
+            QCOMPARE(a.mode, Mode::Simplifie);
+            // le mode expert, avec les mêmes mesures : le pointage y continue, jusqu'à l'image 26 ;
+            // puis ses quatre onglets
             a.change_mode(Mode::Expert);
             a.rafraichit();
+            for (const Vecteur p : {Vecteur(228, 107), Vecteur(242, 106), Vecteur(258, 105), Vecteur(272, 105),
+                                    Vecteur(288, 107), Vecteur(305, 104), Vecteur(321, 102), Vecteur(339, 104)})
+                clic_image(a, p);
+            QCOMPARE(a.pointage.nb_images_pointees(), 12);
+            {
+                ZoneVideo *ze = zone(a);
+                souris(ze, QEvent::MouseMove, ze->vue().ecran({355, 102}), Qt::NoButton, Qt::NoButton);
+            }
             textes << textes_affiches(a);
             rendu(a, u"86_%1_expert_pointage"_s.arg(code));
             onglet(a, trad("Trajectoires"));
@@ -1738,7 +1837,7 @@ private slots:
             rendu(a, u"89_%1_expert_grapheur"_s.arg(code));
             // une mesure de plus, puis la question avant de quitter
             onglet(a, trad("Pointage"));
-            clic_image(a, {301, 112});
+            clic_image(a, {355, 102});
             QVERIFY2(!a.travail_en_securite(), qUtf8Printable(code));
             a.confirme_si_mesures({Apres::Type::Quitter});
             attend();

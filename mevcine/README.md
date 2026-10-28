@@ -28,7 +28,9 @@ change :
   droite de la barre des menus, le soleil ou la lune du thème et le drapeau de la langue
   (dessinés par le programme dans `src/app/icones.cpp`), qui remplacent les menus Langue et Thème ; une barre
   d'état typée d'une ligne (consigne, réussite, attente, erreur ; vidéo, image et mode à droite) ;
-  des pages d'accueil épurées (logo, nom, deux cartes ou un bouton, une ligne) ; un panneau latéral
+  une page d'accueil épurée (logo, nom, sous-titre, le bouton « 📂 Ouvrir une vidéo… », une ligne),
+  sans choix du mode : MeVCine s'ouvre dans le mode de la dernière fois (réglage `mode`, simplifié
+  au premier lancement), et le mode se change dans le menu Mode ; un panneau latéral
   plus sombre, jamais rogné ; `Ctrl` + / `Ctrl` − / `Ctrl` 0 agrandissent toute l'interface (de 50 à
   300 %, réglage `agrandissement`). La fenêtre s'ouvre à sa taille normale (1200 × 700, ramenée à
   l'écran), jamais agrandie d'office. Mode simplifié : la loupe et un petit tableau des coordonnées en haut à
@@ -54,7 +56,9 @@ change :
   jamais une action qui ferait perdre des mesures. Les boutons des dialogues de Qt sont traduits avec
   les traductions de Qt (`qtbase_fr.qm`) quand elles sont installées.
 - **Lecture des vidéos** : la même méthode (`ffprobe`, puis `ffmpeg` qui envoie des images PPM dans un
-  tube, dates lues dans le journal du filtre `showinfo`), avec `QProcess`. Les images sont des
+  tube, dates lues dans le journal du filtre `showinfo`), avec `QProcess`. L'examen d'une vidéo se
+  fait dans un autre fil, avec le curseur d'attente ; au bout de deux minutes, la vidéo est déclarée
+  illisible. Les dates réelles des images servent dès que la cadence n'est pas régulière (téléphones). Les images sont des
   `QImage` (RVB 24 bits) ; la conversion HDR et le suivi automatique sont calculés en parallèle avec
   Qt Concurrent (au lieu de rayon).
 - **Grapheur** : dessiné par le programme (`src/app/onglet_graph.cpp`), sans Qt Charts : molette pour
@@ -72,7 +76,9 @@ change :
   l'interface Qt, et la vue d'ensemble de la fenêtre est annotée de pastilles numérotées (SVG). Sa
   feuille de style est celle de toute la suite (`aide/help.css`, copie exacte de celle de MeVSono,
   vérifiée par le test `aide_dans_chaque_langue`) ; `aide/aide.css` y ajoute ce qui sert à un site de
-  plusieurs pages.
+  plusieurs pages. Les pages gardent le marqueur `{{version}}`, que MeVCine remplace par sa version
+  quand il copie la notice dans le dossier temporaire du système, avant de l'ouvrir dans le
+  navigateur (`chemins::copie_aide`).
 - **Vidéos** : pas de vidéos d'exemple dans l'interface, chacun ouvre les siennes ; celles de
   `data/video` (vidéos de pymecavideo, CC BY-SA) servent aux essais et aux captures de la notice, et ne
   sont pas livrées.
@@ -92,7 +98,7 @@ Core, Gui, Widgets, Concurrent, Test, et DBus sous Linux ; 6.8 pour le choix du 
 ```sh
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
 cmake --build build
-./build/mevcine                        # écran d'accueil : choix du mode
+./build/mevcine                        # le mode de la dernière fois
 ./build/mevcine --simple chute.mp4     # mode simplifié, avec une vidéo
 ./build/mevcine --expert projet.mevcine
 ./build/mevcine -d 2 ...               # messages de débogage
@@ -121,7 +127,9 @@ racine).
   egui_kittest de la version Rust : accueil, mode simplifié complet, mode expert complet, suivi
   automatique, deux objets, rotation, ralenti, cadence variable, ancien projet, confirmations,
   sauvegarde automatique et récupération, écran de démarrage, boutons de la langue et du thème,
-  glisser de l'origine, unités de l'étalon, petite fenêtre, et le mode simplifié dans chaque langue (en anglais, aucun texte affiché ne doit rester en français). Chaque étape est
+  glisser de l'origine, unités de l'étalon, petite fenêtre, et le parcours de la notice dans chaque
+  langue (`guide_dans_chaque_langue` : mode simplifié, plein écran, menus Fichier et Mode, onglets du
+  mode expert ; en anglais, aucun texte affiché ne doit rester en français). Chaque étape est
   capturée dans `build/rendus-tests/`.
 
 Les tests de l'interface tournent sans écran (`QT_QPA_PLATFORM=offscreen`, réglé par `ctest`). Après
@@ -130,7 +138,7 @@ un changement de l'interface ou de la notice :
 ```sh
 python3 -I scripts/site-aide.py                 # refait data/help à partir de aide/
 (cd build && QT_QPA_PLATFORM=offscreen ./mevcine_tests_interface guide_dans_chaque_langue)
-python3 -I scripts/captures-aide.py             # refait les captures de la notice
+python3 -I scripts/captures-aide.py             # refait les captures de la notice (menus, plein écran compris)
 ```
 
 ## Organisation du code
@@ -142,7 +150,7 @@ Les noms sont ceux de la version Rust, pour comparer les deux versions fichier p
 | `src/main.cpp`                            | ligne de commande, lancement                                |
 | `src/erreurs.*`                           | erreurs internes : journal, boîte de message                |
 | `src/app/app.*`                           | modes, machine à états, échelle, refaire une mesure, arrêt du pointage, fichiers, menus et leur coin, barre d'état, dialogues |
-| `src/app/accueil.*`                       | choix du mode, écran d'ouverture d'une vidéo                |
+| `src/app/accueil.*`                       | l'écran sans vidéo, qui propose d'en ouvrir une             |
 | `src/app/demarrage.*`                     | l'écran de démarrage                                        |
 | `src/app/a_propos.*`                      | la fenêtre « À propos »                                     |
 | `src/app/guide.*`                         | le mode simplifié (six étapes)                              |

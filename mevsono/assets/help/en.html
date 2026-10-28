@@ -46,13 +46,15 @@
 <section id="presentation">
 <h2>1. What is MeVSono for?</h2>
 <p>MeVSono is for <strong>studying a sound</strong>: an instrument, a voice, a tuning fork… It
-shows the sound in two ways:</p>
+shows the sound in two ways, in two tabs:</p>
 <ul>
-  <li>the <strong>signal</strong>, at the top: how the sound varies over time, as on an oscilloscope.
-  This is where you measure the <strong>period</strong> of the sound;</li>
-  <li>the <strong>spectrum</strong>, at the bottom: the frequencies that make up the sound, each with
-  its amplitude. This is where you read the <strong>fundamental</strong>, which sets the pitch of the
-  note, and the <strong>harmonics</strong>, which give the instrument its timbre.</li>
+  <li>the <strong>signal</strong>: how the sound varies over time, as on an oscilloscope. In the
+  <span class="btn">Period measurement</span> tab, this is where you measure the
+  <strong>period</strong> of the sound;</li>
+  <li>the <strong>spectrum</strong>, under the signal in the <span class="btn">Frequency study</span>
+  tab: the frequencies that make up the sound, each with its amplitude. This is where you read the
+  <strong>fundamental</strong>, which sets the pitch of the note, and the <strong>harmonics</strong>,
+  which give the instrument its timbre.</li>
 </ul>
 <p>MeVSono is a measuring instrument: it gives times, durations and frequencies. The calculations
 (period, frequency, ratios between harmonics) are <strong>your work</strong>.</p>
@@ -74,19 +76,21 @@ shows the sound in two ways:</p>
     <circle cx="880" cy="784" r="16" fill="#0b5cad"/><text x="880" y="792" fill="#fff">8</text>
   </g>
 </svg>
-<figcaption>MeVSono with a flute sound (<a href="fenetre-en.jpg">full-size image</a>).</figcaption>
+<figcaption>MeVSono with a flute sound, Frequency study tab (<a href="fenetre-en.jpg">full-size image</a>).</figcaption>
 </figure>
 <ol class="legend">
   <li><span class="num">1</span><strong>The two tabs</strong>: <span class="btn">Period measurement</span> (the signal alone, and cursors t₁
-  and t₂) and <span class="btn">Frequency study</span> (the extract chosen between A and B, and its spectrum).</li>
-  <li><span class="num">2</span><strong>Top of the left panel</strong>: open a sound, see the whole
-  signal again (<span class="btn">🔍 Show all</span>) or only the extract
-  (<span class="btn">Zoom to the extract</span>).</li>
+  and t₂) and <span class="btn">Frequency study</span> (the extract chosen between A and B, and its spectrum).
+  <kbd>Ctrl</kbd>+<kbd>Tab</kbd> switches from one to the other.</li>
+  <li><span class="num">2</span><strong>Top of the left panel</strong>: open a sound
+  (<span class="btn">📂 Open a sound…</span>), see the whole signal and the whole spectrum again
+  (<span class="btn">🔍 Show all</span>), or only the extract (<span class="btn">Zoom to the extract</span>).</li>
   <li><span class="num">3</span><strong>Theme and language</strong>, to the right of the menus: the sun
   (light theme) or the moon (dark theme), and the flag of the language. A click switches to the other
   theme or language.</li>
-  <li><span class="num">4</span><strong>The open sound</strong> and its listening buttons
-  <span class="btn">▶</span> <span class="btn">⏸</span> <span class="btn">⏹</span>.</li>
+  <li><span class="num">4</span><strong>The open sound</strong> (its name, sampling rate, mono or
+  stereo, duration) and its listening buttons <span class="btn">▶</span> <span class="btn">⏸</span>
+  <span class="btn">⏹</span>.</li>
   <li><span class="num">5</span><strong>The measurements of the tab</strong>: here, the analysed
   extract, between A and B; in the other tab, times t₁ and t₂ and their difference Δt.</li>
   <li><span class="num">6</span><strong>The signal</strong>. Dragging on it chooses the extract (or, in
@@ -94,7 +98,7 @@ shows the sound in two ways:</p>
   <li><span class="num">7</span><strong>The spectrum</strong> of the extract. The crosshair gives the
   value under the mouse and that of the nearest peak.</li>
   <li><span class="num">8</span><strong>Status bar</strong>: on the left, what just happened (green: a
-  success; red: a problem); on the right, the open sound and the mode.</li>
+  success; orange: a warning; red: a problem); on the right, the open sound and the mode.</li>
 </ol>
 <div class="tip"><p><strong>Help at hand.</strong> Above each graph, a grey line recalls the possible
 mouse gestures. In the left panel, the grey texts say what to do.</p></div>
@@ -110,8 +114,9 @@ mouse gestures. In the left panel, the grey texts say what to do.</p></div>
 <p><span class="btn">📂 Open a sound…</span> button (or <kbd>Ctrl</kbd>+<kbd>O</kbd>), or drag the
 file onto the window. MeVSono reads sounds (WAV, MP3, M4A, OGG, FLAC…) and the sound track of videos
 (MP4, MOV…): a phone recording works very well.</p>
-<p>As soon as a sound is open, MeVSono chooses an <strong>extract</strong> (at first, almost the whole
-sound, between cursors A and B) and shows its spectrum.</p>
+<p>The sound appears in the <span class="btn">Period measurement</span> tab. MeVSono also chooses an
+<strong>extract</strong> (at first, almost the whole sound, between cursors A and B): its spectrum is
+in the <span class="btn">Frequency study</span> tab.</p>
 </section>
 
 <section id="listen">
@@ -136,7 +141,7 @@ without silence.</p></div>
 <em>T</em>, and the frequency is <em>f</em> = 1 / <em>T</em>.</p>
 <figure class="ecran">
 <a href="mesure-en.jpg"><img src="mesure-en.jpg" alt="Measurement on the square wave: the turquoise cursors t₁ and t₂ enclose two periods; the panel shows t₁, t₂ and Δt = 10.00 ms" width="1024" height="640"></a>
-<figcaption>A square wave: t₁ and t₂ enclose two patterns, Δt = 10.00 ms.</figcaption>
+<figcaption>A square wave: t₁ and t₂ enclose two patterns, Δt = 10.00 ms.</figcaption>
 </figure>
 <ol class="steps">
   <li>Click the <span class="btn">Period measurement</span> tab, at the top of the window.</li>
@@ -152,7 +157,9 @@ without silence.</p></div>
 <div class="tip"><p><strong>Measure over several periods to measure better.</strong> The error on the
 position of the cursors is shared between the <em>n</em> periods: over 10 periods, it is 10 times
 smaller than over a single one.</p></div>
-<p>Measuring a duration does not change the analysed extract. To read the spectrum, go to the
+<p>When you hover over the signal, a bubble gives the time <em>t</em> under the mouse. Each tab keeps
+its own zoom: you measure the period close up, and choose the extract from further away. Measuring a
+duration does not change the analysed extract. To read the spectrum, go to the
 <span class="btn">Frequency study</span> tab.</p>
 </section>
 
@@ -168,7 +175,8 @@ smaller than over a single one.</p></div>
   <em>f</em>₁ (2 <em>f</em>₁, 3 <em>f</em>₁…).</li>
 </ul>
 <h3>Measuring the frequency of a peak</h3>
-<p>Put the mouse <strong>near the peak</strong>, on the spectrum. The crosshair shows:</p>
+<p>Put the mouse <strong>near the peak</strong>, on the spectrum (figure in <a href="#window">part 2</a>).
+The crosshair shows:</p>
 <ul>
   <li>the <strong>value under the mouse</strong>: the frequency and amplitude at the pointer;</li>
   <li>the <strong>nearest peak</strong>, marked with a filled dot: its frequency and amplitude. This is
@@ -194,25 +202,26 @@ organ pipe) only has odd harmonics (<em>f</em>₁, 3 <em>f</em>₁, 5 <em>f</em>
   extract.</li>
 </ol>
 <p>Choose an extract where the sound is <strong>steady</strong>: the held note, without the start (the
-attack) or a silence.</p>
+attack) or a silence. <span class="btn">Zoom to the extract</span> shows the extract enlarged on the
+signal.</p>
 <div class="tip"><p><strong>The longer the extract, the finer the spectrum.</strong> Two frequencies are
-only separated if they differ by more than about 1 / (duration of the extract): 10 Hz for a 0.1 s
-extract, 1 Hz for 1 s. If the peaks are wide, lengthen the extract.</p></div>
+only separated if they differ by more than about 1 / (duration of the extract): 10 Hz for a 0.1 s
+extract, 1 Hz for 1 s. If the peaks are wide, lengthen the extract.</p></div>
 </section>
 
 <section id="example">
 <h2>8. Example: a square wave</h2>
-<p>A signal generator feeds a 200 Hz square wave to a loudspeaker; the sound is recorded, then opened
+<p>A signal generator feeds a 200 Hz square wave to a loudspeaker; the sound is recorded, then opened
 in MeVSono.</p>
 <ol class="steps">
   <li><strong>Period.</strong> In the <span class="btn">Period measurement</span> tab, enclose two patterns
-  (figure in <a href="#measure">part 5</a>): Δt = 10.00 ms for <em>n</em> = 2 patterns, so
-  <em>T</em> = Δt / 2 = 5.00 ms.</li>
+  (figure in <a href="#measure">part 5</a>): Δt = 10.00 ms for <em>n</em> = 2 patterns, so
+  <em>T</em> = Δt / 2 = 5.00 ms.</li>
   <li><strong>Frequency.</strong> <em>f</em> = 1 / <em>T</em> = 1 / (5.00 × 10<sup>−3</sup> s) =
-  200 Hz.</li>
-  <li><strong>Spectrum.</strong> In the <span class="btn">Frequency study</span> tab, hover over the first peak: the nearest peak is at 200 Hz. It is the
+  200 Hz.</li>
+  <li><strong>Spectrum.</strong> In the <span class="btn">Frequency study</span> tab, hover over the first peak: the nearest peak is at 200 Hz. It is the
   fundamental <em>f</em>₁, equal to the computed frequency: the two measurements agree.</li>
-  <li><strong>Harmonics.</strong> The next peaks are at 600 Hz, 1000 Hz, 1400 Hz… that is
+  <li><strong>Harmonics.</strong> The next peaks are at 600 Hz, 1000 Hz, 1400 Hz… that is
   3 <em>f</em>₁, 5 <em>f</em>₁, 7 <em>f</em>₁: a square wave only has odd harmonics, weaker and
   weaker.</li>
 </ol>
@@ -231,7 +240,8 @@ Which harmonics are present? Which one is the strongest?</p></div>
 <tr><td>Zoom (signal, spectrum)</td><td>wheel, around the mouse</td></tr>
 <tr><td>Pan</td><td>hold the right button, or <kbd>Shift</kbd>+wheel</td></tr>
 <tr><td>Show all again</td><td>double-click, or <span class="btn">🔍 Show all</span></td></tr>
-<tr><td>Read a frequency</td><td>hover over the spectrum near the peak</td></tr>
+<tr><td>Read a time, a frequency</td><td>hover over the signal; hover over the spectrum near the peak</td></tr>
+<tr><td>Go to the other tab</td><td><kbd>Ctrl</kbd>+<kbd>Tab</kbd> (or <kbd>Ctrl</kbd>+<kbd>Page Down</kbd>)</td></tr>
 <tr><td>Listen, pause</td><td><kbd>Space</kbd>, or <span class="btn">▶</span> <span class="btn">⏸</span> <span class="btn">⏹</span></td></tr>
 <tr><td>Open a sound</td><td><kbd>Ctrl</kbd>+<kbd>O</kbd>, or drag the file onto the window</td></tr>
 <tr><td>Enlarge or shrink the texts</td><td><kbd>Ctrl</kbd>+<kbd>+</kbd>, <kbd>Ctrl</kbd>+<kbd>−</kbd>; <kbd>Ctrl</kbd>+<kbd>0</kbd>: normal size</td></tr>
@@ -250,8 +260,17 @@ app), or ask your teacher.</dd>
 <dt>“This file contains no sound”</dt>
 <dd>The video was filmed without sound, or the sound was cut.</dd>
 
+<dt>An orange message appears when the sound opens.</dt>
+<dd>Only part of the sound is read: “only the first 30 minutes are read” (sound too long), “the rest of
+the file is unreadable: only the beginning is read” or “some values in the file are unreadable: they
+are set to 0” (damaged file). Choose the extract in the part that was read, or record the sound
+again.</dd>
+
 <dt>The signal is just a solid band.</dt>
 <dd>The sound is long: you only see its envelope. Zoom with the wheel to see the patterns appear.</dd>
+
+<dt>“Extract too short: widen it between A and B”</dt>
+<dd>A and B are almost on top of each other: move them apart (<a href="#extract">part 7</a>).</dd>
 
 <dt>The crosshair does not point at the peak you want.</dt>
 <dd>Zoom on the spectrum (wheel) to separate close peaks, then move the mouse near the peak.</dd>
@@ -260,14 +279,15 @@ app), or ask your teacher.</dd>
 <dd>Lengthen the extract (<a href="#extract">part 7</a>).</dd>
 
 <dt>Nothing can be heard.</dt>
-<dd>Check the volume and the output of the computer (speakers or headphones). “No audio output” means
-that none is plugged in.</dd>
+<dd>Check the volume and the output of the computer (speakers or headphones). “No audio output
+(speakers or headphones) is available” means that none is plugged in.</dd>
 
 <dt>The texts have become huge (or tiny).</dt>
 <dd><kbd>Ctrl</kbd>+<kbd>0</kbd> restores the normal size.</dd>
 
-<dt>The program closed by itself.</dt>
-<dd>An unexpected error occurred. Start MeVSono again and tell your teacher.</dd>
+<dt>“MeVSono hit an unexpected error and must close”</dt>
+<dd>An unexpected error occurred. The message says where the details were saved. Start MeVSono again
+and tell your teacher.</dd>
 </dl>
 </section>
 
@@ -279,12 +299,14 @@ that none is plugged in.</dd>
 <section id="modes">
 <h2>11. Simple mode, expert mode</h2>
 <p>The <strong>Mode</strong> menu offers two modes; the current mode is shown on the right of the
-status bar.</p>
+status bar, and remembered from one session to the next.</p>
 <ul>
   <li><strong>Simple</strong> (default): measurements only, those described in the students' part. The
-  initial extract covers the middle 80 % of the sound; playback plays the extract; t₁ and t₂ snap to
-  rising zero crossings; the display is fixed (linear amplitudes, frequencies up to 5 kHz). The software
-  gives neither the fundamental nor the period: the student measures them.</li>
+  initial extract covers the middle 80 % of the sound; playback plays the whole sound in the
+  <span class="btn">Period measurement</span> tab, the extract in the <span class="btn">Frequency
+  study</span> tab; t₁ and t₂ always snap to rising zero crossings; the display is fixed (Hann window,
+  linear amplitudes, frequencies up to 5 kHz). The software gives neither the fundamental nor the
+  period, and exports nothing: the student measures.</li>
   <li><strong>Expert</strong>: all the options (<a href="#expert">part 12</a>). The initial extract lasts
   half a second, on the loudest part of the sound.</li>
 </ul>
@@ -295,37 +317,53 @@ classroom, see <a href="#install">part 15</a>.</p>
 <section id="expert">
 <h2>12. Expert mode</h2>
 <figure class="ecran">
-<a href="expert-en.jpg"><img src="expert-en.jpg" alt="Expert mode with the settings window open: window function, FFT size, peak threshold, number of harmonics, display" width="1024" height="640"></a>
-<figcaption>The flute sound in expert mode, with the settings window open.</figcaption>
+<a href="expert-en.jpg"><img src="expert-en.jpg" alt="Expert mode, frequency study: the left panel adds the period by autocorrelation, the bin spacing, the analysis resolution, the fundamental and the table of harmonics" width="1024" height="640"></a>
+<figcaption>The flute sound in expert mode: period by autocorrelation, bin spacing and analysis
+resolution, fundamental <em>f</em>₁ = 440.0 Hz and table of harmonics.</figcaption>
 </figure>
 <ul>
   <li><strong>Fundamental and harmonics</strong>: MeVSono looks for the frequency <em>f</em>₁ whose
-  multiples best match the peaks. The table gives, for each rank <em>n</em>, the measured frequency, the
-  ratio <em>f</em> / <em>f</em>₁, the amplitude in decibels and relative to that of the fundamental. A
-  dash means a rank without a peak (even harmonics of a stopped pipe or of a square wave).
-  <span class="btn">📋 Copy the table</span> copies it for a spreadsheet.</li>
-  <li><strong>Right-click a peak</strong> of the spectrum to use it as the fundamental;
-  <span class="btn">Automatic detection</span> goes back to the software's choice.</li>
-  <li><strong>Period by autocorrelation</strong> of the extract: the signal is compared with itself
-  shifted, and is most alike for a shift of one period. Useful to check a measurement.</li>
+  multiples best match the peaks (the detected peaks are circled on the spectrum). The table gives, for
+  each rank <em>n</em>, the measured frequency, the ratio <em>f</em> / <em>f</em>₁, the amplitude in
+  decibels and relative to that of the fundamental. A dash means a rank without a peak (even harmonics
+  of a stopped pipe or of a square wave). <span class="btn">📋 Copy the table</span> copies it, to paste
+  into a spreadsheet or a document.</li>
+  <li><strong>Right-click a peak</strong> of the spectrum: “Use the … peak as the fundamental”.
+  <em>f</em>₁ is then marked “(manual)”, and <span class="btn">Automatic detection</span> goes back to
+  the software's choice.</li>
+  <li><strong>Autocorrelation</strong>: period of the extract found by the software. The signal is
+  compared with itself shifted, and is most alike for a shift of one period. Useful to check a
+  measurement.</li>
+  <li><strong>Bin spacing Δf</strong>: the spacing between two frequencies computed by the FFT.
+  <strong>Analysis resolution</strong>: the difference below which two frequencies are not separated
+  (about 1 / duration of the extract). Their bubbles give the details of the computation.</li>
   <li><strong>Snap t₁ and t₂ to zero crossings</strong> (<span class="btn">Period measurement</span> tab, checked by default): uncheck it to
   place the cursors freely, on a crest for example.</li>
-  <li><strong>Playback</strong>: the list to the left of <span class="btn">▶</span> chooses the whole
-  sound or the A–B extract.</li>
-  <li><strong>View menu</strong>: amplitudes in decibels, logarithmic frequency axis, channel analysed for
-  a stereo sound (average, left or right), <span class="btn">⚙ Settings…</span> (also at the
-  top of the left panel).</li>
-  <li><strong>Exports</strong> (<em>File</em> menu): the spectrum (columns <code>f (Hz)</code>,
-  <code>A</code>, <code>A (dB)</code>) and the signal extract (<code>t (s)</code>,
-  <code>signal</code>), as CSV. In English, columns are separated by <code>,</code> with a decimal
-  point. In Python: <code>pandas.read_csv("spectrum.csv")</code>.</li>
+  <li><strong>Playback</strong>: the list to the left of <span class="btn">▶</span> chooses
+  “whole sound” or “A–B extract”, in both tabs.</li>
+  <li><strong>View menu</strong>: amplitudes “in decibels (dB)”, “logarithmic” frequency axis, “Show the
+  n × f₁ marks”, “Channel analysed” for a stereo sound (average of channels, left or right),
+  <span class="btn">⚙ Settings…</span> (also at the top of the left panel).</li>
+  <li><strong>Exports</strong> (<em>File</em> menu), as CSV:
+  <span class="btn">💾 Export the spectrum (CSV)…</span> (<code>spectrum.csv</code>: columns
+  <code>f (Hz)</code>, <code>A</code>, <code>A (dB)</code>, every bin up to
+  <em>f</em><sub>s</sub> / 2) and <span class="btn">💾 Export the signal extract (CSV)…</span>
+  (<code>extract.csv</code>: <code>t (s)</code>, <code>signal</code>, every sample between A and B).
+  <code>.csv</code> is added to a name typed without an extension; MeVSono asks before replacing a
+  file. In English, columns are separated by <code>,</code> with a decimal point. In Python:
+  <code>pandas.read_csv("spectrum.csv")</code>.</li>
 </ul>
 </section>
 
 <section id="settings">
 <h2>13. Analysis settings</h2>
 <p>In expert mode, <span class="btn">⚙ Settings…</span> opens the settings. They apply at once and are
-kept from one session to the next; <span class="btn">Default values</span> restores them.</p>
+kept from one session to the next; <span class="btn">Default values</span> restores them. Each setting
+has its explanation bubble.</p>
+<figure class="ecran etroite">
+<a href="reglages-en.jpg"><img src="reglages-en.jpg" alt="Settings window: spectral analysis (window function, FFT size, peak detection threshold, number of harmonics, channel analysed, snapping) and display (amplitude, frequency axis, harmonic marks, highest frequency shown)" width="373" height="424"></a>
+<figcaption>The settings window, with the default values.</figcaption>
+</figure>
 <h3>Window function</h3>
 <p>Before the computation, the extract is multiplied by a “window” that fades it at its edges: without
 it, the abrupt start and end of the extract would spread every peak (spectral leakage).</p>
@@ -341,21 +379,23 @@ it, the abrupt start and end of the extract would spread every peak (spectral le
 </table>
 <h3>FFT size</h3>
 <p>The spectrum is computed by fast Fourier transform (FFT). With the <strong>automatic</strong> size,
-the whole extract is analysed in one go, padded with zeros up to a power of 2 (beyond 262,144 samples,
-about 6 s, it is split as below). A fixed size smaller than the extract splits it into
-<strong>segments</strong> that overlap by half, and averages their spectra: the spectrum is smoother,
-but less fine. The bin spacing is Δ<em>f</em> = sampling rate / FFT size; peak frequencies are refined
-by interpolation, well below that.</p>
+the whole extract is analysed in one go, padded with zeros up to a power of 2 (beyond 262,144 samples,
+about 6 s, it is split as below). A fixed size (from 1,024 to 262,144 points) smaller than the extract
+splits it into <strong>segments</strong> that overlap by half, and averages their spectra: the
+spectrum is smoother, but less fine. The bin spacing is Δ<em>f</em> = sampling rate / FFT size; peak
+frequencies are refined by interpolation, well below that.</p>
 <h3>Other settings</h3>
 <ul>
   <li><strong>Peak detection threshold</strong>: a peak weaker than the largest one by this amount is
-  ignored (−40 dB: 1 % of its amplitude), including for the crosshair's “nearest peak”. Lower it to
+  ignored (−40 dB: 1 % of its amplitude), including for the crosshair's “nearest peak”. Lower it to
   find weak harmonics.</li>
-  <li><strong>Number of harmonics</strong> in the table (10 by default).</li>
-  <li><strong>Channel analysed</strong> for a stereo sound.</li>
+  <li><strong>Number of harmonics in the table</strong> (10 by default, up to 40).</li>
+  <li><strong>Channel analysed (stereo sound)</strong>: average of channels, left or right.</li>
+  <li><strong>Snap t₁ and t₂ to zero crossings</strong>, like the box in the panel.</li>
   <li><strong>Amplitude</strong> linear or in dB, <strong>frequency axis</strong> linear or logarithmic,
-  <strong>highest frequency shown</strong> (5 kHz by default), <strong>harmonic marks</strong> (pink
-  dotted lines at frequencies <em>n</em> × <em>f</em>₁).</li>
+  <strong>harmonic marks</strong> (numbered pink dotted lines at frequencies <em>n</em> ×
+  <em>f</em>₁), <strong>highest frequency shown</strong> (5 kHz by default, from 1 to 20 kHz, or up to
+  <em>f</em><sub>s</sub> / 2).</li>
 </ul>
 <div class="note"><p>Amplitudes are sine-wave amplitudes: a pure sound of amplitude 0.5 gives a peak of
 height 0.5. They depend on the microphone level: compare amplitudes with one another.</p></div>
@@ -371,8 +411,8 @@ height 0.5. They depend on the microphone level: compare amplitudes with one ano
   different harmonics), or two notes of the same instrument. A pipe open at both ends has all the
   harmonics, a pipe closed at one end only the odd ones.</li>
   <li><strong>Plucked string</strong>: a fading sound; take the extract just after the attack.</li>
-  <li><strong>Beats</strong>: two tuning forks of 440 Hz and 444 Hz played together; a 0.1 s extract
-  does not separate the two frequencies, a 1 s extract does. The envelope of the signal varies 4 times
+  <li><strong>Beats</strong>: two tuning forks of 440 Hz and 444 Hz played together; a 0.1 s extract
+  does not separate the two frequencies, a 1 s extract does. The envelope of the signal varies 4 times
   per second.</li>
   <li><strong>Cross-checking</strong>: compare the frequency computed from the period with that of the
   first peak of the spectrum (<a href="#example">part 8</a>).</li>
@@ -382,21 +422,30 @@ height 0.5. They depend on the microphone level: compare amplitudes with one ano
 <section id="install">
 <h2>15. Installing and configuring</h2>
 <h3>Installation</h3>
+<p>The files to install are on the “Releases” page of the repository:
+<a href="https://github.com/melectronvolt/MevSuite/releases">github.com/melectronvolt/MevSuite/releases</a>.</p>
 <ul>
-  <li><strong>Windows, no installation</strong>: MeVSono fits in a folder (<code>.zip</code>
-  archive), to copy onto the computer, the school network or a USB stick; run <code>mevsono.exe</code>.
-  It works offline, guide included. On first launch, Windows may show “Windows protected your PC”,
-  because MeVSono is not digitally signed: click “More info”, then “Run anyway”. To open a sound
-  directly: right-click the file → “Open with…” → MeVSono.</li>
+  <li><strong>Windows, no installation</strong>: MeVSono fits in a folder
+  (<code>MeVSono-<i>version</i>-windows-x64.zip</code> archive), to copy onto the computer, the school
+  network or a USB stick; run <code>mevsono.exe</code>. It works offline, guide included. On first
+  launch, Windows may show “Windows protected your PC”, because MeVSono is not digitally signed: click
+  “More info”, then “Run anyway”. To open a sound directly: right-click the file → “Open with…” →
+  MeVSono.</li>
   <li><strong>Windows, installer</strong>: <code>MeVSono-<i>version</i>-windows-x64-setup.exe</code> installs MeVSono
-  for all users in <code>Program Files\MeVSuite</code>, with a Start menu shortcut; it is uninstalled from
-  the Windows Settings. Deployment on many computers (WAPT, GPO): options
-  <code>/VERYSILENT /SUPPRESSMSGBOXES /NORESTART</code>.</li>
-  <li><strong>Linux</strong>: <code>.deb</code> package (Ubuntu, Debian), <code>.rpm</code> (Fedora), or
-  <code>.AppImage</code>, which runs without installation (make it executable).</li>
+  for all users in <code>Program Files\MeVSuite\MeVSono</code>, with a Start menu shortcut (MeVSuite
+  folder); it is uninstalled from the Windows Settings. A new version replaces the old one; the users'
+  settings are kept. Deployment on many computers (WAPT, GPO), with no window or question,
+  installation then uninstallation:
+<pre><code>MeVSono-<i>version</i>-windows-x64-setup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART
+"C:\Program Files\MeVSuite\MeVSono\unins000.exe" /VERYSILENT /SUPPRESSMSGBOXES /NORESTART</code></pre></li>
+  <li><strong>Linux</strong>: <code>.deb</code> (Ubuntu 26.04) or <code>.rpm</code> (Fedora 45) package,
+  which adds MeVSono to the applications menu and to “Open with” for sound files; or
+  <code>MeVSono-<i>version</i>-x86_64.AppImage</code>, which runs without installation (make it
+  executable).</li>
   <li><strong>Formats</strong>: WAV, MP3, OGG, Opus, FLAC, M4A and AAC, AIFF, CAF; the sound track of
   MP4, MOV, M4V, MKV, WebM, AVI videos. Other formats are read if ffmpeg is installed on the computer, or
-  placed in an <code>ffmpeg</code> folder next to the program. Sounds are read up to 30 minutes.</li>
+  placed in an <code>ffmpeg</code> folder next to the program (the Windows version includes it, the
+  <code>.deb</code> and <code>.rpm</code> packages install it). Sounds are read up to 30 minutes.</li>
   <li><strong>Projector</strong>: <kbd>Ctrl</kbd>+<kbd>+</kbd> enlarges the texts and graphs;
   <kbd>Ctrl</kbd>+<kbd>0</kbd> goes back to the normal size.</li>
 </ul>
@@ -416,8 +465,11 @@ values.</p>
 </tbody>
 </table>
 <h3>Enforced settings</h3>
-<p>A <code>mevsono.ini</code> file placed next to the program (computer room, USB stick) is read at
-every launch and takes priority over the user's settings; MeVSono never writes it. For example:</p>
+<p>An enforced <code>mevsono.ini</code> file (computer room, USB stick) is read at every launch and
+takes priority over the user's settings; MeVSono never writes it. On Windows, it goes in the folder
+of <code>mevsono.exe</code> (<code>C:\Program Files\MeVSuite\MeVSono</code> with the installer, or
+the folder of the portable version); on Linux, in <code>/etc/MeVSuite/</code> (packages and
+AppImage). For example:</p>
 <pre><code>mode = simple
 language = en
 theme = light</code></pre>
@@ -432,16 +484,18 @@ folder (<code>mevsono-help</code>): it can be printed or saved from the browser.
 
 <section id="about">
 <h2>16. Errors, contact and licence</h2>
-<p><strong>Unexpected error</strong>: MeVSono shows a message before closing and saves the details to
-<code>mevsono.log</code>, in the same folder as <code>mevsono.ini</code>. Attach this file to your
-report.</p>
+<p><strong>Unexpected error or crash</strong>: MeVSono writes the cause (and, for a crash, the call
+stack) to <code>mevsono.log</code>, in the same folder as <code>mevsono.ini</code>, then shows “MeVSono
+hit an unexpected error and must close”, with the path of the file. The log only keeps the last
+error: attach it to your report, with the version (<strong>Help › About MeVSono…</strong>).</p>
 <p><strong>Contact</strong>: Rémi MEVAERE,
 <a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>. Comments, ideas for
 improvement and problems are welcome.</p>
 <p><strong>Licence</strong>: MeVSono is free software, released under the MIT licence; it is written in
 C++ with the free Qt and Qt Multimedia libraries (LGPL version 3) and relies on FFmpeg to read sounds.
 The components used and their licences are listed in <strong>Help › About MeVSono…</strong>;
-<strong>Help › About Qt…</strong> gives the Qt version and its licence terms.</p>
+<strong>Help › About Qt…</strong> gives the Qt version and its licence terms. On Windows, the licences
+of the bundled libraries are in the <code>licences</code> folder, next to the program.</p>
 <footer>MeVSono {{version}} — guide built into the software, available offline.</footer>
 </section>
 </main>

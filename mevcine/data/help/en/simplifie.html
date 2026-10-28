@@ -112,17 +112,35 @@ all the allowed ways to write it: <a href="echelle.html">The scale</a>.</p>
   <li><span class="btn">↶ Undo the last point</span> (<kbd>Ctrl</kbd>+<kbd>Z</kbd>) erases the last point and goes
   back to its frame; ↷ (<kbd>Ctrl</kbd>+<kbd>Y</kbd>) brings it back.</li>
   <li>No need to mark the whole video: stop when the motion is over. However, you cannot skip a frame.</li>
-  <li><span class="btn">Full screen</span>, under the image (<kbd>F11</kbd>): the image fills the whole screen, the
-  magnifier stays visible. <kbd>Esc</kbd> goes back to the window.</li>
   <li><strong>Slow-motion video?</strong> Open this section if the video was filmed in slow motion, and enter the
-  capture frame rate (for instance 240 frames per second). See <a href="video.html#ralenti">Slow motion</a>.</li>
+  capture frame rate (for instance 240 frames per second). See <a href="video.html#ralenti">In slow motion</a>.</li>
+  <li>“Variable frame rate: the real times of the frames are used.”: the video comes from a phone whose frames are
+  not evenly spaced. Nothing to do: MeVCine takes the real time of each frame. See
+  <a href="video.html#cadence">Variable frame rate</a>.</li>
 </ul>
 <p>When you are done: <span class="btn">Finish marking ▶</span>.</p>
+
+<h3 id="plein-ecran">Marking in full screen</h3>
+<figure>
+<img src="images/plein-ecran.jpg" alt="Marking in full screen: the image over the whole screen, the magnifier and the instruction in a frame at the top left, the buttons at the bottom">
+<figcaption>In full screen: the magnifier and the instruction stay visible, in a frame laid over the
+image.</figcaption>
+</figure>
+<p><span class="btn">Full screen</span>, under the image (<kbd>F11</kbd>): the image fills the whole screen, and the
+points are easier to aim at. The magnifier, the coordinates and the instruction stay visible in a frame at the top
+of the image; when the mouse comes near, it moves to the other side, so that it never hides the object. You mark as
+in the window: a click on the object, and the next frame shows up.</p>
+<ul>
+  <li>At the bottom: the choice of the frame, ↶ ↷ to undo or redo the last point.</li>
+  <li><span class="btn">✕ Leave full screen</span> (<kbd>Esc</kbd> or <kbd>F11</kbd>) goes back to the window;
+  marking goes on.</li>
+  <li><span class="btn">Finish marking ▶</span> goes back to the window, at step 5.</li>
+</ul>
 
 <h2 id="tableau">Step 5: the table of measurements</h2>
 <p>For each marked frame: the time <code>t</code> in seconds, and the coordinates <code>x</code> and <code>y</code>
 in metres, in your axes. The first marked frame is at t = 0; with a video at 25 frames per second, the times go up
-by 0.040 s each time.</p>
+by 0.040 s each time (unless the frame rate is variable).</p>
 <p><strong>A measurement is wrong?</strong> Click on <strong>⌖</strong> in its row: its frame shows up, the point to
 redo is circled in orange; click on the object. MeVCine then goes back to where you were.
 <span class="btn">Cancel (Esc)</span> gives up.</p>

@@ -7,14 +7,19 @@
 
 <h2 id="video">La vidéo ne s'ouvre pas</h2>
 <dl class="faq">
-  <dt>« Vidéo illisible : la vidéo est au format HEVC (H.265), que ffmpeg n'a pas su décoder »</dt>
+  <dt>« Vidéo illisible » : « La vidéo est au format HEVC (H.265), que ffmpeg n'a pas su décoder »</dt>
   <dd>Le ffmpeg utilisé ne connaît pas ce format. Vérifiez que le dossier <code>ffmpeg</code> est bien à côté du
-  programme, ou installez un ffmpeg complet. Sinon, convertissez la vidéo en H.264 :
+  programme (Windows, AppImage), ou installez un ffmpeg complet (sous Fedora, celui de RPM Fusion : voir
+  <a href="installer.html#linux">Installer</a>). Sinon, convertissez la vidéo en H.264 :
   <pre>ffmpeg -i video.mov -c:v libx264 -pix_fmt yuv420p -an video.mp4</pre>
   (ou avec HandBrake, VLC…). Une conversion peut perdre la cadence d'un ralenti.</dd>
   <dt>« le programme ffprobe est introuvable : ffmpeg doit être installé pour lire les vidéos »</dt>
   <dd>Ni le dossier <code>ffmpeg</code> à côté du programme, ni un ffmpeg installé. Recopiez le dossier complet de
   MeVCine, ou installez ffmpeg (<code>sudo apt install ffmpeg</code>, <code>sudo dnf install ffmpeg</code>…).</dd>
+  <dt>« ffprobe ne répond pas : la vidéo est peut-être abîmée, ou sur un support trop lent »</dt>
+  <dd>L'examen de la vidéo n'était pas fini au bout de deux minutes. Copiez la vidéo sur le disque de l'ordinateur
+  (et non sur une clé USB ou un dossier réseau lent), puis rouvrez-la ; si le message revient, le fichier est
+  abîmé : réencodez-le avec la commande ci-dessus.</dd>
   <dt>« ce fichier n'est pas une vidéo », « ce fichier ne contient pas de vidéo »</dt>
   <dd>Le fichier est autre chose (une image, un son), ou il est abîmé. Essayez de le lire avec VLC.</dd>
   <dt>« impossible de déterminer le nombre d'images »</dt>
@@ -30,9 +35,10 @@
 <h2 id="affichage">La fenêtre ne s'ouvre pas</h2>
 <dl class="faq">
   <dt>« This application failed to start because no Qt platform plugin could be initialized »</dt>
-  <dd>Les bibliothèques de Qt sont incomplètes. Sous Windows, le dossier <code>platforms</code> (avec
-  <code>qwindows.dll</code>) doit être à côté de <code>mevcine.exe</code> : recopiez le dossier complet. Sous Linux,
-  installez le paquet de MeVCine, ou prenez l'AppImage (voir <a href="installer.html#linux">Installer</a>).</dd>
+  <dd>Les bibliothèques de Qt sont incomplètes. Sous Windows, le dossier <code>plugins</code> (avec
+  <code>plugins\platforms\qwindows.dll</code>) et le fichier <code>qt.conf</code> doivent être à côté de
+  <code>mevcine.exe</code> : recopiez le dossier complet. Sous Linux, installez le paquet de MeVCine, ou prenez
+  l'AppImage (voir <a href="installer.html#linux">Installer</a>).</dd>
   <dt>Rien ne se passe au double-clic (Windows)</dt>
   <dd>SmartScreen a peut-être bloqué le programme : relancez-le, puis <em>Informations complémentaires › Exécuter
   quand même</em>. Vérifiez aussi que l'antivirus ne l'a pas mis en quarantaine.</dd>
@@ -45,25 +51,35 @@
 <dl class="faq">
   <dt>Aucune fenêtre ne s'ouvre avec <em>Ouvrir une vidéo…</em> (Linux)</dt>
   <dd>MeVCine utilise les dialogues du bureau, sinon ceux de Qt. En attendant, glissez la vidéo sur la fenêtre, ou
-  lancez <code>./mevcine video.mp4</code>.</dd>
+  lancez <code>mevcine video.mp4</code>.</dd>
   <dt>« Fichier trop ancien »</dt>
   <dd>Un ancien fichier <code>.mecavideo</code> antérieur à la version 7.3 : son format n'est pas lisible.</dd>
   <dt>« Projet illisible »</dt>
-  <dd>Le fichier n'est pas un projet MeVCine, ou il est abîmé.</dd>
+  <dd>Le fichier n'est pas un projet MeVCine, ou il est abîmé (par exemple, une longueur d'étalon nulle : « La
+  longueur de l'étalon (0 m) n'est pas valide. »).</dd>
+  <dt>« Vidéo introuvable »</dt>
+  <dd>Le projet ne contient que le chemin de la vidéo : placez la vidéo à côté du fichier de projet, puis
+  rouvrez-le.</dd>
   <dt>« Erreur lors de l'enregistrement »</dt>
-  <dd>Le dossier n'est pas accessible en écriture (clé protégée, dossier réseau plein, droits). Choisissez un autre
-  dossier, par exemple <em>Documents</em>.</dd>
+  <dd>Le dossier n'est pas accessible en écriture (clé protégée ou pleine, dossier réseau plein, droits) ; le
+  message en donne la cause. Un fichier qui existait déjà reste intact. Choisissez un autre dossier, par exemple
+  <em>Documents</em>.</dd>
+  <dt>« Sauvegarde automatique impossible »</dt>
+  <dd>Le dossier de configuration n'est pas accessible en écriture (disque plein, droits). Le travail n'est plus
+  protégé : enregistrez le projet (<em>Fichier › Enregistrer le projet…</em>) ailleurs, puis libérez de la place ou
+  corrigez les droits (voir <a href="reglages.html#configuration">Réglages</a>).</dd>
 </dl>
 
 <h2 id="interne">Une erreur interne, un plantage</h2>
 <dl class="faq">
   <dt>« Erreur interne de MeVCine »</dt>
-  <dd>Le programme a rencontré une erreur imprévue et s'arrête. Le détail est dans <code>mevcine-erreurs.log</code>
-  (<a href="reglages.html#configuration">dossier de configuration</a>) : envoyez-le à
+  <dd>Le programme a rencontré une erreur imprévue, ou il a planté, et s'arrête. Le message dit où est le
+  journal : <code>mevcine.log</code>, dans le <a href="reglages.html#configuration">dossier de configuration</a>,
+  avec la date, la cause et, pour un plantage, la pile d'appels. Envoyez-le à
   <a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>, avec la vidéo si possible.</dd>
   <dt>Récupérer le travail en cours</dt>
-  <dd>Relancez MeVCine, puis <em>Fichier › Récupérer le travail précédent…</em> : la sauvegarde automatique (au plus
-  deux secondes avant l'arrêt) revient.</dd>
+  <dd>Relancez MeVCine, puis <em>Fichier › Récupérer le travail précédent…</em> : la sauvegarde automatique revient
+  (les toutes dernières modifications, deux secondes au plus, peuvent y manquer).</dd>
   <dt>« Erreur de lecture de la configuration »</dt>
   <dd>Le fichier <code>mevcine.ini</code> est abîmé : MeVCine repart d'une configuration neuve. Rien de grave.</dd>
 </dl>

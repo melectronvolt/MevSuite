@@ -9,7 +9,7 @@
   <tr><td><kbd>←</kbd> <kbd>→</kbd>, <kbd>Page ↑</kbd> <kbd>Page ↓</kbd></td><td>previous frame, next frame</td></tr>
   <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd></td><td>undo the last point / redo it</td></tr>
   <tr><td><kbd>Esc</kbd></td><td>cancel drawing the reference, the measurement to redo, choosing the origin (expert
-  mode); close a message</td></tr>
+  mode); leave full screen; close a message</td></tr>
   <tr><td><kbd>Enter</kbd></td><td>confirm the length of the reference; close a message (but never confirm an action
   that would lose measurements)</td></tr>
   <tr><td><kbd>Ctrl</kbd>+<kbd>C</kbd></td><td>copy the measurements for Python (outside a text field)</td></tr>
@@ -36,7 +36,7 @@
   <tr><td>Right-click</td><td>cancel drawing the reference</td></tr>
   <tr><td>Hover</td><td>the magnifier enlarges the frame around the mouse; next to it, the coordinates of the point
   under the cursor</td></tr>
-  <tr><td>Grapher</td><td>wheel: zoom; drag: move; double-click: fit</td></tr>
+  <tr><td>Grapher</td><td>wheel: zoom; drag: move; double-click: show all</td></tr>
 </table>
 
 <h2 id="loupe">The magnifier</h2>
@@ -45,4 +45,6 @@ Look at it when you click, and always aim at the same point of the object from o
 recalls what is expected: “Origin of the axes”, “Reference”, “Marking”, “Marking object 2”, “Measurement to
 redo”.</p>
 <p>Next to it, the small table gives the coordinates of the point under the cursor, in your axes: the
-<strong>px</strong> row in pixels, the <strong>m</strong> row in metres (once the scale is set).</p>
+<strong>px</strong> row in pixels, the <strong>m</strong> row in metres (once the scale is set). In simple mode,
+the <strong>m</strong> row replaces the <strong>px</strong> row as soon as the scale is set; expert mode shows
+both.</p>

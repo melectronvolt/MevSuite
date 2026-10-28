@@ -14,8 +14,21 @@ std::function<bool(const QUrl &)> openUrl = [](const QUrl &url) { return QDeskto
 
 QStringList files()
 {
-    return {NOTICE,           PYTHON,           u"help.css"_s,     u"accueil.jpg"_s, u"fenetre.jpg"_s,
-            u"tableur.jpg"_s, u"import-csv.jpg"_s, u"graphe.jpg"_s, u"modele.jpg"_s,  u"python.jpg"_s};
+    return {NOTICE,
+            PYTHON,
+            u"help.css"_s,
+            u"accueil.jpg"_s,
+            u"fenetre.jpg"_s,
+            u"tableur.jpg"_s,
+            u"import-csv.jpg"_s,
+            u"incertitude.jpg"_s,
+            u"graphe.jpg"_s,
+            u"modele.jpg"_s,
+            u"tangentes.jpg"_s,
+            u"export-csv.jpg"_s,
+            u"menu-fenetres.jpg"_s,
+            u"scripts-recus.jpg"_s,
+            u"python.jpg"_s};
 }
 
 QString write(const QString &page, QString *error)

@@ -37,9 +37,9 @@ LANGUES = ["fr", "en"]
 
 
 def version():
-    with open(os.path.join(RACINE, "CMakeLists.txt"), encoding="utf-8") as f:
-        m = re.search(r"project\(\s*mevcine\s+VERSION\s+([0-9.]+)", f.read())
-    return m.group(1) if m else ""
+    """le marqueur de la version : MeVCine le remplace par la sienne quand il copie la notice
+    (chemins::copie_aide), et le site reste juste d'une version à l'autre"""
+    return "{{version}}"
 
 
 def lit_cles(chemin):
@@ -153,7 +153,8 @@ def main():
                 "pied": html.escape(textes["pied"].replace("{version}", v)),
             }.items():
                 page = page.replace("{{" + cle + "}}", valeur)
-            reste = re.search(r"{{\w+}}", page)
+            # {{version}} reste : MeVCine le remplace en copiant la notice
+            reste = re.search(r"{{(?!version}})\w+}}", page)
             if reste:
                 sys.exit(f"{source} : marque {reste.group(0)} non remplacée")
             with open(os.path.join(dossier_sortie, f"{nom}.html"), "w", encoding="utf-8") as f:

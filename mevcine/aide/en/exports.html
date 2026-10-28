@@ -65,7 +65,8 @@ PNG: handy for a report.</p>
 <h2 id="projets">Projects</h2>
 <p><em>File › Save the project…</em> (<kbd>Ctrl</kbd>+<kbd>S</kbd>) writes a <code>.mevcine</code>
 file: the path of the video, the axes, the scale (and its unit), the frame rate and all the measurements.
-<em>File › Open a project…</em> reopens it, at the frame after the last marked one.</p>
+<em>File › Open a project…</em> reopens it, at the frame after the last marked one; if MeVCine is installed on the
+computer, a double-click on the file is enough. A project that follows several objects opens in expert mode.</p>
 <p class="warn">The project does not contain the video: <strong>keep the video next to the project</strong>
 (copy both files together onto your USB stick). Otherwise, the “Video not found” message tells which file is
 missing.</p>
@@ -76,11 +77,13 @@ missing.</p>
 <figcaption>Before quitting with unsaved measurements, MeVCine asks for confirmation.</figcaption>
 </figure>
 <ul>
-  <li><strong>Confirmation</strong>: quitting, starting over or opening another video while the measurements have
-  been neither copied, nor exported, nor saved: MeVCine asks first. <kbd>Enter</kbd> does not confirm;
-  <kbd>Esc</kbd> cancels.</li>
+  <li><strong>Confirmation</strong>: quitting, starting over, opening another video or a project while the
+  measurements have been neither copied, nor exported, nor saved: MeVCine asks first. With several objects, a frame
+  where an object is missing counts too. <kbd>Enter</kbd> does not confirm; <kbd>Esc</kbd> cancels.</li>
   <li><strong>Automatic backup</strong>: the work in progress is saved by itself, every two seconds if it has
-  changed.</li>
+  changed. If that is impossible (full disk, protected folder), MeVCine says so once: then save the project yourself
+  (<em>File › Save the project…</em>).</li>
   <li><strong>Recovering</strong>: after a crash or an accidental closing, start MeVCine again, then <em>File ›
-  Recover previous work…</em>. The video must still be in its place.</li>
+  Recover previous work…</em>. The video must still be in its place. The very latest changes (two seconds at most)
+  may be missing.</li>
 </ul>

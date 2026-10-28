@@ -11,12 +11,13 @@ L'interface est en français.
 
 L'utilisation est décrite dans la notice ([`assets/help/notice.html`](assets/help/notice.html),
 touche `F1` ou menu **Aide → Notice d'utilisation…**, ouverte dans le navigateur) : une partie pour
-les élèves (fenêtre, saisie, import CSV, calculs, incertitudes, graphes, modélisation, exports), puis
-une pour les professeurs (Python, préparation d'un TP, installation). La référence Python
+les élèves (fenêtre, saisie, import CSV, calculs, incertitudes, graphes, modélisation, méthode des
+tangentes, exports, fenêtres), puis une pour les professeurs (Python, préparation d'un TP,
+installation, journal des erreurs). La référence Python
 ([`assets/help/python.html`](assets/help/python.html)) décrit les fonctions de numpy, matplotlib et
 pandas disponibles et toutes celles du module `mevreg`, avec leurs paramètres. Les images de la
-notice viennent des essais de l'interface : `MEVREG_SHOTS=build/captures ./build/test_app`, puis
-`python3 -I tools/images_notice.py build`.
+notice viennent des essais de l'interface : `MEVREG_SHOTS=$PWD/build/captures ctest --test-dir build
+-R app` (chemin absolu : l'essai tourne dans `build/`), puis `python3 -I tools/images_notice.py build`.
 
 Pas d'exemples livrés : élèves et professeurs ouvrent leurs propres fichiers. Seul le menu
 **Python → Exemples** propose des scripts courts.
@@ -68,8 +69,9 @@ sont intégrées au programme, pour que les graphes ne dépendent pas des police
 - **Réticule** : accroché à un point, il affiche la valeur avec son incertitude, arrondie à la même
   décimale (`U = (5,042 ± 0,070) V`).
 - **Incertitude créée en un clic** : boîte « Incertitude » (constante ou formule, par exemple
-  `0.02*U + 0.01`), colonne `u_x` placée à droite de `x`, barres affichées aussitôt ; les réglages
-  d'une courbe signalent une incertitude manquante et proposent de la créer.
+  `(0.02*abs(U) + 0.01)/sqrt(3)` pour une tolérance « ±(2 % + 1 digit) »), colonne `u_x` placée à
+  droite de `x`, barres affichées aussitôt ; les réglages d'une courbe signalent une incertitude
+  manquante et proposent de la créer.
 
 Le fichier `.phy` enregistre en plus `error_width` et `cap_size` pour chaque courbe ; la version Rust
 les ignore.
@@ -93,11 +95,15 @@ change :
   - `mevreg` (`import mevreg as mr`), une aide pour exploiter tout le logiciel : grandeurs (`creer`,
     `calculer`, `modifier`, `renommer`, `supprimer`, `incertitude`, `parametre`), `tableau` et
     `importer` (avec pandas), `lire_csv`, `tableur`, graphes (`graphe`, `courbe`, `axes`,
-    `verticale`, `horizontale`, `oblique`, `texte`, `retirer_courbe`), `modeliser` (résultat avec
+    `verticale`, `horizontale`, `oblique`, `texte`, `effacer_annotations`, `tangentes`,
+    `retirer_tangentes`, `retirer_courbe`), `modeliser` (résultat avec
     incertitudes, modèle tracé sur le graphe), fenêtres (`ouvrir`, `cacher`, `fermer`, `detacher`,
     `rattacher`, `disposition`), fichiers (`enregistrer`, `exporter_csv`, `exporter_graphe`),
     `message`. Les lectures sont immédiates ; les changements sont faits à la fin du script, dans
     l'ordre. Les chemins relatifs sont rapportés au dossier du document.
+  - scripts d'un document reçu : lancés seulement après accord (« Ne pas lancer » par défaut ; le
+    bouton Exécuter d'un script le lance) ; un document enregistré sur ce poste, ou accepté une
+    fois, les lance sans question (empreintes dans `trusted_documents`).
   - menu **Python → Exemples** : une quarantaine d'exemples courts, par thème (grandeurs, graphes,
     modélisation, fenêtres et fichiers, divers), chacun dans un nouveau script prêt à exécuter ;
     l'export Capytale commence par `plt.clf()`.
@@ -112,7 +118,8 @@ change :
   (onglet Modèles des réglages, ou clic droit) ; retirer la courbe la retire. Réglages du graphe
   jamais écrasés (devant le graphe s'il manque de place), fermés par leur croix.
 - **Tableur** : colonnes réparties sur la largeur (au moins une largeur minimale, puis défilement),
-  élargies à la main (double-clic sur la poignée : largeur automatique) ; numéros de lignes
+  élargies à la main, les autres se partageant le reste (double-clic sur la poignée : retour au
+  partage égal) ; numéros de lignes
   centrés. Export CSV réglable : séparateur des valeurs, séparateur décimal, en-têtes, codage, avec
   un aperçu.
 - **Fenêtres** : fenêtres ancrables de Qt. Glissée par sa barre de titre ou par son onglet, une
@@ -124,9 +131,10 @@ change :
   autres, sous Wayland aussi : le cadre que Qt dessine aux fenêtres ancrables flottantes ne s'y
   déplace pas) ; son bouton **Rattacher**, ou **Fenêtres → Rattacher les fenêtres détachées**, la
   remet en place. Fermer la fenêtre d'un tableur, d'un graphe, d'un script ou d'un dessin demande
-  confirmation : il reste dans le document, le menu Fenêtres le rouvre (« Ne plus demander », que
-  les préférences rétablissent). La disposition est enregistrée dans le `.phy` sous une clé propre à
-  cette version.
+  s'il faut le cacher (il reste dans le document, le menu Fenêtres le rouvre) ou le supprimer
+  (« Toujours cacher sans demander », que les préférences rétablissent). Menu Fenêtres : un clic
+  cache une fenêtre affichée ou réaffiche une fenêtre cachée ; la croix d'une ligne la supprime. La
+  disposition est enregistrée dans le `.phy` sous une clé propre à cette version.
 - **Import CSV** (menu Fichier, fenêtre Grandeurs, tableur, ou fichier glissé sur la fenêtre) : un
   aperçu montre le fichier ligne par ligne (noms, unités, valeurs, ignorée) et les colonnes qui seront
   importées, à cocher, à renommer ; séparateur des valeurs, séparateur décimal, lignes des noms et des
@@ -138,7 +146,8 @@ change :
 - **Réglages** : `mevreg.ini`, dans le dossier commun à la suite (Linux : `~/.config/MeVSuite/`,
   Windows : `%APPDATA%\MeVSuite\`) ; l'ancien `MevSuite/mevreg.ini` y est déplacé : `theme = auto | light | dark`, `window_width`,
   `window_height`, `maximized`, `ui_zoom`, `sig_digits`, `dark_plots`, `confirm_close`,
-  `recent`. La virgule décimale n'est pas un réglage : elle suit la langue (français : virgule).
+  `recent`, `trusted_documents`. La virgule décimale n'est pas un réglage : elle suit la langue
+  (français : virgule). Journal des erreurs et des plantages : `mevreg.log`, dans le même dossier.
 - **Thème clair ou sombre** : celui du bureau (`theme = auto`), suivi pendant que le programme tourne
   (sous Linux, lu auprès du portail du bureau `org.freedesktop.appearance`), tant que le bouton
   soleil / lune de la barre de menus n'a pas servi. Palette sombre commune à la suite. En thème

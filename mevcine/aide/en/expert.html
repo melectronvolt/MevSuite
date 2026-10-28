@@ -4,10 +4,10 @@
 </header>
 
 <p>Expert mode gives access to everything: several objects, automatic tracking, trajectories, velocity vectors,
-chronophotography, change of reference frame, grapher. You switch to it with the <em>Mode › Expert mode</em>
-menu; the measurements made in simple mode are kept. The four tabs, in the order of the work:
-<strong>1. Marking</strong>, <strong>2. Coordinates</strong>, <strong>3. Trajectories</strong>,
-<strong>4. Grapher</strong>. The last three open once marking has started.</p>
+chronophotography, change of reference frame, grapher. You switch to it with the <em>Mode › Expert mode (all
+features)</em> menu; the measurements made in simple mode are kept, and marking goes on. The four tabs, in the
+order of the work: <strong>Marking</strong>, <strong>Coordinates</strong>, <strong>Trajectories</strong>,
+<strong>Grapher</strong>. The last three open once marking has started.</p>
 
 <h2 id="pointage">Marking tab</h2>
 <figure>
@@ -25,8 +25,8 @@ menu; the measurements made in simple mode are kept. The four tabs, in the order
   direction is given in words (“x to the right, y upward”).</dd>
   <dt>3. Scale — <span class="btn">Set the scale</span></dt>
   <dd>Draw the reference on the frame (two clicks, or a drag), then give its length and unit (mm, cm or m) in the
-  small window. Next to the button: “85 cm for 353 px”, or “not set: the measurements are in pixels”. See
-  <a href="echelle.html">The scale</a>.</dd>
+  small window. Next to the button: “85 cm for 353 px”, or “not set: the measurements are in pixels”. The button
+  then becomes <span class="btn">Redo the scale</span>. See <a href="echelle.html">The scale</a>.</dd>
 </dl>
 <p>While choosing the origin or the reference, the instruction shows below these buttons, in orange, with
 <span class="btn">Cancel</span>.</p>
@@ -47,20 +47,24 @@ menu; the measurements made in simple mode are kept. The four tabs, in the order
   measurements are kept; ⌖ still redoes a measurement. <span class="btn">▶ Resume marking</span> goes on.</dd>
   <dt>Video</dt>
   <dd>The name of the video, its size, its number of frames, its duration; and the <em>Frames per second</em>,
-  detected in the video. For slow motion, enter the capture frame rate (for instance 240). “Variable frame rate”
-  means the frames are not evenly spaced: their real times are used.</dd>
+  detected in the video. For slow motion, enter the capture frame rate (for instance 240). “Variable frame rate”,
+  in orange, means the frames are not evenly spaced (phone): their real times are used, and the <em>Frames per
+  second</em> only give the usual frame rate of the camera. See <a href="video.html#cadence">Variable frame
+  rate</a>.</dd>
   <dt><span class="btn">Start over</span></dt>
   <dd>Erases the measurements, the scale and the axes; the video stays open. MeVCine asks for confirmation if there
   are measurements.</dd>
 </dl>
 <p>Under the frame: ⟲ ⟳ rotate the video by a quarter turn (before the scale and marking); the frame number and the
-slider; ↶ ↷ undo or redo the last point; <span class="btn">Full screen</span> (<kbd>F11</kbd>), while marking.</p>
+slider; ↶ ↷ undo or redo the last point; <span class="btn">Full screen</span> (<kbd>F11</kbd>), while marking. The
+status bar, at the bottom, says what to do (“Click on the object”, “Click on object 2”…).</p>
 <h3 id="plein-ecran">Marking in full screen</h3>
 <p><span class="btn">Full screen</span> gives the whole screen to the image. The magnifier and the coordinates stay
 visible in a frame at the top of the image: it moves to the other side when the mouse comes near, so that it never
 hides the object. The instruction is under the magnifier; at the bottom, the choice of the frame,
 <span class="btn">✕ Leave full screen</span> (<kbd>Esc</kbd>), which goes back to the window without stopping the
-marking, and <span class="btn">⏹ Stop marking</span>. Full screen also exists in simple mode, at step 4.</p>
+marking, and <span class="btn">⏹ Stop marking</span>. Full screen also exists in simple mode, at step 4: see
+<a href="simplifie.html#plein-ecran">Marking in full screen</a>, with a picture.</p>
 
 <h3 id="suivi">Automatic tracking</h3>
 <ol class="steps">
@@ -84,9 +88,9 @@ passes in front of a similar background.</p>
 object, in metres (<code>x1</code>, <code>y1</code>, <code>x2</code>… with several objects). The <strong>⌖</strong>
 button of a row redoes that measurement: the <em>Marking</em> tab opens on the frame, the point is circled; click on
 the object, and you come back to the table.</p>
-<p>Above it, on one line: <span class="btn">📋 Copy for Python</span>, <span class="btn">💾 Save as CSV…</span>,
-<span class="btn">Save the project…</span>; the mouse resting on a button says what it does. See
-<a href="exports.html">Exporting the measurements</a>.</p>
+<p>Above it, on one line, <em>Export the measurements:</em> <span class="btn">📋 Copy for Python</span> (“✔
+Copied” confirms it), <span class="btn">💾 Save as CSV…</span>, <span class="btn">Save the project…</span>; the mouse
+resting on a button says what it does. See <a href="exports.html">Exporting the measurements</a>.</p>
 
 <h2 id="trajectoires">Trajectories tab</h2>
 <figure>
@@ -100,11 +104,12 @@ the object, and you come back to the table.</p>
   of pixels for 1 m/s in <em>Velocity scale</em> (empty box: automatic; the tooltip of the box recalls it). The legend, bottom left, shows the arrow of
   a round speed. <em>Near the mouse</em> draws only the vector of the point under the mouse.</dd>
   <dt>Chronophotography</dt>
-  <dd>The points on a frame of the video (<em>Frame no.</em> chooses which), with the interval Δt between two frames,
-  the time of the frame, and the reference in blue.</dd>
+  <dd>The points on a frame of the video (<em>Frame no.</em> chooses which), with the interval Δt between two frames
+  (“usual Δt” if the frame rate is variable), the time of the frame, and the reference in blue.</dd>
   <dt>Motion diagram</dt>
-  <dd>The points alone, on a white background, named M0, M1, M2…, with the reference: ready to print for work on
-  paper.</dd>
+  <dd>The points alone, named M0, M1, M2…, with the reference, on the background of the graphs: white in the light
+  theme, dark in the dark theme. To print it and work on paper, first switch to the light theme (the sun, at the
+  top right).</dd>
   <dt><span class="btn">Save</span></dt>
   <dd>Saves the drawing as an image (PNG or JPEG).</dd>
   <dt>Change of reference frame</dt>
@@ -117,16 +122,17 @@ the object, and you come back to the table.</p>
 <figure>
 <img src="images/expert-grapheur.jpg" alt="The Grapher tab: x versus t, points and lines">
 <figcaption>x versus t: the title, and the label of each axis with its unit. The help line, under the graph,
-recalls the gestures: the wheel zooms, a drag moves the graph, a double-click fits it again.</figcaption>
+recalls the gestures: the wheel zooms, a drag moves the graph, a double-click shows the whole graph.</figcaption>
 </figure>
 <p>At the top, choose what to plot (<em>Plot</em>) and against what (<em>versus</em>, <code>t</code> by default):
 <code>t</code>, <code>x</code>, <code>y</code>, the speed <code>|v|</code> and its components <code>vx</code>,
 <code>vy</code>, the acceleration <code>|a|</code>, <code>ax</code>, <code>ay</code>. The graph, empty at first, is
-drawn at once, with its title and the labels of its axes. Three styles: points only, points and lines, lines only.
-<span class="btn">Save</span> writes the graph as PNG, title included.</p>
+drawn at once, with its title and the labels of its axes. Three styles (<em>Style</em>): <em>Points only</em>,
+<em>Points and lines</em>, <em>Lines only</em>. <span class="btn">Save</span> writes the graph as PNG, title
+included.</p>
 <p class="note">The velocities and accelerations of the grapher are quick estimates, from differences between two
-successive frames. They are for exploring the motion and are not exported: the proper calculation is yours to do,
-from the positions.</p>
+successive frames, with the real time of each frame. They are for exploring the motion and are not exported: the
+proper calculation is yours to do, from the positions.</p>
 
 <h2 id="projets">Saving, resuming</h2>
 <p><em>File › Save the project…</em> (<kbd>Ctrl</kbd>+<kbd>S</kbd>) keeps everything; <em>File › Open a

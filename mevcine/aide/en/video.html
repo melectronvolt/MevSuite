@@ -40,11 +40,14 @@
   <strong>capture</strong> frame rate is what matters. Android phones write it in the file: MeVCine uses it
   automatically, and says so (“Slow-motion video”). An iPhone does not always write it: enter the capture frame
   rate yourself, in <em>Slow-motion video?</em> (step 4 of simple mode) or <em>Frames per second</em> (expert mode).
-  The times in the table are recomputed at once.</dd>
-  <dt>Variable frame rate</dt>
-  <dd>Many phones drop frames, or film more slowly when the light gets dim. MeVCine detects it (“Variable frame
-  rate”) and uses the real time of each frame: the intervals in the table are then not all equal, and that is
-  normal.</dd>
+  The times in the table are recomputed at once. Likewise, a time-lapse video is announced (“Time-lapse
+  video”).</dd>
+  <dt id="cadence">Variable frame rate</dt>
+  <dd>Many phones do not film at a perfectly regular rate: for instance 40 ms, then 44 ms between two frames; or they
+  drop frames, or film more slowly when the light gets dim. MeVCine detects it (“Variable frame rate”) and uses the
+  <strong>real time</strong> of each frame: the intervals in the table are then not all equal, and that is normal.
+  The velocities and accelerations of the grapher take it into account; do the same in your calculations, with the
+  times of the table.</dd>
   <dt>HDR</dt>
   <dd>HDR videos (recent iPhones) are converted to ordinary colours: they do not look washed out.</dd>
 </dl>
@@ -52,4 +55,5 @@
 <h2 id="formats">Formats</h2>
 <p>MeVCine reads the formats of phones, cameras and webcams: MP4, MOV, AVI, MKV, WebM, 3GP, MTS…, in H.264, HEVC
 (H.265), AV1, VP9, ProRes, Motion JPEG. Very large videos (4K) open, but more slowly: for a lab, a 1080p video is
-plenty.</p>
+plenty. A video that MeVCine cannot examine within two minutes (damaged file, USB stick too slow) is declared
+unreadable: copy it to the computer first.</p>

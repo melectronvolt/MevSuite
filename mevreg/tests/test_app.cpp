@@ -4,6 +4,7 @@
 // sont enregistrées.
 
 #include "app/about.h"
+#include "app/calculationspanel.h"
 #include "app/crash.h"
 #include "app/csvimport.h"
 #include "app/dialogs.h"
@@ -36,6 +37,7 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QPainter>
 #include <QPlainTextEdit>
 #include <QPushButton>
 #include <QRegularExpression>
@@ -96,6 +98,26 @@ void shot(QWidget *w, const QString &name)
     QDir().mkpath(dir);
     QApplication::processEvents();
     w->grab().save(QDir(dir).filePath(name + u".png"_s));
+}
+
+/// Capture d'une fenêtre avec un menu ouvert par-dessus (le menu est une fenêtre à part, absente
+/// de `grab`), rognée autour du menu.
+void shotWithMenu(QWidget *w, QMenu *menu, const QString &name)
+{
+    const QString dir = qEnvironmentVariable("MEVREG_SHOTS");
+    if (dir.isEmpty())
+        return;
+    QDir().mkpath(dir);
+    QApplication::processEvents();
+    QPixmap pm = w->grab();
+    const QRect at(w->mapFromGlobal(menu->pos()), menu->size());
+    {
+        QPainter p(&pm);
+        p.drawPixmap(at.topLeft(), menu->grab());
+    }
+    const QRect keep = QRect(0, 0, at.right() + 180, at.bottom() + 24) & w->rect();
+    const qreal dpr = pm.devicePixelRatio();
+    pm.copy(QRect(keep.topLeft() * dpr, keep.size() * dpr)).save(QDir(dir).filePath(name + u".png"_s));
 }
 
 void settle(int ms = 60)
@@ -202,6 +224,9 @@ private Q_SLOTS:
     void initTestCase()
     {
         g_previous = qInstallMessageHandler(quiet);
+        // curseur de texte qui ne clignote pas : les captures (images de la notice) sont les mêmes d'une
+        // fois à l'autre
+        QApplication::setCursorFlashTime(0);
         QStandardPaths::setTestModeEnabled(true);
         ensureCoreResources();
         theme::init();
@@ -391,10 +416,12 @@ private Q_SLOTS:
         const QString page = help::write(help::NOTICE, &error);
         QVERIFY2(!page.isEmpty(), qPrintable(error));
         const QDir dir = QFileInfo(page).dir();
+        QString pages;
         for (const QString &name : {help::NOTICE, help::PYTHON}) {
             QFile f(dir.filePath(name));
             QVERIFY(f.open(QIODevice::ReadOnly));
             const QString html = QString::fromUtf8(f.readAll());
+            pages += html;
             QVERIFY(!html.contains(u"{{version}}"_s));
             QVERIFY(html.contains(QString::fromLatin1(MEVREG_VERSION)));
             static const QRegularExpression ids(u"id=\"([^\"]+)\""_s), refs(u"(?:href|src)=\"([^\"#:]*)(?:#([^\"]*))?\""_s);
@@ -410,6 +437,10 @@ private Q_SLOTS:
                     QVERIFY2(anchors.contains(anchor), qPrintable(name + u" : #"_s + anchor));
             }
         }
+        // chaque image livrée sert dans une page
+        for (const QString &name : help::files())
+            if (name.endsWith(u".jpg"_s))
+                QVERIFY2(pages.contains(u"\""_s + name + u"\""_s), qPrintable(name));
         // les fonctions du module mevreg sont toutes décrites dans la référence
         QFile py(u":/python/mevreg.py"_s), ref(dir.filePath(help::PYTHON));
         QVERIFY(py.open(QIODevice::ReadOnly) && ref.open(QIODevice::ReadOnly));
@@ -949,9 +980,50 @@ private Q_SLOTS:
             win.show();
             document(win, 5, u"ohm.phy"_s);
             const ViewId g = store.ws.graphs.front().id;
+            // tableur caché : le graphe et ses réglages prennent sa place
+            win.hideTab(TabKey{TabKey::Table, store.ws.tables.front().id});
+            settle();
             win.graphPanel(g)->openSettings(SettingsSection::Curves, -1);
             settle(150);
             shot(&win, u"notice-graphe"_s);
+        }
+        {
+            // la boîte « Incertitude », remplie pour un voltmètre : ±(2 % + 1 digit)
+            Store store;
+            MainWindow win(store);
+            win.resize(1280, 800);
+            win.show();
+            settle();
+            win.newTable({});
+            settle();
+            store.edit([](Workspace &ws) {
+                if (auto u = ws.doc.addExperimental(u"U"_s, u"V"_s, {1.02, 1.98, 3.05}))
+                    ws.tables.front().columns.push_back(*u);
+            });
+            settle();
+            dialogs::newUncertainty(win, store.ws.doc.byName(u"U"_s)->id);
+            settle(40);
+            QDialog *d = openDialog(win);
+            QVERIFY(d);
+            const QList<QLineEdit *> edits = d->findChildren<QLineEdit *>();
+            QCOMPARE(edits.size(), 1);
+            edits.front()->setText(u"(0.02*abs(U) + 0.01)/sqrt(3)"_s);
+            shot(d, u"notice-incertitude"_s);
+            d->reject();
+            settle(20);
+        }
+        {
+            // la méthode des tangentes sur une courbe de dosage, avec la dérivée
+            Store store;
+            MainWindow win(store);
+            win.resize(1280, 800);
+            win.show();
+            document(win, 2, u"dosage.phy"_s);
+            const ViewId g = store.ws.graphs.front().id;
+            QVERIFY(!store.ws.graph(g)->plots[0].tangents.empty());
+            win.hideTab(TabKey{TabKey::Table, store.ws.tables.front().id});
+            settle(150);
+            shot(win.graphPanel(g), u"notice-tangentes"_s);
         }
         {
             Store store;
@@ -973,6 +1045,19 @@ private Q_SLOTS:
             settle(150);
             QVERIFY(!store.runs.at(sid).error);
             shot(&win, u"notice-python"_s);
+            // le menu Fenêtres : fenêtres affichées cochées, ✕ pour fermer un tableur, un graphe…
+            QMenu *windows = nullptr;
+            for (QAction *a : win.menuBar()->actions())
+                if (a->text() == u"Fenê&tres")
+                    windows = a->menu();
+            QVERIFY(windows);
+            windows->popup(win.menuBar()->mapToGlobal(win.menuBar()->actionGeometry(windows->menuAction()).bottomLeft()));
+            settle(100);
+            QVERIFY(windows->isVisible());
+            QVERIFY(windows->findChild<QWidget *>(u"windowRow:"_s + TabKey{TabKey::Script, sid}.text()));
+            shotWithMenu(&win, windows, u"notice-menu-fenetres"_s);
+            windows->close();
+            settle(20);
         }
     }
 
@@ -986,6 +1071,29 @@ private Q_SLOTS:
         QCOMPARE(dialogs::formulaText(u"atan2(1,2) + 1,5"_s), u"atan2(1,2) + 1.5"_s);
         QCOMPARE(dialogs::formulaText(u"max (sin(0,5),1)"_s), u"max (sin(0.5),1)"_s);
         QCOMPARE(dialogs::formulaText(u"integ(y, t)"_s), u"integ(y, t)"_s);
+        // la ligne « nom = expression » du panneau Calculs aussi
+        Store store;
+        MainWindow win(store);
+        win.resize(1300, 800);
+        win.show();
+        win.newTable({});
+        settle();
+        win.openTab(TabKey{TabKey::Calculations});
+        settle();
+        Dock *calc = dockOf(win, TabKey{TabKey::Calculations});
+        auto *panel = calc ? calc->findChild<CalculationsPanel *>() : nullptr;
+        QVERIFY(panel);
+        QLineEdit *line = nullptr;
+        for (QLineEdit *e : panel->findChildren<QLineEdit *>())
+            if (e->placeholderText().startsWith(u"Ec ="_s))
+                line = e;
+        QVERIFY(line);
+        line->setText(u"k = 0,5*2"_s);
+        QTest::keyClick(line, Qt::Key_Return);
+        settle();
+        const Quantity *k = store.ws.doc.byName(u"k"_s);
+        QVERIFY(k && k->formula);
+        QCOMPARE(*k->formula, u"0.5*2"_s);
     }
 
     /// Scripts : ordres de mevreg dans l'ordre du script, scripts liés qui lisent par mr.valeurs,
@@ -1565,6 +1673,10 @@ mr.effacer_annotations("G")
                 if (a->text() == u"Grandeurs")
                     quantities = a;
             QVERIFY(quantities && quantities->isCheckable());
+            // sans icône : le style dessine la case cochée (avec une icône, il ne fait que l'encadrer)
+            QVERIFY(quantities->icon().isNull());
+            QVERIFY(std::any_of(windows->actions().begin(), windows->actions().end(),
+                                [](QAction *a) { return a->text() == u"Calculs"; }));
             QCOMPARE(quantities->isChecked(), win.isOpen(qk));
             quantities->trigger();
             settle();

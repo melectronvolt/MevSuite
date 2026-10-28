@@ -1,38 +1,54 @@
 <header class="title">
 <h1>Getting started</h1>
-<p>Starting MeVCine, choosing the mode, opening a video</p>
+<p>Starting MeVCine, opening a video, choosing the mode</p>
 </header>
 
 <h2 id="lancer">Starting MeVCine</h2>
 <p>Double-click on MeVCine (or on the shortcut prepared by your teacher). A splash screen shows for two seconds;
 a click makes it disappear at once.</p>
+<p>MeVCine starts in the mode used last time (<strong>simple mode</strong> the first time), and offers at once to
+open a video.</p>
 <figure>
-<img src="images/accueil.png" alt="The home screen: the logo, then two cards, Simple mode and Expert mode">
-<figcaption>The home screen: choose how you want to work.</figcaption>
+<img src="images/sans-video.png" alt="The window at start-up: the logo, the Open a video button, and simple mode at the bottom right">
+<figcaption>At start-up: the button to open a video. At the bottom right, the way of working (the mode).</figcaption>
 </figure>
-<p>Click on the <strong>Simple mode</strong> card (step by step, to get started) or on the <strong>Expert
-mode</strong> card (all the features). If in doubt, take simple mode: you can switch from one to the other at any
-time, without losing the measurements, with the <em>Mode</em> menu.</p>
 
 <h2 id="ouvrir">Opening a video</h2>
-<figure>
-<img src="images/sans-video.png" alt="The screen without a video: the Open a video button">
-<figcaption>Before opening a video.</figcaption>
-</figure>
 <ul>
-  <li><span class="btn">📂 Open a video…</span>: your own, filmed with a phone or a camera
-  (<kbd>Ctrl</kbd>+<kbd>O</kbd>);</li>
+  <li><span class="btn">📂 Open a video…</span>: your own, filmed with a phone or a camera (also <em>File › Open a
+  video…</em>, or <kbd>Ctrl</kbd>+<kbd>O</kbd>);</li>
   <li>or <strong>drag the video file</strong> onto the MeVCine window.</li>
 </ul>
+<p>A large video takes a few seconds to open: the busy cursor shows, and the window does not respond until it is
+done. Please wait.</p>
 <p>MeVCine reads videos from phones (iPhone, Android) and cameras, even filmed in portrait or in slow motion. If
 the video is lying on its side, you can rotate it at step 1. If an “Unreadable video” message appears, ask your
 teacher, or see <a href="video.html">Filming a motion</a>.</p>
 
+<h2 id="mode">Choosing the mode</h2>
+<figure class="etroite">
+<img src="images/menu-mode.png" alt="The Mode menu open: Simple mode (step by step), ticked, and Expert mode (all features)">
+<figcaption>The <em>Mode</em> menu: the dot marks the mode shown.</figcaption>
+</figure>
+<ul>
+  <li><em>Mode › Simple mode (step by step)</em>: the six steps, one by one, for a single object. To get started,
+  and for most labs. See <a href="simplifie.html">Simple mode</a>.</li>
+  <li><em>Mode › Expert mode (all features)</em>: several objects, automatic tracking, trajectories, grapher. See
+  <a href="expert.html">Expert mode</a>.</li>
+</ul>
+<p>You can change mode at any time, <strong>without losing the measurements</strong> (simple mode keeps only
+object 1). The status bar recalls the mode, bottom right, and MeVCine remembers it for next time.</p>
+
 <h2 id="projet">Resuming a piece of work</h2>
+<figure class="etroite">
+<img src="images/menu-fichier.png" alt="The File menu open: open a video, open a project, recover previous work, save the project, copy for Python, save as CSV, quit">
+<figcaption>The <em>File</em> menu.</figcaption>
+</figure>
 <ul>
   <li><em>File › Open a project…</em> reopens saved work (you can also drag the project file onto the window):
   the video, the axes, the scale and the measurements come back. The video must be next to the project file, or at
-  its original place.</li>
+  its original place. If MeVCine is installed on the computer, a double-click on the <code>.mevcine</code> file
+  opens it too.</li>
   <li><em>File › Recover previous work…</em> reopens the <strong>automatic backup</strong>, after an accidental
   closing or a crash. See <a href="exports.html#securite">Nothing is lost without warning</a>.</li>
 </ul>
@@ -41,11 +57,12 @@ teacher, or see <a href="video.html">Filming a motion</a>.</p>
 <h2 id="barre">The menus</h2>
 <p>At the very top, the menus:</p>
 <table>
-  <tr><th><em>File</em></th><td>open a video, open or save a project (video, axes, scale,
-  measurements, to continue later), copy for Python, save as CSV</td></tr>
-  <tr><th><em>Edit</em></th><td>undo or redo the last point, start over</td></tr>
-  <tr><th><em>Mode</em></th><td>change mode, without losing the measurements</td></tr>
-  <tr><th><em>Help</em></th><td>this guide (<kbd>F1</kbd>: at the page of what you are doing), “About”</td></tr>
+  <tr><th><em>File</em></th><td>open a video; open a project, recover previous work, save the project (video,
+  axes, scale, measurements, to continue later); copy for Python, save as CSV; quit</td></tr>
+  <tr><th><em>Edit</em></th><td>undo the last point, redo it, start over</td></tr>
+  <tr><th><em>Mode</em></th><td>simple mode or expert mode, without losing the measurements</td></tr>
+  <tr><th><em>Help</em></th><td><em>User guide…</em>: this guide (<kbd>F1</kbd>: at the page of what you are
+  doing); <em>About MeVCine…</em>; <em>About Qt…</em></td></tr>
 </table>
 <p>At the far right, on the same line:</p>
 <table>

@@ -221,8 +221,8 @@ namespace {
 /// croix à droite pour fermer la fenêtre pour de bon.
 class WindowRow : public QWidget {
 public:
-    WindowRow(QMenu *menu, const QIcon &icon, const QString &text, bool shown, std::function<void()> open, std::function<void()> close)
-        : QWidget(menu), m_menu(menu), m_icon(icon), m_text(text), m_shown(shown), m_open(std::move(open))
+    WindowRow(QMenu *menu, const QString &text, bool shown, std::function<void()> open, std::function<void()> close)
+        : QWidget(menu), m_menu(menu), m_text(text), m_shown(shown), m_open(std::move(open))
     {
         setMouseTracking(true);
         setAttribute(Qt::WA_Hover);
@@ -290,7 +290,8 @@ private:
         opt.checked = m_shown;
         opt.menuHasCheckableItems = true;
         opt.text = m_text;
-        opt.icon = m_icon;
+        // sans icône : le style dessine la case cochée d'une fenêtre affichée (avec une icône, il ne
+        // ferait que l'encadrer)
         opt.maxIconWidth = style()->pixelMetric(QStyle::PM_SmallIconSize, nullptr, m_menu) + 4;
         opt.font = m_menu->font();
         opt.reservedShortcutWidth = 0;
@@ -299,7 +300,6 @@ private:
     }
 
     QMenu *m_menu;
-    QIcon m_icon;
     QString m_text;
     bool m_shown;
     std::function<void()> m_open;
@@ -730,35 +730,36 @@ void MainWindow::buildMenus()
             else
                 openTab(k);
         };
-        auto add = [this, toggle](const char *icon, const QString &text, const TabKey &k) {
-            QAction *a = m_windowsMenu->addAction(icons::get(icon), text, this, [toggle, k] { toggle(k); });
+        // entrées sans icône : une case cochée marque les fenêtres affichées
+        auto add = [this, toggle](const QString &text, const TabKey &k) {
+            QAction *a = m_windowsMenu->addAction(text, this, [toggle, k] { toggle(k); });
             a->setCheckable(true);
             a->setChecked(isOpen(k));
         };
-        add("list", u"Grandeurs"_s, TabKey{TabKey::Quantities});
-        add("function", u"Calculs et paramètres"_s, TabKey{TabKey::Calculations});
-        add("model", u"Modélisation"_s, TabKey{TabKey::Modeling});
-        add("stats", u"Statistiques"_s, TabKey{TabKey::Statistics});
+        add(u"Grandeurs"_s, TabKey{TabKey::Quantities});
+        add(u"Calculs"_s, TabKey{TabKey::Calculations});
+        add(u"Modélisation"_s, TabKey{TabKey::Modeling});
+        add(u"Statistiques"_s, TabKey{TabKey::Statistics});
         // tableurs, graphes, scripts, dessins : cochés s'ils sont affichés (sinon cachés), une
         // croix pour les fermer (supprimer du document)
         if (!m_store.ws.tables.empty() || !m_store.ws.graphs.empty() || !m_store.ws.scripts.empty() || !m_store.drawings.empty())
             m_windowsMenu->addSection(u"Tableurs, graphes, scripts — ✕ : fermer"_s);
-        auto row = [this, toggle](const char *icon, const QString &text, const TabKey &k) {
+        auto row = [this, toggle](const QString &text, const TabKey &k) {
             auto *action = new QWidgetAction(m_windowsMenu);
             action->setText(text);
-            auto *w = new WindowRow(m_windowsMenu, icons::get(icon), text, isOpen(k), [toggle, k] { toggle(k); }, [this, k] { deleteWindow(k); });
+            auto *w = new WindowRow(m_windowsMenu, text, isOpen(k), [toggle, k] { toggle(k); }, [this, k] { deleteWindow(k); });
             w->setObjectName(u"windowRow:"_s + k.text());
             action->setDefaultWidget(w);
             m_windowsMenu->addAction(action);
         };
         for (const auto &t : m_store.ws.tables)
-            row("table", t.name, TabKey{TabKey::Table, t.id});
+            row(t.name, TabKey{TabKey::Table, t.id});
         for (const auto &g : m_store.ws.graphs)
-            row("chart", g.name, TabKey{TabKey::Graph, g.id});
+            row(g.name, TabKey{TabKey::Graph, g.id});
         for (const auto &s : m_store.ws.scripts)
-            row("python", s.name, TabKey{TabKey::Script, s.id});
+            row(s.name, TabKey{TabKey::Script, s.id});
         for (const auto &[name, d] : m_store.drawings)
-            row("paint", name, TabKey{TabKey::Drawing, 0, name});
+            row(name, TabKey{TabKey::Drawing, 0, name});
         m_windowsMenu->addSeparator();
         m_windowsMenu->addAction(icons::get("layout"), u"Disposition par défaut"_s, this, [this] { defaultLayout(); });
         // une fenêtre détachée se rattache par son bouton « Rattacher », ou toutes d'un coup ici

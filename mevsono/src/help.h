@@ -13,15 +13,15 @@
 
 namespace help {
 
-/// Sous-dossier des fichiers de la notice, dans le dossier des réglages (ou le dossier temporaire).
+/// Sous-dossier des fichiers de la notice, dans le dossier temporaire du système.
 inline const QString DIR_NAME = QStringLiteral("mevsono-help");
 
 /// Fichiers du site, tels qu'ils sont écrits sur le disque.
 QStringList files();
 
 /// Écrit la notice sur le disque et renvoie le chemin de la page à ouvrir, ou vide en cas d'échec
-/// (`error` reçoit alors la raison). Le dossier des réglages est essayé d'abord, puis le dossier
-/// temporaire (dossier personnel en lecture seule, par exemple).
+/// (`error` reçoit alors la raison). Elle est refaite à chaque ouverture dans le dossier temporaire
+/// du système.
 QString write(Lang lang, const SettingsFiles &files, QString *error);
 
 } // namespace help

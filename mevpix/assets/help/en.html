@@ -61,11 +61,11 @@ by eye.</p>
 <svg viewBox="0 0 1280 800" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, sans-serif">
   <image href="fenetre-en.jpg" width="1280" height="800"/>
   <g font-weight="700" font-size="22" text-anchor="middle">
-    <circle cx="875" cy="39" r="16" fill="#0b5cad"/><text x="875" y="47" fill="#fff">1</text>
+    <circle cx="800" cy="40" r="16" fill="#0b5cad"/><text x="800" y="48" fill="#fff">1</text>
     <circle cx="1200" cy="16" r="16" fill="#0b5cad"/><text x="1200" y="24" fill="#fff">2</text>
     <circle cx="268" cy="74" r="16" fill="#0b5cad"/><text x="268" y="82" fill="#fff">3</text>
-    <circle cx="1245" cy="90" r="16" fill="#0b5cad"/><text x="1245" y="98" fill="#fff">4</text>
-    <circle cx="930" cy="783" r="16" fill="#0b5cad"/><text x="930" y="791" fill="#fff">5</text>
+    <circle cx="1240" cy="276" r="16" fill="#0b5cad"/><text x="1240" y="284" fill="#fff">4</text>
+    <circle cx="950" cy="784" r="16" fill="#0b5cad"/><text x="950" y="792" fill="#fff">5</text>
   </g>
 </svg>
 <figcaption>MeVPix after the calibration and a first measurement (<a href="fenetre-en.jpg">full-size image</a>).</figcaption>
@@ -75,16 +75,17 @@ by eye.</p>
   (<span class="btn">📏 Calibrate</span>, <span class="btn">📐 Measure</span>,
   <span class="btn">📈 Intensity profile</span>), see the whole image again
   (<span class="btn">🔍 Fit to window</span>); then the scale of the image.</li>
-  <li><span class="num">2</span><strong>Theme and language</strong>: the sun (light theme) or the
-  moon (dark theme), and the flag of the language. A click switches to the other theme or the other
-  language.</li>
+  <li><span class="num">2</span><strong>Theme and language</strong>, to the right of the menus: the
+  sun (light theme) or the moon (dark theme), and the flag of the language. A click switches to the
+  other theme or the other language.</li>
   <li><span class="num">3</span><strong>Tool panel</strong>: what to do, then the results (scale,
   table of measurements, profile cursors).</li>
-  <li><span class="num">4</span><strong>The image</strong>, with the segments of the chosen tool: the
-  reference in yellow (Calibrate), the measurements in blue (Measure) or the profile line in pink
-  (Intensity profile).</li>
+  <li><span class="num">4</span><strong>The image</strong>, with the lines of the chosen tool: the
+  reference in yellow (Calibrate), the measurements in turquoise (Measure) or the profile line in
+  pink (Intensity profile). The lines of the other tools are hidden, not deleted.</li>
   <li><span class="num">5</span><strong>Status bar</strong>: on the left, what to do next or what just
-  happened (in green, a success; in red, a problem); on the right, the open image and its zoom.</li>
+  happened (in green, a success; in red, a problem); on the right, the open image, its size in
+  pixels and its zoom.</li>
 </ol>
 <div class="tip"><p><strong>Lost?</strong> Read the status bar at the bottom of the window: it
 always tells you the next step.</p></div>
@@ -94,9 +95,14 @@ always tells you the next step.</p></div>
 <h2>3. Measuring in three steps</h2>
 
 <h3>Step 1: open the image</h3>
-<p>On start-up, MeVPix shows its welcome page. Click <span class="btn">📂 Open an image…</span>, in
-the middle of the window or in the toolbar (or <kbd>Ctrl</kbd>+<kbd>O</kbd>), or drag the image file
-onto the window. MeVPix reads PNG, JPEG, BMP, TIFF and WebP images (TIFF: not in the AppImage for Linux).</p>
+<p>On start-up, MeVPix shows its welcome page.</p>
+<figure class="ecran">
+<a href="accueil-en.jpg"><img src="accueil-en.jpg" alt="MeVPix welcome page: the Open an image button" width="1024" height="640"></a>
+<figcaption>The welcome page: open an image.</figcaption>
+</figure>
+<p>Click <span class="btn">📂 Open an image…</span>, in the middle of the window or in the toolbar
+(or <kbd>Ctrl</kbd>+<kbd>O</kbd>), or drag the image file onto the window. MeVPix reads PNG, JPEG,
+BMP, TIFF and WebP images (TIFF: not in the AppImage for Linux).</p>
 <div class="note"><p><strong>iPhone photo (HEIC)</strong>: MeVPix cannot read it. Email the photo to
 yourself (it arrives as JPEG), or set the camera to “Formats → Most Compatible”.</p></div>
 
@@ -121,14 +127,27 @@ type 20, unit mm, then confirm.</figcaption>
 <h3>Step 3: measure</h3>
 <p>With the <span class="btn">📐 Measure</span> tool, every segment you draw (left-click and drag)
 becomes a measurement. Its length appears on the image (M1, M2…) and in the table of the panel (see
-the figure in <a href="#fenetre">section 2</a>).</p>
+the figure in <a href="#fenetre">part 2</a>).</p>
 <ul>
   <li><strong>Correct a measurement</strong>: grab an end point (round handle) and move it.</li>
   <li><strong>Delete a measurement</strong>: the bin 🗑 next to it, or <kbd>Ctrl</kbd>+<kbd>Z</kbd>
   for the last one; <span class="btn">Clear all</span> deletes them all.</li>
-  <li><strong>Keep the results</strong>: <span class="btn">📋 Copy the table</span>, then
-  <kbd>Ctrl</kbd>+<kbd>V</kbd> in a spreadsheet, Regressi or your report.</li>
 </ul>
+
+<h3>Keeping your results</h3>
+<ul>
+  <li><strong>The measurements</strong>: <span class="btn">📋 Copy the table</span>, then
+  <kbd>Ctrl</kbd>+<kbd>V</kbd> in a spreadsheet (LibreOffice Calc, Excel, MeVReg, Regressi) or in
+  your report. The table has two columns: “Measurement” and “Length (mm)”.</li>
+  <li><strong>The intensity profile</strong>: <span class="btn">💾 Export the profile (CSV)…</span>
+  (<a href="#profil">part 5</a>).</li>
+  <li><strong>The image with its lines</strong>: take a screenshot (on Windows,
+  <kbd>Windows</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd>; on Linux, the <kbd>Print Screen</kbd>
+  key).</li>
+</ul>
+<div class="warn"><p><strong>MeVPix does not save your work.</strong> Closing MeVPix or opening
+another image clears the calibration, the measurements and the profile line. Copy them first:
+MeVPix reminds you with a question, and “Cancel” is the default choice.</p></div>
 </section>
 
 <section id="precision">
@@ -152,9 +171,10 @@ the figure in <a href="#fenetre">section 2</a>).</p>
 uncertainty mostly comes from <strong>pointing</strong>, about 1 pixel at each end. With the scale
 “1 px = 0.0206 mm”, that is about 0.04 mm on a measurement. Pointing the same end points several
 times shows the spread of your measurements.</p>
-<div class="warn"><p><strong>Reference changed?</strong> If you move the reference or change its
-length or unit, a ⚠ warning asks you to confirm again. After confirming, the measurements already
-drawn are recalculated: nothing is lost.</p></div>
+<div class="warn"><p><strong>Reference changed?</strong> If you move the reference, even slightly,
+or change its length or unit, the scale turns orange with ⚠ and the panel asks you to confirm
+again. Until then, the measurements keep the old scale; after confirming, they are recalculated:
+nothing is lost.</p></div>
 <p>Without calibration, lengths are in pixels (“px”) and the warning “⚠ Not calibrated” stays
 visible.</p>
 </section>
@@ -164,13 +184,15 @@ visible.</p>
 <p>The <span class="btn">📈 Intensity profile</span> tool draws the curve of the brightness along a
 profile line. On a diffraction or interference pattern, the dips of the curve are the dark fringes.</p>
 <ol class="steps">
-  <li>Choose the tool: the graph appears below the image.</li>
+  <li>Choose the tool: the graph appears below the image. (A second click on the button goes back
+  to the Measure tool.)</li>
   <li>Draw the <strong>profile line</strong> on the image, along the pattern (left-click and drag;
-  <kbd>Shift</kbd> for a horizontal line).</li>
-  <li>Place the <strong>cursors A and B</strong>: drag them on the image (they stay on the profile line),
-  or click and drag on the graph.</li>
-  <li>Read their positions and the gap <strong>Δx = |x<sub>B</sub> − x<sub>A</sub>|</strong> on the
-  left.</li>
+  <kbd>Shift</kbd> for a horizontal line). A new line replaces the previous one.</li>
+  <li>Place the <strong>cursors A and B</strong>: drag them on the image (they stay on the profile
+  line), or click and drag on the graph (the nearest cursor jumps under the mouse).</li>
+  <li>Read on the left their positions <em>x</em>, their intensities <em>I</em> and the gap
+  <strong>Δx = |x<sub>B</sub> − x<sub>A</sub>|</strong>. Positions are counted from the start of
+  the profile line, where you began drawing it.</li>
 </ol>
 <figure class="ecran">
 <a href="profil-en.jpg"><img src="profil-en.jpg" alt="Profile line, cursors A and B on the minima, profile graph" width="1024" height="640"></a>
@@ -178,26 +200,36 @@ profile line. On a diffraction or interference pattern, the dips of the curve ar
 spot: Δx = 20.2 mm. The top of the curve is flat: the photo is saturated in the centre, but the
 minima remain clearly visible.</figcaption>
 </figure>
-<h3>Channel and thickness</h3>
+<div class="tip"><p><strong>Graph paper</strong>: every line of the paper that crosses the profile
+line makes a small, narrow dip in the curve (one per millimetre). These are not fringes: place A
+and B on the minima you can see on the image.</p></div>
+<h3>Channel and width</h3>
 <ul>
   <li><strong>Channel</strong>: luminance (grey) combines the three colours; the <strong>Red</strong>
   channel often brings out the fringes of a red laser better.</li>
-  <li><strong>Thickness</strong>: the intensity is averaged over a band on both sides of the profile
-  line. 10 to 20 px smooth out the grid of the paper and the noise of the photo.</li>
+  <li><strong>Width</strong>: the intensity is averaged over a band on both sides of the profile
+  line (drawn in light pink). 10 to 20 px smooth out the noise of the photo and the lines of the
+  paper parallel to the profile line.</li>
 </ul>
 <h3>Saturation</h3>
-<p>“⚠ … % of the line is saturated”: the photo reaches the maximum value 255 there, and the real
-intensity is higher than shown. This is common in the centre of a diffraction pattern. The positions
-of the minima remain correct; the heights of saturated maxima do not.</p>
+<p>“⚠ …% of the line is saturated (value 254 or 255)”: the photo reaches the maximum value there,
+and the real intensity may be higher than shown. This is common in the centre of a diffraction
+pattern. The positions of the minima remain correct; the heights of saturated maxima do not. To
+measure them, take the photo again with less light (lower the camera exposure).</p>
 <h3>The graph</h3>
 <ul>
   <li>Mouse wheel: zoom; <kbd>Shift</kbd>+wheel: move; double-click: see the whole curve again.</li>
-  <li>Hovering over the curve shows the position and intensity of the point.</li>
+  <li>When hovering, a crosshair gives the position <em>x</em> and the intensity <em>I</em> under
+  the mouse.</li>
 </ul>
 <h3>Exporting the profile</h3>
 <p><span class="btn">💾 Export the profile (CSV)…</span> saves the curve in a file with two columns: the
-position <code>x</code> and the intensity <code>I</code> (from 0 to 255). It opens in LibreOffice
-Calc, Excel or Regressi. In Python:</p>
+position <code>x</code> (in the unit of the reference, in px without calibration) and the intensity
+<code>I</code> (from 0 to 255), one point per pixel of the line. The suggested name is
+<code>profile.csv</code>, in the folder of the image; if you type a name without “.csv”, MeVPix
+adds it, and it asks before replacing a file that already exists. The file opens in LibreOffice
+Calc, Excel, MeVReg or Regressi. With the English interface, columns are separated by “,” and
+numbers use a decimal point. In Python:</p>
 <pre><code>import pandas as pd
 profile = pd.read_csv("profile.csv")
 profile.plot(x="x (mm)", y="I")</code></pre>
@@ -237,7 +269,7 @@ the distance across <em>N</em> + 1 fringes and divide by <em>N</em> to get <em>i
 <tbody>
 <tr><td>Draw a segment</td><td>left-click and drag</td></tr>
 <tr><td>Horizontal or vertical segment</td><td>hold <kbd>Shift</kbd> while drawing</td></tr>
-<tr><td>Correct an end point, move A or B</td><td>grab the round handle and drag</td></tr>
+<tr><td>Correct an end point, move A or B on the image</td><td>grab the round handle and drag</td></tr>
 <tr><td>Cancel the line being drawn</td><td><kbd>Esc</kbd></td></tr>
 <tr><td>Zoom</td><td>mouse wheel, centred on the mouse</td></tr>
 <tr><td>Move the image</td><td>right-click and drag</td></tr>
@@ -245,8 +277,9 @@ the distance across <em>N</em> + 1 fringes and divide by <em>N</em> to get <em>i
 <tr><td>Open an image</td><td><kbd>Ctrl</kbd>+<kbd>O</kbd>, or drag and drop</td></tr>
 <tr><td>Confirm the calibration</td><td><kbd>Enter</kbd> in the length field</td></tr>
 <tr><td>Delete the last measurement</td><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> (Measure tool)</td></tr>
-<tr><td>Enlarge or shrink the text</td><td><kbd>Ctrl</kbd>+<kbd>+</kbd>, <kbd>Ctrl</kbd>+<kbd>−</kbd>; <kbd>Ctrl</kbd>+<kbd>0</kbd>: normal size</td></tr>
+<tr><td>Place A or B on the graph</td><td>click or drag: the nearest cursor follows</td></tr>
 <tr><td>Profile graph</td><td>wheel: zoom; <kbd>Shift</kbd>+wheel: move; double-click: see it all</td></tr>
+<tr><td>Enlarge or shrink the text</td><td><kbd>Ctrl</kbd>+<kbd>+</kbd>, <kbd>Ctrl</kbd>+<kbd>−</kbd>; <kbd>Ctrl</kbd>+<kbd>0</kbd>: normal size</td></tr>
 <tr><td>Open this guide</td><td><kbd>F1</kbd>, or <em>Help › User guide…</em></td></tr>
 </tbody>
 </table>
@@ -262,9 +295,20 @@ the number (“20”, not “20 mm”): the unit is chosen in the list next to i
 <dt>Lengths are shown in “px”.</dt>
 <dd>The image is not calibrated: do step 2. The measurements already drawn will be converted.</dd>
 
-<dt>“Unsupported image format”.</dt>
-<dd>The file is not a PNG, JPEG, BMP, TIFF or WebP image. An iPhone photo (HEIC) or a PDF must first
-be converted to JPEG.</dd>
+<dt>The scale is orange, with ⚠.</dt>
+<dd>The reference, its length or its unit has changed since it was confirmed. Go back to
+<span class="btn">📏 Calibrate</span> and click <span class="btn">✔ Confirm calibration</span>.</dd>
+
+<dt>“Cannot open …: image format not supported”.</dt>
+<dd>MeVPix cannot read this file: it is not a PNG, JPEG, BMP, TIFF or WebP image (the AppImage
+does not read TIFF). Convert it to PNG or JPEG; the same goes for an iPhone photo (HEIC) or a
+PDF.</dd>
+
+<dt>My measurements are no longer on the image.</dt>
+<dd>Each tool shows only its own lines: go back to <span class="btn">📐 Measure</span> (likewise,
+the reference is with <span class="btn">📏 Calibrate</span> and the profile line with
+<span class="btn">📈 Intensity profile</span>). If you opened another image, they were cleared:
+MeVPix asked first.</dd>
 
 <dt>The mouse wheel does not zoom.</dt>
 <dd>The mouse must be over the image, not over the panel or the graph.</dd>
@@ -279,12 +323,9 @@ field.</dd>
 <dt>The profile graph is empty.</dt>
 <dd>Draw a profile line on the image with the Intensity profile tool.</dd>
 
-<dt>My measurements have disappeared.</dt>
-<dd>Opening another image clears the calibration and the measurements (MeVPix asks first). Copy the
-table of measurements before changing image.</dd>
-
 <dt>The program closed by itself.</dt>
-<dd>An unexpected error occurred. Start MeVPix again and tell your teacher.</dd>
+<dd>An unexpected error occurred (“MeVPix hit an unexpected error and must close”). Start MeVPix
+again and tell your teacher.</dd>
 </dl>
 </section>
 
@@ -295,22 +336,30 @@ table of measurements before changing image.</dd>
 
 <section id="installer">
 <h2>9. Installing and using in class</h2>
+<p>The installation files are on the releases page:
+<a href="https://github.com/melectronvolt/MevSuite/releases">github.com/melectronvolt/MevSuite/releases</a>.</p>
 <ul>
-  <li><strong>Windows, no installation</strong>: MeVPix fits in a folder (<code>.zip</code>
-  archive), to copy onto the computer, the school network or a USB stick; run
-  <code>mevpix.exe</code>. It works offline, guide included. The first time it runs on a computer,
-  Windows may show “Windows protected your PC”, because MeVPix is not digitally signed: click “More
-  info”, then “Run anyway”. To open an image directly: right-click on the image → “Open with…” →
-  MeVPix.</li>
-  <li><strong>Windows, installer</strong>: <code>MeVPix-<i>version</i>-windows-x64-setup.exe</code> installs MeVPix
-  for all users in <code>Program Files\MeVSuite</code>, with a Start menu shortcut; it is uninstalled from
-  the Windows Settings. Deployment on many computers (WAPT, GPO): options
-  <code>/VERYSILENT /SUPPRESSMSGBOXES /NORESTART</code>.</li>
+  <li><strong>Windows, no installation</strong>: MeVPix fits in a folder
+  (<code>MeVPix-<i>version</i>-windows-x64.zip</code> archive), to copy onto the computer, the school
+  network or a USB stick; run <code>mevpix.exe</code>. It works offline, guide included. The first
+  time it runs on a computer, Windows may show “Windows protected your PC”, because MeVPix is not
+  digitally signed: click “More info”, then “Run anyway”. To open an image directly: right-click on
+  the image → “Open with…” → MeVPix.</li>
+  <li><strong>Windows, installer</strong>: <code>MeVPix-<i>version</i>-windows-x64-setup.exe</code>
+  (administrator rights) installs MeVPix for all users in
+  <code>C:\Program Files\MeVSuite\MeVPix</code>, with a Start menu shortcut (MeVSuite folder); it is
+  uninstalled from the Windows Settings. A new version replaces the old one; users' settings are
+  kept.</li>
+  <li><strong>Deployment on many computers</strong> (WAPT, GPO), with no window or question: install,
+  then uninstall:
+<pre><code>MeVPix-<i>version</i>-windows-x64-setup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART
+"C:\Program Files\MeVSuite\MeVPix\unins000.exe" /VERYSILENT /SUPPRESSMSGBOXES /NORESTART</code></pre></li>
   <li><strong>Linux</strong>: <code>.deb</code> package (Ubuntu, Debian), <code>.rpm</code> (Fedora), or
-  <code>.AppImage</code>, which runs without installation (make it executable).</li>
+  <code>.AppImage</code>, which runs without installation (make it executable). The AppImage does
+  not read TIFF images.</li>
   <li><strong>Large photos</strong>: a phone photo (12 to 50 Mpx) opens in a few seconds (“Loading…”
   in the status bar). The display is reduced if needed, but measurements and the profile always use
-  the original pixels.</li>
+  the original pixels. A photo taken in portrait mode is turned upright.</li>
   <li><strong>Projector</strong>: <kbd>Ctrl</kbd>+<kbd>+</kbd> enlarges the text and the buttons (the
   enlargement is capped so that the panels stay visible); <kbd>Ctrl</kbd>+<kbd>0</kbd> returns to
   the normal size.</li>
@@ -323,7 +372,7 @@ table of measurements before changing image.</dd>
 the language is neither French nor English). The sun/moon and flag buttons change the theme and the
 language; numbers follow the language (decimal point in English).</p>
 <p>MeVPix remembers from one session to the next: the language, the theme, the unit of the
-reference, the channel and thickness of the profile, the text enlargement, the last folder opened,
+reference, the channel and width of the profile, the text enlargement, the last folder opened,
 the size of the window. These settings are in a small text file <code>mevpix.ini</code>, specific to
 each user and editable by hand; deleting it restores the defaults.</p>
 <table>
@@ -334,13 +383,16 @@ each user and editable by hand; deleting it restores the defaults.</p>
 </tbody>
 </table>
 <p><strong>Enforced settings</strong> (computer room, USB stick): a <code>mevpix.ini</code> file
-placed next to <code>mevpix.exe</code> is read at every launch and takes priority over the user's
-settings; MeVPix never writes it. For example:</p>
+is read at every launch and takes priority over the user's settings; MeVPix never writes it. On
+Windows, it goes in the folder of <code>mevpix.exe</code> (<code>C:\Program Files\MeVSuite\MeVPix</code>
+with the installer, or the folder of the portable version); on Linux, in <code>/etc/MeVSuite/</code>
+(packages and AppImage). For example:</p>
 <pre><code>language = fr
 theme = light</code></pre>
 <p>enforces French and the light theme on every computer. The possible keys are those of the user's
 file; <code>language</code> and <code>theme</code> also accept <code>auto</code> (language or theme
-of the system). The paths of both files are shown in <strong>Help → About MeVPix</strong>.</p>
+of the system). <strong>Help › About MeVPix…</strong> shows the path of the user's file, and that of
+the enforced file if there is one.</p>
 <p>The four programs of the suite (MeVPix, MeVCine, MeVReg, MeVSono) keep their settings in this same
 <code>MeVSuite</code> folder. The guide is written each time it is opened to the system's temporary
 folder (<code>mevpix-help</code>): it can be printed or saved from the browser.</p>
@@ -348,14 +400,15 @@ folder (<code>mevpix-help</code>): it can be printed or saved from the browser.<
 
 <section id="apropos">
 <h2>11. Errors, contact and licence</h2>
-<p><strong>Unexpected error</strong>: MeVPix shows a message before closing and saves the details in
-<code>mevpix.log</code>, in the same folder as <code>mevpix.ini</code>. Attach this file to your
-report.</p>
+<p><strong>Unexpected error</strong>: MeVPix shows a message before closing and saves the details
+(the cause and, after a crash, the call stack) in <code>mevpix.log</code>, in the same folder as
+<code>mevpix.ini</code>; the message gives its path. The log only keeps the last error: attach it
+to your report.</p>
 <p><strong>Contact</strong>: Rémi MEVAERE, <a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>.
 Comments, ideas for improvement and problems are welcome.</p>
 <p><strong>Licence</strong>: MeVPix is free software, released under the MIT licence; it is written
 in C++ with the free Qt library (LGPL version 3). The components used and their licences are listed
-in <strong>Help → About MeVPix…</strong>; <strong>Help → About Qt…</strong> gives the version of Qt
+in <strong>Help › About MeVPix…</strong>; <strong>Help › About Qt…</strong> gives the version of Qt
 and its licence terms.</p>
 <footer>MeVPix {{version}} — guide built into the program, available offline.</footer>
 </section>

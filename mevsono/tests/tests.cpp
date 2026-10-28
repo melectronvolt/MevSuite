@@ -801,10 +801,12 @@ private slots:
         QVERIFY(html.contains(u"help.css"_s));
     }
 
-    /// Chaque image des pages est livrée, et chaque lien interne mène à une partie de la page.
+    /// Chaque image des pages est livrée, chaque image livrée sert, et chaque lien interne mène à une
+    /// partie de la page.
     void helpPagesAreComplete()
     {
         const QStringList files = help::files();
+        QStringList used;
         for (const QString &page : {u"fr.html"_s, u"en.html"_s}) {
             const QString html = readText(u":/help/"_s + page);
             QVERIFY(!html.isEmpty());
@@ -816,16 +818,25 @@ private slots:
                 }
                 return out;
             };
-            for (const QString &image : attributes(u"src=\""_s))
+            for (const QString &image : attributes(u"src=\""_s)) {
                 QVERIFY2(files.contains(image), qPrintable(page + u" : image "_s + image));
+                used << image;
+            }
             for (const QString &anchor : attributes(u"href=\"#"_s))
                 QVERIFY2(html.contains(u"id=\"%1\""_s.arg(anchor)), qPrintable(page + u" : #"_s + anchor));
+            // autres pages, feuille de style, images (figure annotée, « image en grand »)
             for (const QString &other : attributes(u"href=\""_s)) {
-                if (other.endsWith(u".html"_s) || other.endsWith(u".css"_s))
+                if (other.endsWith(u".html"_s) || other.endsWith(u".css"_s) || other.endsWith(u".jpg"_s)) {
                     QVERIFY2(files.contains(other), qPrintable(page + u" : "_s + other));
+                    used << other;
+                }
             }
             // la notice donne les noms de fichiers du programme
             QVERIFY2(html.contains(u"mevsono.ini"_s), qPrintable(page));
+        }
+        for (const QString &file : files) {
+            if (file.endsWith(u".jpg"_s))
+                QVERIFY2(used.contains(file), qPrintable(u"image inutilisée : "_s + file));
         }
     }
 

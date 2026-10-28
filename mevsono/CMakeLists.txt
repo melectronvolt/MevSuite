@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 
 project(mevsono
-    VERSION 0.3.0
+    VERSION 0.3.1
     DESCRIPTION "Analyse spectrale des sons pour le lycée : signal, spectre, fondamentale et harmoniques"
     LANGUAGES CXX)
 
@@ -54,7 +54,9 @@ qt_add_resources(mevsono_core help
     FILES
         assets/help/fr.html assets/help/en.html assets/help/help.css
         assets/help/accueil-fr.jpg assets/help/fenetre-fr.jpg assets/help/mesure-fr.jpg assets/help/expert-fr.jpg
+        assets/help/reglages-fr.jpg
         assets/help/accueil-en.jpg assets/help/fenetre-en.jpg assets/help/mesure-en.jpg assets/help/expert-en.jpg
+        assets/help/reglages-en.jpg
 )
 
 # Interface (fenêtre, graphiques, réglages, « À propos », thème, icônes) : partagée par le programme

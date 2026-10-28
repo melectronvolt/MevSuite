@@ -2,7 +2,9 @@
 """Refait les images de la notice (assets/help/*.jpg) à partir des captures des essais de
 l'interface (test_app, lancé avec MEVREG_SHOTS) :
 
-    MEVREG_SHOTS=build/captures ctest --test-dir build -R app && python3 -I tools/images_notice.py build
+    MEVREG_SHOTS=$PWD/build/captures ctest --test-dir build -R app && python3 -I tools/images_notice.py build
+
+(chemin absolu pour MEVREG_SHOTS : l'essai tourne dans le dossier build).
 
 Il faut Pillow (python3-pillow).
 """
@@ -17,14 +19,20 @@ RENDUS = os.path.join(COMPILATION, "captures")
 AIDE = os.path.join(RACINE, "assets", "help")
 
 # capture de l'essai → image de la notice ; les fenêtres entières passent à 1024 px de large,
-# les boîtes de dialogue et les fenêtres à part gardent leur taille
+# les boîtes de dialogue, les menus et les fenêtres à part gardent leur taille. Toute nouvelle
+# image est aussi à ajouter à help::files() (src/app/help.cpp) et aux ressources (CMakeLists.txt).
 IMAGES = [
     ("notice-accueil.png", "accueil.jpg"),
     ("notice-fenetre.png", "fenetre.jpg"),
     ("notice-tableur.png", "tableur.jpg"),
     ("import-csv.png", "import-csv.jpg"),
+    ("notice-incertitude.png", "incertitude.jpg"),
     ("notice-graphe.png", "graphe.jpg"),
     ("notice-modele.png", "modele.jpg"),
+    ("notice-tangentes.png", "tangentes.jpg"),
+    ("export-csv.png", "export-csv.jpg"),
+    ("notice-menu-fenetres.png", "menu-fenetres.jpg"),
+    ("scripts-confirmation.png", "scripts-recus.jpg"),
     ("notice-python.png", "python.jpg"),
 ]
 

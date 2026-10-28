@@ -3,6 +3,64 @@
 Les changements visibles des quatre logiciels de la MevSuite, qui partagent un même numéro de
 version. Les plus récents en haut ; « Non publié » : ce qui sera dans la prochaine version.
 
+## [0.3.1] — 2026-10-28
+
+### MeVReg
+
+- **Notice** à jour de la version 0.3.0 : menu Fenêtres, scripts d'un document reçu, virgule
+  décimale dans les formules, incertitude-type d'une tolérance (÷ √3) et différente de chaque côté,
+  méthode des tangentes pas à pas, journal `mevreg.log`, double clic sur les `.phy`. Nouvelles
+  images (incertitude, tangentes, export CSV, menu Fenêtres, scripts reçus) ; graphe et aperçu de
+  l'import CSV plus lisibles.
+- **Référence Python** : couleurs et marqueurs de `mr.courbe`, `r.n`, `to_csv`, `to_dict` et
+  `reset_index` de pandas, scripts liés et scripts d'un document reçu.
+- **Panneau Calculs** : la ligne « nom = expression » accepte aussi la virgule décimale
+  (`Ec = 0,5*m*v^2` était refusé), et son aide le dit.
+- **Menu Fenêtres** : une case cochée marque les fenêtres affichées (seule leur icône était
+  encadrée, peu visible) ; l'entrée s'appelle « Calculs », comme la fenêtre et `mr.ouvrir`.
+
+### MeVCine
+
+- **Notice** à jour de la version 0.3.0 : pas de choix du mode au lancement (menu Mode), ouverture
+  d'une vidéo, cadence variable ou presque régulière, sauvegarde automatique, journal `mevcine.log`,
+  installateur Windows, paquets Linux et AppImage, dépannage réécrit. Nouvelles images : menus
+  Fichier et Mode, pointage en plein écran. Le TP du palet commence à l'image 15 (le palet est
+  encore dans la main au début) ; les images le montrent pointé comme par un élève.
+- Vidéo au ralenti ou en accéléré : le message nomme le champ « Images par seconde » tel qu'il
+  s'affiche, et dit où il est en mode simplifié.
+
+### MeVSono
+
+- **Notice** à jour de la version 0.3.0 : les deux onglets et `Ctrl` + `Tab`, l'écoute en mode
+  simplifié, les messages d'avertissement et de plantage (`mevsono.log`), les exports
+  (`spectre.csv`, `extrait.csv`), les réglages de l'analyse (nouvelle image). Captures refaites
+  (tableau des harmoniques entier) ; la page anglaise montre le mode expert comme la française.
+- Réglages : le seuil des pics s'écrit avec le signe moins (« −40,0 dB »), comme ailleurs ; une valeur
+  tapée dans la fenêtre des réglages n'est plus réécrite au milieu de la saisie (« -55,5 » donnait
+  « −55,,0 », et le seuil restait à −55). Titres de la fenêtre en demi-gras, à la taille normale,
+  comme ceux des panneaux.
+
+### MeVPix
+
+- **Notice** : page d'accueil en image ; nouvelle partie « Garder ses résultats » (copier le
+  tableau, exporter le profil, capture d'écran : MeVPix n'enregistre rien) ; profil d'intensité :
+  positions comptées depuis le début de la coupe, creux dus au papier millimétré, réticule, fichier
+  CSV, alerte « 254 ou 255 ». En anglais, le réglage « Width » porte son vrai nom.
+- Barre d'outils : « 📂 Ouvrir une image… » garde ses points de suspension, comme sur la page
+  d'accueil et dans le menu.
+
+### Toute la suite
+
+- **Notices, partie professeurs** : dossier d'installation `Program Files\MeVSuite\<Logiciel>`,
+  installation **et désinstallation** silencieuses (WAPT), lien vers les versions publiées, journal
+  des erreurs et des plantages.
+- README : une capture de chaque logiciel ; où trouver la notice, les réglages et les journaux.
+- **Réglages imposés** (MeVPix, MeVSono) : sous Linux, le fichier se place dans `/etc/MeVSuite/`, avec
+  les paquets comme avec l'AppImage (les paquets le cherchaient dans `/usr/bin`, l'AppImage n'en
+  acceptait pas) ; sous Windows, toujours à côté du programme.
+- Notices : les boîtes de dialogue et les menus sont montrés à leur taille réelle, nets, au lieu
+  d'être agrandis ou réduits à une largeur fixe.
+
 ## [0.3.0] — 2026-10-28
 
 ### MeVReg

@@ -8,6 +8,8 @@
   <tr><th>Langue</th><td>le drapeau, en haut à droite (français ou anglais) ; sans choix, la langue du
   système</td></tr>
   <tr><th>Thème</th><td>le soleil ou la lune, en haut à droite ; sans choix, le thème du bureau</td></tr>
+  <tr><th>Mode</th><td>le dernier choisi dans le menu <em>Mode</em> ; au premier lancement, le mode simplifié
+  (l'option <code>--simple</code> l'impose)</td></tr>
   <tr><th>Unité de l'étalon</th><td>la dernière choisie (mm, cm ou m)</td></tr>
   <tr><th>Fenêtre</th><td>sa taille, et si elle était agrandie</td></tr>
   <tr><th>Agrandissement</th><td>la taille des textes de l'interface, choisie avec <kbd>Ctrl</kbd>+<kbd>+</kbd> et
@@ -26,13 +28,16 @@ logiciels de la suite (MeVPix, MeVCine, MeVReg, MeVSono) :</p>
   <tr><th>Linux</th><td><code>~/.config/MeVSuite/</code></td></tr>
 </table>
 <p>Le même dossier contient <code>mevcine-secours.mevcine</code>, la sauvegarde automatique du travail en cours, et
-<code>mevcine.log</code>, le journal des erreurs internes s'il y en a eu. Si le fichier de configuration
-est illisible, MeVCine le signale et repart d'une configuration neuve ; le supprimer remet tous les réglages à
-zéro. Les projets de l'ancienne version, CineMev (<code>.cinemev</code>), s'ouvrent dans MeVCine.</p>
+<code>mevcine.log</code>, le journal des erreurs : chaque erreur interne ou plantage y est ajouté, daté, avec sa
+cause (et, pour un plantage, la pile d'appels). Si le fichier de configuration est illisible, MeVCine le signale
+et repart d'une configuration neuve ; le supprimer remet tous les réglages à zéro. Les fichiers d'une version plus
+ancienne (dossier <code>mevcine</code>) y sont déplacés au premier lancement, et les projets de l'ancienne
+version, CineMev (<code>.cinemev</code>), s'ouvrent dans MeVCine.</p>
 <p>Les réglages du poste y sont écrits en clair : <code>langue = fr</code> (ou <code>en</code>),
 <code>theme = light</code> (ou <code>dark</code> ; <code>auto</code>, ou rien, suit le bureau),
-<code>agrandissement = 1.2</code>, <code>taille_fenetre = (1200,700)</code>, <code>fenetre_maximisee = False</code>.
-Ils ne vont jamais dans les fichiers de projet.</p>
+<code>mode = simplifie</code> (ou <code>expert</code>), <code>agrandissement = 1.2</code>,
+<code>taille_fenetre = (1200,700)</code>, <code>fenetre_maximisee = False</code>. Ils ne vont jamais dans les
+fichiers de projet.</p>
 
 <h2 id="variables">Les variables d'environnement</h2>
 <table>
@@ -46,7 +51,8 @@ Ils ne vont jamais dans les fichiers de projet.</p>
 <ul>
   <li><code>ffmpeg/</code>, à côté du programme : le ffmpeg livré. S'il manque, MeVCine utilise le ffmpeg installé
   sur l'ordinateur (dans le <code>PATH</code>), qui ne sait pas toujours décoder le HEVC.</li>
-  <li><code>data/help</code> : cette notice.</li>
+  <li><code>data/help</code> : cette notice. Elle s'ouvre dans le navigateur, depuis une copie refaite à chaque
+  ouverture dans le dossier temporaire du système (<code>mevcine-help</code>).</li>
   <li>Les dialogues d'ouverture proposent le dernier dossier de vidéos, sinon le dossier <em>Vidéos</em> (ou
   <em>Téléchargements</em>) de l'utilisateur ; ceux d'enregistrement, le dossier <em>Documents</em>.</li>
 </ul>

@@ -40,61 +40,75 @@
 <main>
 <header class="title">
 <h1>Installing MeVCine</h1>
-<p>For teachers: a folder to copy or an installer on Windows, a package or an AppImage on Linux</p>
+<p>For teachers: a portable version or an installer on Windows, a package or an AppImage on Linux</p>
 </header>
 
-<h2 id="dossier">The MeVCine folder (Windows)</h2>
-<p>On Windows, MeVCine comes as a folder (<code>.zip</code> archive), with no installation, to copy as it is (USB
-stick, shared folder, disk of each computer). It contains:</p>
+<h2 id="dossier">The portable version (Windows)</h2>
+<p><code>MeVCine-<i>version</i>-windows-x64.zip</code> contains a folder, <code>MeVCine-<i>version</i></code>, to copy
+as it is, with no installation (USB stick, shared folder, disk of each computer). It contains:</p>
 <table>
-  <tr><th><code>mevcine.exe</code></th><td>the program, with the Qt libraries (the <code>*.dll</code> files and the
-  <code>platforms</code> folder)</td></tr>
+  <tr><th><code>mevcine.exe</code></th><td>the program, with the Qt libraries (the <code>*.dll</code> files, the
+  <code>plugins</code> and <code>translations</code> folders, and <code>qt.conf</code>)</td></tr>
   <tr><th><code>ffmpeg/</code></th><td>the ffmpeg and ffprobe programs, which read the videos (including the HEVC of
-  phones). Do not separate these files from the folder.</td></tr>
-  <tr><th><code>data/</code></th><td>this guide (<code>help</code>)</td></tr>
-  <tr><th><code>COPYING.txt</code>, <code>NOTICE.txt</code></th><td>the licence</td></tr>
+  phones), with their licence. Do not separate these files from the folder.</td></tr>
+  <tr><th><code>data/help</code></th><td>this guide</td></tr>
+  <tr><th><code>licences/</code></th><td>the licences of the shipped libraries, and the list of their versions</td></tr>
+  <tr><th><code>COPYING.txt</code>, <code>NOTICE.txt</code></th><td>the licence of MeVCine</td></tr>
+  <tr><th><code>LISEZMOI.txt</code></th><td>the first launch, in a few lines (in French)</td></tr>
 </table>
 
-<h2 id="installateur">Installer (Windows)</h2>
+<h2 id="installateur">The installer (Windows)</h2>
 <p><code>MeVCine-<i>version</i>-windows-x64-setup.exe</code> installs the same folder for all users in
-<code>Program Files\MeVSuite\MeVCine</code>, with a Start menu shortcut; it is uninstalled from the Windows
+<code>Program Files\MeVSuite\MeVCine</code>, with a shortcut in the Start menu (MeVSuite folder) and, if asked, on
+the desktop. <code>.mevcine</code> projects then open with a double-click. It is uninstalled from the Windows
 Settings. Deployment on many computers (WAPT, GPO), with no window or question:</p>
 <pre><code>MeVCine-<i>version</i>-windows-x64-setup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART</code></pre>
+<p>Silent uninstallation:</p>
+<pre><code>"C:\Program Files\MeVSuite\MeVCine\unins000.exe" /VERYSILENT /SUPPRESSMSGBOXES /NORESTART</code></pre>
+<p>The identifier of the installer does not change from one version to the next: a new version replaces the old
+one.</p>
 
 <h2 id="windows">On Windows</h2>
-<p>Double-click on <code>mevcine.exe</code>. On first launch, Windows may show “Windows protected your PC”, because
-the program is not signed: <em>More info</em>, then <em>Run anyway</em>.</p>
+<p>Double-click on <code>mevcine.exe</code> (or on the Start menu shortcut). On first launch, Windows may show
+“Windows protected your PC”, because the program is not signed: <em>More info</em>, then <em>Run anyway</em>.</p>
 <p>Display needs no graphics acceleration: MeVCine also works in a virtual machine or a remote desktop. If the window
 does not open, see <a href="depannage.html#affichage">Troubleshooting</a>.</p>
 
 <h2 id="linux">On Linux</h2>
 <ul>
-  <li><strong>Package</strong>: <code>.deb</code> for Ubuntu and Debian, <code>.rpm</code> for Fedora. It installs
-  MeVCine in the applications menu, with ffmpeg (on Fedora, the ffmpeg of RPM Fusion decodes the H.264 and HEVC of
-  phones; Fedora's own, <code>ffmpeg-free</code>, does not decode them all).</li>
-  <li><strong>AppImage</strong>, with no installation: a single file, ffmpeg included, to make executable
+  <li><strong>Ubuntu 26.04</strong>: <code>sudo apt install ./mevcine_<i>version</i>_amd64.deb</code>.</li>
+  <li><strong>Fedora 45</strong>: <code>sudo dnf install ./mevcine-<i>version</i>-1.fc45.x86_64.rpm</code>. Fedora's
+  own ffmpeg (<code>ffmpeg-free</code>) does not decode all phone formats (HEVC in particular): install the one from
+  RPM Fusion (RPM Fusion repository enabled, then <code>sudo dnf swap ffmpeg-free ffmpeg --allowerasing</code>).</li>
+  <li><strong>AppImage</strong>, with no installation, for recent distributions (Ubuntu 24.04, Debian 13, Fedora 40
+  or newer): <code>MeVCine-<i>version</i>-x86_64.AppImage</code>, a single file, ffmpeg included, to make executable
   (right-click › <em>Properties</em>, or <code>chmod +x</code>) and then start.</li>
 </ul>
-<p>A graphical desktop is needed (Wayland or X11). File dialogs are those of the desktop (GNOME, KDE…), and the
-desktop's dark theme is followed as long as the student has not chosen one.</p>
+<p>The package installs MeVCine in the applications menu, with ffmpeg; <code>.mevcine</code> projects open with a
+double-click, and videos with <em>Open with › MeVCine</em>. A graphical desktop is needed (Wayland or X11). File
+dialogs are those of the desktop (GNOME, KDE…), and the desktop's dark theme is followed as long as the student has
+not chosen one.</p>
 
 <h2 id="premier">On first launch</h2>
 <ul>
-  <li>MeVCine uses the system language if it is French, otherwise English; and the light or dark theme of the
-  desktop. The flag and the sun (or moon), at the top right of the window, change them; the choice is remembered.</li>
+  <li>MeVCine opens in simple mode, and offers to open a video. Later on, it takes the mode used last time.</li>
+  <li>It uses the system language if it is French, otherwise English; and the light or dark theme of the desktop.
+  The flag and the sun (or moon), at the top right of the window, change them; the choice is remembered.</li>
   <li>The window opens at its normal size (1200 × 700, smaller if the screen is smaller), never maximised by
   itself; it then keeps the size the user gave it (and stays maximised if it was maximised).</li>
   <li>MeVCine never reopens the last video: it only remembers the last video folder.</li>
 </ul>
 
 <h2 id="commande">The command line</h2>
-<pre>mevcine                        home screen: choice of mode
-mevcine --simple fall.mp4      simple mode, with a video
-mevcine --expert project.mevcine
-mevcine -d 2 ...               debug messages (1 to 3) in the terminal</pre>
-<p>A shortcut to <code>mevcine.exe --simple</code> opens simple mode directly. A project (<code>.mevcine</code>,
-<code>.cinemev</code>, old <code>.mecavideo</code>) can also be given on the command line, or dropped onto the window.
-See <a href="professeurs.html#deploiement">Deploying MeVCine in a computer room</a>.</p>
+<pre>mevcine                          the mode used last time
+mevcine --simple fall.mp4        simple mode (or -s), with a video
+mevcine --expert project.mevcine expert mode (or -e), with a project
+mevcine -d 2 …                   debug messages (1 to 3)
+mevcine --help                   these options</pre>
+<p>Without an option, MeVCine takes the mode used last time (simple mode on first launch); a shortcut to
+<code>mevcine.exe --simple</code> always opens simple mode. A project (<code>.mevcine</code>, <code>.cinemev</code>,
+old <code>.mecavideo</code>) can also be given on the command line, or dropped onto the window. See
+<a href="professeurs.html#deploiement">Deploying MeVCine in a computer room</a>.</p>
 <nav class="voisins">
 <a class="precedent" href="professeurs.html"><small>◀ Previous page</small>In the classroom</a>
 <a class="suivant" href="reglages.html"><small>Next page ▶</small>Settings</a>

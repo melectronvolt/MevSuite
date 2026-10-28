@@ -142,5 +142,7 @@ footer { color: var(--muted); font-size: .85rem; margin-top: 3rem; border-top: 1
   figure, table, .note, .tip, .warn { break-inside: avoid; }
 }
 
-/* Boîte de dialogue ou fenêtre à part : à sa taille, pas à toute la largeur. */
-figure.etroite { max-width: 26rem; }
+/* Boîte de dialogue, menu ou fenêtre à part : à sa taille réelle (nette), sans dépasser la colonne,
+   pas étirée à toute la largeur. */
+figure.etroite { width: fit-content; max-width: 100%; }
+figure.etroite img { width: auto; max-width: 100%; }

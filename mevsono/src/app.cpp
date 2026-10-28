@@ -454,8 +454,8 @@ void MainWindow::buildMenus()
 
 void MainWindow::buildMenuCorner()
 {
-    // À droite de la barre de menus, sur sa ligne : la notice, le thème et la langue. Pas de barre
-    // d'outils ; ouvrir, les exemples et les vues sont en haut du panneau de gauche.
+    // À droite de la barre de menus, sur sa ligne : le thème et la langue. Pas de barre d'outils ;
+    // ouvrir et les vues sont en haut du panneau de gauche.
     // Barre de menus dans la fenêtre, même avec un menu global du bureau, qui cacherait ces boutons.
     menuBar()->setNativeMenuBar(false);
     m_menuCorner = new QWidget(menuBar());
@@ -528,8 +528,8 @@ void MainWindow::buildStatusBar()
 
 QWidget *MainWindow::buildWelcomePage()
 {
-    // Épurée : le logiciel, puis ouvrir un son ou essayer un exemple ; la notice, la langue et le
-    // thème sont à droite de la barre de menus.
+    // Épurée : le logiciel, puis ouvrir un son ; la langue et le thème sont à droite de la barre de
+    // menus, la notice dans le menu Aide.
     auto *page = new QWidget(this);
     page->setObjectName(u"welcome"_s);
     auto *layout = new QVBoxLayout(page);

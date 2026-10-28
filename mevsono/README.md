@@ -8,9 +8,12 @@ A toujours avant B), spectre d'amplitude (fenêtres de pondération, taille de l
 pics, fondamentale et tableau des harmoniques, mesure d'une période sur le signal (curseurs t₁ et t₂
 aimantés aux passages par zéro), période par autocorrélation, écoute du son ou de l'extrait, exports
 CSV, modes simplifié et expert, notice HTML intégrée, interface en français et en anglais, réglages
-imposés à côté du programme. L'utilisation est décrite dans la notice (`F1`, menu Aide). Pas de sons
-d'exemple dans l'interface : chacun ouvre ses enregistrements ; les sons de synthèse (`audio.cpp`)
+imposés (à côté du programme sous Windows, dans `/etc/MeVSuite/` sous Linux). L'utilisation est
+décrite dans la notice (`F1`, menu Aide). Pas de sons d'exemple dans l'interface : chacun ouvre ses enregistrements ; les sons de synthèse (`audio.cpp`)
 servent aux essais et aux captures de la notice.
+
+Versions à installer (version portable et installateur pour Windows, AppImage, `.deb`, `.rpm`) :
+[Releases](https://github.com/melectronvolt/MevSuite/releases) du dépôt.
 
 ## Différences avec l'ancienne version Rust
 
@@ -73,7 +76,8 @@ Les tests reprennent ceux de la version Rust :
   `MEVSONO_EXEMPLES=dossier` y écrit les sons d'exemple en WAV.
 - `tests/uitests.cpp` : essais de l'interface, pilotée sans fenêtre comme par un élève (page d'accueil,
   boutons du thème et de la langue à droite des menus, boutons du panneau, barre d'état, menus, glisser sur le signal, mesure
-  d'une période, survol du spectre, écoute simulée, anglais). Chaque étape est rendue
+  d'une période, survol du spectre, mode expert et réglages, écoute simulée, anglais, journal des
+  plantages). Chaque étape est rendue
   dans `build/captures/` ; les images de la notice en viennent :
   `python3 -I tools/images_notice.py build`.
 
@@ -108,6 +112,7 @@ racine).
   barre d'état, exports, enregistrement des réglages) ; `src/settingsdialog.*` : fenêtre des réglages ;
   `src/icons.*` : icônes dessinées (soleil, lune, drapeaux, pictogrammes de la barre d'état).
 - `src/i18n.*`, `src/settings.*`, `src/help.*`, `src/about.*`, `src/crash.*`, `src/theme.*` : langues,
-  réglages, notice, écran d'accueil et « À propos », erreurs fatales, thème clair ou sombre.
+  réglages, notice, écran de démarrage et « À propos », erreurs fatales et plantages (journal
+  `mevsono.log`), thème clair ou sombre.
 - `assets/` : notice (pour les élèves d'abord, puis pour les professeurs ; avec des captures des essais
   de l'interface) et icônes.

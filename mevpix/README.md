@@ -6,7 +6,8 @@ sous licence MIT.
 MeVPix mesure des longueurs sur n'importe quelle image, en C++ 20 avec Qt 6 (Widgets) :
 étalonnage sur un objet de longueur connue, mesures, profil d'intensité le long d'une ligne de
 coupe (canal, épaisseur, curseurs A et B, saturation, export CSV), notice HTML intégrée, interface
-en français et en anglais, thème clair ou sombre, réglages imposés à côté du programme.
+en français et en anglais, thème clair ou sombre, réglages imposés (à côté du programme sous
+Windows, dans `/etc/MeVSuite/` sous Linux).
 
 L'utilisation est décrite dans la notice ([`assets/help/fr.html`](assets/help/fr.html), touche `F1`
 dans le programme). Elle s'adresse d'abord aux élèves (le logiciel est pédagogique), puis aux
@@ -43,7 +44,7 @@ MeVSono) : mêmes places, mêmes couleurs, mêmes tailles dans les quatre logici
   centrée), agrandie seulement si l'élève l'a agrandie à la séance précédente. Barre de menus
   standard de Qt : `Fichier`, `Aide`.
 - **Zone image** : chaque outil n'affiche que ses segments : l'étalon (jaune) avec Étalonner, les
-  mesures (bleu) avec Mesurer, la ligne de coupe (rose) avec Profil d'intensité.
+  mesures (turquoise) avec Mesurer, la ligne de coupe (rose) avec Profil d'intensité.
 
 ## Différences avec l'ancienne version Rust
 

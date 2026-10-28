@@ -47,9 +47,9 @@
 <dl class="faq">
   <dt>I click on the object, and nothing happens.</dt>
   <dd>In simple mode, marking happens only at step 4 (or to redo a measurement with ⌖). In expert mode, first
-  <span class="btn">Start marking</span>, and the frame must follow those already marked: no gaps are allowed.
-  Also check that drawing the reference or choosing the origin is not in progress: the status bar says so;
-  <kbd>Esc</kbd> cancels it.</dd>
+  <span class="btn">Start marking</span> (or <span class="btn">▶ Resume marking</span> if it was stopped), and the
+  frame must follow those already marked: no gaps are allowed. Also check that drawing the reference or choosing
+  the origin is not in progress: the status bar says so; <kbd>Esc</kbd> cancels it.</dd>
   <dt>I clicked next to the object.</dt>
   <dd>Right after: <span class="btn">↶ Undo the last point</span> (<kbd>Ctrl</kbd>+<kbd>Z</kbd>). Later: the ⌖
   button of the row, in the table of measurements, then a click on the object.</dd>
@@ -88,7 +88,15 @@
 <h2 id="modes">Modes, the window</h2>
 <dl class="faq">
   <dt>How do I switch to expert mode, or back to simple mode?</dt>
-  <dd>With the <em>Mode</em> menu, at any time. The measurements are kept.</dd>
+  <dd>With the <em>Mode</em> menu, at any time: <em>Expert mode (all features)</em> or <em>Simple mode (step by
+  step)</em>. The measurements are kept.</dd>
+  <dt>MeVCine starts in expert mode, and I wanted simple mode.</dt>
+  <dd>MeVCine takes the mode used last time: someone changed it on this computer. <em>Mode › Simple mode (step by
+  step)</em> menu.</dd>
+  <dt>The video does not open at once, the window no longer responds.</dt>
+  <dd>MeVCine is examining the video (the busy cursor shows it): a large video, or a video on a USB stick, takes a
+  few seconds. Please wait. After two minutes, MeVCine gives up: copy the video to the computer, then open it
+  again.</dd>
   <dt>“Switch to simple mode?”: MeVCine wants to keep only object 1.</dt>
   <dd>Simple mode follows only one object. <span class="btn">Keep object 1</span> forgets the others;
   <span class="btn">Cancel</span> stays in expert mode, with all the objects.</dd>

@@ -42,9 +42,10 @@ QString writeFiles(const QString &dir, Lang lang)
 
 QStringList files()
 {
-    return {u"fr.html"_s,       u"en.html"_s,       u"help.css"_s,      u"accueil-fr.jpg"_s, u"fenetre-fr.jpg"_s,
-            u"mesure-fr.jpg"_s, u"expert-fr.jpg"_s, u"accueil-en.jpg"_s, u"fenetre-en.jpg"_s, u"mesure-en.jpg"_s,
-            u"expert-en.jpg"_s};
+    return {u"fr.html"_s,         u"en.html"_s,        u"help.css"_s,       u"accueil-fr.jpg"_s,
+            u"fenetre-fr.jpg"_s,  u"mesure-fr.jpg"_s,  u"expert-fr.jpg"_s,  u"reglages-fr.jpg"_s,
+            u"accueil-en.jpg"_s,  u"fenetre-en.jpg"_s, u"mesure-en.jpg"_s,  u"expert-en.jpg"_s,
+            u"reglages-en.jpg"_s};
 }
 
 QString write(Lang lang, const SettingsFiles &settings, QString *error)
