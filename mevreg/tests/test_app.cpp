@@ -1665,7 +1665,8 @@ mr.effacer_annotations("G")
         const QStringList lines = QString::fromUtf8(file.readAll()).split(u'\n', Qt::SkipEmptyParts);
         QVERIFY2(lines.size() >= 2, qPrintable(lines.join(u'\n')));
         QVERIFY(lines[0].startsWith(u"MeVReg "_s + about::VERSION));
-        QCOMPARE(lines[1], u"essai d'exception"_s);
+        // journal écrit en mode texte : \r\n sous Windows
+        QCOMPARE(lines[1].trimmed(), u"essai d'exception"_s);
     }
 
     /// Coller un tableau dont une case n'est pas un nombre : la case est laissée vide, et la barre

@@ -1812,7 +1812,8 @@ private slots:
         const QStringList lignes = lit_texte(conf.filePath(u"mevcine.log"_s)).split(u'\n', Qt::SkipEmptyParts);
         QVERIFY2(lignes.size() >= 2, qUtf8Printable(lignes.join(u'\n')));
         QVERIFY2(lignes[0].contains(u"] MeVCine "_s + a_propos::VERSION), qUtf8Printable(lignes[0]));
-        QCOMPARE(lignes[1], u"essai d'exception"_s);
+        // journal écrit en mode texte : \r\n sous Windows
+        QCOMPARE(lignes[1].trimmed(), u"essai d'exception"_s);
     }
 };
 
