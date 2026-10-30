@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(MeVReg VERSION 0.3.2 DESCRIPTION "Traitement de données pour les TP de physique-chimie" LANGUAGES CXX)
+project(MeVReg VERSION 0.3.3 DESCRIPTION "Traitement de données pour les TP de physique-chimie" LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

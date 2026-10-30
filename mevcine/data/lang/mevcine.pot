@@ -103,7 +103,7 @@ msgstr ""
 
 #: src/app/accueil.cpp:110
 msgid ""
-"🪜 Mode simplifié\n"
+"👣 Mode simplifié\n"
 "pas à pas, un seul objet"
 msgstr ""
 

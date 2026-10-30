@@ -1,7 +1,7 @@
 ﻿; Installateur Windows d'un logiciel de MevSuite (Inno Setup 6), fabriqué par packaging/windows.sh à
 ; partir du dossier de la version portable :
 ;
-;   ISCC.exe /DAppNom=MeVReg /DAppExe=mevreg.exe /DAppVersion=0.3.2 /DAppId=<GUID> /DSource=<dossier>
+;   ISCC.exe /DAppNom=MeVReg /DAppExe=mevreg.exe /DAppVersion=0.3.3 /DAppId=<GUID> /DSource=<dossier>
 ;            /DSortie=<dossier> /DIcone=<fichier .ico> [/DExtension=phy] installateur.iss
 ;
 ; Installation pour tous les utilisateurs dans Program Files\MeVSuite\<Nom>, raccourci dans le menu

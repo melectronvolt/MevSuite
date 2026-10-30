@@ -107,7 +107,7 @@ void PageSansVideo::maj()
     m_ouvrir->setText(trad("📂 Ouvrir une vidéo…"));
     m_ouvrir->setToolTip(trad("Vidéos de téléphone (iPhone, Android) et d'appareil photo : MP4, MOV, AVI, MKV, WebM…\n"
                               "H.264, HEVC, AV1, VP9, ProRes ; HDR, vidéos en portrait, ralenti."));
-    m_simplifie->setText(trad("🪜 Mode simplifié\npas à pas, un seul objet"));
+    m_simplifie->setText(trad("👣 Mode simplifié\npas à pas, un seul objet"));
     m_simplifie->setToolTip(trad("Pour débuter : MeVCine guide chaque étape (échelle, origine, pointage, résultats)."));
     m_expert->setText(trad("🧰 Mode expert\ntoutes les fonctions"));
     m_expert->setToolTip(trad("Plusieurs objets, suivi automatique, trajectoires dans un autre référentiel, grapheur."));

@@ -37,6 +37,11 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/platform/${MEVSUITE_PAQUET}.xml")
     install(FILES platform/${MEVSUITE_PAQUET}.xml DESTINATION share/mime/packages)
 endif()
 
+# les émoji des boutons (📂 Ouvrir…) : la police émoji en couleur du système, présente sur les
+# bureaux, mais pas toujours sur une installation minimale (sinon, des carrés à leur place)
+set(_mevsuite_emoji_deb fonts-noto-color-emoji)
+set(_mevsuite_emoji_rpm google-noto-color-emoji-fonts)
+
 set(CPACK_PACKAGE_NAME ${MEVSUITE_PAQUET})
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 set(CPACK_PACKAGE_VENDOR "Rémi MEVAERE")
@@ -50,7 +55,7 @@ set(CPACK_STRIP_FILES ON)
 set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
 set(CPACK_DEBIAN_PACKAGE_SECTION science)
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "${MEVSUITE_DEB_DEPENDS}")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "${MEVSUITE_DEB_DEPENDS}, ${_mevsuite_emoji_deb}")
 
 # .rpm (Fedora) : <paquet>-<version>-1.<fcNN>.x86_64.rpm
 set(CPACK_RPM_FILE_NAME RPM-DEFAULT)
@@ -58,7 +63,7 @@ set(CPACK_RPM_PACKAGE_RELEASE_DIST ON)
 set(CPACK_RPM_PACKAGE_LICENSE "${MEVSUITE_LICENCE}")
 set(CPACK_RPM_PACKAGE_GROUP "Applications/Engineering")
 set(CPACK_RPM_PACKAGE_URL "${CPACK_PACKAGE_HOMEPAGE_URL}")
-set(CPACK_RPM_PACKAGE_REQUIRES "${MEVSUITE_RPM_REQUIRES}")
+set(CPACK_RPM_PACKAGE_REQUIRES "${MEVSUITE_RPM_REQUIRES}, ${_mevsuite_emoji_rpm}")
 # dossiers du système : à ne pas réclamer (conflit avec le paquet « filesystem »)
 set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION /usr/share/applications /usr/share/doc /usr/share/mime
     /usr/share/mime/packages ${_mevsuite_dossiers_icones})

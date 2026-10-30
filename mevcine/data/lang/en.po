@@ -110,10 +110,10 @@ msgstr "Expert mode chosen: the Mode menu lets you change it"
 
 #: src/app/accueil.cpp
 msgid ""
-"🪜 Mode simplifié\n"
+"👣 Mode simplifié\n"
 "pas à pas, un seul objet"
 msgstr ""
-"🪜 Simple mode\n"
+"👣 Simple mode\n"
 "step by step, one object"
 
 #: src/app/accueil.cpp

@@ -3,6 +3,21 @@
 Les changements visibles des quatre logiciels de la MevSuite, qui partagent un même numéro de
 version. Les plus récents en haut ; « Non publié » : ce qui sera dans la prochaine version.
 
+## [0.3.3] — 2026-10-30
+
+### Les quatre logiciels
+
+- Paquets `.deb` et `.rpm` : ils installent la police émoji en couleur du système
+  (`fonts-noto-color-emoji`, `google-noto-color-emoji-fonts`). Sur une installation minimale qui
+  ne l'avait pas, les émoji des boutons s'affichaient en carrés.
+
+### MeVCine
+
+- Premier démarrage : le bouton du mode simplifié porte 👣 au lieu de 🪜, un émoji trop récent
+  (2020) pour la police de Windows 10, qui ne l'aurait pas affiché.
+- **Notice** : le choix du mode au premier lancement (page « Démarrer », avec sa capture ; accueil,
+  installation et page des professeurs).
+
 ## [0.3.2] — 2026-10-30
 
 ### Les quatre logiciels

@@ -21,6 +21,7 @@ AIDE = os.path.join(RACINE, "data", "help")
 # menu déroulé garde sa taille, pour rester lisible
 FENETRE = (960, 600)
 CAPTURES = [
+    ("95_{}_premier_demarrage.png", "premier-demarrage.png", FENETRE),
     ("91_{}_sans_video.png", "sans-video.png", FENETRE),
     ("93_{}_menu_fichier.png", "menu-fichier.png", None),
     ("94_{}_menu_mode.png", "menu-mode.png", None),

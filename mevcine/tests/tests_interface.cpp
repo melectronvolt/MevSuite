@@ -1771,7 +1771,7 @@ private slots:
 
     /// Le mode simplifié dans chaque langue : les étapes se suivent avec les intitulés traduits, et le
     /// texte copié pour Python a ses commentaires dans la langue. En anglais, aucun texte affiché
-    /// n'est resté en français. Les rendus (81 à 94) sont les captures de la notice
+    /// n'est resté en français. Les rendus (81 à 95) sont les captures de la notice
     /// (scripts/captures-aide.py) : le palet de la vidéo y est pointé comme le ferait un élève.
     void guide_dans_chaque_langue()
     {
@@ -1780,6 +1780,13 @@ private slots:
                                     u"Language: English. Click to switch to French (français)."_s};
         for (Langue langue : TOUTES_LES_LANGUES) {
             const QString code = i18n::code(langue);
+            {
+                // au premier lancement : le choix du mode
+                configuration(langue, true);
+                auto app = fenetre({}, std::nullopt, langue, true);
+                QVERIFY(bouton(*app, trad("👣 Mode simplifié\npas à pas, un seul objet")));
+                rendu(*app, u"95_%1_premier_demarrage"_s.arg(code));
+            }
             {
                 // au lancement, sans choix du mode : l'écran qui propose d'ouvrir une vidéo
                 auto app = fenetre({}, std::nullopt, langue);
