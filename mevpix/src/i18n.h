@@ -28,7 +28,7 @@ std::optional<Lang> firstTranslated(const QStringList &codes);
 Lang resolveLang(std::optional<Lang> choice);
 
 /// Nombre de composants principaux affichés dans « À propos » (voir about.cpp).
-inline constexpr size_t MAIN_COMPONENT_COUNT = 4;
+inline constexpr size_t MAIN_COMPONENT_COUNT = 5;
 
 /// Textes de l'interface dans une langue.
 struct Tr {

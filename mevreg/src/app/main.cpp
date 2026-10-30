@@ -12,6 +12,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QFileInfo>
+#include <QFontDatabase>
 #include <QIcon>
 #include <QLibraryInfo>
 #include <QScreen>
@@ -47,6 +48,22 @@ int selfTest(int argc, char **argv)
     return 0;
 }
 
+
+/// AppImage : le Qt joint ne dessine pas les polices émoji en couleur au format COLR (celle de
+/// Fedora) ; la petite police émoji en images jointe à côté (packaging/police-emoji.py) les remplace.
+/// Absente des autres versions, qui ont le Qt du système (ou de MSYS2).
+void loadAppImageEmojiFont()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
+    const QString path = QApplication::applicationDirPath() + u"/../share/mevsuite/mevsuite-emoji.ttf"_s;
+    if (!QFileInfo::exists(path))
+        return;
+    const QStringList families = QFontDatabase::applicationFontFamilies(QFontDatabase::addApplicationFont(path));
+    if (!families.isEmpty())
+        QFontDatabase::addApplicationEmojiFontFamily(families.first());
+#endif
+}
+
 } // namespace
 
 int main(int argc, char **argv)
@@ -63,6 +80,7 @@ int main(int argc, char **argv)
     QApplication::setDesktopFileName(u"mevreg"_s);
     ensureCoreResources();
     QApplication::setWindowIcon(QIcon(u":/icons/mevreg.svg"_s));
+    loadAppImageEmojiFont();
 
     // boîtes de dialogue standard de Qt (fichiers, impression) en français
     QTranslator qtTr;

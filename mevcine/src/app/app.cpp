@@ -187,6 +187,7 @@ App::App(const QString &fichier, std::optional<Mode> mode_impose)
     i18n::choisit(prefs::langue(config).value_or(i18n::langue_du_systeme()));
     // le mode imposé (--simple, --expert), sinon celui de la dernière fois
     mode = mode_impose.value_or(config.get(u"mode"_s) == u"expert"_s ? Mode::Expert : Mode::Simplifie);
+    mode_a_choisir = !mode_impose && !config.get(u"mode"_s);
     unite_etalon = unite_depuis_symbole(config.get(u"unite_etalon"_s).value_or(QString())).value_or(Unite::Metre);
 
     construit_menus();
@@ -316,8 +317,12 @@ QString App::consigne_etalon() const
 
 void App::change_mode(Mode m)
 {
-    if (mode == m)
+    // choisi (menu Mode, ou page d'accueil du premier démarrage) : retenu pour la prochaine fois
+    mode_a_choisir = false;
+    if (mode == m) {
+        config.set(u"mode"_s, m == Mode::Expert ? u"expert"_s : u"simplifie"_s);
         return;
+    }
     if (m == Mode::Simplifie) {
         if (pointage.nb_obj() > 1 && pointage.a_des_pointages()) {
             // le mode simplifié ne suit qu'un objet : on demande avant d'oublier les autres

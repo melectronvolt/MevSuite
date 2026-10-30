@@ -186,6 +186,7 @@ const Tr FR = {
             u"interface graphique, lecture des images, boîtes de dialogue"_s,
             u"lecture des images TIFF et WebP"_s,
             u"bibliothèques d'exécution C (version Windows)"_s,
+            u"émoji des boutons (version AppImage)"_s,
         },
     .licenseNote =
         u"MeVPix est un logiciel libre, distribué sous licence MIT. Qt est distribué sous licence LGPL version 3 : le bouton « À propos de Qt » en donne la version et les conditions."_s,
@@ -315,6 +316,7 @@ const Tr EN = {
             u"user interface, image decoding, dialogs"_s,
             u"TIFF and WebP image decoding"_s,
             u"C runtime libraries (Windows version)"_s,
+            u"button emoji (AppImage version)"_s,
         },
     .licenseNote =
         u"MeVPix is free software, released under the MIT licence. Qt is released under the LGPL version 3: the “About Qt” button gives its version and licence terms."_s,

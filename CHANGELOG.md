@@ -3,6 +3,23 @@
 Les changements visibles des quatre logiciels de la MevSuite, qui partagent un même numéro de
 version. Les plus récents en haut ; « Non publié » : ce qui sera dans la prochaine version.
 
+## [0.3.2] — 2026-10-30
+
+### Les quatre logiciels
+
+- **AppImage** : les émoji des boutons (📂 Ouvrir, 📏 Étalonner, 💾 Exporter…) s'affichent de
+  nouveau. Le Qt de l'AppImage ne sait pas dessiner les polices émoji en couleur au format COLR, celui
+  de Fedora : l'émoji était choisi mais rien ne s'affichait. L'AppImage contient maintenant une petite
+  police émoji (Noto Color Emoji, licence OFL, réduite aux émoji des logiciels), citée dans « À
+  propos ». Les paquets `.deb` et `.rpm` et la version Windows n'étaient pas touchés.
+
+### MeVCine
+
+- **Premier démarrage** : la page d'accueil demande de choisir le mode de travail, avec deux boutons,
+  « 🪜 Mode simplifié » (pas à pas, un seul objet) et « 🧰 Mode expert » (toutes les fonctions). Le
+  choix est retenu ; on en change ensuite dans le menu Mode. Les options `--simple` et `--expert`
+  l'imposent sans le demander.
+
 ## [0.3.1] — 2026-10-28
 
 ### MeVReg

@@ -46,6 +46,8 @@ std::vector<Composant> composants()
          u"GPL-3.0-or-later WITH GCC-exception-3.1"_s, u"https://gcc.gnu.org"_s},
         {u"mingw-w64"_s, trad("les bibliothèques d'exécution de la version Windows"),
          u"ZPL-2.1, MIT, GPL-3.0-or-later WITH GCC-exception-3.1"_s, u"https://www.mingw-w64.org"_s},
+        {u"Noto Color Emoji"_s, trad("les émoji des boutons de la version AppImage"), u"OFL-1.1"_s,
+         u"https://github.com/googlefonts/noto-emoji"_s},
     };
 }
 

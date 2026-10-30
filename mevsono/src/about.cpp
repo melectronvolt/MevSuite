@@ -36,6 +36,7 @@ std::array<Component, MAIN_COMPONENT_COUNT> mainComponents()
         {u"Qt Multimedia"_s, u"LGPL-3.0-only"_s, u"https://doc.qt.io/qt-6/qtmultimedia-index.html"_s},
         {u"FFmpeg"_s, u"LGPL-2.1-or-later / GPL-2.0-or-later"_s, u"https://ffmpeg.org"_s},
         {u"MinGW-w64"_s, u"ZPL-2.1, MIT, GPL-3.0+ WITH GCC-exception-3.1"_s, u"https://www.mingw-w64.org"_s},
+        {u"Noto Color Emoji"_s, u"OFL-1.1"_s, u"https://github.com/googlefonts/noto-emoji"_s},
     }};
 }
 

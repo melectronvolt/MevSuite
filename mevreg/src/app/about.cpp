@@ -45,6 +45,7 @@ std::vector<Component> components()
         {u"CPython %1"_s.arg(py), u"interpréteur Python intégré"_s, u"PSF-2.0"_s, u"https://www.python.org"_s},
         {u"DejaVu Sans, DejaVu Sans Mono"_s, u"polices des graphes et des documents"_s, u"Bitstream Vera / DejaVu"_s, u"https://dejavu-fonts.github.io"_s},
         {u"MinGW-w64"_s, u"bibliothèques d'exécution C (version Windows)"_s, u"ZPL-2.1, MIT, GPL-3.0+ WITH GCC-exception-3.1"_s, u"https://www.mingw-w64.org"_s},
+        {u"Noto Color Emoji"_s, u"émoji des boutons (version AppImage)"_s, u"OFL-1.1"_s, u"https://github.com/googlefonts/noto-emoji"_s},
     };
 }
 

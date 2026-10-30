@@ -20,6 +20,8 @@
 #include "outils.h"
 #include "prefs.h"
 
+#include <algorithm>
+
 #include <QAbstractButton>
 #include <QApplication>
 #include <QClipboard>
@@ -211,12 +213,14 @@ class TestsInterface : public QObject {
 
     /// Une configuration jetable, propre au test, pour ne pas toucher à celle de l'utilisateur.
     /// L'interface est en français, sauf demande contraire.
-    void configuration(std::optional<Langue> langue)
+    /// une configuration neuve, avec le mode déjà choisi (simplifié), sauf pour un premier démarrage
+    void configuration(std::optional<Langue> langue, bool premier_demarrage = false)
     {
         m_conf = std::make_unique<QTemporaryDir>();
         qputenv("MEVCINE_CONF", m_conf->path().toLocal8Bit());
         ecrit_texte(prefs::fichier_conf(),
-                    u"[DEFAULT]\nversion = mevcine 1.0\nlangue = %1\n"_s.arg(i18n::code(langue.value_or(Langue::Francais))));
+                    u"[DEFAULT]\nversion = mevcine 1.0\nlangue = %1\n%2"_s.arg(i18n::code(langue.value_or(Langue::Francais)),
+                                                                                premier_demarrage ? QString() : u"mode = simplifie\n"_s));
     }
 
     QString temporaire(const QString &nom)
@@ -543,7 +547,7 @@ private slots:
         auto *ouvrir = app->m_sans_video->findChild<QPushButton *>(u"ouvrir"_s);
         QVERIFY(ouvrir && ouvrir->isVisible());
         QCOMPARE(ouvrir->text(), u"📂 Ouvrir une vidéo…"_s);
-        QCOMPARE(app->m_sans_video->findChildren<QPushButton *>().size(), 1);
+        QCOMPARE(std::ranges::count_if(app->m_sans_video->findChildren<QPushButton *>(), [](QPushButton *b) { return b->isVisible(); }), 1);
         for (QAction *x : app->menuBar()->actions().front()->menu()->actions())
             QVERIFY2(!x->text().contains(u"exemple"_s, Qt::CaseInsensitive), qPrintable(x->text()));
         QCOMPARE(app->page_d_aide(), u"demarrer.html"_s);
@@ -586,6 +590,58 @@ private slots:
         }
         theme::choisit(Qt::ColorScheme::Light);
         attend();
+        i18n::choisit(Langue::Francais);
+    }
+
+    /// Au premier démarrage (aucun mode retenu ni imposé), la page d'accueil fait choisir le mode :
+    /// deux boutons de même taille à la place de celui d'ouverture, dans une page qui reste épurée et
+    /// tient dans la fenêtre à sa taille minimale ; le choix est retenu pour la prochaine fois
+    void choix_du_mode_au_premier_demarrage()
+    {
+        for (Langue langue : TOUTES_LES_LANGUES) {
+            const QString code = i18n::code(langue);
+            configuration(langue, true);
+            auto app = fenetre({}, std::nullopt, langue, true);
+            App &a = *app;
+            QVERIFY(a.mode_a_choisir);
+            a.rafraichit();
+            attend();
+            rendu(a, u"00_%1_premier_demarrage"_s.arg(code));
+            a.resize(a.minimumSize());
+            attend();
+            for (const bool sombre : {false, true}) {
+                theme::choisit(sombre ? Qt::ColorScheme::Dark : Qt::ColorScheme::Light);
+                attend();
+                const QString nom = u"%1_%2"_s.arg(code, sombre ? u"sombre"_s : u"clair"_s);
+                a.rafraichit();
+                attend();
+                verifie_page_epuree(a.m_sans_video, nom + u" choix du mode"_s, 2);
+                rendu(a, u"04_%1_choix_du_mode_minimale"_s.arg(nom));
+            }
+            theme::choisit(Qt::ColorScheme::Light);
+            attend();
+            auto *ouvrir = a.m_sans_video->findChild<QPushButton *>(u"ouvrir"_s);
+            auto *expert = a.m_sans_video->findChild<QPushButton *>(u"mode_expert"_s);
+            QVERIFY(ouvrir && !ouvrir->isVisible());
+            QVERIFY(expert && expert->isVisible());
+            expert->click();
+            attend();
+            QCOMPARE(a.mode, Mode::Expert);
+            QVERIFY(!a.mode_a_choisir);
+            QVERIFY(ouvrir->isVisible() && !expert->isVisible());
+            verifie_page_epuree(a.m_sans_video, code + u" après le choix du mode"_s, 1);
+            a.sauve_prefs();
+            app.reset();
+            auto suivante = fenetre({}, std::nullopt, langue, true);
+            QCOMPARE(suivante->mode, Mode::Expert);
+            QVERIFY(!suivante->mode_a_choisir);
+        }
+        // le mode imposé (--simple, --expert) : rien à choisir
+        configuration(Langue::Francais, true);
+        auto impose = fenetre({}, Mode::Simplifie, Langue::Francais, true);
+        QVERIFY(!impose->mode_a_choisir);
+        QVERIFY(impose->m_sans_video->findChild<QPushButton *>(u"ouvrir"_s)->isVisible());
+        impose.reset();
         i18n::choisit(Langue::Francais);
     }
 

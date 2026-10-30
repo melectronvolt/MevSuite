@@ -28,6 +28,10 @@ msgstr "the C++ compiler and its standard library"
 msgid "les bibliothèques d'exécution de la version Windows"
 msgstr "the runtime libraries of the Windows version"
 
+#: src/app/a_propos.cpp
+msgid "les émoji des boutons de la version AppImage"
+msgstr "the button emoji of the AppImage version"
+
 #: src/app/a_propos.cpp:88
 msgid "À propos de MeVCine"
 msgstr "About MeVCine"
@@ -95,6 +99,42 @@ msgstr ""
 #: src/app/accueil.cpp:90
 msgid "ou glissez une vidéo (ou un projet) sur la fenêtre"
 msgstr "or drag a video (or a project) onto the window"
+
+#: src/app/accueil.cpp
+msgid "Mode simplifié choisi : le menu Mode permet d'en changer"
+msgstr "Simple mode chosen: the Mode menu lets you change it"
+
+#: src/app/accueil.cpp
+msgid "Mode expert choisi : le menu Mode permet d'en changer"
+msgstr "Expert mode chosen: the Mode menu lets you change it"
+
+#: src/app/accueil.cpp
+msgid ""
+"🪜 Mode simplifié\n"
+"pas à pas, un seul objet"
+msgstr ""
+"🪜 Simple mode\n"
+"step by step, one object"
+
+#: src/app/accueil.cpp
+msgid "Pour débuter : MeVCine guide chaque étape (échelle, origine, pointage, résultats)."
+msgstr "To get started: MeVCine guides each step (scale, origin, marking, results)."
+
+#: src/app/accueil.cpp
+msgid ""
+"🧰 Mode expert\n"
+"toutes les fonctions"
+msgstr ""
+"🧰 Expert mode\n"
+"all features"
+
+#: src/app/accueil.cpp
+msgid "Plusieurs objets, suivi automatique, trajectoires dans un autre référentiel, grapheur."
+msgstr "Several objects, automatic tracking, trajectories in another frame of reference, grapher."
+
+#: src/app/accueil.cpp
+msgid "Choisissez votre façon de travailler : le menu Mode permet d'en changer à tout moment."
+msgstr "Choose how you want to work: the Mode menu lets you change it at any time."
 
 #: src/app/app.cpp:120
 msgid "Déposez la vidéo ici"

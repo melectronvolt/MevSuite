@@ -38,6 +38,7 @@ std::array<Component, MAIN_COMPONENT_COUNT> mainComponents()
         {u"Qt %1"_s.arg(QString::fromLatin1(qVersion())), u"LGPL-3.0-only"_s, u"https://www.qt.io"_s},
         {u"Qt Image Formats"_s, u"LGPL-3.0-only"_s, u"https://doc.qt.io/qt-6/qtimageformats-index.html"_s},
         {u"MinGW-w64"_s, u"ZPL-2.1, MIT, GPL-3.0+ WITH GCC-exception-3.1"_s, u"https://www.mingw-w64.org"_s},
+        {u"Noto Color Emoji"_s, u"OFL-1.1"_s, u"https://github.com/googlefonts/noto-emoji"_s},
     }};
 }
 

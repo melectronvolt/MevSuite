@@ -24,6 +24,8 @@
 #include "prefs.h"
 
 #include <QApplication>
+#include <QFileInfo>
+#include <QFontDatabase>
 #include <QIcon>
 
 #include <cstdio>
@@ -96,6 +98,22 @@ Arguments analyse_arguments(const QStringList &args)
     return res;
 }
 
+
+/// AppImage : le Qt joint ne dessine pas les polices émoji en couleur au format COLR (celle de
+/// Fedora) ; la petite police émoji en images jointe à côté (packaging/police-emoji.py) les remplace.
+/// Absente des autres versions, qui ont le Qt du système (ou de MSYS2).
+void charge_police_emoji_appimage()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
+    const QString chemin = QApplication::applicationDirPath() + u"/../share/mevsuite/mevsuite-emoji.ttf"_s;
+    if (!QFileInfo::exists(chemin))
+        return;
+    const QStringList familles = QFontDatabase::applicationFontFamilies(QFontDatabase::addApplicationFont(chemin));
+    if (!familles.isEmpty())
+        QFontDatabase::addApplicationEmojiFontFamily(familles.first());
+#endif
+}
+
 } // namespace
 
 int main(int argc, char *argv[])
@@ -109,6 +127,7 @@ int main(int argc, char *argv[])
     for (int taille : {16, 32, 48, 64, 256})
         icone.addFile(u":/icones/mevcine-%1.png"_s.arg(taille), QSize(taille, taille));
     QApplication::setWindowIcon(icone);
+    charge_police_emoji_appimage();
 
     // la langue choisie avec le bouton du drapeau, sinon celle du système (dès l'aide de la ligne de
     // commande) ; le thème, avant la création de la fenêtre, qui prend sa palette

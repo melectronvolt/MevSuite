@@ -77,6 +77,24 @@ case $APP in
         ;;
 esac
 
+# émoji des boutons : ce Qt ne dessine pas les polices émoji en couleur au format COLR (celle de
+# Fedora) ; Noto Color Emoji en images (CBDT), réduite aux émoji des sources, est jointe (chargée
+# par le logiciel au démarrage, voir packaging/police-emoji.py)
+NOTO=https://raw.githubusercontent.com/googlefonts/noto-emoji/v2.051/fonts
+telecharge "$NOTO/NotoColorEmoji.ttf" "$CACHE/noto-emoji/NotoColorEmoji.ttf" \
+    72a635cb3d2f3524c51620cdde406b217204e8a6a06c6a096ff8ed4b5fd6e27b
+telecharge "$NOTO/LICENSE" "$CACHE/noto-emoji/LICENSE" 6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2
+if [ ! -x "$CACHE/fonttools/bin/python" ]; then
+    python3 -m venv "$CACHE/fonttools"
+    "$CACHE/fonttools/bin/pip" install -q fonttools==4.68.0
+fi
+mkdir -p "$APPDIR/usr/share/mevsuite"
+SOURCES=("$RACINE/$APP/src")
+[ -d "$RACINE/$APP/po" ] && SOURCES+=("$RACINE/$APP/po")
+"$CACHE/fonttools/bin/python" -I "$RACINE/packaging/police-emoji.py" "$CACHE/noto-emoji/NotoColorEmoji.ttf" \
+    "$APPDIR/usr/share/mevsuite/mevsuite-emoji.ttf" "${SOURCES[@]}"
+cp "$CACHE/noto-emoji/LICENSE" "$APPDIR/usr/share/mevsuite/mevsuite-emoji-LICENSE.txt"
+
 # Qt, ses greffons (dont Wayland) et les bibliothèques, sauf celles du système (D-Bus, systemd),
 # présentes sur tout bureau et qui doivent être celles du système ; le greffon TIFF de Qt est mis de côté le
 # temps de linuxdeploy : il attend libtiff.so.5, absente des distributions récentes

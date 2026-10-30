@@ -99,6 +99,8 @@ public:
     /// mode de travail : celui de la dernière fois (réglage du poste), simplifié au premier lancement ;
     /// il se change dans le menu Mode
     Mode mode = Mode::Simplifie;
+    /// premier démarrage (aucun mode retenu, ni imposé) : la page d'accueil fait choisir le mode
+    bool mode_a_choisir = false;
     Etat etat = Etat::Debut;
     /// état à restaurer après la sélection de l'étalon (A ou D)
     Etat etat_ancien = Etat::A;

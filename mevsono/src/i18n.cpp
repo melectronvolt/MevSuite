@@ -310,6 +310,7 @@ const Tr FR = {
             u"lecture des sons et des vidéos, sortie du son (haut-parleurs, casque)"_s,
             u"décodage des formats audio et vidéo (par Qt Multimedia)"_s,
             u"bibliothèques d'exécution C (version Windows)"_s,
+            u"émoji des boutons (version AppImage)"_s,
         },
     .licenseNote =
         u"MeVSono est un logiciel libre, distribué sous licence MIT. Qt et Qt Multimedia sont distribués sous licence LGPL version 3, FFmpeg sous licence LGPL version 2.1 ou ultérieure, ou GPL version 2 ou ultérieure selon sa compilation : le bouton « À propos de Qt » donne la version et les conditions de licence de Qt."_s,
@@ -540,6 +541,7 @@ const Tr EN = {
             u"sound and video reading, sound output (speakers, headphones)"_s,
             u"audio and video format decoding (through Qt Multimedia)"_s,
             u"C runtime libraries (Windows version)"_s,
+            u"button emoji (AppImage version)"_s,
         },
     .licenseNote =
         u"MeVSono is free software, released under the MIT licence. Qt and Qt Multimedia are released under the LGPL version 3, FFmpeg under the LGPL version 2.1 or later, or the GPL version 2 or later depending on its build: the “About Qt” button gives the version and licence terms of Qt."_s,
