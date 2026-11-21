@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVSono — Notice d’utilisation</title>
+<link rel="stylesheet" href="help.css">
+</head>
+<body>
+<a class="skip" href="#presentation">Aller à la notice</a>
+<div class="layout">
+<nav class="toc" aria-label="Sommaire">
+  <p class="brand">MeVSono</p>
+  <p class="lang"><a href="en.html" lang="en" hreflang="en">English version</a></p>
+  <details open id="contents">
+    <summary>Sommaire</summary>
+    <p class="group">Prise en main</p>
+    <ul>
+      <li><a href="#premiere-mesure">Vérifier un la à 440 Hz</a></li>
+      <li><a href="#ouvrir">Ouvrir un son</a></li>
+      <li><a href="#enregistrer">Enregistrer et sauvegarder une prise</a></li>
+      <li><a href="#ecouter">Écouter le son ou l’extrait</a></li>
+    </ul>
+    <p class="group">Mesures</p>
+    <ul>
+      <li><a href="#mesure">Mesurer une période avec t₁ et t₂</a></li>
+      <li><a href="#extrait">Choisir l’extrait A–B</a></li>
+      <li><a href="#spectre">Lire la fréquence et l’amplitude d’un pic</a></li>
+      <li><a href="#ordonnees">Ajuster l’axe vertical</a></li>
+      <li><a href="#sons-de-tp">Choisir un son pour le TP</a></li>
+      <li><a href="#comparer">Comparer deux spectres</a></li>
+    </ul>
+    <p class="group">Mode expert</p>
+    <ul>
+      <li><a href="#modes">Choisir le mode</a></li>
+      <li><a href="#expert">Fondamentale et harmoniques</a></li>
+      <li><a href="#reglages">Régler l’analyse et l’affichage</a></li>
+      <li><a href="#exporter">Exporter les mesures en CSV</a></li>
+    </ul>
+    <p class="group">Référence</p>
+    <ul>
+      <li><a href="#raccourcis">Souris et clavier</a></li>
+      <li><a href="#problemes">Dépannage</a></li>
+      <li><a href="#installer">Installer et configurer un poste</a></li>
+      <li><a href="#apropos">Assistance, version et licence</a></li>
+    </ul>
+  </details>
+</nav>
+
+<main>
+<header class="title" id="presentation">
+  <h1>MeVSono — Notice d’utilisation</h1>
+  <p>Combien de temps dure une oscillation ? Quelles fréquences composent une note ? Les deux onglets permettent de répondre à ces questions sur le même enregistrement.</p>
+  <p class="guide-meta">Version {{version}} · Cliquez sur une capture pour la voir à sa taille d’origine.</p>
+</header>
+
+<section id="premiere-mesure">
+<h2>Vérifier un la à 440 Hz</h2>
+<p>Commencez en <strong>Mode › Simplifié</strong> avec le fichier <a href="../../exemples/sinus_440_Hz.wav" download><code>sinus_440_Hz.wav</code></a>. Enregistrez-le à partir du lien puis ouvrez-le dans MeVSono. Un diapason enregistré au microphone convient aussi pour cette mesure.</p>
+<ol class="steps">
+  <li>Ouvrez le son. Dans <strong>Mesure de la période</strong>, zoomez à la molette sur une portion régulière jusqu’à distinguer une dizaine d’oscillations.</li>
+  <li>Partez d’un passage par zéro montant. Glissez jusqu’au passage montant situé <em>cinq périodes</em> plus loin. Le panneau doit indiquer environ 11,36 ms pour cet intervalle. Une période vaut alors 11,36 / 5 ≈ 2,27 ms, soit une fréquence de 5 / 0,01136 ≈ 440 Hz.</li>
+  <li>Passez à <strong>Étude des fréquences</strong>. Gardez l’extrait initial du fichier ou, pour un diapason, délimitez environ une demi-seconde de son régulier avec A et B. Cliquez sur le pic principal et comparez sa fréquence à votre calcul.</li>
+</ol>
+<p>À consigner dans le compte rendu : le nombre de périodes comptées, la durée totale lue, la fréquence calculée et la fréquence du pic. Un écart proche d’un facteur deux invite à recompter les motifs entre les curseurs.</p>
+</section>
+
+<section id="ouvrir">
+<h2>Ouvrir un son</h2>
+<p>Cliquez sur <strong>Ouvrir un son…</strong>, appuyez sur <kbd>Ctrl</kbd> + <kbd>O</kbd> ou déposez un fichier sur la fenêtre. Ces trois gestes permettent aussi de changer de son en cours de séance.</p>
+<p>MeVSono accepte notamment WAV, MP3, OGG, FLAC et M4A. Pour un MP4, MOV ou MKV, il analyse la piste audio par défaut, ou la première piste audio en l’absence d’indication. Il charge au plus les 30 premières minutes. Une lecture partielle est signalée en bas de la fenêtre.</p>
+<figure>
+  <a href="accueil-fr.png"><img src="accueil-fr.png" width="860" height="560" alt="Accueil de MeVSono avec les boutons Ouvrir un son et Enregistrer un son au-dessus des deux listes audio." loading="lazy"></a>
+  <figcaption>L’entrée sert à la prise de son. La sortie sert à l’écoute. Les noms dépendent du matériel du poste.</figcaption>
+</figure>
+<h3 id="fenetre">Se repérer dans la fenêtre de mesure</h3>
+<p>Après l’ouverture, le panneau de gauche indique le nom du son, sa fréquence d’échantillonnage, ses voies et sa durée. Les deux onglets se trouvent sous les menus. <strong>Mesure de la période</strong> affiche le signal au cours du temps. <strong>Étude des fréquences</strong> affiche aussi le spectre de l’extrait choisi. La barre d’état indique l’opération en cours ou son résultat, et le mode actif.</p>
+<p>Le soleil ou la lune, en haut à droite, change le thème. Le drapeau change la langue de l’interface. <kbd>F1</kbd> ouvre la notice dans cette langue, y compris hors connexion.</p>
+</section>
+
+<section id="enregistrer">
+<h2>Enregistrer et sauvegarder une prise</h2>
+<ol class="steps">
+  <li>Branchez le microphone ou le casque USB. Sur l’accueil, choisissez <strong>Entrée (microphone)</strong> et <strong>Sortie (casque ou haut-parleurs)</strong>. Si un appareil manque dans la liste, cliquez sur <strong>Actualiser</strong>. Pendant les mesures, retrouvez ces deux listes dans <strong>Audio › Périphériques audio…</strong></li>
+  <li>Cliquez sur le rond rouge <strong>Enregistrer un son</strong>, sur l’accueil ou dans le menu <strong>Fichier</strong>. La prise commence immédiatement. La fenêtre affiche le microphone, la durée écoulée et la <strong>Crête du micro</strong>. Le niveau est exprimé en dBFS, par rapport à la pleine échelle numérique. Près de 0 dBFS, la saturation est possible. Faites d’abord une prise courte. Si les crêtes atteignent régulièrement 0 dBFS, diminuez le gain sur le microphone ou dans le système, puis recommencez la prise.</li>
+  <li>Cliquez sur <strong>Arrêter</strong> pour ouvrir la prise dans MeVSono. <strong>Annuler</strong> abandonne la prise en cours. La durée maximale d’une prise est de 30 minutes.</li>
+  <li>Pour conserver la prise, cliquez sur la disquette <strong>Enregistrer la prise en WAV…</strong>, sous son nom ou dans <strong>Fichier</strong>. Choisissez le dossier et le nom du fichier. Le WAV (PCM 16 bits) contient toute la prise, même si A et B en délimitent seulement une partie. Si vous fermez la fenêtre ou remplacez une prise encore en mémoire, MeVSono propose de la sauvegarder.</li>
+</ol>
+<div class="figures">
+<figure>
+  <a href="prise-fr.png"><img src="prise-fr.png" width="200" height="155" alt="Fenêtre de prise de son avec le niveau de crête, la durée et les boutons Arrêter et Annuler." loading="lazy"></a>
+  <figcaption>Pendant la prise, la valeur et la barre suivent le niveau reçu du microphone.</figcaption>
+</figure>
+<figure>
+  <a href="fichier-fr.png"><img src="fichier-fr.png" width="256" height="102" alt="Menu Fichier montrant le rond rouge pour enregistrer et la disquette pour sauvegarder en WAV." loading="lazy"></a>
+  <figcaption>Après l’arrêt, la disquette écrit le fichier WAV sur le disque.</figcaption>
+</figure>
+</div>
+</section>
+
+<section id="ecouter">
+<h2>Écouter le son ou l’extrait</h2>
+<p>Les commandes d’écoute se trouvent sous le nom du son. <strong>Lecture ▶</strong> démarre l’écoute. <strong>Pause ⏸</strong> conserve la position du trait rouge sur le signal. <strong>Arrêt ⏹</strong> ramène la prochaine lecture au début de la portion choisie. Appuyez sur <kbd>Espace</kbd> pour écouter à nouveau un passage ou mettre la lecture en pause.</p>
+<p>En mode simplifié, l’onglet <strong>Mesure de la période</strong> joue tout le son. L’onglet <strong>Étude des fréquences</strong> joue uniquement l’extrait A–B. En mode expert, la liste à gauche de ▶ permet de choisir l’un ou l’autre dans les deux onglets.</p>
+</section>
+
+<section id="mesure">
+<h2>Mesurer une période avec t₁ et t₂</h2>
+<ol class="steps">
+  <li>Ouvrez <strong>Mesure de la période</strong>. Placez la souris sur la portion à examiner et tournez la molette jusqu’à distinguer les motifs du signal.</li>
+  <li>Maintenez le bouton gauche et glissez d’un point du motif au point correspondant d’un motif suivant. Les traits turquoise <strong>t₁</strong> et <strong>t₂</strong> marquent les deux instants. Au relâchement, chaque curseur rejoint un passage par zéro montant s’il en trouve un à proximité.</li>
+  <li>Lisez les deux instants et <strong>Δt = t₂ − t₁</strong> dans le panneau de gauche. Pour affiner une borne, attrapez son trait ou utilisez les <a href="#raccourcis">touches de déplacement</a>.</li>
+</ol>
+<figure>
+  <a href="mesure-fr.png"><img src="mesure-fr.png" width="1280" height="800" alt="Deux curseurs sur deux passages par zéro montants, séparés par deux motifs. Le panneau affiche 10,00 ms." loading="lazy"></a>
+  <figcaption>Sur ce signal, t₁ vaut 0,50500 s et t₂ vaut 0,51500 s. La durée affichée de 10,00 ms couvre deux périodes.</figcaption>
+</figure>
+<p>Pour <em>n</em> périodes complètes, <em>T</em> = Δt / <em>n</em>. Dans la capture, une période dure 5,00 ms, soit une fréquence de 200 Hz. La fréquence en hertz est <em>f</em> = 1 / <em>T</em> avec <em>T</em> en secondes. Sur un son complexe, plusieurs passages montants peuvent appartenir à un seul motif. Repérez la forme entière qui revient. Les curseurs t₁ et t₂ mesurent sa durée. Les bornes A et B choisissent le son dont on calcule le spectre. Chaque onglet garde son propre zoom du signal.</p>
+<p>En mode expert, décochez <strong>Aimanter t₁ et t₂ aux passages par zéro</strong> pour placer les curseurs librement à la souris. Une fois l’intervalle défini, <strong>Analyser cet intervalle</strong> reporte t₁ et t₂ sur A et B et ouvre l’onglet des fréquences.</p>
+</section>
+
+<section id="extrait">
+<h2>Choisir l’extrait A–B</h2>
+<p>Dans <strong>Étude des fréquences</strong>, le signal du haut sert à délimiter l’extrait. Glissez dessus avec le bouton gauche pour placer <strong>A</strong> au début (orange) et <strong>B</strong> à la fin (vert). La zone entre les traits est ombrée. Pour déplacer une seule borne, attrapez son trait ou cliquez à l’instant voulu pour y amener la borne la plus proche.</p>
+<p>Pour une note tenue, écartez A et B sur la partie régulière. Pour étudier une attaque, resserrez-les autour du début de la note. Le panneau indique les deux instants, la durée effectivement analysée et le nombre d’échantillons. À 48 000 échantillons par seconde, un extrait de 0,100 s contient 4 800 valeurs par voie. Le spectre du bas est recalculé après chaque modification. <strong>Zoom sur l’extrait</strong> agrandit l’intervalle sur le signal. <strong>Tout voir</strong> rétablit les vues d’ensemble du signal et du spectre.</p>
+</section>
+
+<section id="spectre">
+<h2>Lire la fréquence et l’amplitude d’un pic</h2>
+<p>Sur le signal, une abscisse désigne un instant. Sur le spectre, elle désigne la fréquence d’une composante en hertz. L’axe vertical donne l’amplitude numérique, ou le niveau en dBFS si cette option est activée en mode expert. Un spectre décrit l’extrait A–B de la voie étudiée.</p>
+<p>Pour un son périodique, la fréquence fondamentale vaut 1 / <em>T</em>. Les harmoniques sont ses multiples entiers. Le pic le plus haut peut correspondre à un harmonique de rang supérieur à 1. Des pics à 400, 600 et 800 Hz, par exemple, sont compatibles avec une fondamentale à 200 Hz même si aucun pic n’y est visible.</p>
+<ol class="steps">
+  <li>Survolez un pic. Les premières valeurs de la bulle sont les coordonnées du pointeur. Sous <strong>Pic le plus proche</strong>, les valeurs correspondent au pic détecté le plus proche en fréquence, marqué par un point plein.</li>
+  <li>Cliquez pour fixer la lecture. Le panneau conserve la fréquence et l’amplitude sous <strong>Pic sélectionné</strong> quand la souris quitte le graphique.</li>
+  <li>Quand le spectre a le focus, <kbd>←</kbd> et <kbd>→</kbd> parcourent ses pics visibles. <kbd>Échap</kbd> efface la sélection.</li>
+</ol>
+<figure>
+  <a href="spectre-fr.png"><img src="spectre-fr.png" width="1280" height="800" alt="Spectre sous le signal, extrait entre A et B. La bulle distingue le pointeur à 445,0 Hz du pic à 440,0 Hz." loading="lazy"></a>
+  <figcaption>La lecture du pic dans cette capture est 440,0 Hz pour une amplitude de 0,400. Le réticule est légèrement à sa droite.</figcaption>
+</figure>
+<p>La <strong>finesse du segment</strong> indiquée en hertz vaut l’inverse de sa durée. Un segment de 0,1 s donne ainsi 10 Hz, et un segment de 1 s donne 1 Hz. Le zoom agrandit la courbe existante. Pour modifier la séparation de deux pics proches, agissez sur la durée du segment et sur la <a href="#reglages">fenêtre de pondération</a>.</p>
+</section>
+
+<section id="ordonnees">
+<h2>Ajuster l’axe vertical</h2>
+<p>En mode simplifié, l’axe des ordonnées s’ajuste automatiquement aux valeurs visibles du signal et du spectre. Zoomez horizontalement sur un passage faible pour détailler ses variations. Les graduations indiquent la nouvelle échelle. Comparez les nombres inscrits sur l’axe avant de conclure qu’un son a une amplitude plus grande qu’un autre. Le CSV conserve les amplitudes numériques du son.</p>
+<p>Pour garder la même échelle pendant un zoom ou un déplacement, choisissez <strong>Mode › Expert</strong>, puis <strong>Affichage › Réglages…</strong> Dans la rubrique <strong>Affichage</strong>, décochez <strong>Ajuster l’axe vertical à la partie visible</strong>. Recochez la case pour réactiver l’ajustement.</p>
+<div class="figures paired">
+<figure>
+  <a href="axe-fixe-fr.png"><img src="axe-fixe-fr.png" width="548" height="432" alt="Courbe presque horizontale avec la graduation verticale de l’ensemble du signal." loading="lazy"></a>
+  <figcaption>Échelle fixe. Ce passage de 0,55 à 0,65 s oscille autour de 0,25.</figcaption>
+</figure>
+<figure>
+  <a href="axe-ajuste-fr.png"><img src="axe-ajuste-fr.png" width="548" height="432" alt="Même portion du signal avec des graduations de 0,242 à 0,258 et des oscillations visibles." loading="lazy"></a>
+  <figcaption>Échelle ajustée. Les graduations resserrées rendent visible l’amplitude des oscillations du même passage.</figcaption>
+</figure>
+</div>
+</section>
+
+<section id="sons-de-tp">
+<h2>Choisir un son pour le TP</h2>
+<p>Cliquez sur un nom de fichier pour enregistrer le WAV sur le poste, puis ouvrez-le dans MeVSono. Ces sept sons sont fournis avec la notice et utilisables hors connexion.</p>
+<table>
+<thead><tr><th scope="col">Fichiers</th><th scope="col">Manipulation et observation attendue</th></tr></thead>
+<tbody>
+<tr><th scope="row"><a href="../../exemples/sinus_440_Hz.wav" download><code>sinus_440_Hz.wav</code></a><br><a href="../../exemples/diapason_440_Hz.wav" download><code>diapason_440_Hz.wav</code></a></th><td>Mesurez le la sur le sinus, puis sur la partie tenue du diapason. Retrouvez le pic proche de 440 Hz et suivez la diminution d’amplitude du diapason dans le temps.</td></tr>
+<tr><th scope="row"><a href="../../exemples/harmoniques_de_220_Hz.wav" download><code>harmoniques_de_220_Hz.wav</code></a></th><td>Prévoyez les fréquences des rangs 2 et 3 à partir de 220 Hz. Relevez les pics vers 440 et 660 Hz, puis vérifiez leurs rangs dans le tableau expert.</td></tr>
+<tr><th scope="row"><a href="../../exemples/clarinette_la.wav" download><code>clarinette_la.wav</code></a><br><a href="../../exemples/piano_la.wav" download><code>piano_la.wav</code></a></th><td>Choisissez une portion tenue de même durée dans chaque son. Mémorisez le premier spectre, puis ouvrez le second. Repérez les pics de fréquences voisines et comparez leurs hauteurs relatives.</td></tr>
+<tr><th scope="row"><a href="../../exemples/battements_440_et_444_Hz.wav" download><code>battements_440_et_444_Hz.wav</code></a></th><td>Comptez les maxima d’amplitude sur une seconde. Élargissez ensuite A–B à deux secondes et recherchez les deux pics qui expliquent les quatre battements par seconde.</td></tr>
+<tr><th scope="row"><a href="../../exemples/balayage_200_a_2000_Hz.wav" download><code>balayage_200_a_2000_Hz.wav</code></a></th><td>Comparez deux extraits courts de même durée, l’un près du début et l’autre près de la fin. Le pic se déplace vers les hautes fréquences. Un long extrait réunit les fréquences traversées.</td></tr>
+</tbody></table>
+</section>
+
+<section id="comparer">
+<h2>Comparer deux spectres</h2>
+<ol class="steps">
+  <li>Dans <strong>Étude des fréquences</strong>, choisissez le premier extrait. Une fois le spectre affiché, cliquez sur <strong>Affichage › Mémoriser ce spectre</strong>.</li>
+  <li>Déplacez A et B, ou ouvrez un second son. Le spectre actuel est en trait plein et la référence en tirets. La légende à gauche identifie les deux sons et l’intervalle mémorisé.</li>
+  <li>Pour comparer les amplitudes relatives, cochez <strong>Ramener les deux pics maximaux à la même hauteur</strong> dans <strong>Affichage</strong>. Seul le tracé de la référence est multiplié par un facteur commun. Décochez la commande pour retrouver les niveaux d’origine.</li>
+</ol>
+<figure>
+  <a href="comparaison-fr.png"><img src="comparaison-fr.png" width="1280" height="800" alt="Deux spectres superposés. Les courbes pleine et en tirets sont identifiées dans le panneau de gauche." loading="lazy"></a>
+  <figcaption>Le son actuel est signal-200.wav et la référence signal-440.wav. Les pics maximaux des deux tracés ont ici été ramenés à la même hauteur.</figcaption>
+</figure>
+<p>Une nouvelle mémorisation remplace la référence. <strong>Retirer le spectre de référence</strong> la supprime. Si un changement des réglages d’analyse la masque, rétablissez la fenêtre de pondération et le réglage de taille de FFT utilisés lors de sa mémorisation.</p>
+<h3 id="conseils">Comparer des passages ou des sons</h3>
+<p>Pour comparer le timbre de deux notes de même hauteur, gardez la même pondération et une même durée de segment. Mémorisez une portion tenue de la première note, puis choisissez une portion tenue de la seconde. Pour suivre l’évolution d’une seule note, mémorisez son attaque puis déplacez A–B sur sa tenue. Les positions des pics se lisent en hertz et leurs hauteurs dépendent aussi du gain d’enregistrement.</p>
+<p>Avec deux sons purs de même amplitude à 440 et 444 Hz, le signal présente des battements à 4 Hz. Gardez le spectre d’un extrait court, puis écartez A et B d’au moins deux secondes avec la FFT en taille automatique. Les deux pics apparaissent séparément. Leur motif commun dure 250 ms. Sa fréquence de 4 Hz est sous la limite de recherche de 20 Hz, d’où le message <strong>Aucune fondamentale stable détectée.</strong> en mode expert.</p>
+</section>
+
+<section id="modes">
+<h2>Choisir le mode</h2>
+<p>Utilisez <strong>Mode › Simplifié</strong> pour faire mesurer la période et lire les pics par les élèves. Passez à <strong>Expert</strong> pour confronter leur résultat à la détection automatique ou exploiter les valeurs dans un tableur. La coche et le texte en bas à droite indiquent le choix actif. Les deux modes permettent d’enregistrer, d’écouter, de sauvegarder la prise en WAV et de comparer des spectres.</p>
+<figure>
+  <a href="mode-fr.png"><img src="mode-fr.png" width="136" height="50" alt="Menu Mode avec les entrées Simplifié et Expert et une coche sur Expert." loading="lazy"></a>
+  <figcaption>Le mode peut être changé alors qu’un son est ouvert.</figcaption>
+</figure>
+<table>
+<thead><tr><th scope="col">À l’ouverture d’un son</th><th scope="col">Simplifié (par défaut)</th><th scope="col">Expert</th></tr></thead>
+<tbody>
+<tr><th scope="row">Extrait initial</th><td>Les 80 % centraux du son.</td><td>La portion de 0,5 s la plus forte sur la voie choisie, ou tout le son s’il est plus court.</td></tr>
+<tr><th scope="row">Analyse</th><td>Fenêtre de Hann, taille de FFT automatique, amplitudes et fréquences linéaires. La vue initiale va jusqu’à 5 kHz dans la limite de la moitié de la fréquence d’échantillonnage.</td><td>Réglages modifiables, choix de voie, estimations de période et de fondamentale, tableau des harmoniques et exports CSV.</td></tr>
+</tbody></table>
+<p>Changer de mode conserve le son et les bornes A–B déjà placées. Les réglages experts sont retrouvés au retour dans ce mode.</p>
+</section>
+
+<section id="expert">
+<h2>Fondamentale et harmoniques</h2>
+<p>L’<strong>autocorrélation</strong> compare l’extrait <strong>A–B</strong> à une copie décalée dans le temps. Si la forme se superpose à nouveau pour un même retard sur plusieurs motifs, ce retard renseigne sur la période. Comparez-le à la mesure manuelle Δt / <em>n</em>. Sur un extrait long, MeVSono cherche ce retard sur un bloc actif de 65 536 échantillons, puis vérifie la répétition sur plusieurs portions de A–B. Les deux onglets indiquent la période du même extrait. Les 5 kHz de la vue initiale limitent uniquement la portion de spectre visible. Si l’extrait ne présente pas de période suffisamment nette, les curseurs restent disponibles pour mesurer une durée.</p>
+<p>Dans <strong>Étude des fréquences</strong>, les petits cercles marquent les pics détectés. MeVSono cherche une fondamentale <em>f</em>₁ compatible avec les fréquences des pics et la répétition du signal. Chaque pic est affecté à un seul rang. Avec deux pics à 200 et 500 Hz, le motif peut se répéter toutes les 10 ms. La fondamentale est alors de 100 Hz et les rangs 2 et 5 sont mesurés. Le rang 1 affiche un tiret. Une détection insuffisante donne le message <strong>Aucune fondamentale stable détectée.</strong></p>
+<figure>
+  <a href="expert-fr.png"><img src="expert-fr.png" width="1280" height="800" alt="Panneau expert avec l’autocorrélation, l’écart entre raies, la fondamentale et le tableau des harmoniques à côté du spectre." loading="lazy"></a>
+  <figcaption>Sur cet extrait de 0,500 s, le panneau affiche une fondamentale à 440,0 Hz et des pics aux six premiers rangs.</figcaption>
+</figure>
+<ul>
+  <li>Pour fixer manuellement <em>f</em>₁, faites un <strong>clic droit</strong> près du pic, puis choisissez <strong>Prendre le pic de … comme fondamentale</strong>. <strong>Détection automatique</strong> rend la main à l’estimation automatique.</li>
+  <li>Le tableau donne le rang, la fréquence mesurée, le rapport <em>f</em> / <em>f</em>₁, le niveau d’amplitude et le pourcentage de l’amplitude du rang 1. Un tiret indique une valeur indisponible. En particulier, l’amplitude relative demande un pic au rang 1.</li>
+  <li><strong>Afficher les repères n × f₁</strong> place des lignes pointillées aux fréquences théoriques des harmoniques. <strong>Copier le tableau</strong> copie les lignes et les colonnes pour les coller dans un tableur ou un document.</li>
+</ul>
+</section>
+
+<section id="reglages">
+<h2>Régler l’analyse et l’affichage</h2>
+<p>En mode expert, ouvrez <strong>Affichage › Réglages…</strong> ou le bouton <strong>Réglages…</strong> du panneau de gauche. Les changements s’appliquent immédiatement. <strong>Valeurs par défaut</strong> rétablit les paramètres d’analyse et d’affichage. <strong>Fermer</strong> revient à la mesure.</p>
+<div class="figures">
+<figure>
+  <a href="reglages-fr.png"><img src="reglages-fr.png" width="389" height="446" alt="Réglages experts de l’analyse et de l’affichage avec la case d’ajustement vertical cochée." loading="lazy"></a>
+  <figcaption>La fenêtre réunit la pondération, la FFT, la détection des pics, la voie et les échelles.</figcaption>
+</figure>
+<figure>
+  <a href="affichage-fr.png"><img src="affichage-fr.png" width="358" height="229" alt="Menu Affichage avec les commandes de vue, de référence, de décibels, d’axe logarithmique et de réglages." loading="lazy"></a>
+  <figcaption>Les échelles en décibels et en fréquence logarithmique sont aussi accessibles directement dans le menu.</figcaption>
+</figure>
+</div>
+<h3>Fenêtre de pondération</h3>
+<p>Lorsque les extrémités d’un segment ne se raccordent pas, une partie de l’énergie d’une sinusoïde se répartit sur les raies voisines. Une fenêtre de pondération multiplie les échantillons par des coefficients connus avant le calcul. Elle influe sur la largeur des pics et sur les lobes secondaires, qui peuvent masquer une composante faible près d’une composante forte.</p>
+<table>
+<thead><tr><th scope="col">Fenêtre</th><th scope="col">Effet sur le spectre</th></tr></thead>
+<tbody>
+<tr><th scope="row">Hann</th><td>Réglage initial. Compromis entre largeur des pics et atténuation des lobes secondaires.</td></tr>
+<tr><th scope="row">Rectangulaire</th><td>Pondération uniforme. Lobe principal étroit et lobes secondaires plus élevés.</td></tr>
+<tr><th scope="row">Hamming</th><td>Lobes secondaires proches du pic atténués, à décroissance plus lente loin du pic.</td></tr>
+<tr><th scope="row">Blackman, Blackman-Harris</th><td>Lobes secondaires davantage atténués, au prix d’un lobe principal plus large.</td></tr>
+<tr><th scope="row">À sommet plat</th><td>Pic plus large. Sa hauteur varie peu avec la position de la fréquence entre deux raies.</td></tr>
+</tbody></table>
+<h3>Taille de la FFT et finesse du segment</h3>
+<p>En <strong>automatique</strong>, la transformée de Fourier rapide (FFT) traite l’extrait en un segment jusqu’à 262 144 échantillons et le complète par des zéros jusqu’à une puissance de deux. Au-delà, ou avec une taille imposée plus courte que l’extrait, les segments se recouvrent d’au moins la moitié et leurs puissances sont moyennées. Les tailles proposées vont de 1 024 à 262 144 points.</p>
+<p><strong>Écart entre raies Δf</strong> vaut <em>f</em><sub>e</sub> / <em>N</em>, où <em>f</em><sub>e</sub> est la fréquence d’échantillonnage et <em>N</em> la taille de la FFT. <strong>Finesse de l’analyse</strong> vaut l’inverse de la durée d’un segment. Ajouter des zéros resserre les raies calculées. La séparation physique de deux composantes dépend de la durée des données, de la pondération et de leurs amplitudes. La bulle de Δf précise la taille de la FFT et, en cas de moyennage, le nombre de segments.</p>
+<p><strong>Exemple à 48 kHz.</strong> Avec 4 800 échantillons de son et une FFT fixée à 8 192 points, le segment dure 0,100 s. La finesse indiquée vaut 10 Hz, tandis que l’écart entre raies vaut 48 000 / 8 192 ≈ 5,86 Hz. Passer à 16 384 points sur le même extrait donne une raie tous les 2,93 Hz. Pour observer davantage de périodes du son, il faut écarter A et B.</p>
+<h3>Détection, voie et axes</h3>
+<ul>
+  <li><strong>Seuil de détection des pics</strong> agit sur le repérage des pics. À −40 dB, le seuil vaut 1 % de l’amplitude du pic maximal. <strong>Nombre d’harmoniques du tableau</strong> fixe le nombre de rangs affichés, de 1 à 40 (10 par défaut).</li>
+  <li><strong>Voie étudiée</strong> choisit, pour un son stéréo, la moyenne des voies, la gauche ou la droite. Le signal, le spectre et l’extrait CSV suivent ce choix.</li>
+  <li><strong>Amplitude</strong> permet une lecture linéaire ou en dBFS. Une amplitude numérique de 1 vaut 0 dBFS, une amplitude de 0,5 vaut environ −6 dBFS. Une mesure de pression acoustique en pascals demanderait en plus un microphone et une chaîne étalonnés.</li>
+  <li>L’<strong>axe des fréquences</strong> peut être linéaire ou logarithmique. <strong>Fréquence maximale affichée</strong> fixe la limite de la vue d’ensemble, jusqu’à <em>f</em><sub>e</sub> / 2. L’<a href="#ordonnees">ajustement vertical</a> agit sur les graduations du signal et du spectre.</li>
+</ul>
+</section>
+
+<section id="exporter">
+<h2>Exporter les mesures en CSV</h2>
+<p>En mode expert, le menu <strong>Fichier</strong> propose deux exports. Attendez la fin du calcul pour exporter le spectre de l’extrait courant.</p>
+<table>
+<thead><tr><th scope="col">Commande</th><th scope="col">Données du fichier</th></tr></thead>
+<tbody>
+<tr><th scope="row">Exporter le spectre (CSV)…</th><td><code>spectre.csv</code> contient une ligne par raie, de 0 à <em>f</em><sub>e</sub> / 2, même si la vue est zoomée. Colonnes <code>f (Hz)</code>, <code>A</code> et <code>A (dB)</code>. Le fichier contient les raies de la FFT du son courant. Le sommet interpolé indiqué sous « Pic sélectionné » peut se trouver entre deux lignes du CSV.</td></tr>
+<tr><th scope="row">Exporter l’extrait du signal (CSV)…</th><td><code>extrait.csv</code> contient les échantillons de la voie étudiée entre A et B. Colonnes <code>t (s)</code>, mesuré depuis le début du son, et <code>signal</code>.</td></tr>
+</tbody></table>
+<p>Choisissez le dossier et le nom du fichier. MeVSono ajoute l’extension <code>.csv</code> si elle manque et demande confirmation avant un remplacement. L’écriture peut être annulée dans la fenêtre de progression.</p>
+<p>La langue de MeVSono détermine le format. En français, les colonnes sont séparées par un point-virgule et les décimales par une virgule. En anglais, le séparateur de colonnes est la virgule et le séparateur décimal est le point. Si le tableur place toute la ligne dans une seule cellule, choisissez ce séparateur à l’importation. Pour obtenir un fichier audio à réécouter, utilisez <a href="#enregistrer">Enregistrer la prise en WAV…</a></p>
+</section>
+
+<section id="raccourcis">
+<h2>Souris et clavier</h2>
+<p>Donnez le focus au signal pour déplacer une borne de temps, ou au spectre pour parcourir les pics. Le même raccourci de zoom agit sur le graphique actif.</p>
+<table>
+<thead><tr><th scope="col">Action</th><th scope="col">Geste ou raccourci</th></tr></thead>
+<tbody>
+<tr><th scope="row">Ouvrir un fichier</th><td><kbd>Ctrl</kbd> + <kbd>O</kbd> ou glisser le fichier sur la fenêtre.</td></tr>
+<tr><th scope="row">Changer d’onglet</th><td><kbd>Ctrl</kbd> + <kbd>Tab</kbd>, ou <kbd>Ctrl</kbd> + <kbd>Page suiv.</kbd> / <kbd>Page préc.</kbd></td></tr>
+<tr><th scope="row">Activer un graphique au clavier</th><td><kbd>Tab</kbd> jusqu’au cadre en surbrillance.</td></tr>
+<tr><th scope="row">Placer ou déplacer deux bornes</th><td>Glisser sur le signal pour former la paire. Attraper un trait ou cliquer près de sa nouvelle position pour déplacer une seule borne.</td></tr>
+<tr><th scope="row">Déplacer précisément un curseur</th><td>Sur le signal, <kbd>1</kbd> ou <kbd>2</kbd> choisit le curseur, puis <kbd>←</kbd> ou <kbd>→</kbd> le déplace d’un échantillon. Avec <kbd>Maj</kbd>, le pas est de 1 % de la largeur visible, au minimum un échantillon.</td></tr>
+<tr><th scope="row">Zoomer sur un graphique</th><td>Molette autour du pointeur. Au clavier, <kbd>+</kbd> ou <kbd>−</kbd> autour du curseur actif ou du pic sélectionné.</td></tr>
+<tr><th scope="row">Déplacer ou rétablir la vue</th><td>Clic droit glissé ou <kbd>Maj</kbd> + molette pour déplacer. Double-clic ou <kbd>Début</kbd> pour rétablir le graphique actif. <strong>Tout voir</strong> rétablit les deux graphiques.</td></tr>
+<tr><th scope="row">Fixer une lecture de pic</th><td>Clic sur le spectre ou <kbd>←</kbd> / <kbd>→</kbd>. <kbd>Échap</kbd> efface la sélection.</td></tr>
+<tr><th scope="row">Écouter ou mettre en pause</th><td><kbd>Espace</kbd>.</td></tr>
+<tr><th scope="row">Changer la taille de l’interface</th><td><kbd>Ctrl</kbd> + <kbd>+</kbd> ou <kbd>Ctrl</kbd> + <kbd>−</kbd>. <kbd>Ctrl</kbd> + <kbd>0</kbd> rétablit la taille normale, notamment après une projection.</td></tr>
+<tr><th scope="row">Ouvrir la notice</th><td><kbd>F1</kbd> ou <strong>Aide › Notice d’utilisation…</strong></td></tr>
+</tbody></table>
+</section>
+
+<section id="problemes">
+<h2>Dépannage</h2>
+<dl class="faq">
+<dt>La période automatique et ma mesure diffèrent.</dt>
+<dd>Encadrez environ cinq motifs entiers entre t₁ et t₂ et divisez Δt par leur nombre. En mode expert, utilisez <strong>Analyser cet intervalle</strong> pour comparer les deux méthodes sur la même portion régulière du son.</dd>
+<dt>Le son stéréo paraît presque silencieux sur la voie moyenne.</dt>
+<dd>En mode expert, affichez successivement la gauche et la droite. Lorsque leurs oscillations sont en opposition de phase, leur moyenne peut être très faible alors que chaque voie porte bien un signal.</dd>
+<dt>Le casque USB vient d’être branché et n’apparaît pas.</dt>
+<dd>Sur l’accueil ou dans <strong>Audio › Périphériques audio…</strong>, cliquez sur <strong>Actualiser</strong>. Choisissez à la fois le micro en entrée et le casque en sortie. Si la liste reste vide, vérifiez que le système voit l’appareil et autorise l’accès au micro.</dd>
+<dt>« Enregistrer un son » est grisé, ou la prise s’est interrompue.</dt>
+<dd>La commande demande une entrée disponible. Si le micro a été retiré pendant la prise, le logiciel ouvre la partie reçue lorsqu’elle contient des échantillons. Vous pouvez la sauvegarder en WAV avant de reconnecter le micro.</dd>
+<dt>La barre du micro reste basse, ou indique « Pleine échelle ».</dt>
+<dd>Vérifiez l’entrée choisie et le gain du microphone. En cas de pleine échelle répétée, réduisez le gain ou éloignez le micro. Pendant l’analyse, « Sommets à pleine échelle » signale des plateaux compatibles avec un écrêtage dans l’extrait.</dd>
+<dt>La lecture est silencieuse ou s’arrête au retrait du casque.</dt>
+<dd>Choisissez une sortie disponible, vérifiez son volume et relancez la lecture. En étude des fréquences, vérifiez aussi la position de l’extrait A–B que vous écoutez.</dd>
+<dt>Le fichier est refusé ou n’est lu qu’en partie.</dt>
+<dd>Vérifiez qu’il contient une piste audio. Un fichier de format inconnu peut être converti en WAV. À l’ouverture, la barre d’état signale une fin illisible, des valeurs remplacées par zéro ou une durée limitée à 30 minutes.</dd>
+<dt>Le signal forme une bande pleine, ou le spectre indique « Extrait trop court ».</dt>
+<dd>Zoomez sur le signal avec la molette pour en voir les oscillations. Pour obtenir un spectre, écartez A et B sur le signal. Un calcul demande au moins huit échantillons.</dd>
+<dt>Deux pics se confondent, ou la référence disparaît.</dt>
+<dd>Pour des pics proches, allongez le segment analysé. Si la taille de FFT est fixée et limite le segment, augmentez-la aussi. Pour une référence masquée, rétablissez les réglages de FFT et de pondération de la <a href="#comparer">comparaison</a>.</dd>
+</dl>
+</section>
+
+<section id="installer">
+<h2>Installer et configurer un poste</h2>
+<p>Les distributions de MeVSono sont publiées sur la <a href="https://github.com/melectronvolt/MevSuite/releases">page des versions de MeVSuite</a>. Une fois installé, le programme ouvre les fichiers, effectue les mesures et affiche cette notice hors connexion.</p>
+<ul>
+  <li><strong>Windows portable.</strong> Décompressez l’archive <code>MeVSono-<i>version</i>-windows-x64.zip</code> et conservez son dossier complet. Lancez <code>mevsono.exe</code>. Pour démarrer avec un fichier audio, utilisez « Ouvrir avec… » dans l’Explorateur.</li>
+  <li><strong>Windows avec installateur.</strong> <code>MeVSono-<i>version</i>-windows-x64-setup.exe</code> installe le logiciel dans <code>Program Files\MeVSuite\MeVSono</code> et ajoute un raccourci au menu Démarrer. La désinstallation se fait dans les paramètres de Windows. Pour un déploiement silencieux, l’installateur et le désinstallateur acceptent les options ci-dessous.</li>
+  <li><strong>Linux.</strong> Installez le paquet <code>.deb</code> ou <code>.rpm</code> correspondant au système, ou rendez le fichier <code>.AppImage</code> exécutable et lancez-le. FFmpeg sert au décodage de formats audio et vidéo supplémentaires.</li>
+</ul>
+<pre><code>MeVSono-<i>version</i>-windows-x64-setup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART
+"C:\Program Files\MeVSuite\MeVSono\unins000.exe" /VERYSILENT /SUPPRESSMSGBOXES /NORESTART</code></pre>
+<h3 id="professeurs">Réglages personnels et réglages de salle</h3>
+<p>Au premier lancement, MeVSono utilise le thème du système et le français ou l’anglais selon la langue du poste (anglais par défaut pour les autres langues). Le fichier personnel <code>mevsono.ini</code> conserve le mode, la langue, le thème, les réglages experts, l’agrandissement, le dernier dossier et la géométrie de la fenêtre. Le choix des périphériques audio vaut pour la séance.</p>
+<table>
+<thead><tr><th scope="col">Système</th><th scope="col">Fichier personnel</th><th scope="col">Réglages de salle</th></tr></thead>
+<tbody><tr><th scope="row">Windows</th><td><code>%APPDATA%\MeVSuite\mevsono.ini</code></td><td><code>mevsono.ini</code> à côté de <code>mevsono.exe</code>.</td></tr>
+<tr><th scope="row">Linux</th><td><code>~/.config/MeVSuite/mevsono.ini</code>, ou le dossier indiqué par <code>XDG_CONFIG_HOME</code> suivi de <code>/MeVSuite/mevsono.ini</code>.</td><td><code>/etc/MeVSuite/mevsono.ini</code> en priorité, sinon à côté de l’exécutable.</td></tr></tbody></table>
+<p>Au démarrage, une valeur valide du fichier de salle a priorité sur le choix personnel correspondant. Vous pouvez ainsi imposer le mode tout en laissant chacun choisir sa langue. Les modifications faites pendant la séance sont enregistrées dans le fichier personnel. Pour démarrer en mode simplifié, en français et en thème clair, utilisez ces lignes dans le fichier de salle.</p>
+<pre><code>mode = simple
+language = fr
+theme = light</code></pre>
+<p><code>language = auto</code> et <code>theme = auto</code> suivent le système. <strong>Aide › À propos de MeVSono…</strong> indique le chemin des fichiers de réglages. La notice, ses captures et les sept sons de TP sont disponibles dans le dossier <code>notice</code> du cache personnel de MeVSono. Le navigateur permet d’imprimer la page.</p>
+</section>
+
+<section id="apropos">
+<h2>Assistance, version et licence</h2>
+<p>En cas de fermeture imprévue, le message indique où a été écrit <code>mevsono.log</code>. Le journal, à côté de <code>mevsono.ini</code>, conserve la dernière erreur. Pour signaler un problème de mesure, précisez le fichier ou la prise, l’intervalle A–B, la voie, le mode et ce qui apparaît à l’écran. Indiquez aussi le système et la version donnée dans <strong>Aide › À propos de MeVSono…</strong> Joignez le journal s’il est disponible.</p>
+<p>MeVSono est un logiciel libre de Rémi MEVAERE, distribué sous licence MIT. La fenêtre <strong>À propos de MeVSono…</strong> présente les composants, dont Qt, Qt Multimedia et FFmpeg. <strong>À propos de Qt…</strong> donne les conditions de licence de Qt. Sous Windows, les licences des bibliothèques livrées se trouvent dans <code>licences</code>, à côté du programme.</p>
+<p>Pour contacter l’auteur, écrivez à <a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>.</p>
+</section>
+
+<footer>Notice intégrée à MeVSono {{version}}</footer>
+</main>
+</div>
+<script src="navigation.js"></script>
+</body>
+</html>

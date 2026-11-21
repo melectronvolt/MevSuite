@@ -1,0 +1,12 @@
+# Compilation de chaque logiciel (cmake -S <logiciel> -B <logiciel>/build)
+build/
+# Compilations de la suite (build-mevpix…) et intermédiaires d’empaquetage (build-paquet)
+/build-*/
+# Paquets distribuables
+/dist/
+# Python (outils des notices)
+__pycache__/
+*.pyc
+# Fichiers laissés par les essais lancés dans un conteneur
+/.cache/
+/.qttest/

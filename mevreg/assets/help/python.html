@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MeVReg · Atelier et référence Python</title>
+  <link rel="stylesheet" href="help.css">
+</head>
+<body>
+<a class="skip" href="#contenu">Aller à l’atelier</a>
+<header class="mast">
+  <div><a class="brand" href="notice.html">MeVReg</a><span>Notice d’utilisation · {{version}}</span></div>
+  <nav aria-label="Pages de l’aide"><a href="notice.html">Guide d’utilisation</a><a href="python.html" aria-current="page">Python</a></nav>
+</header>
+<div class="layout">
+<nav class="toc" aria-label="Sommaire Python">
+  <h2>Trois expériences</h2>
+  <a href="#scripts">Prendre l’éditeur en main</a>
+  <a href="#ohm">Mesurer une résistance</a>
+  <a href="#repetitions">Exploiter des répétitions</a>
+  <a href="#son">Analyser un son</a>
+  <h2>Du script à la séance</h2>
+  <a href="#grandeurs">Lire, publier, lier</a>
+  <a href="#numpy">Calculer avec NumPy</a>
+  <a href="#pandas">Filtrer un tableau</a>
+  <a href="#matplotlib">Tracer dans une figure</a>
+  <h2>Référence MeVReg</h2>
+  <a href="#mr-grandeurs">Grandeurs et paramètres</a>
+  <a href="#mr-tableurs">Tableurs et CSV</a>
+  <a href="#mr-graphes">Axes et annotations</a>
+  <a href="#mr-modeliser">Modèles et paramètres ajustés</a>
+  <a href="#mr-fenetres">Fenêtres et fichiers</a>
+  <a href="#fenetre">Dessin en unités physiques</a>
+  <a href="#erreurs">Lire un message d’erreur</a>
+</nav>
+<main id="contenu">
+<header class="title">
+  <h1>Un TP avec Python</h1>
+  <p class="lead">Les scripts travaillent sur les grandeurs de la séance. Les trois expériences ci-dessous peuvent aussi être exécutées chacune dans un document vide, avec les mesures fournies dans le code.</p>
+</header>
+
+<section id="scripts">
+  <h2>Exécuter un premier calcul</h2>
+  <ol>
+    <li>Dans <b>Mode › Expert</b>, ouvrez <b>Python › Nouveau script</b>. Tapez <code>print(14.1 / 0.30)</code>.</li>
+    <li>Cliquez sur <b>Exécuter</b> ou appuyez sur <kbd>F5</kbd>. La console affiche <samp>47.0</samp>. <kbd>Ctrl</kbd> + <kbd>Entrée</kbd> exécute également le script actif.</li>
+    <li>Enregistrez la séance en <code>.phy</code> pour conserver le programme. Le bouton <b>Arrêter</b> permet d’interrompre un calcul en cours.</li>
+  </ol>
+  <p>Utilisez un point comme séparateur décimal en Python. <code>print</code> écrit dans la console, <code>mr.creer</code> crée une grandeur de la séance et <code>plt.show()</code> affiche une figure. Les modules fournis fonctionnent hors connexion.</p>
+</section>
+
+<section id="ohm">
+  <h2>1. Retrouver la résistance d’un conducteur</h2>
+  <p>Dans un document vide, créez les mesures et ajustez le modèle U = RI. L’ordre des arguments de <code>mr.modeliser</code> est l’ordonnée puis l’abscisse.</p>
+<pre><code data-essai="ohm">import mevreg as mr
+
+mr.creer("I", [0, 0.10, 0.20, 0.30], "A")
+mr.creer("U", [0, 4.7, 9.4, 14.1], "V")
+mr.tableur("Mesures", ["I", "U"])
+mr.graphe("Caractéristique", "I", "U")
+_ajustement = mr.modeliser("U", "I", modele="lineaire", graphe="Caractéristique")
+print(f"R = {_ajustement.a:.2f} Ω pour {_ajustement.n} points")</code></pre>
+  <p class="result"><strong>Console</strong><samp>R = 47.00 Ω pour 4 points</samp></p>
+  <p>Si vos élèves ont déjà saisi I et U, supprimez les deux lignes <code>mr.creer</code> du programme pour travailler sur leurs propres valeurs. Remplacez ensuite la lecture à 0,20 A par 9,2 V dans le tableur et relancez l’ajustement. La résistance affichée devient 46,71 Ω. <a href="notice.html#commencer">Retrouver la même expérience avec la souris</a>.</p>
+</section>
+
+<section id="repetitions">
+  <h2>2. Estimer une incertitude avec des mesures répétées</h2>
+  <p>Quatre lectures indépendantes d’une même longueur sont disponibles. Une cinquième case est vide. Sélectionnez les valeurs finies avant de compter les répétitions.</p>
+<pre><code data-essai="repetitions">import numpy as np
+
+_longueurs = np.array([9.8, 10.0, np.nan, 10.2, 10.0])
+_mesures = _longueurs[np.isfinite(_longueurs)]
+_effectif = _mesures.size
+_ecart_type = _mesures.std(ddof=1)
+_incertitude = _ecart_type / np.sqrt(_effectif)
+print(f"{_effectif} mesures, moyenne = {_mesures.mean():.2f} cm")
+print(f"s = {_ecart_type:.3f} cm, u = {_incertitude:.3f} cm")</code></pre>
+  <p class="result"><strong>Console</strong><samp>4 mesures, moyenne = 10.00 cm</samp><samp>s = 0.163 cm, u = 0.082 cm</samp></p>
+  <p><code>ddof=1</code> utilise le diviseur <var>n</var> − 1. Il faut au moins deux valeurs finies. Pour appliquer l’exercice à une colonne de la séance, remplacez la création de <code>_longueurs</code> par <code>mr.valeurs("L")</code> après <code>import mevreg as mr</code>. L’unité de <code>L</code> doit correspondre à celle affichée dans la console.</p>
+</section>
+
+<section id="son">
+  <h2>3. Identifier la fréquence et l’amplitude d’un son</h2>
+  <p>La sinusoïde de démonstration a une amplitude de 1 et une fréquence de 440 Hz. Le signal contient 2 000 échantillons régulièrement espacés à 8 000 Hz. Le spectre possède donc une graduation tous les 4 Hz.</p>
+<pre><code data-essai="son">import numpy as np
+import matplotlib.pyplot as plt
+
+_frequence_echantillonnage = 8000
+_temps = np.arange(2000) / _frequence_echantillonnage
+_signal = np.sin(2 * np.pi * 440 * _temps)
+_effectif = _signal.size
+_frequences = np.fft.rfftfreq(_effectif, d=1 / _frequence_echantillonnage)
+_amplitudes = np.abs(np.fft.rfft(_signal)) / _effectif
+
+# Seules les fréquences ayant un partenaire négatif sont doublées.
+_amplitudes[1:(_effectif + 1) // 2] *= 2
+_pic = np.argmax(_amplitudes)
+print(f"{_frequences[_pic]:.0f} Hz, amplitude = {_amplitudes[_pic]:.2f}")
+
+plt.plot(_frequences, _amplitudes)
+plt.xlabel("Fréquence (Hz)")
+plt.ylabel("Amplitude")
+plt.xlim(0, 1000)
+plt.show()</code></pre>
+  <p class="result"><strong>Console</strong><samp>440 Hz, amplitude = 1.00</samp></p>
+  <p>La composante continue, et celle de Nyquist lorsque l’effectif est pair, n’ont chacune qu’un terme. Le calcul respecte ces deux cas. Pour un signal acquis, vérifiez le pas de temps en secondes. Une composante continue importante peut devenir le plus grand pic. Pour rechercher une oscillation, examinez les fréquences strictement positives. <a href="notice.html#analyses">Lire un spectre dans le menu Analyse</a>.</p>
+</section>
+
+<section id="grandeurs">
+  <h2>Relier les variables au document</h2>
+  <ul>
+    <li><b>Entrées.</b> Au début de l’exécution, chaque grandeur existante est disponible sous son nom comme tableau NumPy et chaque paramètre comme un nombre. <code>mr.valeurs("U")</code> relit les valeurs, y compris celles modifiées explicitement pendant le script.</li>
+    <li><b>Résultats.</b> Une nouvelle liste ou un tableau numérique réel à une dimension, non vide et de nom public peut devenir une colonne de résultats. Un nom commençant par <code>_</code> garde le calcul local. Pour choisir le nom et l’unité, écrivez <code>mr.creer("P", U * I, "W")</code>.</li>
+    <li><b>Mesures existantes.</b> Réaffecter <code>U</code> dans Python modifie la variable locale. <code>mr.modifier("U", valeurs=...)</code> écrit dans la grandeur. Pour une relation recalculée par le tableur, utilisez <code>mr.calculer("P", "U*I", "W")</code>.</li>
+    <li><b>Script lié.</b> Cochez <b>lié</b> pour suivre les changements des entrées. Placez les valeurs réglables dans les paramètres du document. Une exécution liée doit pouvoir être répétée avec les mêmes données, par exemple pour recalculer une puissance à partir des colonnes brutes.</li>
+  </ul>
+  <p>À la réouverture du <code>.phy</code>, les mesures retrouvent leurs valeurs enregistrées. <b>Régénérer le dessin</b> exécute tout le script qui a produit le dessin. Si ce script multiplie une colonne existante par deux à chaque exécution, il la multipliera de nouveau. Conservez la mesure initiale et donnez un nom distinct à la grandeur corrigée.</p>
+</section>
+
+<section id="numpy">
+  <h2>Repères de calcul avec NumPy</h2>
+  <p><code>import numpy as np</code> donne accès à NumPy. Une tranche telle que <code>x[2:5]</code> contient les éléments d’indices 2, 3 et 4. Pour une mesure manquante, utilisez <code>np.nan</code>. Un produit, une dérivée et un ajustement portant sur deux séries doivent associer les mêmes essais.</p>
+  <table><thead><tr><th scope="col">Opération de TP</th><th scope="col">Écriture</th></tr></thead><tbody>
+    <tr><th scope="row">Préparer des abscisses</th><td><code>np.linspace(0, 1, 11)</code> inclut les deux bornes. <code>np.arange(100) / 1000</code> représente cent instants à 1 000 Hz.</td></tr>
+    <tr><th scope="row">Sélectionner des couples complets</th><td><code>_valides = np.isfinite(x) &amp; np.isfinite(y)</code>, puis <code>x[_valides]</code> et <code>y[_valides]</code>.</td></tr>
+    <tr><th scope="row">Résumer une série</th><td><code>np.nanmean(x)</code>, <code>np.nanstd(x, ddof=1)</code>, <code>np.nanmedian(x)</code>, <code>np.histogram(x[np.isfinite(x)])</code>.</td></tr>
+    <tr><th scope="row">Dériver ou intégrer</th><td><code>np.gradient(y, x)</code> estime dy/dx. Pour une aire trapézoïdale, <code>np.sum((y[1:] + y[:-1]) * np.diff(x) / 2)</code> conserve le signe donné par l’ordre des abscisses.</td></tr>
+    <tr><th scope="row">Fonctions et unités</th><td><code>np.sin(np.radians(30))</code> vaut 0,5. <code>np.log</code> est le logarithme népérien et <code>np.log10</code> le logarithme décimal. Un carré s’écrit <code>x**2</code>.</td></tr>
+    <tr><th scope="row">Ajuster ou comparer</th><td><code>np.polyfit(x, y, 1)</code> donne pente et ordonnée à l’origine. <code>np.polyval</code> évalue le polynôme et <code>np.allclose</code> compare des résultats à une tolérance près.</td></tr>
+    <tr><th scope="row">Transformée de Fourier réelle</th><td><code>np.fft.rfft(signal)</code>, <code>np.fft.rfftfreq(n, d=pas)</code> et <code>np.abs</code>. Les fréquences sont en Hz lorsque le pas est en secondes.</td></tr>
+  </tbody></table>
+</section>
+
+<section id="pandas">
+  <h2>Filtrer un tableau sans décaler les mesures</h2>
+  <p><code>import pandas as pd</code> charge le module de tableaux fourni avec MeVReg. Un <code>DataFrame</code> regroupe les colonnes d’une acquisition. Une <code>Series</code> associe une valeur à chaque étiquette de ligne. Après un tri, utilisez le même masque pour les deux grandeurs d’un couple.</p>
+<pre><code>import mevreg as mr
+
+_mesures = mr.tableau(["I", "U"])
+_selection = _mesures[_mesures["I"] &gt; 0]
+print(_selection[["I", "U"]])
+print(_selection.attrs["unites"])</code></pre>
+  <p>Avec le TP d’Ohm, il reste les lignes à 0,10, 0,20 et 0,30 A. Les unités associées à <code>I</code> et <code>U</code> sont A et V. L’affichage console abrège les grandes acquisitions. <code>len(_selection)</code> donne l’effectif complet.</p>
+  <table><thead><tr><th scope="col">But</th><th scope="col">Outils du module intégré</th></tr></thead><tbody>
+    <tr><th scope="row">Lire ou construire</th><td><code>pd.read_csv(chemin, sep=";", decimal=",")</code>, <code>pd.DataFrame(...)</code>, <code>pd.Series(...)</code>. Après enregistrement de la séance, un chemin relatif se rapporte au dossier de son fichier .phy.</td></tr>
+    <tr><th scope="row">Inspecter et choisir</th><td><code>df.shape</code>, <code>df.columns</code>, <code>df.head()</code>, <code>df.tail()</code>, <code>df.iloc[0]</code>, <code>df[["I","U"]]</code>, <code>dropna()</code>, <code>sort_values("I")</code>, <code>reset_index(drop=True)</code>.</td></tr>
+    <tr><th scope="row">Calculer et résumer</th><td><code>describe()</code>, <code>count()</code>, <code>mean()</code>, <code>std()</code> (diviseur <var>n</var> − 1), <code>var()</code>, <code>median()</code>, <code>quantile(0.25)</code>, <code>diff()</code>, <code>cumsum()</code>, <code>corr()</code>.</td></tr>
+    <tr><th scope="row">Assembler</th><td><code>pd.concat([a, b])</code> empile deux acquisitions. Les unités déclarées d’une même colonne doivent être compatibles. <code>pd.concat([a, b], axis=1)</code> juxtapose les colonnes en alignant leurs étiquettes de lignes.</td></tr>
+    <tr><th scope="row">Échanger</th><td><code>df.to_numpy()</code>, <code>df.to_dict("list")</code>, <code>df.to_csv(chemin, sep=";", decimal=",", index=False)</code>. <code>mr.importer(df)</code> transfère le tableau dans la séance.</td></tr>
+  </tbody></table>
+</section>
+<section id="matplotlib">
+  <h2>Tracer une figure avec pyplot</h2>
+  <p><code>import matplotlib.pyplot as plt</code> utilise le tracé intégré à MeVReg. Pour une acquisition de position, <code>plt.plot(t, x, "o")</code> place un point par mesure. <code>plt.xlabel("Temps (s)")</code> et <code>plt.ylabel("Position (m)")</code> explicitent les axes. Terminez avec <code>plt.show()</code>.</p>
+  <table><thead><tr><th scope="col">Représentation</th><th scope="col">Appels disponibles</th></tr></thead><tbody>
+    <tr><th scope="row">Points, courbes et dispersion</th><td><code>plot</code>, <code>scatter</code>, <code>errorbar(x, y, xerr=..., yerr=...)</code>, <code>hist</code>, <code>bar</code>. Donnez une demi-longueur positive ou nulle pour chaque barre.</td></tr>
+    <tr><th scope="row">Lire et annoter</th><td><code>xlabel</code>, <code>ylabel</code>, <code>title</code>, <code>grid</code>, <code>legend</code>, <code>axvline</code>, <code>axhline</code>, <code>text</code>, <code>annotate</code>, <code>xlim</code>, <code>ylim</code>.</td></tr>
+    <tr><th scope="row">Comparer des tracés</th><td><code>fig, ax = plt.subplots()</code>, <code>ax.plot(...)</code>, <code>ax.twinx()</code>, <code>plt.semilogx</code>, <code>plt.semilogy</code>, <code>plt.loglog</code>. Un axe logarithmique demande des valeurs positives.</td></tr>
+    <tr><th scope="row">Conserver une figure</th><td><code>plt.savefig("mesures.svg")</code> demande l’export. <code>plt.show()</code> affiche la figure dans la séance. Les formats usuels sont PNG, SVG et PDF.</td></tr>
+  </tbody></table>
+</section>
+
+<section id="mr-grandeurs">
+  <h2>Grandeurs et paramètres avec le module mevreg</h2>
+  <p>Les appels suivants supposent <code>import mevreg as mr</code>. Dans un nom tel que <code>"U"</code>, les guillemets désignent la colonne de la séance.</p>
+  <table><thead><tr><th scope="col">Fonctions</th><th scope="col">Usage</th></tr></thead><tbody>
+    <tr><td><code>mr.grandeurs()</code>, <code>mr.valeurs(nom)</code>, <code>mr.unite(nom)</code></td><td>Lister les noms puis lire les valeurs et l’unité d’une grandeur.</td></tr>
+    <tr><td><code>mr.creer(nom, valeurs, unite="")</code></td><td>Créer ou écrire explicitement une série de valeurs réelles à une dimension.</td></tr>
+    <tr><td><code>mr.calculer(nom, formule, unite="")</code></td><td>Créer une grandeur calculée par le tableur. La chaîne utilise sa syntaxe, par exemple <code>"0.5*m*v^2"</code>.</td></tr>
+    <tr><td><code>mr.modifier(nom, valeurs=None, unite=None, nouveau_nom=None)</code></td><td>Mettre à jour les propriétés fournies. Si vous changez d’unité, fournissez aussi les valeurs converties lorsque cela s’impose.</td></tr>
+    <tr><td><code>mr.renommer(nom, nouveau_nom)</code>, <code>mr.supprimer(nom)</code></td><td>Renommer ou supprimer une grandeur. Les formules qui dépendent d’une grandeur renommée suivent son nouveau nom.</td></tr>
+    <tr><td><code>mr.incertitude(nom, valeur)</code></td><td>Associer une incertitude-type, donnée par un nombre ou par une formule dans l’unité de la grandeur.</td></tr>
+    <tr><td><code>mr.parametres()</code>, <code>mr.parametre(nom, valeur, unite="")</code></td><td>Lire les paramètres de la séance ou en définir un, par exemple <code>mr.parametre("m", 0.200, "kg")</code>.</td></tr>
+  </tbody></table>
+</section>
+<section id="mr-tableurs">
+  <h2>Tableurs et fichiers de mesures</h2>
+  <table><thead><tr><th scope="col">Fonction</th><th scope="col">Effet dans la séance</th></tr></thead><tbody>
+    <tr><td><code>mr.tableau(noms=None)</code></td><td>Renvoie un DataFrame avec les grandeurs choisies et leurs unités dans <code>attrs["unites"]</code>.</td></tr>
+    <tr><td><code>mr.importer(df, tableur=None, remplacer=False)</code></td><td>Importe les colonnes et renvoie leurs noms effectifs. Par défaut, une nouvelle colonne reçoit un nom libre en cas de conflit. <code>remplacer=True</code> autorise la mise à jour d’une mesure de même unité.</td></tr>
+    <tr><td><code>mr.lire_csv(chemin, tableur=None, sep=None, decimal=None)</code></td><td>Lit le CSV, l’importe dans le document et renvoie le DataFrame. Pour examiner un fichier avant l’import, commencez avec <code>pd.read_csv</code>.</td></tr>
+    <tr><td><code>mr.tableur(nom, colonnes)</code></td><td>Crée ou met à jour la fenêtre portant ce nom et choisit l’ordre de ses colonnes.</td></tr>
+    <tr><td><code>mr.exporter_csv(chemin, grandeurs=None, separateur=";", virgule=True)</code></td><td>Écrit les grandeurs indiquées ou toutes les colonnes. Le séparateur et la virgule décimale sont réglables séparément.</td></tr>
+  </tbody></table>
+</section>
+<section id="mr-graphes">
+  <h2>Graphes du document, axes et annotations</h2>
+  <table><thead><tr><th scope="col">Fonctions</th><th scope="col">Usage</th></tr></thead><tbody>
+    <tr><td><code>mr.graphe(nom, x=None, y=None, incertitudes=None)</code></td><td>Crée ou retrouve le graphe. Donner x et y ajoute la courbe y(x). y peut être une liste de grandeurs.</td></tr>
+    <tr><td><code>mr.courbe(graphe, x, y, couleur=None, marqueur=None, trait=None, incertitudes=None, x_bas=None, x_haut=None, y_bas=None, y_haut=None)</code></td><td>Configure le tracé. Par exemple <code>couleur="bleu"</code>, <code>marqueur="rond"</code>, <code>trait="aucun"</code>. Les modes d’incertitude sont <code>"barres"</code>, <code>"deux"</code>, <code>"rectangles"</code> ou <code>"aucune"</code>. Les quatre derniers arguments nomment les grandeurs des barres dissymétriques.</td></tr>
+    <tr><td><code>mr.retirer_courbe(graphe, y)</code>, <code>mr.axes(graphe, xmin=None, xmax=None, ymin=None, ymax=None, titre=None, x_titre=None, y_titre=None)</code></td><td>Retire les courbes de l’ordonnée indiquée ou règle les limites et les titres des axes.</td></tr>
+    <tr><td><code>mr.verticale(graphe, x, texte="", verrou=False)</code>, <code>mr.horizontale(graphe, y, texte="", verrou=False)</code></td><td>Place un repère, par exemple au volume équivalent. <code>verrou=True</code> fixe sa position.</td></tr>
+    <tr><td><code>mr.oblique(graphe, x1, y1, x2, y2, texte="", verrou=False)</code>, <code>mr.texte(graphe, x, y, texte, taille=12, verrou=False)</code></td><td>Trace une droite définie par deux points ou place une légende en coordonnées du graphe.</td></tr>
+    <tr><td><code>mr.effacer_annotations(graphe)</code>, <code>mr.tangentes(graphe, x, y, contact=None, verrou=False)</code>, <code>mr.retirer_tangentes(graphe)</code></td><td>Efface les annotations, construit ou retire les tangentes parallèles d’un dosage. <code>contact</code> fixe l’abscisse du premier contact.</td></tr>
+    <tr><td><code>mr.exporter_graphe(nom, chemin)</code></td><td>Enregistre le graphe dans le format indiqué par l’extension PNG, SVG ou PDF.</td></tr>
+  </tbody></table>
+</section>
+<section id="mr-modeliser">
+  <h2>Ajuster une loi et en lire les paramètres</h2>
+  <p><code>mr.modeliser(y, x, modele="affine", degre=3, plage=None, graphe=None, nom=None)</code> ajuste y en fonction de x et renvoie les résultats. <code>plage=(xmin, xmax)</code> limite les points utilisés. <code>graphe</code> choisit le graphe de destination et <code>nom</code> le libellé du modèle.</p>
+  <table><thead><tr><th scope="col">Famille</th><th scope="col">Valeurs de modele</th></tr></thead><tbody>
+    <tr><th scope="row">Polynômes</th><td><code>"constante"</code>, <code>"lineaire"</code> (passage à l’origine), <code>"affine"</code>, <code>"parabole"</code>, <code>"polynome"</code> avec <code>degre</code>.</td></tr>
+    <tr><th scope="row">Autres lois usuelles</th><td><code>"puissance"</code>, <code>"exponentielle"</code>, <code>"exp_inverse"</code>, <code>"charge"</code>, <code>"decharge"</code>, <code>"ln"</code>, <code>"log"</code>.</td></tr>
+    <tr><th scope="row">Oscillations et modèle personnel</th><td><code>"sinus"</code>, <code>"cosinus"</code>, <code>"sinus_amorti"</code>, <code>"cosinus_amorti"</code> ou une expression comme <code>"a*x^2+b"</code>. Dans cette expression, <code>x</code> désigne l’abscisse.</td></tr>
+  </tbody></table>
+  <p>Si le résultat s’appelle <code>r</code>, <code>r.a</code> ou <code>r["a"]</code> lit le paramètre a, <code>r.incertitudes["a"]</code> son incertitude estimée, et <code>r.n</code> le nombre de points retenus. <code>r.parametres</code>, <code>r.equation</code> et <code>r.r2</code> complètent la lecture. Une incertitude statistique peut être indéterminée, par exemple avec deux points pour deux paramètres. Sa valeur est alors <code>nan</code>.</p>
+</section>
+<section id="mr-fenetres">
+  <h2>Fenêtres, sauvegarde et messages</h2>
+  <table><thead><tr><th scope="col">Fonctions</th><th scope="col">Usage</th></tr></thead><tbody>
+    <tr><td><code>mr.ouvrir(nom)</code>, <code>mr.cacher(nom)</code></td><td>Afficher ou masquer une fenêtre nommée. Parmi les panneaux figurent <code>"Grandeurs"</code>, <code>"Calculs"</code>, <code>"Modélisation"</code> et <code>"Statistiques"</code>. <code>mr.ouvrir("Notice")</code> ouvre l’aide locale.</td></tr>
+    <tr><td><code>mr.fermer(nom)</code></td><td>Supprimer l’élément nommé de la séance. Pour le retrouver dans le menu Fenêtres après l’avoir masqué, utilisez <code>mr.cacher(nom)</code>.</td></tr>
+    <tr><td><code>mr.detacher(nom)</code>, <code>mr.rattacher(nom)</code>, <code>mr.disposition()</code></td><td>Détacher ou rattacher une fenêtre, ou rétablir la disposition par défaut.</td></tr>
+    <tr><td><code>mr.enregistrer(chemin=None)</code>, <code>mr.message(texte)</code></td><td>Demander l’enregistrement du document ou écrire un message dans la barre d’état.</td></tr>
+  </tbody></table>
+</section>
+<section id="fenetre">
+  <h2>Dessiner en coordonnées physiques</h2>
+  <p>Avec <code>import fenetre as fe</code>, un dessin possède un repère et une unité. Pour schématiser un montage en cm, créez par exemple <code>d = fe.Dessin("Montage", xmin=0, xmax=20, ymin=0, ymax=10, unite="cm")</code>. Chaque coordonnée des objets est alors exprimée dans cette unité.</p>
+  <table><thead><tr><th scope="col">Méthodes</th><th scope="col">Ce qu’elles dessinent</th></tr></thead><tbody>
+    <tr><td><code>d.ligne(x1, y1, x2, y2)</code>, <code>d.fleche(x1, y1, x2, y2)</code>, <code>d.point(x, y)</code>, <code>d.texte(x, y, texte)</code></td><td>Segments, vecteurs, points et légendes. La couleur accepte un nom français ou un code comme <code>"#ff0000"</code>.</td></tr>
+    <tr><td><code>d.cercle(x, y, r)</code>, <code>d.rectangle(x, y, largeur, hauteur)</code></td><td>Formes avec contour et remplissage facultatif. <code>d.cercle(5, 5, 2, couleur="bleu")</code> trace un cercle de rayon 2 cm dans le repère de l’exemple.</td></tr>
+    <tr><td><code>d.bandes(profil, ...)</code>, <code>d.radial(profil, rmax=None, ...)</code>, <code>d.carte(expression, ...)</code></td><td>Bandes, anneaux ou carte d’intensité. Les palettes sont <code>"gris"</code>, <code>"laser"</code>, <code>"chaud"</code>, <code>"viridis"</code> et <code>"bleu-rouge"</code>. Avec la palette laser, <code>longueur_onde=633e-9</code> donne la longueur d’onde en mètres.</td></tr>
+    <tr><td><code>d.effacer()</code>, <code>d.montrer()</code>, <code>fe.couleur_longueur_onde(lambda_m)</code></td><td>Vider le dessin, l’afficher ou déterminer la couleur associée à une longueur d’onde fournie en mètres.</td></tr>
+  </tbody></table>
+</section>
+<section id="erreurs">
+  <h2>Comprendre une erreur</h2>
+  <dl class="support">
+    <dt>La console cite une ligne du script.</dt><dd>Cliquez sur le lien pour retrouver la ligne. Vérifiez l’orthographe et les majuscules du nom, puis affichez les valeurs intermédiaires avec <code>print</code>. Un script s’exécute sans saisie interactive par <code>input()</code>.</dd>
+    <dt>Un résultat ne devient pas une colonne.</dt><dd>Affichez <code>_resultat.shape</code> et <code>_resultat.dtype</code>. Choisissez la colonne d’une matrice avec <code>_resultat[:, 0]</code>. Pour une transformée complexe, <code>np.abs</code> donne le module. Spécifiez l’unité en publiant avec <code>mr.creer</code>.</dd>
+    <dt>La sélection de lignes ou les barres d’erreur sont refusées.</dt><dd>Comparez les étiquettes du masque à celles du tableau. Pour les barres d’erreur, vérifiez l’effectif et les unités de chaque série. Les demi-longueurs doivent être positives ou nulles.</dd>
+    <dt>Une méthode utilisée dans un autre environnement est absente.</dt><dd>NumPy est fourni avec l’interpréteur. Les modules de tableaux et de tracé intégrés couvrent les opérations décrites ci-dessus. Pour poursuivre avec d’autres bibliothèques, vous pouvez exporter la séance avec <b>Fichier › Exporter vers Python (Capytale)…</b>.</dd>
+    <dt>Un script reçu demande à s’exécuter à l’ouverture.</dt><dd>Vous pouvez choisir <b>Ne pas lancer</b> et lire son contenu. Les accès aux fichiers s’effectuent avec les droits de votre compte. <a href="notice.html#problemes">Consulter le dépannage de la séance</a>.</dd>
+  </dl>
+</section>
+<footer><a href="notice.html">← Guide d’utilisation</a><a href="#contenu">Retour au début de l’atelier</a></footer>
+</main>
+</div>
+</body>
+</html>

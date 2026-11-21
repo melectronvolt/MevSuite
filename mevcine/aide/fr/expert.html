@@ -1,0 +1,181 @@
+<header class="title">
+<h1>Le mode expert</h1>
+<p>Toutes les fonctions, dans quatre onglets</p>
+</header>
+
+<nav class="rubriques" aria-label="Dans cette page">
+  <ul>
+    <li><a href="#pointage">Pointage</a></li>
+    <li><a href="#suivi">Suivi automatique</a></li>
+    <li><a href="#coordonnees">Coordonnées</a></li>
+    <li><a href="#trajectoires">Trajectoires</a></li>
+    <li><a href="#grapheur">Grapheur</a></li>
+    <li><a href="#calcul">Calcul des dérivées</a></li>
+  </ul>
+</nav>
+
+<p>Le mode expert donne accès à tout : plusieurs objets, suivi automatique, trajectoires, vecteurs vitesse,
+chronophotographie, changement de référentiel, grapheur. On y passe par le menu <em>Mode › Mode expert (toutes
+les fonctions)</em> ; les mesures faites en mode simplifié sont gardées, et le pointage continue. Les quatre
+onglets, dans l'ordre du travail : <strong>Pointage</strong>, <strong>Coordonnées</strong>,
+<strong>Trajectoires</strong>, <strong>Grapheur</strong>. Les trois derniers s'ouvrent une fois le pointage
+démarré.</p>
+
+<h2 id="pointage">Onglet Pointage</h2>
+<figure class="capture">
+  <a href="images/expert-pointage.png" aria-label="Agrandir · Onglet Pointage avec repère, loupe et petit tableau à droite"><img src="images/expert-pointage.png" width="1280" height="800" loading="lazy" alt="Onglet Pointage avec repère, loupe et petit tableau à droite"></a>
+  <figcaption>À droite, le n° désigne l’image. Utilisez la cible de Rec pour la repointer ou la poubelle de Sup. pour retirer ses points.</figcaption>
+</figure>
+
+<h3 id="repere">En haut : le repère, en trois étapes</h3>
+<dl class="faq">
+  <dt>1. Origine — <span class="btn">Placer l'origine</span></dt>
+  <dd>Puis cliquez sur l'image à l'endroit choisi (un second appui sur le bouton, ou <kbd>Échap</kbd>, y
+  renonce). Avant le pointage, l'origine se déplace aussi en la <strong>faisant glisser</strong>. Possible même
+  après le pointage : les mesures sont recalculées.</dd>
+  <dt>2. Axes — quatre petits repères</dt>
+  <dd>Un clic choisit le sens de x et de y ; le repère choisi est entouré. La souris posée sur un bouton dit son
+  sens en mots (« x vers la droite, y vers le haut »).</dd>
+  <dt>3. Échelle — <span class="btn">Définir l'échelle</span></dt>
+  <dd>Tracez l'étalon sur l'image (deux clics, ou un glisser), puis donnez sa longueur et son unité (mm, cm ou m)
+  dans la petite fenêtre. À côté du bouton : « 85 cm pour 353 px », ou « non définie : les mesures sont en
+  pixel ». Le bouton devient ensuite <span class="btn">Refaire l'échelle</span>. Voir
+  <a href="echelle.html">L'échelle</a>.</dd>
+</dl>
+<p>Pendant le choix de l'origine ou de l'étalon, la consigne s'affiche sous ces boutons, en orange, avec
+<span class="btn">Annuler</span>.</p>
+<h3 id="gauche">À gauche : la loupe, les objets, la vidéo</h3>
+<dl class="faq">
+  <dt>Loupe et coordonnées</dt>
+  <dd>L'image grossie autour de la souris, et les coordonnées du point visé, en px et en m.</dd>
+  <dt>Objets à suivre</dt>
+  <dd>Le nombre d'objets (1 à 10), avant de démarrer. Avec plusieurs objets, on pointe l'objet 1, puis
+  l'objet 2… sur chaque image : le titre de la loupe dit lequel est attendu, et chaque objet a sa couleur.</dd>
+  <dt>Suivi automatique</dt>
+  <dd>Cochez-le avant de démarrer pour que MeVCine suive les objets tout seul (ci-dessous).</dd>
+  <dt><span class="btn">Démarrer le pointage</span></dt>
+  <dd>Chaque clic sur l'objet enregistre sa position et affiche l'image suivante. Placez-vous d'abord sur la
+  première image utile. On ne laisse pas de trou : pour reprendre ailleurs, annulez les derniers points.</dd>
+  <dt><span class="btn">Arrêter le pointage</span></dt>
+  <dd>Le pointage est fini : un clic sur l'image ne pointe plus, et l'onglet <em>Coordonnées</em> s'ouvre. Les
+  mesures sont gardées ; ⌖ refait toujours une mesure. <span class="btn">Reprendre le pointage</span> le
+  continue.</dd>
+  <dt>Vidéo</dt>
+  <dd>Le nom de la vidéo, ses dimensions, son nombre d'images, sa durée ; et les <em>Images par seconde</em>,
+  détectées dans la vidéo. Pour un ralenti, indiquez la cadence de prise de vue (par exemple 240). « Cadence
+  variable », en orange, signale des images irrégulièrement espacées (téléphone) : leurs dates réelles sont
+  utilisées, et les <em>Images par seconde</em> ne donnent que la cadence habituelle de la caméra. Voir
+  <a href="video.html#cadence">Cadence variable</a>.</dd>
+  <dt><span class="btn">Tout recommencer</span></dt>
+  <dd>Efface les mesures, l'échelle et le repère ; la vidéo reste ouverte. MeVCine demande confirmation s'il y a
+  des mesures.</dd>
+</dl>
+<p>Sous l'image : ⟲ ⟳ tournent la vidéo d'un quart de tour (avant l'échelle et le pointage) ; le numéro de l'image
+et la glissière ; ↶ ↷ annulent ou rétablissent le dernier point ; <span class="btn">Plein écran</span>
+(<kbd>F11</kbd>), pendant le pointage. La barre d'état, en bas, dit ce qu'il faut faire
+(« Cliquez sur l'objet », « Cliquez sur l'objet 2 »…).</p>
+<p>À droite de la vidéo, le petit tableau affiche les numéros des images pointées. Survolez un numéro pour
+entourer les objets pointés sur cette image. Les points des autres images restent visibles. Cliquez sur la cible ⌖ de Rec pour
+refaire la mesure ou sur la poubelle pour supprimer tous les points de cette image.
+<kbd>Ctrl</kbd>+<kbd>Z</kbd> les restaure ensemble.</p>
+<h3 id="plein-ecran">Pointer en plein écran</h3>
+<p><span class="btn">Plein écran</span> donne tout l'écran à l'image. La loupe et les coordonnées restent
+affichées dans un cadre, en haut de l'image : il passe de l'autre côté quand la souris s'en approche, pour ne
+jamais cacher l'objet. La consigne est sous la loupe ; en bas, le choix de l'image,
+<span class="btn">Quitter le plein écran</span> (<kbd>Échap</kbd>), qui revient à la fenêtre sans arrêter le
+pointage, et <span class="btn">Arrêter le pointage</span>. Le plein écran existe aussi en mode simplifié, à
+l'étape 4 : voir <a href="simplifie.html#plein-ecran">Pointer en plein écran</a>, avec une image.</p>
+
+<h3 id="suivi">Le suivi automatique</h3>
+<ol class="steps">
+  <li>Indiquez le nombre d'objets, cochez <em>Suivi automatique</em>, placez-vous sur la première image utile,
+  puis <span class="btn">Démarrer le pointage</span>.</li>
+  <li><strong>Tracez un cadre</strong> (glisser) autour de chaque objet, sur l'image affichée.
+  Le cadre doit contenir l'objet, bien contrasté, avec peu de fond.</li>
+  <li>MeVCine cherche chaque objet d'image en image et pose les points. Après la dernière image,
+  le pointage s'arrête et l'onglet <em>Coordonnées</em> s'ouvre. Pour continuer à la main avant la fin,
+  cliquez sur <span class="btn">STOP</span>.</li>
+</ol>
+<p>Vérifiez ensuite les points : un point mal placé se refait avec ⌖ (onglet <em>Coordonnées</em>). Le suivi
+marche bien pour un objet net, de couleur franche, sur un fond uni ; il se perd si l'objet tourne, change de
+taille ou passe devant un fond semblable.</p>
+
+<p>MeVCine cherche d’abord autour de la position prévue à partir des dernières images fiables et de leurs dates. Si la recherche locale échoue, il examine le reste de l’image. Il compare la couleur et les détails du motif. Quand deux mobiles se superposent, vérifiez les points signalés avant d’utiliser ces mesures. Une position incertaine ne déplace pas la référence de la recherche suivante.</p>
+<p>Le robot indique un point automatique. <em>Point suivant à vérifier</em> ouvre l’image d’un mobile incertain ou perdu.
+Un clic sur le mobile corrige sa position. Si le point proposé est juste, choisissez <em>Valider le point</em>. Si le mobile a disparu, <em>Confirmer l’absence</em> conserve une donnée manquante et termine sa vérification. Le tableau affiche un tiret pour un mobile perdu.</p>
+
+<figure class="capture">
+  <a href="images/suivi.png" aria-label="Agrandir · Trajectoire suivie automatiquement et robots dans les lignes du petit tableau"><img src="images/suivi.png" width="1280" height="800" loading="lazy" alt="Trajectoire suivie automatiquement et robots dans les lignes du petit tableau"></a>
+  <figcaption>Le robot indique l’origine automatique d’un point. Si MeVCine demande une vérification, ouvrez la ligne concernée, vérifiez l’image et validez ou corrigez la proposition.</figcaption>
+</figure>
+
+<h2 id="coordonnees">Onglet Coordonnées</h2>
+<p>Le tableau prend tout l'onglet : la date <code>t</code> (zéro à la première image pointée) et les positions de chaque
+objet, en mètres après étalonnage ou en pixels avant étalonnage (<code>x1</code>, <code>y1</code>, <code>x2</code>… avec plusieurs objets). Le bouton
+<strong>⌖</strong> d'une ligne refait cette mesure : l'onglet <em>Pointage</em> s'ouvre sur l'image, le point
+est entouré ; cliquez sur l'objet, et vous revenez au tableau.</p>
+<p>Survolez une coordonnée pour entourer son objet dans l’aperçu, ou la date pour entourer tous les objets de
+l’image. La poubelle supprime la ligne entière. Pour supprimer un seul objet, sélectionnez sa coordonnée et
+appuyez sur <kbd>Suppr</kbd>.</p>
+<p>Au-dessus, sur une ligne, <em>Exporter les mesures :</em> <span class="btn">Copier pour Python</span>, <span class="btn">Enregistrer en CSV…</span>, <span class="btn">Enregistrer le
+projet…</span> ; la souris posée sur un bouton dit ce qu'il fait. Voir
+<a href="exports.html">Exporter les mesures</a>.</p>
+
+<figure class="capture">
+  <a href="images/coordonnees.png" aria-label="Agrandir · Tableau des coordonnées du mobile avec dates et boutons de correction"><img src="images/coordonnees.png" width="1280" height="800" loading="lazy" alt="Tableau des coordonnées du mobile avec dates et boutons de correction"></a>
+  <figcaption>La date zéro correspond ici à l’image 9, première image pointée. Survolez une cellule pour retrouver le mobile auquel elle se rapporte.</figcaption>
+</figure>
+
+<h2 id="trajectoires">Onglet Trajectoires</h2>
+<dl class="faq">
+  <dt>Trajectoire</dt>
+  <dd>Les points, le repère et, si vous cochez <em>Montrer les vecteurs vitesse</em>, une flèche par point.
+  Chaque vecteur utilise la position centrale, ses deux voisines et leurs dates. Leur longueur est choisie
+  automatiquement ; pour la régler, tapez le nombre de pixels pour 1 m/s dans <em>Échelle de vitesses</em> (case
+  vide : automatique ; la bulle de la case le rappelle). La légende, en bas à gauche, montre la flèche d'une vitesse ronde. <em>Près de la
+  souris</em> ne dessine que le vecteur du point survolé.</dd>
+  <dt>Chronophotographie</dt>
+  <dd>Les points sur une image de la vidéo (<em>Image n°</em> choisit laquelle), avec l'intervalle Δt entre
+  deux images (« Δt habituel » si la cadence est variable), la date de l'image, et l'étalon en bleu.</dd>
+  <dt>Chronogramme</dt>
+  <dd>Les points seuls, nommés M0, M1, M2…, avec l'étalon, sur le fond des graphiques : blanc en thème clair,
+  sombre en thème sombre. Pour l'imprimer et travailler sur papier, passez d'abord au thème clair (le
+  soleil, en haut à droite).</dd>
+  <dt><span class="btn">Enregistrer</span></dt>
+  <dd>Enregistre le dessin comme image (PNG ou JPEG).</dd>
+  <dt>Changement de référentiel</dt>
+  <dd>Choisissez <em>objet n° 1</em> au lieu de <em>caméra</em> : les points sont tracés dans le référentiel où
+  cet objet est immobile. <span class="btn">Voir la vidéo</span> ouvre la vidéo recadrée pour que l'objet reste
+  fixe, avec un ralenti réglable.</dd>
+</dl>
+
+<p>Dans le référentiel du premier mobile, la position relative du second est la différence de leurs positions sur la même image. Si le mobile de référence disparaît, cette image est écartée du dessin. La vidéo recadrée respecte le temps écoulé entre les images disponibles. Le tableau et les exports conservent les coordonnées de la séance dans le repère de la caméra.</p>
+
+<figure class="capture">
+  <a href="images/trajectoires.png" aria-label="Agrandir · Flèches de vitesse sur la trajectoire de la bille"><img src="images/trajectoires.png" width="1280" height="800" loading="lazy" alt="Flèches de vitesse sur la trajectoire de la bille"></a>
+  <figcaption>Les flèches donnent le sens du mouvement. Utilisez la flèche de légende pour en comparer les longueurs.</figcaption>
+</figure>
+
+<h2 id="grapheur">Onglet Grapheur</h2>
+<p>Dans <em>Tracer</em>, choisissez l’ordonnée, par exemple <code>y</code>. Dans <em>en fonction de</em>, choisissez l’abscisse, par exemple <code>t</code>. Le titre, les graduations et les unités suivent ces deux choix. Les grandeurs disponibles comprennent les positions, les composantes et les normes de la vitesse et de l’accélération.</p>
+<ul>
+  <li><em>Points seuls</em> montre les valeurs disponibles image par image. Survolez une croix pour lire les deux coordonnées et le numéro d’image sous le graphique.</li>
+  <li><em>Points et lignes</em> et <em>Lignes seules</em> relient les images consécutives par une courbe lissée qui passe par tous les points. Suivez le trait avec la souris. Le réticule passe d’une mesure à la suivante. Sous le graphique, lisez les deux coordonnées du point entouré et le numéro de son image.</li>
+  <li>Une image sans valeur laisse une coupure. Zoomez à la molette, glissez pour déplacer la vue et double-cliquez pour tout revoir. <em>Enregistrer</em> produit un PNG avec le titre et les axes.</li>
+</ul>
+<figure class="capture">
+  <a href="images/grapheur.png" aria-label="Agrandir · Courbe de y en fonction de t avec un réticule sur la mesure de l’image 11"><img src="images/grapheur.png" width="1280" height="800" loading="lazy" alt="Courbe de y en fonction de t avec un réticule sur la mesure de l’image 11"></a>
+  <figcaption>Le réticule bleu indique la mesure de l’image 11. Cliquez sur la croix pour retrouver le point dans la vidéo.</figcaption>
+</figure>
+<h3 id="calcul">D’où vient une vitesse ou une accélération ?</h3>
+<p>Tracez <code>vy</code> en fonction de <code>t</code>, puis cliquez sur un point. La fenêtre montre les trois positions et leurs dates. La valeur appartient à l’image centrale. Il faut retrouver le même objet sur les deux images voisines.</p>
+<p>À cadence constante, avec un intervalle Δt et trois ordonnées successives, le calcul donne <strong>v<sub>y</sub> = (y<sub>3</sub> − y<sub>1</sub>) / (2 Δt)</strong> et <strong>a<sub>y</sub> = (y<sub>3</sub> − 2 y<sub>2</sub> + y<sub>1</sub>) / Δt²</strong>. Le même calcul s’applique à <em>x</em>. Une petite erreur de visée se voit particulièrement sur l’accélération.</p>
+<p>À cadence variable, MeVCine ajuste une parabole aux trois positions en utilisant leurs dates réelles. Sa pente et sa dérivée seconde à la date centrale donnent la vitesse et l’accélération. Aux extrémités d’une série ou près d’une position manquante, le graphe laisse une coupure.</p>
+<figure class="capture">
+  <a href="images/calcul-vitesse.png" aria-label="Agrandir · Fenêtre du point central avec l’intervalle de calcul et les trois positions de la bille"><img src="images/calcul-vitesse.png" width="448" height="439" loading="lazy" alt="Fenêtre du point central avec l’intervalle de calcul et les trois positions de la bille"></a>
+  <figcaption>Reprenez les dates et les positions de cette fenêtre pour vérifier le calcul d’une composante.</figcaption>
+</figure>
+
+<h2 id="projets">Enregistrer, reprendre</h2>
+<p><kbd>Ctrl</kbd>+<kbd>S</kbd> conserve les pointages et leurs corrections. Si le pointage était arrêté lors de l’enregistrement, le projet s’ouvre sur les coordonnées. Pour ajouter un point, ouvrez l’onglet <em>Pointage</em> puis choisissez <em>Reprendre le pointage</em>. Une série interrompue entre deux objets reprend au prochain objet attendu.</p>
+<p>Pour transmettre la séance à un autre poste, réunissez le film et le projet. Pour remettre les données à analyser, utilisez un <a href="exports.html#csv">CSV</a>.</p>

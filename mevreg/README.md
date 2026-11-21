@@ -1,0 +1,223 @@
+# MeVReg — traitement de données
+
+Rémi MEVAERE — logiciel libre sous licence MIT.
+
+Pour reprendre le développement, compiler sa première modification ou retrouver le calcul derrière un résultat affiché, commencer par le [guide de maintenance](MAINTENANCE.md).
+
+MeVReg traite des séries de mesures, en C++ 20 avec Qt 6 (Widgets) : tableur de grandeurs à identifiant
+invariable, formules et paramètres à curseur, graphes, modélisation (17 modèles), incertitudes,
+dérivée, intégrale, spectre de Fourier, tangentes parallèles, recherche du maximum de pente, statistiques, Python intégré (NumPy,
+mini-matplotlib, mini-pandas et module `mevreg`), fenêtres de dessin (`fenetre`), import CSV avec
+aperçu, exports PNG, SVG, PDF et CSV, compte rendu du document, export vers Python pour Capytale.
+L'interface est en français. Au premier lancement, le mode **Simplifié** propose quatre étapes,
+**Mesurer**, **Tracer**, **Exploiter** et **Conclure**. Dans **Exploiter**, on choisit la courbe puis le traitement souhaité (modélisation, dérivée, intégrale, tangentes parallèles, maximum de pente ou statistiques). Le menu **Mode → Expert** donne accès aux fenêtres
+d'analyse et à Python. Les deux modes partagent les mêmes mesures, calculs et fichiers `.phy`.
+
+La touche **F1** ou le menu **Aide → Notice d’utilisation…** ouvre le guide hors connexion.
+L’exemple d’introduction part de quatre couples intensité–tension fournis en CSV pour retrouver une résistance
+de 47 Ω, puis étudier l’effet d’une mesure sur les résidus. Le guide couvre aussi les incertitudes,
+les dosages, les spectres, la préparation d’une séance et l’installation. [Notice d’utilisation](assets/help/notice.html)
+
+Le menu d’aide de l’éditeur Python ouvre les exercices sur la résistance, l’incertitude d’une moyenne et le spectre d’un son,
+le dépannage et la référence des bibliothèques de calcul et du module `mevreg`.
+[Atelier et référence Python](assets/help/python.html)
+
+## Interface
+
+MeVReg suit le style commun des logiciels de la MevSuite :
+
+- **Fenêtre** ouverte à sa taille normale (1200 × 700 au premier lancement, ramenée à l'écran),
+  agrandie seulement si l'élève l'avait agrandie ; titre `MeVReg — document`. Écran de démarrage
+  de deux secondes (un clic l'efface).
+- **Page d'accueil** tant qu'aucune fenêtre n'est ouverte : **Nouveau tableur** et **Ouvrir…**
+  (document `.phy` ou fichier de mesures CSV), ou un fichier glissé sur la fenêtre.
+- **Barre d'outils** unique et fixe : les fenêtres de travail (Grandeurs, Tableur, Graphe, Python),
+  avec des icônes dessinées au trait. Ouvrir, enregistrer, annuler et rétablir sont dans les menus.
+  À droite de la barre des menus : le thème (soleil ou lune) puis le drapeau, désactivé : MeVReg
+  n'existe pour l'instant qu'en français.
+- **Fenêtres ancrées** : titres en demi-gras, boutons Détacher et Fermer de la hauteur d'une ligne de
+  texte ; fermer demande s'il faut cacher la fenêtre (menu Fenêtres pour la rouvrir) ou la
+  supprimer (`Ctrl+Z` la rend). Les fenêtres de réglages et de résultats (Grandeurs, Calculs,
+  Modélisation, Statistiques) ont le fond un peu plus sombre des panneaux latéraux de la suite. La
+  Modélisation s'ouvre à part, à côté de la fenêtre principale.
+- **Barre d'état** d'une ligne : pictogramme et message (vert : réussi, orange : à vérifier, rouge :
+  erreur) ; à droite, le document, le titre de l’étude et le nombre de grandeurs, puis les formules en
+  erreur.
+
+## Graphes et barres d'incertitude
+
+Le moteur de tracé (`src/plot/`) dessine avec QPainter, par le même code à l'écran, en PNG (×3), en
+SVG et en PDF (vectoriels) et sur l'imprimante : le rendu est identique partout. Les polices DejaVu
+sont intégrées au programme, pour que les graphes ne dépendent pas des polices du système.
+
+- **Traits nets** : à l'écran et en PNG, les traits fins (axes, graduations, quadrillage, barres
+  d'incertitude) sont alignés sur la grille des pixels, y compris sur les écrans haute densité ;
+  en SVG et en PDF, les coordonnées restent exactes.
+- **Barres d'incertitude** : barres verticales, barres en x et en y, ou rectangles d'incertitude
+  (fond translucide et contour). Les barres sont dessinées sans arrondi, leurs embouts sont
+  centrés au pixel près, et leur épaisseur et la taille des embouts se règlent (embouts
+  proportionnés au marqueur par défaut, 0 pour des barres sans embout).
+- **Lisibilité** : une barre s'arrête au bord d'un marqueur plein au lieu de le traverser ; les
+  marqueurs creux sont remplis de la couleur du fond ; les barres sont dessinées sous les courbes
+  et les marqueurs. Une barre qui sort du graphe est coupée net au bord, sans embout trompeur ; en
+  échelle logarithmique, une borne inférieure négative est prolongée jusqu'au bord.
+- **Légende** : chaque entrée montre le marqueur avec ses barres (ou son rectangle) ; la légende se
+  place dans le coin où elle cache le moins de points.
+- **Réticule** : accroché à un point, il affiche la valeur avec son incertitude, arrondie à la même
+  décimale (`U = (5,042 ± 0,070) V`).
+- **Incertitude créée en un clic** : boîte « Incertitude » (constante ou formule, par exemple
+  `(0.02*abs(U) + 0.01)/sqrt(3)` pour une tolérance « ±(2 % + 1 digit) »), colonne `u_x` placée à
+  droite de `x`, barres affichées aussitôt ; les réglages d'une courbe signalent une incertitude
+  manquante et proposent de la créer.
+
+Le fichier `.phy` enregistre aussi `error_width` et `cap_size` pour chaque courbe.
+
+## Choix techniques
+
+- **Python** utilise CPython en mode isolé et le paquet NumPy pour les calculs numériques.
+  Les modules du logiciel relient les résultats aux mesures et aux graphes. Les versions portables
+  emportent l'interpréteur, sa bibliothèque standard et NumPy. Les scripts tournent dans
+  un fil à part et s'interrompent par le bouton Arrêter. Une liste de nombres réels ou un tableau numérique réel à une dimension d'un
+  script devient une grandeur, du nom de la variable (sans unité ; `grandeur(nom, valeurs, unité)`
+  en donne une avec son unité) ; une grandeur du document changée dans le script ne l'est pas dans le
+  document (un message le dit). En plus :
+  - `pandas` (mini-pandas) : `DataFrame`, `Series`, `read_csv` (séparateurs devinés comme à
+    l'import, unités des en-têtes dans `df.attrs["unites"]`), `to_csv`, `describe`, `mean`, `std`
+    (cases vides ignorées, écart-type corrigé), `dropna`, `sort_values`, `iloc`, `concat`, `plot` ;
+  - `mevreg` (`import mevreg as mr`), une aide pour exploiter tout le logiciel : grandeurs (`creer`,
+    `calculer`, `modifier`, `renommer`, `supprimer`, `incertitude`, `parametre`), `tableau` et
+    `importer` (avec pandas), `lire_csv`, `tableur`, graphes (`graphe`, `courbe`, `axes`,
+    `verticale`, `horizontale`, `oblique`, `texte`, `effacer_annotations`, `tangentes`,
+    `retirer_tangentes`, `retirer_courbe`), `modeliser` (résultat avec
+    incertitudes, modèle tracé sur le graphe), fenêtres (`ouvrir`, `cacher`, `fermer`, `detacher`,
+    `rattacher`, `disposition`), fichiers (`enregistrer`, `exporter_csv`, `exporter_graphe`),
+    `message`. Les lectures sont immédiates ; les changements sont faits à la fin du script, dans
+    l'ordre. Les chemins relatifs sont rapportés au dossier du document.
+  - à la réouverture, le tableur retrouve les valeurs enregistrées. Un script lié reprend
+    son calcul quand ses entrées changent. Le bouton **Régénérer le dessin** exécute le
+    script qui a tracé ce dessin. Pour un document reçu, **Ne pas lancer** permet
+    d’examiner les scripts avant de choisir lesquels exécuter.
+  - l'export Capytale commence par `plt.clf()`.
+- **Graphes** : droites verticales, horizontales et obliques, textes, glissés à la souris (une
+  droite oblique s'incline par ses poignées), sauf s'ils sont verrouillés (cadenas des réglages) ;
+  taille du texte à côté de sa couleur. Incertitudes : une grandeur au choix pour chaque côté
+  (haut, bas, gauche, droite), pour des barres ou des rectangles dissymétriques. Colonnes d'un
+  tableur glissées sur un graphe (par l'en-tête, ou sélectionnées, Ctrl + clic pour plusieurs : la
+  première en abscisse). Modélisation dans une fenêtre à part ; plage des points et étendue de la
+  courbe choisies par des barres glissées sur le graphe ; la courbe du modèle se prolonge sur tout
+  le graphe ; nom du modèle dans la légende. Méthode des tangentes : couleur, verrou, suppression
+  (onglet Modèles des réglages, ou clic droit) ; retirer la courbe la retire. Réglages du graphe
+  jamais écrasés (devant le graphe s'il manque de place), fermés par leur croix.
+- **Tableur** : colonnes réparties sur la largeur (au moins une largeur minimale, puis défilement),
+  élargies à la main, les autres se partageant le reste (double-clic sur la poignée : retour au
+  partage égal). Les numéros de ligne sont centrés. Les mesures se lisent et se saisissent au
+  centre de leur colonne, sous son nom et son unité. Export CSV réglable : séparateur des valeurs,
+  séparateur décimal, en-têtes, codage, avec un aperçu.
+- **Fenêtres** : fenêtres ancrables de Qt. Glissée par sa barre de titre ou par son onglet, une
+  fenêtre ne se place pas là où Qt le devine d'après le pointeur : des repères
+  s'affichent sur la fenêtre survolée (au centre : en onglet ; sur un côté : à côté) et sur les bords
+  de l'espace de travail (sur toute la hauteur ou toute la largeur), avec l'aperçu de la place prise ;
+  Échap annule. Une fenêtre ouverte ensuite s'ajoute sans défaire la disposition choisie. Le bouton
+  Détacher en fait une fenêtre à part, avec le cadre du système (déplacée, agrandie, fermée comme les
+  autres, sous Wayland aussi : le cadre que Qt dessine aux fenêtres ancrables flottantes ne s'y
+  déplace pas) ; son bouton **Rattacher**, ou **Fenêtres → Rattacher les fenêtres détachées**, la
+  remet en place. Fermer la fenêtre d'un tableur, d'un graphe, d'un script ou d'un dessin demande
+  s'il faut le cacher (il reste dans le document, le menu Fenêtres le rouvre) ou le supprimer
+  (« Toujours cacher sans demander », que les préférences rétablissent). Menu Fenêtres : un clic
+  cache une fenêtre affichée ou réaffiche une fenêtre cachée ; la croix d'une ligne la supprime. La
+  disposition est enregistrée dans le `.phy`.
+- **Import CSV** (menu Fichier, fenêtre Grandeurs, tableur, ou fichier glissé sur la fenêtre) : un
+  aperçu montre le fichier ligne par ligne (noms, unités, valeurs, ignorée) et les colonnes qui seront
+  importées, à cocher, à renommer ; séparateur des valeurs, séparateur décimal, lignes des noms et des
+  unités, première ligne de valeurs et lignes vides sont devinés et se corrigent. Une case écrite avec
+  l'autre séparateur décimal n'est pas devinée : elle est signalée en rouge, comme les lignes d'un
+  autre nombre de cases et les noms déjà pris.
+- **Impression** : boîte d'impression du système (Qt Print Support).
+- **Réglages** : `mevreg.ini`, dans le dossier commun à la suite (Linux : `~/.config/MeVSuite/`,
+  Windows : `%APPDATA%\MeVSuite\`) : `theme = auto | light | dark`, `window_width`,
+  `window_height`, `maximized`, `ui_zoom`, `sig_digits`, `dark_plots`, `confirm_close`,
+  `recent`, `trusted_documents`. La virgule décimale n'est pas un réglage : elle suit la langue
+  (français : virgule). Journal des erreurs et des plantages : `mevreg.log`, dans le même dossier.
+- **Thème clair ou sombre** : celui du bureau (`theme = auto`), suivi pendant que le programme tourne
+  (sous Linux, lu auprès du portail du bureau `org.freedesktop.appearance`), tant que le bouton
+  soleil / lune de la barre de menus n'a pas servi. Palette sombre commune à la suite. En thème
+  sombre, les graphes passent sur fond sombre (réglage dans les préférences) ; les exports restent
+  sur fond blanc.
+- **Annuler** : les modifications du code d'un script ne sont pas des étapes d'annulation du
+  document ; l'éditeur a son propre « annuler ».
+- **Graphiques** : Qt Charts n'est pas utilisé (licence GPL, incompatible avec la licence MIT).
+
+## Compilation
+
+Prérequis : CMake ≥ 3.21, un compilateur C++ 20 (GCC ≥ 13 ou Clang ≥ 17), Qt ≥ 6.8 (modules Core,
+Gui, Widgets, Svg, PrintSupport, Concurrent, Test, et DBus sous Linux) et Python ≥ 3.10 avec ses
+fichiers de développement et NumPy importable par cet interpréteur en mode isolé.
+
+| Système          | Paquets                                                                         |
+|------------------|---------------------------------------------------------------------------------|
+| Fedora 45        | `cmake ninja-build gcc-c++ qt6-qtbase-devel qt6-qtsvg-devel python3-devel python3-numpy`      |
+| Ubuntu 26.04     | `cmake ninja-build g++ qt6-base-dev qt6-svg-dev python3-dev python3-numpy`                    |
+| Windows (MSYS2)  | `mingw-w64-ucrt-x86_64-{toolchain,cmake,ninja,qt6-base,qt6-svg,python,python-numpy}`         |
+
+```sh
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+# → build/mevreg  (build/mevreg tp.phy ouvre directement un espace de travail)
+ctest --test-dir build --output-on-failure
+```
+
+Options : `-DMEVREG_APP=OFF` compile seulement le cœur et ses tests (sans la fenêtre ; Qt Widgets
+reste nécessaire, pour Qt Print Support),
+`-DMEVREG_TESTS=OFF` ne compile pas les tests.
+
+Les tests (Qt Test, `tests/`) : `test_core` (formules, document, modélisation, statistiques, FFT,
+dosage, CSV, fichiers `.phy`), `test_python` (interpréteur, NumPy comparé aux résultats de référence
+caractère par caractère, mini-matplotlib, interruption), `test_plot` (graduations, mise en page,
+rendu des barres d'incertitude au pixel près, exports) et `test_app` (fenêtre principale,
+enregistrement et réouverture avec la disposition, annuler, réglages, modélisation, scripts, boîtes
+de dialogue, déplacement des fenêtres). `test_seances` rejoue des TP par les commandes des modes
+simplifié et expert, de la saisie au compte rendu. Il vérifie notamment la loi d’Ohm, un étalonnage,
+la charge d’un condensateur, un mouvement accéléré, un dosage et la fréquence d’un diapason. Avec `MEVREG_SHOTS=dossier`, `test_plot` et `test_app` y
+enregistrent des captures de contrôle.
+
+Pour Windows x64, extraire le ZIP en entier sur une clé USB ou dans un dossier et ouvrir
+`mevreg.exe`. Le sous-dossier `profil` reçoit les réglages et les fichiers de récupération
+si le support est accessible en écriture. L'installateur crée un raccourci dans le menu Démarrer
+et utilise le profil Windows de chaque utilisateur. Les deux distributions fonctionnent hors ligne.
+
+La commande `mevreg --selftest` réalise un TP court avec import CSV, loi d’Ohm, FFT complexe,
+calcul matriciel, réouverture du document et export SVG avec graduations personnalisées.
+`packaging/windows.sh mevreg` construit l’archive et l’installateur dans `dist/` depuis MSYS2 UCRT64.
+
+La CI ([`ci.yml`](../.github/workflows/ci.yml)) compile MeVReg et lance ses tests sous Fedora 45,
+Ubuntu 26.04 et Windows. Les versions distribuables (version portable et installateur pour Windows, AppImage, `.deb`,
+`.rpm`) sont fabriquées par `../packaging/` et publiées dans les
+[Releases](https://github.com/melectronvolt/MevSuite/releases) du dépôt GitHub (voir le `README.md` de la
+racine).
+
+## Organisation du code
+
+- `src/core/` : sans interface. `format` (nombres, unités), `expr` (formules), `document`
+  (grandeurs, paramètres, recalcul), `formules` (ordre des calculs), `numeric`, `series`, `linalg`, `spline`, `fft`, `stats`,
+  `titration`, `fit` (modèles et ajustement), `plotspec` (description des graphes), `workspace`
+  (grandeurs et fenêtres d’une séance), `fichier_seance` (lecture et vérification du fichier `.phy`), `csv`, `pyformule` (traduction en NumPy), `pyexport` (construction du script), `drawing`
+  (fenêtres de dessin).
+- `src/plot/` : `ticks` (graduations), `resolve` (valeurs à tracer, modèles, tangentes),
+  `renderer` (mise en page et dessin, barres d'incertitude), `export` (PNG, SVG, PDF),
+  `report` (documents de plusieurs pages : tableur, script, compte rendu).
+- `src/python/` : `identifiants` (grandeurs lues dans un script lié), `engine` (interpréteur dans son fil, entrées et sorties des scripts), `native`
+  (module `_mevreg` : tableaux, chargement des modules intégrés, ordres et modélisation du module
+  `mevreg`, lecture des CSV de pandas),
+  `figure` (figures de matplotlib) ; les modules Python (`matplotlib`, `pandas`, `mevreg`,
+  `fenetre`) sont dans `python/`.
+- `src/app/` : `store` (état partagé, annuler/rétablir, scripts en cours), `mainwindow` (menus,
+  modes, accueil), `mainwindow_fenetres` (panneaux et disposition), `mainwindow_fichiers` (séances,
+  récupération et CSV), `mainwindow_exports` (images, rapports et impression), `quantitiespanel`, `calculationspanel`,
+  `tableview`, `graphwidget` et `graphsettings` (graphe et ses réglages), `modelingpanel`,
+  `statspanel`, `scriptpanel`, `drawingview`, `dialogs`, `csvimport` (aperçu d'import, export CSV
+  réglable), `docking` (déplacement des fenêtres par
+  repères de dépôt), `scripting` (résultats des scripts),
+  `help` (notice écrite sur le disque et ouverte dans le
+  navigateur), `about`, `theme`, `icons` (icônes dessinées au trait), `widgets`.
+- `assets/` : polices DejaVu, icônes, notice (`help/` contient les pages, leur feuille de style, les captures et les mesures du TP).
+- `platform/` : ressources de l'exécutable Windows, lanceur Linux (`mevreg.desktop`).

@@ -1,0 +1,124 @@
+<header class="title">
+<h1>Simple mode, step by step</h1>
+<p>From the first frame of interest to a table of positions in metres</p>
+</header>
+
+<p>On the left, at the top, the <strong>magnifier</strong> and the coordinates of the point under the cursor;
+below, the <strong>instruction</strong> of the step; at the very bottom, <span class="btn">Previous</span> and
+<span class="btn">Next</span>. In the middle, the video frame, and under it the choice of the frame. On the
+right, from step 4 on, the <strong>table of measurements</strong>. The whole window is described on the
+<a href="index.html#fenetre">Overview</a> page.</p>
+<p>The top bar highlights the current step. The <span class="btn">Next</span> button becomes available once
+you complete the action. You can revisit steps 1 to 3 after marking. If you change the axes or scale,
+MeVCine keeps your marks and recalculates their coordinates.</p>
+
+<h2 id="origine">Step 1: the origin of the axes</h2>
+<p><strong>Click on the frame</strong> where you want the origin O: often the starting position of the object, or
+a point easy to find (the end of a ruler, the ground…). The origin appears in green. To move it, click elsewhere,
+or <strong>drag it</strong>: with the button held down, the mouse carries it along.</p>
+<p>Is the video lying on its side? The <span class="btn">To the left</span> and
+<span class="btn">To the right</span> buttons rotate it by a quarter turn (only before the scale and the
+marking).</p>
+<p class="tip">Use this moment to browse the video with the slider under the frame: find where the motion
+starts and where it ends.</p>
+
+<figure class="capture">
+  <a href="images/origine.png" aria-label="Enlarge · Origin step with the ball and ruler in the video"><img src="images/origine.png" width="1280" height="800" loading="lazy" alt="Origin step with the ball and ruler in the video"></a>
+  <figcaption>The left end of the ruler provides a fixed landmark in this recording.</figcaption>
+</figure>
+
+<h2 id="axes">Step 2: the direction of the axes</h2>
+<p>Choose the directions of <em>x</em> and <em>y</em> by clicking the matching pair of axes. For a throw, try pointing <em>y</em> upwards. The value of <em>y</em> should increase as the ball rises. For a drop, pointing <em>y</em> downwards gives a positive vertical velocity during the fall.</p>
+<p>You can still drag the green origin. Moving it changes the position coordinates. Reversing an axis changes the sign of the corresponding velocity component.</p>
+<figure class="capture">
+  <a href="images/axes.png" aria-label="Enlarge · Four axis directions and the axes overlaid on the video"><img src="images/axes.png" width="1280" height="800" loading="lazy" alt="Four axis directions and the axes overlaid on the video"></a>
+  <figcaption>The green arrows show the directions of increasing coordinates. Moving upwards increases y when the y arrow points upwards.</figcaption>
+</figure>
+
+<h2 id="echelle">Step 3: the scale</h2>
+<ol>
+  <li>Click on <span class="btn">Select the reference</span>. On the frame, click on one end of an object of known
+  length (a ruler, a door, a measured distance), then on the other end. You can also drag from one end to the
+  other. Right-click or <kbd>Esc</kbd>: cancel.</li>
+  <li>Type its <strong>real length</strong>, choose the <strong>unit</strong> in the list (<code>mm</code>,
+  <code>cm</code> or <code>m</code>), then <span class="btn">Confirm</span> (or <kbd>Enter</kbd>). You can also
+  write the unit after the number: <code>85 cm</code>.</li>
+</ol>
+<p>The message “Scale: 85 cm for 353 pixels.” confirms the scale. The reference stays drawn on the frame with its length. Positions
+are then given <strong>in metres</strong>, whatever the unit of the reference. How to choose a good reference, and
+all the allowed ways to write it: <a href="echelle.html">The scale</a>.</p>
+
+<h2 id="pointage">Step 4: marking</h2>
+<ol>
+  <li>With the slider (or the <kbd>←</kbd> <kbd>→</kbd> arrows), go to the <strong>first useful frame</strong>: the
+  one where the motion starts. That will be time t = 0.</li>
+  <li><strong>Click on the object.</strong> The next frame shows up by itself, and the table gains a row. Do it
+  again, frame after frame.</li>
+  <li>Look at the <strong>magnifier</strong>, top left, when you click, and always aim at <strong>the same
+  point</strong> of the object: its centre, or its front edge.</li>
+</ol>
+<ul>
+  <li><span class="btn">Undo the last point</span> (<kbd>Ctrl</kbd>+<kbd>Z</kbd>) erases the last point and goes
+  back to its frame; ↷ (<kbd>Ctrl</kbd>+<kbd>Y</kbd>) brings it back.</li>
+  <li>No need to mark the whole video: stop when the motion is over. However, you cannot skip a frame.</li>
+  <li><strong>Slow-motion video?</strong> Open this section if the video was filmed in slow motion, and enter the
+  capture frame rate (for instance 240 frames per second). See <a href="video.html#ralenti">In slow motion</a>.</li>
+  <li>“Variable frame rate: the real times of the frames are used.”: the video comes from a phone whose frames are
+  not evenly spaced. Nothing to do: MeVCine takes the real time of each frame. See
+  <a href="video.html#cadence">Variable frame rate</a>.</li>
+</ul>
+<p>When your measurements are ready, click <span class="btn">Finish marking</span> to open <em>5. Export</em>.</p>
+
+<figure class="capture">
+  <a href="images/pointage.png" aria-label="Enlarge · Marking step with the ball in the magnifier and measurement columns"><img src="images/pointage.png" width="1280" height="800" loading="lazy" alt="Marking step with the ball in the magnifier and measurement columns"></a>
+  <figcaption>Aim at the same feature on the ball. The frame number lets you find a particular measurement again.</figcaption>
+</figure>
+
+<h3 id="tableau">Checking and correcting measurements while marking</h3>
+<p>In the table to the right of the video, find the row by its time <code>t</code> in seconds. Read <code>x</code> and <code>y</code> in the units shown in the header. Hover over the row to see the frame number in the preview. At a constant 25 frames/s, successive frames are 0.040 s apart.</p>
+<ul>
+  <li>Hover over a coordinate to circle its object. The other marks stay visible. The arrow keys also move the preview between cells.</li>
+  <li>To mark a frame again, click the target ⌖ in <strong>Redo</strong>, then mark the object in the displayed frame. <kbd>Esc</kbd> cancels the correction.</li>
+  <li>Click the bin in <strong>Del.</strong> to remove the whole row. To remove one object, select its coordinate and press <kbd>Delete</kbd>. <kbd>Ctrl</kbd>+<kbd>Z</kbd> undoes the deletion.</li>
+</ul>
+<figure class="capture">
+  <a href="images/tableau-mesures.png" aria-label="Enlarge the measurement table"><img src="images/tableau-mesures.png" width="250" height="203" loading="lazy" alt="Six measurements in dark mode with their times, x and y in metres, and the Redo and Del. buttons."></a>
+  <figcaption>At 0.120 s, the ball is at x = 0.3178 m and y = 0.3154 m. The small robots identify positions recorded by automatic tracking.</figcaption>
+</figure>
+
+<h3 id="visee">Marking faster with assisted marking</h3>
+<ol>
+  <li>In step 4, turn on <em>Assisted marking</em>. Click a feature you can follow throughout the motion, such as the centre of the ball. This first click provides a reference for that object.</li>
+  <li>Look at the magnifier in the next frame. If the crosshair is on the feature, click the centre or press <kbd>Space</kbd>. This records the measurement and moves to the next frame or object.</li>
+  <li><strong>If the feature is off-centre, click its actual position</strong> in the magnifier or the video. This adds an example of how it looks in that frame. If the object rotates, keep marking the same physical feature.</li>
+</ol>
+<p>MeVCine checks your examples near the last measured position and can place the crosshair between pixels. If it cannot recognise the feature or the examples point to different places, “Feature unclear” asks you to mark it in the video. If an example was misplaced, use <strong>Redo</strong> in its row to correct it.</p>
+<p>Hold <kbd>Shift</kbd> and press an arrow to move the crosshair by one video pixel. Press <kbd>Space</kbd> to keep this correction as a reference. Confirming an untouched crosshair records only the measurement. Each object’s references are available when you reopen the project.</p>
+<figure class="capture">
+  <a href="images/visee.png" aria-label="Enlarge · Target on the ball and latest confirmed assisted mark in the table"><img src="images/visee.png" width="1280" height="800" loading="lazy" alt="Target on the ball and latest confirmed assisted mark in the table"></a>
+  <figcaption>Aim for the centre of the ball in the magnifier on the left. The dashed ring marks an assisted measurement. Hover over its coordinate to see whether you corrected it and it serves as a reference.</figcaption>
+</figure>
+
+<h3 id="plein-ecran">Marking in full screen</h3>
+<p>Click <span class="btn">Full screen</span> below the video or press <kbd>F11</kbd> to enlarge it.
+With assisted marking, the magnifier stays to the left of the video. Click in the magnifier or on the object in the video as you would in the window. When marking freely, the panel changes sides as the pointer approaches to keep the frame clear.</p>
+<ul>
+  <li>At the bottom: the choice of the frame, ↶ ↷ to undo or redo the last point.</li>
+  <li><span class="btn">Leave full screen</span> (<kbd>Esc</kbd> or <kbd>F11</kbd>) goes back to the window;
+  marking goes on.</li>
+  <li><span class="btn">Finish marking</span> leaves full screen and opens <em>5. Export</em>.</li>
+</ul>
+
+<figure class="capture">
+  <a href="images/plein-ecran.png" aria-label="Enlarge · Full-screen marking with the magnifier and bottom controls"><img src="images/plein-ecran.png" width="1280" height="800" loading="lazy" alt="Full-screen marking with the magnifier and bottom controls"></a>
+  <figcaption>During assisted marking the magnifier stays on the left. Press Esc to return to the window.</figcaption>
+</figure>
+
+<h2 id="export">Step 5 · Exporting the measurements</h2>
+<p>Choose <em>Finish marking</em> in step 4. Check the table on the right. Choose <em>Previous</em> to return to marking if a measurement needs correcting.</p>
+<ul>
+  <li><em>Save the project, to continue later…</em> keeps the scale, axes, frame rate and measurements. Take the original video with you as well.</li>
+  <li><em>Copy for Python</em> supplies NumPy arrays. For one object their names are <code>lst_t</code>, <code>lst_x</code> and <code>lst_y</code>.</li>
+  <li><em>Save as CSV…</em> creates columns for a spreadsheet. Read their units in the header row.</li>
+</ul>
+<p>A session saved during marking resumes at step 4 once the axes and scale are ready. A completed automatic run saved in expert mode opens at Export in the guide when those steps are complete. See the <a href="exports.html">export examples</a>.</p>

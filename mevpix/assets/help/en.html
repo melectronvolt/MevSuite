@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVPix — User guide</title>
+<link rel="stylesheet" href="help.css">
+<script src="navigation.js" defer></script>
+</head>
+<body>
+<a class="acces-contenu" href="#contenu">Skip to the guide</a>
+<div class="layout">
+
+<nav class="toc" aria-label="Contents">
+  <p class="brand">MeVPix</p>
+  <p class="version">User guide · version {{version}}</p>
+  <p class="group">Using MeVPix</p>
+  <ol>
+    <li><a href="#presentation">Open an image or a session</a></li>
+    <li><a href="#tp">Two practicals with images</a></li>
+    <li><a href="#fenetre">The window and image zoom</a></li>
+    <li><a href="#etapes">Calibrate and measure</a></li>
+    <li><a href="#profil">Read an intensity profile</a></li>
+    <li><a href="#seances">Save and resume a session</a></li>
+    <li><a href="#exports">Copy and export results</a></li>
+    <li><a href="#raccourcis">Mouse and keyboard</a></li>
+    <li><a href="#problemes">Troubleshooting</a></li>
+  </ol>
+  <p class="group">Installation and settings</p>
+  <ol>
+    <li><a href="#installer">Install MeVPix</a></li>
+    <li><a href="#reglages">Settings</a></li>
+    <li><a href="#apropos">Guide, contact and licence</a></li>
+  </ol>
+  <p class="lang"><a href="fr.html" lang="fr" hreflang="fr">Version française</a></p>
+</nav>
+
+<main id="contenu" tabindex="-1">
+<header class="title">
+  <h1>MeVPix — User guide</h1>
+  <p>Measure lengths and read an intensity profile on an image · version {{version}}</p>
+</header>
+
+<section id="presentation">
+<h2>Open an image or a session</h2>
+<p>For a first class practical, try <a href="#tp">measuring a washer or analysing Young’s fringes</a>.
+To work on your own photo, click
+<span class="btn">Open an image…</span>, press <kbd>Ctrl</kbd>+<kbd>O</kbd> or drop a file onto the window.
+These commands open both images and <code>.mevpix</code> sessions.</p>
+<ul>
+  <li>An <strong>image</strong> opens with the Calibrate tool selected and the real length field empty.
+  You can also go straight to Measure or Intensity profile and work in pixels.</li>
+  <li>A <strong>session</strong> restores the image, tool, calibration, measurements and profile line
+  you saved. The <code>.mevpix</code> file contains everything you need to resume on another computer.</li>
+</ul>
+<details id="formats">
+  <summary>Image formats available on this computer</summary>
+  <p class="formats">{{formats}}</p>
+  <p>This list comes from the image readers installed with Qt. Support for HEIC and HEIF depends
+  on those readers. MeVPix applies the orientation recorded in the photo.</p>
+</details>
+<p>Click any screenshot to open it at its original size.</p>
+<figure>
+  <a href="accueil-en.png"><img src="accueil-en.png" width="1280" height="800" loading="lazy" alt="Welcome screen with the Open an image button in the centre."></a>
+  <figcaption>The welcome screen before a file is opened.</figcaption>
+</figure>
+</section>
+
+<section id="tp">
+<h2>Two practicals with images</h2>
+<p>Both images come with this guide. Save the PNG for your practical, then open it in MeVPix.
+Each pair of students can save their points in a <code>.mevpix</code> file and compare their
+results with those of another pair.</p>
+
+<h3>Measure the diameters of a washer</h3>
+<p><a href="../../exemples/rondelle_diametres.png" download>Download the washer image (PNG)</a></p>
+<ol class="steps">
+  <li>In <strong>Calibrate</strong>, join the centres of the two vertical ticks at the ends of the
+  white scale bar in the lower left. Enter <strong>20</strong>, choose <strong>mm</strong> and
+  confirm. The bar spans about 300 px, giving a scale of about 0.067 mm per pixel.</li>
+  <li>In <strong>Measure</strong>, draw the outer diameter through the centre, then measure the
+  diameter of the hole. Expect about <strong>30 mm</strong> and <strong>12 mm</strong> respectively.
+  A chord that misses the centre gives a smaller value.</li>
+  <li>Repeat in another direction. Compare the results and discuss which edge of the bevel you
+  picked. Use <strong>Copy the table</strong> to collect the class measurements.</li>
+</ol>
+
+<h3>Measure fringe spacing in Young’s double-slit experiment</h3>
+<p><a href="../../exemples/franges_interference.png" download>Download the two exposures of the fringes (PNG)</a></p>
+<ol class="steps">
+  <li>Calibrate using the <strong>10 mm</strong> bar below the reference exposure on the left.
+  Select <strong>Intensity profile</strong> and draw a horizontal line through the centres of the
+  bright spots in that exposure. Hold <kbd>Shift</kbd> to keep the line horizontal.</li>
+  <li>Identify the central maximum. Put A on the second maximum to its left and B on the second
+  to its right. The separation spans <strong>four fringe spacings</strong>. Divide Δx by four.
+  The peaks in the image are about 6.1 mm apart, giving a fringe spacing of about 1.5 mm.</li>
+  <li>Compare this with the theoretical spacing in the focal plane, <em>i</em> = λ<em>f</em>/<em>a</em>.
+  For λ = 632.8 nm, <em>f</em> = 1.000 m and slit separation <em>a</em> = 400 µm, the result is
+  1.58 mm. Save the session before drawing a new profile line across the long exposure on the right.
+  Look for flat-topped peaks and the saturation warning.</li>
+</ol>
+</section>
+
+<section id="fenetre">
+<h2>The window and image zoom</h2>
+<p>Use the toolbar to open a file, select <strong>Calibrate</strong>, <strong>Measure</strong> or
+<strong>Intensity profile</strong>, and read the current scale. The left panel shows the controls
+and results for the selected tool. Its lines appear on the image. Switching tools preserves
+the lines drawn with the other tools.</p>
+<div class="menus">
+<figure>
+  <a href="menu-fichier-en.png"><img src="menu-fichier-en.png" width="258" height="127" loading="lazy" alt="File menu with Open, Save session, Save session as, Annotated image and Quit."></a>
+  <figcaption>File contains the commands for opening files, saving sessions and exporting an image.</figcaption>
+</figure>
+<figure>
+  <a href="menu-aide-en.png"><img src="menu-aide-en.png" width="161" height="75" loading="lazy" alt="Help menu with the guide’s book icon, the MeVPix logo and the Qt information icon."></a>
+  <figcaption>Help opens the guide and information about the software.</figcaption>
+</figure>
+</div>
+<h3 id="precision">Zoom and pan the image</h3>
+<p>The zoom and pan controls sit in the <strong>bottom-right corner of the image</strong>, above the graph
+when it is open. The <strong>+</strong> and <strong>−</strong> magnifiers zoom in and out around the
+centre of the view. <span class="btn">Fit to window</span> centres the whole image.</p>
+<figure>
+  <a href="zoom-en.png"><img src="zoom-en.png" width="277" height="33" loading="lazy" alt="Plus and minus magnifiers, Fit to window, and left, right, up and down arrows."></a>
+  <figcaption>Each click shifts the image by a tenth of the visible width or height.
+  Hold an arrow down to keep moving. In a narrow window the arrows sit below the magnifiers.</figcaption>
+</figure>
+<p>To zoom in on a detail, place the pointer over it and turn the wheel. Pinch to zoom on a trackpad
+that supports the gesture. To pan, drag with the right or middle mouse button. Zooming makes points
+easier to place. Lengths and profiles always use the coordinates of the original photo.</p>
+<p>The status bar shows the result of the last action on the left and the image name, dimensions
+and zoom on the right. The sun or moon and the flag to the right of the menus change the theme and
+language. To enlarge the text and buttons throughout the interface, press <kbd>Ctrl</kbd>+<kbd>+</kbd>.</p>
+</section>
+
+<section id="etapes">
+<h2>Calibrate and measure</h2>
+<p>When taking a photograph in the lab, put a ruler or scale in the same plane as the object
+and photograph that plane head-on. MeVPix applies one scale to the whole photo. A ruler
+closer to the camera or a strongly tilted object will bias the lengths. Choose two widely
+separated marks to reduce the effect of a small error when placing the reference points.</p>
+<ol class="steps">
+  <li>Select <strong>Calibrate</strong>. On the image, drag with the left mouse button from one end
+  of a known length to the other. The reference appears in yellow. Hold <kbd>Shift</kbd> to draw
+  horizontally or vertically.</li>
+  <li>In <strong>Real length</strong>, enter a positive number. A decimal point or comma works.
+  Choose µm, mm, cm or m. Click <strong>Confirm calibration</strong> or press <kbd>Enter</kbd>
+  in the length field. The toolbar shows the length of one pixel and MeVPix switches to <strong>Measure</strong>.</li>
+  <li>Draw the lengths you want to measure. Each turquoise segment gets a number (M1, M2…)
+  and a row in the table. Lengths are in px until you confirm a scale. Confirming a scale
+  also updates measurements you have already drawn. Scroll the table to see measurements beyond the first twelve.</li>
+</ol>
+<p>The calculation uses the ratio of the two lengths in pixels. If 100 px represent 20 mm,
+the scale is 20/100 = 0.20 mm per pixel, so a 75 px line measures 15 mm. To estimate measurement
+uncertainty, consider the reference, point placement and camera geometry. The displayed decimal
+places reflect the rounding used for the calculation.</p>
+<figure>
+  <a href="etalonnage-en.png"><img src="etalonnage-en.png" width="1280" height="800" loading="lazy" alt="Yellow reference over the black bar, with 20 mm entered in the Calibration panel."></a>
+  <figcaption>Before confirming, check both ends of the reference, its length and its unit.</figcaption>
+</figure>
+<p>Start a new line on the photo. If the pointer leaves the photo while you draw, the end of
+the line stops at the edge. If you drag a handle to within one image pixel of the other end
+and release it, the line returns to its starting position.</p>
+<p>To correct a line, select its tool and drag an end handle. During a drag, <kbd>Esc</kbd> restores
+the starting position or cancels the new line. Click the bin on a row to remove its measurement.
+With the keyboard, move to the bin cell and press <kbd>Space</kbd> or <kbd>Enter</kbd>.
+<strong>Clear all</strong> empties the measurements table.</p>
+<figure>
+  <a href="mesure-en.png"><img src="mesure-en.png" width="1280" height="800" loading="lazy" alt="Segment M1 on the image and its length in the measurements table on the left."></a>
+  <figcaption>The length of M1 appears on the segment and in the table.</figcaption>
+</figure>
+<p>After releasing the mouse, <kbd>Ctrl</kbd>+<kbd>Z</kbd> undoes one change at a time,
+including moving a line, confirming a scale, editing a profile or clearing the table. The history
+holds up to 100 changes. Opening a file starts a new history.</p>
+</section>
+
+<section id="profil">
+<h2>Read an intensity profile</h2>
+<p>Select <strong>Intensity profile</strong>. The graph appears below the image. Drag with the left
+mouse button to draw a line. Hold <kbd>Shift</kbd> for a horizontal or vertical line.
+The start of the line sets the origin of the horizontal axis.
+Drawing a new line replaces the old one and places A a quarter of the way along and B three
+quarters of the way along. Click the tool again to return to Measure.</p>
+<p>If an older session opens with overlapping line ends, drag one end at least one image pixel
+away from the other to restore the graph and CSV export.</p>
+
+<h3>Place cursors A and B</h3>
+<p>On the image, drag the orange A or green B marker along the pink line. On the graph, click or
+drag to move the cursor nearest to the pointer along the horizontal axis. To move a specific
+cursor one sample at a time, click <strong>A</strong> or <strong>B</strong> in the panel, then
+press <kbd>←</kbd> or <kbd>→</kbd>. When the graph has keyboard focus, the <kbd>A</kbd> and
+<kbd>B</kbd> keys also select the cursor.</p>
+<p>The panel gives the position <em>x</em> and intensity <em>I</em> for each cursor, and their
+separation <strong>Δx = |x<sub>B</sub> − x<sub>A</sub>|</strong>, in pixels or in the calibrated
+unit. Hover over the graph to read the intensity on the curve at the pointer’s horizontal position.</p>
+
+<figure>
+  <a href="profil-en.png"><img src="profil-en.png" width="1280" height="800" loading="lazy" alt="Pink profile line with cursors A and B, an intensity graph below and the distance Δx in the panel."></a>
+  <figcaption>A and B mark the same positions on the photo and on the graph. The panel reads Δx = 20.2 mm.</figcaption>
+</figure>
+
+<h3>Choose a channel and a band width</h3>
+<p>The vertical coordinate <em>I</em> is a digital level from 0 to 255. Select Red, Green or Blue
+to read that component. <strong>Weighted grey (RGB)</strong> calculates 0.299 R + 0.587 G + 0.114 B
+from the encoded image values. To relate these levels to illuminance or optical power, you need to
+know the camera response and how the picture was processed.</p>
+<p>The <strong>Width</strong>, from 1 to 50 px, sets how many points to average perpendicular to the
+line. For straight fringes, widening the band reduces noise if peaks occur at the same positions
+across its width. Too wide a band mixes neighbouring features. The profile includes both ends and
+about one sample per pixel, using bilinear interpolation. At an edge MeVPix uses the available points
+and reports truncated bands.</p>
+<p>If the decoder supplies more than 8 bits per component, the
+status bar shows the conversion, for instance <strong>16 → 8 bits</strong>. Both the profile and
+the image saved in the session use the converted values. The saturation percentage counts samples
+to which at least one pixel with a value of 254 or 255 in the selected channel contributes.
+For weighted grey, a saturated pixel in any colour channel counts. A sample can therefore be flagged
+even when its mean is below 254. To compare peak heights, choose an exposure that keeps the channel
+of interest below this threshold.</p>
+
+<h3>Examine part of the graph</h3>
+<p>Turn the wheel to zoom in or out on the horizontal axis around the pointer.
+<kbd>Shift</kbd>+wheel pans horizontally. Double-click to restore the full graph and keep A, B
+and Δx in place. When several samples fall in the same screen column, the graph preserves their
+minimum and maximum values.</p>
+</section>
+
+<section id="seances">
+<h2>Save and resume a session</h2>
+<p>When collecting work, ask for the <code>.mevpix</code> file if you want to review students’
+point placement. When distributing a prepared session, have each pair open it and save it under
+their own name first. For work on camera response, also keep the original file at its acquisition bit depth.</p>
+<p>Choose <strong>File › Save session</strong> or press <kbd>Ctrl</kbd>+<kbd>S</kbd>. The first time
+you save work on an image, choose a filename and folder for the <code>.mevpix</code> file. Its name
+appears in the window title. Subsequent saves write to this file. To work on a copy, choose
+<strong>File › Save session as…</strong>. The copy becomes the current session.</p>
+<p>You can keep measuring while the file is being written. If you draw another measurement after
+clicking <strong>Save</strong>, the asterisk stays in the title. Press <kbd>Ctrl</kbd>+<kbd>S</kbd>
+again to include that measurement in the file.</p>
+<p>If another window has saved the same session, choose <strong>Save a copy…</strong> and pick
+a different name to keep both versions. <strong>Cancel</strong> takes you back to your work.
+If a save is already in progress, you can also try again in a moment.</p>
+<p>A session contains the full-resolution working image, the reference line, the length and unit
+you entered, the confirmed scale, the measurements and the selected tool. It also stores the
+profile line, channel, width and positions of A and B. On reopening, the image fits the window
+and the graph shows the entire profile.</p>
+<p>An asterisk in the window title marks unsaved changes. Zooming, panning and switching tools leave
+the saved state intact. If you close the window or open another file with changes pending,
+<strong>Save session</strong> saves your work and continues, <strong>Discard changes</strong>
+continues without saving, and <strong>Cancel</strong> returns to your work. If you cancel the
+save or it fails, the session stays open.</p>
+<figure>
+  <a href="sauvegarde-en.png"><img src="sauvegarde-en.png" width="340" height="101" loading="lazy" alt="Close confirmation with the choices Save session, Discard changes and Cancel."></a>
+  <figcaption>The three choices offered when a session has unsaved changes.</figcaption>
+</figure>
+</section>
+
+<section id="exports">
+<h2>Copy and export results</h2>
+<table>
+  <thead><tr><th>What you want to share</th><th>Output to choose</th></tr></thead>
+  <tbody>
+    <tr><td>Work to resume in the next lesson</td><td>A <a href="#seances">.mevpix session</a> with the photo and editable lines</td></tr>
+    <tr><td>Lengths M1, M2… for a spreadsheet</td><td><a href="#tableau">Copy the table</a></td></tr>
+    <tr><td>Numerical data for analysing the profile</td><td><a href="#csv">Profile as CSV</a></td></tr>
+    <tr><td>A labelled figure for a lab report</td><td><a href="#annotation">Annotated image</a> as a PNG or on the clipboard</td></tr>
+  </tbody>
+</table>
+<div class="note" id="echelle-export">
+  <p><strong>Which scale will be used?</strong> If you change the reference, length or unit after
+  confirming a scale, a ⚠ symbol appears beside it. Before copying the table, exporting a CSV or
+  composing an annotated image, MeVPix shows the confirmed scale and, if the input is valid, the new
+  one. <strong>Confirm new scale</strong> applies it to the session and the output.
+  <strong>Keep confirmed scale</strong> uses the previous scale and leaves the edit pending.
+  <strong>Cancel</strong> stops the operation. If the input is invalid, the confirmed scale is still available.</p>
+</div>
+
+<figure>
+  <a href="echelle-en.png"><img src="echelle-en.png" width="400" height="124" loading="lazy" alt="The confirmed and new pixel scales shown together before export."></a>
+  <figcaption>MeVPix shows the length of one pixel for each scale.</figcaption>
+</figure>
+
+<h3 id="tableau">Paste the measurements table</h3>
+<p>In <strong>Measure</strong>, click <strong>Copy the table</strong>, then paste into a spreadsheet
+or document with <kbd>Ctrl</kbd>+<kbd>V</kbd>. A tab separates the two columns. The first,
+<strong>Measurement</strong>, contains M1, M2… The second gives the <strong>Length</strong> in
+the unit shown in its heading, such as <code>Length (px)</code> or <code>Length (mm)</code>.
+Numbers use a decimal point in English and a decimal comma in French.</p>
+
+<h3 id="csv">Save profile values as CSV</h3>
+<p>In <strong>Intensity profile</strong>, click <strong>Export the profile (CSV)…</strong>. The file
+contains every sample from end to end, at any graph zoom or A–B interval. The first column gives
+the position <code>x</code> in the unit shown in the heading. The second, <code>I</code>, gives the
+intensity to two decimal places.</p>
+<table>
+  <thead><tr><th>MeVPix language</th><th>Suggested name</th><th>Column separator</th><th>Decimal separator</th></tr></thead>
+  <tbody>
+    <tr><td>English</td><td><code>profile.csv</code></td><td>Comma</td><td>Point</td></tr>
+    <tr><td>French</td><td><code>profil.csv</code></td><td>Semicolon</td><td>Comma</td></tr>
+  </tbody>
+</table>
+<p>MeVPix adds <code>.csv</code> if you enter a name without an extension and asks before
+replacing an existing file. You can import the CSV into MeVReg or a spreadsheet. This code reads
+an English export with pandas.</p>
+<pre><code>import pandas as pd
+profile = pd.read_csv("profile.csv")
+profile.plot(x=profile.columns[0], y="I")</code></pre>
+
+<h3 id="annotation">Copy or save an annotated image</h3>
+<p>Choose <strong>File › Annotated image…</strong>. Include all measurements, a single one by
+number, or none. The <strong>Reference</strong> checkbox is available when the drawn reference
+matches the pixel length used for calibration. If a profile line exists, select <strong>Profile
+line and A/B cursors on the image</strong> to overlay it. Independently, <strong>Include graph and
+Δx</strong> adds the full profile below the image, with axes, cursors and a legend giving the channel,
+width and Δx.</p>
+<p>Check the preview, then choose <strong>Copy</strong> for the clipboard or <strong>Save</strong>
+for a PNG. Both outputs use the same composition and preserve the photo’s resolution regardless of
+the on-screen zoom. Both preserve the photo’s colour profile when one is present.
+The suggested name ends in <code>-MeVPix.png</code>. The annotations become part
+of the PNG pixels. Keep the <code>.mevpix</code>
+session to edit the lines later.</p>
+<figure>
+  <a href="annotation-en.png"><img src="annotation-en.png" width="522" height="488" loading="lazy" alt="Export preview with the reference, measurement M1, profile line, cursors and graph included."></a>
+  <figcaption>The graph sits below the photo. Save and Copy both use this composition.</figcaption>
+</figure>
+</section>
+
+<section id="raccourcis">
+<h2>Mouse and keyboard</h2>
+<table>
+  <thead><tr><th>Action</th><th>Control</th></tr></thead>
+  <tbody>
+    <tr><td>Open an image or a session</td><td><kbd>Ctrl</kbd>+<kbd>O</kbd> or drag and drop a file</td></tr>
+    <tr><td>Save the session</td><td><kbd>Ctrl</kbd>+<kbd>S</kbd></td></tr>
+    <tr><td>Save under a new name</td><td>File › Save session as… (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> where shown in the menu)</td></tr>
+    <tr><td>Draw a line or move an end handle</td><td>Drag with the left button. Hold <kbd>Shift</kbd> for a horizontal or vertical line</td></tr>
+    <tr><td>Confirm calibration</td><td><kbd>Enter</kbd> in the length field</td></tr>
+    <tr><td>Cancel the current drag</td><td><kbd>Esc</kbd></td></tr>
+    <tr><td>Undo the last edit</td><td><kbd>Ctrl</kbd>+<kbd>Z</kbd>. While typing in the length field, this undoes text edits</td></tr>
+    <tr><td>Zoom the image or restore the whole view</td><td>+ and − magnifiers or wheel. Fit to window shows the whole image</td></tr>
+    <tr><td>Pan the image</td><td>Click an arrow beside the magnifiers or drag with the right or middle mouse button</td></tr>
+    <tr><td>Move a cursor by one sample</td><td>On the graph, <kbd>A</kbd> or <kbd>B</kbd>, then <kbd>←</kbd> or <kbd>→</kbd></td></tr>
+    <tr><td>Navigate the graph</td><td>Wheel to zoom, <kbd>Shift</kbd>+wheel to pan, double-click to restore the full graph</td></tr>
+    <tr><td>Resize text and buttons</td><td><kbd>Ctrl</kbd>+<kbd>+</kbd> or <kbd>Ctrl</kbd>+<kbd>−</kbd>. <kbd>Ctrl</kbd>+<kbd>0</kbd> restores normal size</td></tr>
+    <tr><td>Open this guide</td><td><kbd>F1</kbd> or Help › User guide…</td></tr>
+  </tbody>
+</table>
+</section>
+
+<section id="problemes">
+<h2>Troubleshooting</h2>
+<dl class="faq">
+  <dt>All my measurements in mm are too large by the same factor.</dt>
+  <dd>Check the unit selected for the reference, then measure a second known length in the same
+  plane. A factor of ten may indicate a mix-up between cm and mm. If the error varies across the
+  photo, check the ruler orientation and camera perspective.</dd>
+  <dt>A fringe has a flat-topped intensity peak.</dt>
+  <dd>Check the saturation message for the selected channel. Try a shorter exposure and repeat
+  the same profile line. Compare the two exposures in the <a href="#tp">fringe practical</a>.</dd>
+  <dt>MeVPix reports an unknown image format.</dt>
+  <dd>Expand the <a href="#formats">list of formats available on this computer</a>. It also appears when
+  you hover over the error message. If the format is missing, open a copy converted to PNG or JPEG.
+  If a file fails to open, your current work stays in place.</dd>
+  <dt>MeVPix reports an incomplete or damaged JPEG.</dt>
+  <dd>Copy the photo from its original device or folder again. Wait for the transfer to finish
+  before opening the copy. Your current measurements stay on screen.</dd>
+  <dt>“Confirm calibration” is greyed out, or lengths are still in px.</dt>
+  <dd>Draw a reference at least one image pixel long. Enter only its positive length in the field
+  and select the unit from the list. Confirm to convert existing measurements.</dd>
+  <dt>I switched tools and can no longer see a measurement or the profile line.</dt>
+  <dd>Return to <strong>Measure</strong> for segments M1, M2… or <strong>Intensity profile</strong>
+  for the profile line. If the graph is empty, draw a line on the image with this tool.</dd>
+  <dt>The wheel zooms the graph when I want to zoom the photo.</dt>
+  <dd>Move the pointer over the image or use the magnifiers in its bottom-right corner.
+  To reset the text size throughout the interface, press <kbd>Ctrl</kbd>+<kbd>0</kbd>.</dd>
+  <dt>The scale appears in orange with a ⚠ symbol.</dt>
+  <dd>The current input differs from the calibration used for measurements. Return to
+  <strong>Calibrate</strong> to check it. You can also <a href="#echelle-export">choose the scale when exporting</a>.</dd>
+  <dt>The whole CSV appears in one column.</dt>
+  <dd>Choose the column separator for the language in use when you exported the file.
+  See the table under <a href="#csv">Save profile values as CSV</a>.</dd>
+  <dt>MeVPix could not save my session.</dt>
+  <dd>The status bar identifies the file. Choose <strong>File › Save session as…</strong> and
+  select a folder where you have write access.</dd>
+</dl>
+</section>
+
+<section id="installer">
+<h2 id="professeurs">Install MeVPix</h2>
+<p>Windows x64 and Linux x86_64 packages are available on the
+<a href="https://github.com/melectronvolt/MevSuite/releases">MevSuite releases page</a>.</p>
+<ul>
+  <li><strong>Windows portable version.</strong> Extract <code>MeVPix-windows-x64.zip</code>
+  and run <code>mevpix.exe</code>. Copy the entire folder to move the program.</li>
+  <li><strong>Windows installer.</strong> <code>MeVPix-windows-x64-setup.exe</code> installs for
+  all users, by default in <code>C:\Program Files\MeVSuite\MeVPix</code>, and registers the
+  <code>.mevpix</code> file association. Find the shortcut in the MeVSuite folder in the Start
+  menu. To uninstall, use Windows Settings.</li>
+  <li><strong>Linux.</strong> Install the <code>.deb</code> package on Ubuntu or the <code>.rpm</code>
+  on Fedora. To run the standalone <code>.AppImage</code>, make it executable and open it. The
+  <code>.deb</code> and <code>.rpm</code> packages register the <code>.mevpix</code> file type with the desktop.</li>
+</ul>
+<h3>Unattended deployment on Windows</h3>
+<p>Run this command with administrator rights from WAPT, a Group Policy or a deployment script.</p>
+<pre><code>MeVPix-windows-x64-setup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART</code></pre>
+<p>This command uninstalls MeVPix from the default location.</p>
+<pre><code>"C:\Program Files\MeVSuite\MeVPix\unins000.exe" /VERYSILENT /SUPPRESSMSGBOXES /NORESTART</code></pre>
+</section>
+
+<section id="reglages">
+<h2>Settings</h2>
+<p>At first launch MeVPix uses the desktop theme and the first supported language in your system
+preferences, falling back to English. The initial unit is mm, the channel is weighted grey and the band
+width is 5 px. The <code>mevpix.ini</code> file keeps preferences between launches.</p>
+<table>
+  <thead><tr><th>System</th><th>Personal settings</th><th>Settings enforced at startup</th></tr></thead>
+  <tbody>
+    <tr><td>Windows</td><td><code>%APPDATA%\MeVSuite\mevpix.ini</code></td><td><code>mevpix.ini</code> next to <code>mevpix.exe</code></td></tr>
+    <tr><td>Linux</td><td><code>$XDG_CONFIG_HOME/MeVSuite/mevpix.ini</code>, normally <code>~/.config/MeVSuite/mevpix.ini</code></td><td><code>/etc/MeVSuite/mevpix.ini</code>, or <code>mevpix.ini</code> next to the executable if that file is absent</td></tr>
+  </tbody>
+</table>
+<p>MeVPix reads personal settings first, then applies the keys from the enforced settings file.
+It saves preference changes in the personal file. <strong>Help › About MeVPix…</strong> shows the
+paths in use. Each line in a settings file takes the form <code>key = value</code>.</p>
+<p>For example, to start each practical in English with a reference in millimetres and a greyscale
+profile averaged across five points, put these lines in the computer’s enforced settings file.</p>
+<pre><code>language = en
+unit = mm
+channel = luminance
+band = 5</code></pre>
+<p>These values initialise new work. Opening a saved session restores its unit, channel and band width.</p>
+<table>
+  <thead><tr><th>Key</th><th>Values</th></tr></thead>
+  <tbody>
+    <tr><td><code>language</code> and <code>theme</code></td><td><code>auto</code>, <code>fr</code>, <code>en</code> for language. <code>auto</code>, <code>light</code>, <code>dark</code> for theme.</td></tr>
+    <tr><td><code>unit</code> and <code>channel</code></td><td><code>um</code>, <code>mm</code>, <code>cm</code>, <code>m</code> for unit. <code>luminance</code>, <code>red</code>, <code>green</code>, <code>blue</code> for channel.</td></tr>
+    <tr><td><code>band</code> and <code>ui_zoom</code></td><td>Band width from 1 to 50 px. Interface scale from <code>0.5</code> to <code>3.0</code>. The window width limits the scale that can be displayed.</td></tr>
+    <tr><td><code>last_dir</code></td><td>Folder suggested by file dialogs.</td></tr>
+    <tr><td><code>window_width</code>, <code>window_height</code> and <code>maximized</code></td><td>Width and height of the window at its normal size. <code>true</code> or <code>false</code> for the maximised state.</td></tr>
+  </tbody>
+</table>
+</section>
+
+<section id="apropos">
+<h2>Guide, contact and licence</h2>
+<p><kbd>F1</kbd> opens the guide in the current interface language in your browser. Both pages, their screenshots
+and the two practical images are bundled with MeVPix and work offline. The program makes these
+files available in <code>mevpix-help</code> in your personal cache. If the cache cannot be used,
+it uses a private temporary folder. The status bar shows the path of the page it opened.</p>
+<p>After a fatal error, the message gives the path to <code>mevpix.log</code> if the log could be
+written. This file sits alongside your personal settings and describes the most recent fatal error.
+When reporting a problem, include the version, operating system and action you took. Attach the log
+if available.</p>
+<p>Contact Rémi MEVAERE at <a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>.
+MeVPix is distributed under the MIT licence. <strong>Help › About MeVPix…</strong> lists its
+components and their licences. <strong>About Qt…</strong> identifies the Qt version and licence.</p>
+</section>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — Filming a motion</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<a class="saut-contenu" href="#contenu">Skip to content</a>
+<div class="layout">
+
+<nav class="toc" aria-label="Contents">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">User guide<!--mevcine-version--></p>
+  <div class="sommaire-large">
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="index.html">1. Overview</a></li>
+    <li><a href="demarrer.html">2. Getting started</a></li>
+    <li><a href="simplifie.html">3. Simple mode</a></li>
+    <li><a href="echelle.html">4. The scale</a></li>
+    <li><a href="expert.html">5. Expert mode</a></li>
+    <li><a href="exports.html">6. Exporting the measurements</a></li>
+    <li><a href="video.html" class="current" aria-current="page">7. Filming a motion</a></li>
+    <li><a href="clavier.html">8. Menus and shortcuts</a></li>
+    <li><a href="faq.html">9. Frequently asked questions</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="professeurs.html">10. In the classroom</a></li>
+    <li><a href="installer.html">11. Installing</a></li>
+    <li><a href="reglages.html">12. Settings</a></li>
+    <li><a href="depannage.html">13. Troubleshooting</a></li>
+  </ol>
+  </div>
+  <details class="sommaire-mobile">
+    <summary>Contents</summary>
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="index.html">1. Overview</a></li>
+    <li><a href="demarrer.html">2. Getting started</a></li>
+    <li><a href="simplifie.html">3. Simple mode</a></li>
+    <li><a href="echelle.html">4. The scale</a></li>
+    <li><a href="expert.html">5. Expert mode</a></li>
+    <li><a href="exports.html">6. Exporting the measurements</a></li>
+    <li><a href="video.html" class="current" aria-current="page">7. Filming a motion</a></li>
+    <li><a href="clavier.html">8. Menus and shortcuts</a></li>
+    <li><a href="faq.html">9. Frequently asked questions</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="professeurs.html">10. In the classroom</a></li>
+    <li><a href="installer.html">11. Installing</a></li>
+    <li><a href="reglages.html">12. Settings</a></li>
+    <li><a href="depannage.html">13. Troubleshooting</a></li>
+  </ol>
+  </details>
+  <p class="lang"><a href="../fr/video.html" lang="fr" hreflang="fr">Français</a></p>
+</nav>
+
+<main id="contenu" tabindex="-1">
+<header class="title">
+<h1>Filming a motion</h1>
+<p>Filming well with a phone, transferring the video, slow motion</p>
+</header>
+
+<h2 id="filmer">Frame the experiment</h2>
+<ol class="steps">
+  <li>Keep the camera still. Frame the entire motion with the optical axis perpendicular to its plane.</li>
+  <li>Place a ruler or two marks a known distance apart in the same plane. Both endpoints should be visible together in at least one frame.</li>
+  <li>Choose a high-contrast feature on the moving object. Light the scene and inspect a few trial frames to check that the feature stays sharp and moves far enough between frames to mark.</li>
+  <li>For fast motion, increase the capture rate if there is enough light. Record the chosen rate so you can check the times during analysis.</li>
+</ol>
+<figure class="capture">
+  <a href="images/bille.png" aria-label="Enlarge · Marking view showing a contrasting ball and a ruler spanning 85 cm"><img src="images/bille.png" width="640" height="480" loading="lazy" alt="Marking view showing a contrasting ball and a ruler spanning 85 cm"></a>
+  <figcaption>The ball and both ends of the ruler fit in the same field of view.</figcaption>
+</figure>
+
+<h2 id="transfert">Transfer the original recording</h2>
+<p>Transfer the original recording by cable or through the school’s file service. Before handing it out, open it from a student account, go to the last frame of interest and note a known distance in the plane of motion.</p>
+<p>If you crop or re-encode the recording, give the copy a different filename. Prepare any student project with the exact file that students will receive. A messaging app may discard slow-motion metadata when recompressing a recording.</p>
+
+<h2 id="telephone">Phone videos</h2>
+<dl class="faq">
+  <dt>In portrait</dt>
+  <dd>MeVCine straightens a video filmed in portrait by itself. If it still appears lying on its side, rotate it:
+  step 1 of simple mode, or the ⟲ ⟳ buttons under the frame in expert mode (before the scale and marking).</dd>
+  <dt id="ralenti">Slow motion</dt>
+  <dd>A video recorded at 240 frames/s may play at 30 frames/s. Times for the experiment depend on the capture rate. MeVCine uses the capture rate when the file supplies it. Otherwise enter the known rate under <em>Slow-motion video?</em> at step 4 or <em>Frames per second</em> in expert mode. Check the interval between two consecutive rows afterwards.</dd>
+  <dt id="cadence">Variable frame rate</dt>
+  <dd>Many phones do not film at a perfectly regular rate: for instance 40 ms, then 44 ms between two frames; or they
+  drop frames, or film more slowly when the light gets dim. MeVCine detects it (“Variable frame rate”) and uses the
+  <strong>real time</strong> of each frame: the intervals in the table are then not all equal, and that is normal.
+  The velocities and accelerations of the grapher take it into account; do the same in your calculations, with the
+  times of the table.</dd>
+  <dt>HDR</dt>
+  <dd>HDR videos (recent iPhones) are converted to ordinary colours: they do not look washed out.</dd>
+</dl>
+
+<p>For footage captured at 240 frames/s and played at 30 frames/s, consecutive frames of the motion are about <strong>4.17 ms</strong> apart. A table interval of 33.3 ms indicates that the playback rate was used. Check the capture rate in the file or in your recording notes.</p>
+
+<h2 id="formats">Formats</h2>
+<p>MeVCine reads the formats of phones, cameras and webcams: MP4, MOV, AVI, MKV, WebM, 3GP, MTS…, in H.264, HEVC
+(H.265), AV1, VP9, ProRes, Motion JPEG. Very large videos (4K) open, but more slowly: for a lab, a 1080p video is
+plenty. A video that MeVCine cannot examine within two minutes (damaged file, USB stick too slow) is declared
+unreadable: copy it to the computer first.</p>
+<nav class="voisins">
+<a class="precedent" href="exports.html"><small>◀ Previous page</small>Exporting the measurements</a>
+<a class="suivant" href="clavier.html"><small>Next page ▶</small>Menus and shortcuts</a>
+</nav>
+<footer>MeVCine · user guide · Rémi MEVAERE · free software, GPL 3 or later</footer>
+</main>
+</div>
+</body>
+</html>

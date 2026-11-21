@@ -1,0 +1,9 @@
+# La Forge Éducation héberge une copie des sources. GitHub Actions assure la CI/CD.
+workflow:
+  rules:
+    - when: never
+
+# GitLab exige une tâche pour que ce fichier soit une configuration valide.
+depot-principal:
+  script:
+    - echo 'https://github.com/melectronvolt/MevSuite/actions'

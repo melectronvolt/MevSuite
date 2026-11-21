@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — Settings</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<a class="saut-contenu" href="#contenu">Skip to content</a>
+<div class="layout">
+
+<nav class="toc" aria-label="Contents">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">User guide<!--mevcine-version--></p>
+  <div class="sommaire-large">
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="index.html">1. Overview</a></li>
+    <li><a href="demarrer.html">2. Getting started</a></li>
+    <li><a href="simplifie.html">3. Simple mode</a></li>
+    <li><a href="echelle.html">4. The scale</a></li>
+    <li><a href="expert.html">5. Expert mode</a></li>
+    <li><a href="exports.html">6. Exporting the measurements</a></li>
+    <li><a href="video.html">7. Filming a motion</a></li>
+    <li><a href="clavier.html">8. Menus and shortcuts</a></li>
+    <li><a href="faq.html">9. Frequently asked questions</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="professeurs.html">10. In the classroom</a></li>
+    <li><a href="installer.html">11. Installing</a></li>
+    <li><a href="reglages.html" class="current" aria-current="page">12. Settings</a></li>
+    <li><a href="depannage.html">13. Troubleshooting</a></li>
+  </ol>
+  </div>
+  <details class="sommaire-mobile">
+    <summary>Contents</summary>
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="index.html">1. Overview</a></li>
+    <li><a href="demarrer.html">2. Getting started</a></li>
+    <li><a href="simplifie.html">3. Simple mode</a></li>
+    <li><a href="echelle.html">4. The scale</a></li>
+    <li><a href="expert.html">5. Expert mode</a></li>
+    <li><a href="exports.html">6. Exporting the measurements</a></li>
+    <li><a href="video.html">7. Filming a motion</a></li>
+    <li><a href="clavier.html">8. Menus and shortcuts</a></li>
+    <li><a href="faq.html">9. Frequently asked questions</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="professeurs.html">10. In the classroom</a></li>
+    <li><a href="installer.html">11. Installing</a></li>
+    <li><a href="reglages.html" class="current" aria-current="page">12. Settings</a></li>
+    <li><a href="depannage.html">13. Troubleshooting</a></li>
+  </ol>
+  </details>
+  <p class="lang"><a href="../fr/reglages.html" lang="fr" hreflang="fr">Français</a></p>
+</nav>
+
+<main id="contenu" tabindex="-1">
+<header class="title">
+<h1>Settings</h1>
+<p>For teachers: the configuration, the folders, the environment variables</p>
+</header>
+
+<p>The flag and sun/moon button at the top right change the display for this account. Open the session project to recover its measurements, scale and capture rate.</p>
+
+<h2 id="retenu">What MeVCine remembers</h2>
+<table>
+  <tr><th>Language</th><td>the flag, at the top right (French or English); without a choice, the system language</td></tr>
+  <tr><th>Theme</th><td>the sun or moon, at the top right; without a choice, the desktop theme</td></tr>
+  <tr><th>Mode</th><td>the last one chosen in the <em>Mode</em> menu; on first launch, the one chosen on the
+  welcome page (the <code>--simple</code> and <code>--expert</code> options enforce it)</td></tr>
+  <tr><th>Unit of the reference</th><td>the last one chosen (mm, cm or m)</td></tr>
+  <tr><th>Window</th><td>its size, and whether it was maximised</td></tr>
+  <tr><th>Enlargement</th><td>the size of the interface texts, chosen with <kbd>Ctrl</kbd>+<kbd>+</kbd> and
+  <kbd>Ctrl</kbd>+<kbd>−</kbd> (from 50 to 300%)</td></tr>
+  <tr><th>Video folder</th><td>the last one used, offered by <em>Open a video…</em></td></tr>
+</table>
+<p>On screen, numbers follow the language (decimal comma in French, point in English). The exports (Python, CSV)
+always use a decimal point, and project files do not depend on the language.</p>
+
+<h2 id="configuration">The configuration file</h2>
+<p>These settings are in <code>mevcine.ini</code>, for each user, in the folder shared by the programs of the
+suite (MeVPix, MeVCine, MeVReg, MeVSono):</p>
+<table>
+  <tr><th>Windows</th><td><code>%APPDATA%\MeVSuite\</code> (usually
+  <code>C:\Users\<i>name</i>\AppData\Roaming\MeVSuite\</code>)</td></tr>
+  <tr><th>Linux</th><td><code>~/.config/MeVSuite/</code></td></tr>
+</table>
+<p>Each session keeps its own backup in this folder. The name starts with <code>mevcine-secours-</code>, followed by the video name and an identifier. Two windows open on the same video keep their own measurements. The recovery menu can also read <code>mevcine-secours.mevcine</code> from earlier versions.</p>
+<p>The error log <code>mevcine.log</code> records the time and cause of internal errors. If your preferences are unreadable, close MeVCine and rename <code>mevcine.ini</code> to keep the original. MeVCine starts with its default settings the next time you open it.</p>
+<p>The settings of the computer are written there in plain text: <code>langue = fr</code> (or <code>en</code>),
+<code>theme = light</code> (or <code>dark</code>; <code>auto</code>, or nothing, follows the desktop),
+<code>mode = simplifie</code> (or <code>expert</code>), <code>agrandissement = 1.2</code>,
+<code>taille_fenetre = (1200,700)</code>, <code>fenetre_maximisee = False</code>. They never go into project
+files.</p>
+
+<figure class="capture">
+  <a href="images/menu-aide.png" aria-label="Enlarge · Help menu with the About MeVCine command"><img src="images/menu-aide.png" width="388" height="129" loading="lazy" alt="Help menu with the About MeVCine command"></a>
+  <figcaption>Open About MeVCine to read the location of mevcine.ini on this computer. The recovery file and log are in the same folder.</figcaption>
+</figure>
+
+<h2 id="variables">Environment variables</h2>
+<table>
+  <tr><th><code>MEVCINE_CONF</code></th><td>a writable configuration folder. Use a separate location for each account or group to keep automatic backups separate</td></tr>
+  <tr><th><code>MEVCINE_DATA</code></th><td>another data folder (the user guide), instead of the
+  <code>data</code> folder next to the program</td></tr>
+</table>
+
+<h2 id="dossiers">Folders</h2>
+<ul>
+  <li><code>ffmpeg/</code> contains the video tools supplied with the portable build and the AppImage. Linux packages can use the programs installed on the workstation.</li>
+  <li><code>data/help/en/index.html</code> opens the English guide directly in a browser. <kbd>F1</kbd> opens the relevant topic from a copy in the account’s cache. The illustrations remain available after MeVCine closes.</li>
+  <li>The open dialog offers the most recently used video folder. On first launch it looks for <em>Videos</em>, then <em>Downloads</em>. When saving, choose a folder the student can write to.</li>
+</ul>
+
+<h2 id="fenetre">The window</h2>
+<p>The window can be resized freely (at least 900 × 600): the frame takes the available room, the control columns
+scroll if the window is short, and the points stay right, since they are kept in video pixels. In simple mode, the
+width of the table of measurements is set by dragging its edge.</p>
+<nav class="voisins">
+<a class="precedent" href="installer.html"><small>◀ Previous page</small>Installing</a>
+<a class="suivant" href="depannage.html"><small>Next page ▶</small>Troubleshooting</a>
+</nav>
+<footer>MeVCine · user guide · Rémi MEVAERE · free software, GPL 3 or later</footer>
+</main>
+</div>
+</body>
+</html>

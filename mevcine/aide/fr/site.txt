@@ -1,0 +1,7 @@
+langue = Français
+titre = Notice d'utilisation
+sommaire = Sommaire
+aller_contenu = Aller au contenu
+precedent = Page précédente
+suivant = Page suivante
+pied = MeVCine · notice du logiciel · Rémi MEVAERE · logiciel libre, licence GPL 3 ou ultérieure

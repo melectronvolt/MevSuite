@@ -1,0 +1,263 @@
+#include "app/icons.h"
+#include "app/about.h"
+#include "app/store.h"
+
+#include "app/theme.h"
+#include "coordonnees_auteur.h"
+
+#include <QApplication>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QDir>
+#include <QFile>
+#include <QFontDatabase>
+#include <QFrame>
+#include <QLabel>
+#include <QMessageBox>
+#include <QMouseEvent>
+#include <QPlainTextEdit>
+#include <QPushButton>
+#include <QScreen>
+#include <QScrollArea>
+#include <QSettings>
+#include <QVBoxLayout>
+
+#include <Python.h>
+
+#include <algorithm>
+#include <cmath>
+
+using namespace Qt::StringLiterals;
+
+namespace {
+
+struct Component {
+    QString name, role, licence, url;
+};
+
+std::vector<Component> composants()
+{
+    const QString py = QString::fromLatin1(Py_GetVersion()).section(u' ', 0, 0);
+    return {
+        {u"GCC (libstdc++)"_s, u"compilateur C++ et bibliothèque standard"_s, u"GPL-3.0+ WITH GCC-exception-3.1"_s, u"https://gcc.gnu.org"_s},
+        {u"Qt %1"_s.arg(QString::fromLatin1(qVersion())), u"interface graphique, dessin, exports SVG et PDF, impression"_s, u"LGPL-3.0-only"_s,
+         u"https://www.qt.io"_s},
+        {u"CPython %1"_s.arg(py), u"interpréteur Python intégré"_s, u"PSF-2.0"_s, u"https://www.python.org"_s},
+        {u"DejaVu Sans, DejaVu Sans Mono"_s, u"polices des graphes et des documents"_s, u"Bitstream Vera / DejaVu"_s, u"https://dejavu-fonts.github.io"_s},
+        {u"MinGW-w64"_s, u"bibliothèques d'exécution C (version Windows)"_s, u"ZPL-2.1, MIT, GPL-3.0+ WITH GCC-exception-3.1"_s, u"https://www.mingw-w64.org"_s},
+        {u"Noto Color Emoji"_s, u"émoji des boutons (version AppImage)"_s, u"OFL-1.1"_s, u"https://github.com/googlefonts/noto-emoji"_s},
+    };
+}
+
+QFont police_en_pixels(QFont font, double px, bool bold = false)
+{
+    font.setPixelSize(static_cast<int>(std::lround(px)));
+    font.setBold(bold);
+    return font;
+}
+
+/// Taille relative à la police de l'interface.
+QFont police_agrandie(QFont font, double factor, bool bold = false)
+{
+    if (font.pointSizeF() > 0.0)
+        font.setPointSizeF(font.pointSizeF() * factor);
+    else
+        font.setPixelSize(std::max(1, static_cast<int>(std::lround(font.pixelSize() * factor))));
+    font.setBold(bold);
+    return font;
+}
+
+QFrame *separateur(QWidget *parent)
+{
+    auto *line = new QFrame(parent);
+    line->setFrameShape(QFrame::HLine);
+    line->setFrameShadow(QFrame::Sunken);
+    return line;
+}
+
+/// Licence des polices DejaVu, intégrées au programme.
+void montre_licence_police(QWidget *parent)
+{
+    QFile f(u":/fonts/LICENSE-DejaVu.txt"_s);
+    if (!f.open(QIODevice::ReadOnly))
+        return;
+    auto *v = new QDialog(parent);
+    v->setAttribute(Qt::WA_DeleteOnClose);
+    v->setWindowTitle(u"Licence des polices DejaVu"_s);
+    v->resize(640, 520);
+    auto *vl = new QVBoxLayout(v);
+    auto *t = new QPlainTextEdit(QString::fromUtf8(f.readAll()), v);
+    t->setReadOnly(true);
+    t->setFont(theme::police_fixe());
+    vl->addWidget(t);
+    auto *b = new QDialogButtonBox(QDialogButtonBox::Close, v);
+    QObject::connect(b, &QDialogButtonBox::rejected, v, &QDialog::reject);
+    vl->addWidget(b);
+    v->open();
+}
+
+} // namespace
+
+namespace about {
+
+QIcon icone()
+{
+    return QIcon(u":/icons/mevreg.svg"_s);
+}
+
+void montre(QWidget *parent)
+{
+    auto *dlg = new QDialog(parent);
+    dlg->setAttribute(Qt::WA_DeleteOnClose);
+    dlg->setWindowTitle(u"À propos de MeVReg"_s);
+    const QRect screen = parent && parent->screen() ? parent->screen()->availableGeometry() : QRect(0, 0, 800, 600);
+
+    auto *content = new QWidget;
+    auto *layout = new QVBoxLayout(content);
+    const auto label = [&](const QString &text) {
+        auto *l = new QLabel(text, content);
+        l->setWordWrap(true);
+        return l;
+    };
+    // toute la largeur, texte centré : une étiquette qui passe à la ligne garde la bonne hauteur
+    const auto centered = [&](QLabel *l) {
+        l->setAlignment(Qt::AlignHCenter);
+        layout->addWidget(l);
+    };
+
+    auto *logo = new QLabel(content);
+    logo->setPixmap(icone().pixmap(QSize(96, 96), dlg->devicePixelRatioF()));
+    logo->setAlignment(Qt::AlignHCenter);
+    layout->addWidget(logo);
+    auto *name = label(NAME);
+    name->setFont(police_en_pixels(dlg->font(), 34, true));
+    centered(name);
+    centered(label(u"Version %1"_s.arg(VERSION)));
+    centered(label(TAGLINE));
+    layout->addSpacing(6);
+    layout->addLayout(mevsuite::coordonnees_auteur(u"Auteur :"_s, u"Contact :"_s, u"Site web :"_s, AUTHOR, EMAIL, content));
+    layout->addSpacing(10);
+    layout->addWidget(separateur(content));
+
+    auto *heading = label(u"Logiciels libres utilisés"_s);
+    heading->setFont(police_agrandie(dlg->font(), 1.4, true));
+    layout->addWidget(heading);
+    layout->addWidget(label(u"MeVReg est écrit en C++ et s'appuie sur les logiciels libres suivants. Merci à leurs auteurs !"_s));
+
+    // composants : nom (lien vers le site), rôle et licence en dessous
+    const QString weak = theme::couleur_attenuee().name();
+    QString rows;
+    for (const Component &c : composants()) {
+        rows += u"<tr><td style=\"white-space:nowrap\"><a href=\"%1\">%2</a></td>"
+                u"<td>%3<br><span style=\"color:%4\">%5</span></td></tr>"_s.arg(c.url, c.name.toHtmlEscaped(), c.role.toHtmlEscaped(), weak,
+                                                                             c.licence.toHtmlEscaped());
+    }
+    auto *table = label(u"<table cellspacing=\"5\">%1</table>"_s.arg(rows));
+    table->setTextFormat(Qt::RichText);
+    table->setOpenExternalLinks(true);
+    layout->addWidget(table);
+
+    auto *note = label(u"MeVReg est un logiciel libre, distribué sous licence MIT, sans aucune garantie ; son code source est publié avec "
+                       "chaque version. Qt est distribué sous licence LGPL version 3 : ses bibliothèques sont liées dynamiquement et peuvent "
+                       "être remplacées par une autre version compatible ; le bouton « À propos de Qt » donne sa version et ses conditions "
+                       "de licence."_s);
+    note->setFont(police_agrandie(dlg->font(), 0.85));
+    layout->addWidget(note);
+
+    layout->addWidget(separateur(content));
+    const QString ini = fichier_reglages();
+    auto *line = label(u"<span style=\"color:%1\">Fichier de réglages :</span> <code>%2</code>"_s.arg(weak, QDir::toNativeSeparators(ini).toHtmlEscaped()));
+    line->setTextFormat(Qt::RichText);
+    line->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    layout->addWidget(line);
+    layout->addStretch();
+
+    auto *scroll = new QScrollArea(dlg);
+    scroll->setWidget(content);
+    scroll->setWidgetResizable(true);
+    scroll->setFrameShape(QFrame::NoFrame);
+    scroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    auto *buttons = new QDialogButtonBox(dlg);
+    auto *aboutQt = buttons->addButton(u"À propos de Qt"_s, QDialogButtonBox::HelpRole);
+    auto *fonts = buttons->addButton(u"Licence des polices…"_s, QDialogButtonBox::ActionRole);
+    aboutQt->setIcon(icons::obtient("info"));
+    fonts->setIcon(icons::obtient("book"));
+    buttons->addButton(u"Fermer"_s, QDialogButtonBox::AcceptRole)->setIcon(icons::obtient("close"));
+    QObject::connect(aboutQt, &QPushButton::clicked, dlg, [dlg] { QMessageBox::aboutQt(dlg); });
+    QObject::connect(fonts, &QPushButton::clicked, dlg, [dlg] { montre_licence_police(dlg); });
+    QObject::connect(buttons, &QDialogButtonBox::accepted, dlg, &QDialog::accept);
+
+    auto *outer = new QVBoxLayout(dlg);
+    outer->addWidget(scroll);
+    outer->addWidget(buttons);
+
+    const int width = std::clamp(screen.width() - 80, 300, 640);
+    // fenêtre très petite : la hauteur reste positive
+    const int height = std::max(screen.height() - 140, 120);
+    const int wanted = layout->totalHeightForWidth(width - 40) + buttons->sizeHint().height() + 40;
+    dlg->resize(width, std::min(height, wanted));
+    dlg->open();
+}
+
+} // namespace about
+
+// --- Écran de démarrage ------------------------------------------------------------------------
+
+namespace {
+constexpr double HOLD = 2.0;
+constexpr double FADE = 0.5;
+} // namespace
+
+Splash::Splash(QWidget *parent)
+    : QWidget(parent)
+    , m_presentation{about::icone(), about::NAME, about::TAGLINE, u"Version %1"_s.arg(about::VERSION), about::AUTHOR}
+{
+    setObjectName(u"splash"_s);
+    setGeometry(parent->rect());
+    parent->installEventFilter(this);
+    qApp->installEventFilter(this);
+    m_clock.start();
+    connect(&m_timer, &QTimer::timeout, this, [this] {
+        if (duree_ecoulee() - m_start >= HOLD + FADE)
+            deleteLater();
+        else
+            update();
+    });
+    m_timer.start(16);
+    raise();
+    QWidget::show();
+}
+
+double Splash::duree_ecoulee() const
+{
+    return double(m_clock.elapsed()) / 1000.0;
+}
+
+void Splash::saute()
+{
+    if (duree_ecoulee() - m_start < HOLD)
+        m_start = duree_ecoulee() - HOLD;
+}
+
+bool Splash::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == parent() && event->type() == QEvent::Resize)
+        setGeometry(parentWidget()->rect());
+    if (event->type() == QEvent::KeyPress)
+        saute();
+    return false;
+}
+
+void Splash::mousePressEvent(QMouseEvent *event)
+{
+    // les clics ne traversent pas l'écran de démarrage
+    saute();
+    event->accept();
+}
+
+void Splash::paintEvent(QPaintEvent *)
+{
+    const double alpha = 1.0 - std::clamp((duree_ecoulee() - m_start - HOLD) / FADE, 0.0, 1.0);
+    m_presentation.dessine(*this, alpha);
+}

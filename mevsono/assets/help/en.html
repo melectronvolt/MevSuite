@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVSono — User guide</title>
+<link rel="stylesheet" href="help.css">
+</head>
+<body>
+<a class="skip" href="#presentation">Skip to the guide</a>
+<div class="layout">
+<nav class="toc" aria-label="Contents">
+  <p class="brand">MeVSono</p>
+  <p class="lang"><a href="fr.html" lang="fr" hreflang="fr">Version française</a></p>
+  <details open id="contents">
+    <summary>Contents</summary>
+    <p class="group">Getting started</p>
+    <ul>
+      <li><a href="#first-measurement">Check a 440 Hz note</a></li>
+      <li><a href="#open">Open a sound</a></li>
+      <li><a href="#record">Record a sound and save it</a></li>
+      <li><a href="#listen">Play the sound or the extract</a></li>
+    </ul>
+    <p class="group">Measurements</p>
+    <ul>
+      <li><a href="#measure">Measure a period with t₁ and t₂</a></li>
+      <li><a href="#extract">Choose the A–B extract</a></li>
+      <li><a href="#spectrum">Read a peak’s frequency and amplitude</a></li>
+      <li><a href="#vertical">Adjust the vertical scale</a></li>
+      <li><a href="#lab-sounds">Choose a sound for a lab</a></li>
+      <li><a href="#compare">Compare two spectra</a></li>
+    </ul>
+    <p class="group">Expert mode</p>
+    <ul>
+      <li><a href="#modes">Choose a mode</a></li>
+      <li><a href="#expert">Fundamental and harmonics</a></li>
+      <li><a href="#settings">Adjust analysis and display settings</a></li>
+      <li><a href="#export">Export measurements as CSV</a></li>
+    </ul>
+    <p class="group">Reference</p>
+    <ul>
+      <li><a href="#shortcuts">Mouse and keyboard</a></li>
+      <li><a href="#problems">Troubleshooting</a></li>
+      <li><a href="#install">Install and configure a workstation</a></li>
+      <li><a href="#about">Support, version and licence</a></li>
+    </ul>
+  </details>
+</nav>
+
+<main>
+<header class="title" id="presentation">
+  <h1>MeVSono — User guide</h1>
+  <p>How long does one oscillation take? Which frequencies make up a note? Use the two tabs to investigate these questions on the same recording.</p>
+  <p class="guide-meta">Version {{version}} · Click a screenshot to view it at its original size.</p>
+</header>
+
+<section id="first-measurement">
+<h2>Check a 440 Hz note</h2>
+<p>Choose <strong>Mode › Simple</strong> and save <a href="../../exemples/sinus_440_Hz.wav" download><code>sinus_440_Hz.wav</code></a> from this link. Open the saved file in MeVSono. You can also record a tuning fork with the microphone.</p>
+<ol class="steps">
+  <li>Open the sound. In <strong>Period measurement</strong>, use the wheel to zoom into a steady passage until you can distinguish about ten cycles.</li>
+  <li>Start at a rising zero crossing. Drag to the rising crossing <em>five complete cycles</em> later. The panel should show about 11.36 ms for the whole interval. One cycle takes 11.36 / 5 ≈ 2.27 ms, giving a frequency of 5 / 0.01136 ≈ 440 Hz.</li>
+  <li>Switch to <strong>Frequency study</strong>. Keep the initial extract for the example file. For a tuning fork, use A and B to select about half a second of steady sound. Click the main peak and compare its frequency with your calculation.</li>
+</ol>
+<p>In the lab report, record the number of cycles, the total time measured, the frequency you calculated and the frequency of the peak. If the two frequencies differ by a factor close to two, recount the cycles between the cursors.</p>
+</section>
+
+<section id="open">
+<h2>Open a sound</h2>
+<p>Choose <strong>Open a sound…</strong>, press <kbd>Ctrl</kbd> + <kbd>O</kbd>, or drop a file onto the window. You can use any of these methods to switch sounds during a session.</p>
+<p>Supported formats include WAV, MP3, OGG, FLAC and M4A. For MP4, MOV and MKV video, MeVSono uses the default audio track, or the first audio track if none is marked as the default. It reads up to the first 30 minutes. Check the status bar for a partial read.</p>
+<figure>
+  <a href="accueil-en.png"><img src="accueil-en.png" width="860" height="560" alt="MeVSono home screen with Open a sound and Record a sound above the two audio device lists." loading="lazy"></a>
+  <figcaption>The input is used for recording and the output for playback. Device names depend on the computer.</figcaption>
+</figure>
+<h3 id="window">Find your way around the measurement window</h3>
+<p>After opening a sound, the left panel shows its name, sampling rate, channels and duration. The two tabs sit below the menus. <strong>Period measurement</strong> shows the signal over time. <strong>Frequency study</strong> also shows the spectrum of the chosen extract. The status bar reports operations and shows the active mode.</p>
+<p>The sun or moon at the top right switches the theme. The flag switches the interface language. <kbd>F1</kbd> opens this guide in that language, including when the computer is offline.</p>
+</section>
+
+<section id="record">
+<h2>Record a sound and save it</h2>
+<ol class="steps">
+  <li>Connect the microphone or USB headset. On the home screen, choose <strong>Input (microphone)</strong> and <strong>Output (headphones or speakers)</strong>. If a device is missing, click <strong>Refresh</strong>. Both lists are also available during a session under <strong>Audio › Audio devices…</strong></li>
+  <li>Click the red circle labelled <strong>Record a sound</strong> on the home screen or in the <strong>File</strong> menu. Recording starts immediately. The dialog shows the microphone, elapsed time and <strong>Microphone peak</strong>. The level is measured in dBFS relative to digital full scale. Levels near 0 dBFS may clip. Make a short test recording. If the peak repeatedly reaches 0 dBFS, turn down the gain on the microphone or in the system settings and record again.</li>
+  <li>Click <strong>Stop</strong> to open the recording in MeVSono. <strong>Cancel</strong> discards the recording in progress. A recording can last up to 30 minutes.</li>
+  <li>To keep the recording, choose the floppy disk labelled <strong>Save recording as WAV…</strong> below its name or in <strong>File</strong>. Choose a folder and filename. The 16-bit PCM WAV file contains the entire recording even if the A–B extract covers only part of it. If you close the window or replace an unsaved recording, MeVSono offers to save it.</li>
+</ol>
+<div class="figures">
+<figure>
+  <a href="prise-en.png"><img src="prise-en.png" width="200" height="155" alt="Recording dialog with microphone peak, elapsed time, Stop and Cancel." loading="lazy"></a>
+  <figcaption>During recording, the readout and bar follow the peak level received from the microphone.</figcaption>
+</figure>
+<figure>
+  <a href="fichier-en.png"><img src="fichier-en.png" width="232" height="102" alt="File menu with a red circle for recording and a floppy disk for saving as WAV." loading="lazy"></a>
+  <figcaption>After stopping, the floppy disk writes the WAV file to disk.</figcaption>
+</figure>
+</div>
+</section>
+
+<section id="listen">
+<h2>Play the sound or the extract</h2>
+<p>The playback controls are below the sound’s name. <strong>Play ▶</strong> starts playback. <strong>Pause ⏸</strong> holds the position of the red playhead on the signal. With <strong>Stop ⏹</strong>, the next playback starts at the beginning of the chosen portion. <kbd>Space</kbd> toggles playback and pause.</p>
+<p>In simple mode, <strong>Period measurement</strong> plays the whole sound. <strong>Frequency study</strong> plays the A–B extract. In expert mode, the list to the left of ▶ lets you choose either portion in either tab.</p>
+</section>
+
+<section id="measure">
+<h2>Measure a period with t₁ and t₂</h2>
+<ol class="steps">
+  <li>Open <strong>Period measurement</strong>. Place the pointer over the part of the signal you want to examine and use the mouse wheel until you can distinguish the repeating pattern.</li>
+  <li>Hold the left mouse button and drag from one point in the pattern to the corresponding point in a later cycle. The turquoise lines <strong>t₁</strong> and <strong>t₂</strong> mark the two times. On release, each cursor snaps to a rising zero crossing if one is nearby.</li>
+  <li>Read the two times and <strong>Δt = t₂ − t₁</strong> in the left panel. To fine-tune a boundary, drag the line or use the <a href="#shortcuts">keyboard controls</a>.</li>
+</ol>
+<figure>
+  <a href="mesure-en.png"><img src="mesure-en.png" width="1280" height="800" alt="Cursors at two rising zero crossings two cycles apart. The panel reads 10.00 ms." loading="lazy"></a>
+  <figcaption>In this signal t₁ is 0.50500 s and t₂ is 0.51500 s. The displayed 10.00 ms interval spans two periods.</figcaption>
+</figure>
+<p>For <em>n</em> complete cycles, <em>T</em> = Δt / <em>n</em>. In the screenshot, one period lasts 5.00 ms, giving a frequency of 1 / 0.00500 s = 200 Hz. A complex waveform can have several rising zero crossings within one cycle. Identify the whole pattern that repeats. The time cursors measure its duration. A and B select the sound used for the spectrum. Each tab keeps its own waveform zoom.</p>
+<p>In expert mode, clear <strong>Snap t₁ and t₂ to zero crossings</strong> to position the cursors freely with the mouse. Once an interval is defined, <strong>Analyse this interval</strong> sets A and B to t₁ and t₂ and opens the frequency tab.</p>
+</section>
+
+<section id="extract">
+<h2>Choose the A–B extract</h2>
+<p>In <strong>Frequency study</strong>, use the upper signal plot to set the extract. Drag with the left mouse button to set <strong>A</strong> at the start (orange) and <strong>B</strong> at the end (green). The interval is shaded. To move one boundary, drag its line or click at the desired time to bring the nearest cursor there.</p>
+<p>For a sustained note, spread A and B over a steady passage. To study the attack, bring them closer together near the start. The panel gives both times, the duration analysed and the sample count. At 48,000 samples per second, an extract lasting 0.100 s contains 4,800 values per channel. The spectrum below is recalculated after each change. <strong>Zoom to the extract</strong> enlarges the interval on the signal plot. <strong>Show all</strong> restores the overview of both the signal and the spectrum.</p>
+</section>
+
+<section id="spectrum">
+<h2>Read a peak’s frequency and amplitude</h2>
+<p>On the waveform, a horizontal coordinate is a time. On the spectrum, it is the frequency of a component in hertz. The vertical axis shows digital amplitude, or level in dBFS when that option is enabled in expert mode. The spectrum describes the A–B extract of the channel being analysed.</p>
+<p>For a periodic sound, the fundamental frequency is 1 / <em>T</em>. Its harmonics are integer multiples of that frequency. The highest peak can correspond to a harmonic above the first. Peaks at 400, 600 and 800 Hz, for example, are consistent with a 200 Hz fundamental even when there is no visible peak at 200 Hz.</p>
+<ol class="steps">
+  <li>Hover near a peak. The first values in the tooltip are the pointer coordinates. Under <strong>Nearest peak</strong> are the values for the detected peak nearest in frequency, marked with a solid dot.</li>
+  <li>Click to keep the reading. When the pointer leaves the plot, the panel still shows the frequency and amplitude under <strong>Selected peak</strong>.</li>
+  <li>With the spectrum in focus, use <kbd>←</kbd> and <kbd>→</kbd> to move between visible peaks. <kbd>Esc</kbd> clears the selection.</li>
+</ol>
+<figure>
+  <a href="spectre-en.png"><img src="spectre-en.png" width="1280" height="800" alt="Spectrum below the A–B signal extract. The tooltip distinguishes the pointer at 445.0 Hz from the peak at 440.0 Hz." loading="lazy"></a>
+  <figcaption>Here the peak reading is 440.0 Hz with an amplitude of 0.400. The crosshair is slightly to its right.</figcaption>
+</figure>
+<p>The displayed <strong>segment resolution</strong>, in hertz, is the reciprocal of the segment duration. A 0.1 s segment gives 10 Hz and a 1 s segment gives 1 Hz. Zoom enlarges the existing curve. To change how well two nearby peaks are resolved, adjust the segment duration and the <a href="#settings">window function</a>.</p>
+</section>
+
+<section id="vertical">
+<h2>Adjust the vertical scale</h2>
+<p>In simple mode, the vertical axis automatically fits the visible signal or spectrum. Zoom horizontally into a quiet passage to see its variations. The tick labels show the new scale. Read the axis labels before comparing the amplitudes of two sounds. The CSV keeps the original digital amplitudes.</p>
+<p>To keep a fixed scale while zooming or panning, choose <strong>Mode › Expert</strong>, then <strong>View › Settings…</strong> Under <strong>Display</strong>, clear <strong>Fit the vertical axis to the visible data</strong>. Select it again to restore automatic scaling.</p>
+<div class="figures paired">
+<figure>
+  <a href="axe-fixe-en.png"><img src="axe-fixe-en.png" width="548" height="449" alt="Almost flat trace on the vertical scale of the whole sound." loading="lazy"></a>
+  <figcaption>Fixed scale. This passage from 0.55 to 0.65 s oscillates around 0.25.</figcaption>
+</figure>
+<figure>
+  <a href="axe-ajuste-en.png"><img src="axe-ajuste-en.png" width="548" height="449" alt="The same signal interval with vertical tick marks near 0.242 and 0.258, revealing the oscillations." loading="lazy"></a>
+  <figcaption>Automatic scaling. The closer tick marks show the amplitude of the oscillations in the same passage.</figcaption>
+</figure>
+</div>
+</section>
+
+<section id="lab-sounds">
+<h2>Choose a sound for a lab</h2>
+<p>Click a filename to save the WAV, then open it in MeVSono. All seven recordings are included with this guide and work offline.</p>
+<table>
+<thead><tr><th scope="col">Files</th><th scope="col">What to try and what to look for</th></tr></thead>
+<tbody>
+<tr><th scope="row"><a href="../../exemples/sinus_440_Hz.wav" download><code>sinus_440_Hz.wav</code></a><br><a href="../../exemples/diapason_440_Hz.wav" download><code>diapason_440_Hz.wav</code></a></th><td>Measure the sine wave, then the steady part of the tuning fork. Look for a peak near 440 Hz and follow the decay of the tuning fork on the waveform.</td></tr>
+<tr><th scope="row"><a href="../../exemples/harmoniques_de_220_Hz.wav" download><code>harmoniques_de_220_Hz.wav</code></a></th><td>Predict the second and third harmonics from the 220 Hz fundamental. Find the peaks near 440 and 660 Hz and check their orders in the expert table.</td></tr>
+<tr><th scope="row"><a href="../../exemples/clarinette_la.wav" download><code>clarinette_la.wav</code></a><br><a href="../../exemples/piano_la.wav" download><code>piano_la.wav</code></a></th><td>Select steady passages of equal duration. Keep the first spectrum, then open the second sound. Identify peaks at similar frequencies and compare their relative heights.</td></tr>
+<tr><th scope="row"><a href="../../exemples/battements_440_et_444_Hz.wav" download><code>battements_440_et_444_Hz.wav</code></a></th><td>Count the envelope maxima over one second. Widen A–B to two seconds and find the two peaks that account for the four beats per second.</td></tr>
+<tr><th scope="row"><a href="../../exemples/balayage_200_a_2000_Hz.wav" download><code>balayage_200_a_2000_Hz.wav</code></a></th><td>Compare two short extracts of equal duration, one early and one late. The peak shifts upwards in frequency. A long extract includes the frequencies swept through during that interval.</td></tr>
+</tbody></table>
+</section>
+
+<section id="compare">
+<h2>Compare two spectra</h2>
+<ol class="steps">
+  <li>In <strong>Frequency study</strong>, choose the first extract. Once its spectrum appears, select <strong>View › Keep this spectrum</strong>.</li>
+  <li>Move A and B or open a second sound. The current spectrum is a solid line and the reference is dashed. The legend in the left panel identifies both sounds and the stored reference interval.</li>
+  <li>To compare relative amplitudes, select <strong>Match peak amplitudes</strong> in <strong>View</strong>. This multiplies all amplitudes on the reference curve by the same factor. Clear the option to restore the original levels.</li>
+</ol>
+<figure>
+  <a href="comparaison-en.png"><img src="comparaison-en.png" width="1280" height="800" alt="Two overlaid spectra with a legend identifying the solid and dashed curves in the left panel." loading="lazy"></a>
+  <figcaption>The current sound is signal-200.wav and the reference is signal-440.wav. Their highest peaks are shown at the same height.</figcaption>
+</figure>
+<p>Keeping another spectrum replaces the reference. <strong>Remove reference spectrum</strong> clears it. If a change of analysis settings hides it, restore the window function and FFT size setting used when you stored it.</p>
+<h3 id="classroom">Comparing passages and sounds</h3>
+<p>To compare the timbre of two notes at the same pitch, use the same window and segment duration. Keep a steady passage from the first note, then choose a steady passage from the second. To study a single note as it develops, keep the attack and move A–B along the sustained sound. Peak positions are in hertz. Their heights also depend on the recording gain.</p>
+<p>Two pure tones of equal amplitude at 440 and 444 Hz produce beats at 4 Hz. Keep the spectrum of a short extract, then move A and B at least two seconds apart using automatic FFT size. The two peaks are now distinct. The combined waveform repeats every 250 ms. Its frequency of 4 Hz is below the 20 Hz search limit, so Expert mode reports <strong>No stable fundamental detected.</strong></p>
+</section>
+
+<section id="modes">
+<h2>Choose a mode</h2>
+<p>Use <strong>Mode › Simple</strong> for measuring periods and reading peaks with a class. Choose <strong>Expert</strong> to check students’ measurements against an automatic estimate or export the values to a spreadsheet. The check mark and the text at the bottom right identify the active mode. Both modes support recording, playback, saving a recording as WAV and comparing spectra.</p>
+<figure>
+  <a href="mode-en.png"><img src="mode-en.png" width="136" height="50" alt="Mode menu with Simple and Expert and a check mark on Expert." loading="lazy"></a>
+  <figcaption>You can change mode with a sound already open.</figcaption>
+</figure>
+<table>
+<thead><tr><th scope="col">When opening a sound</th><th scope="col">Simple (default)</th><th scope="col">Expert</th></tr></thead>
+<tbody>
+<tr><th scope="row">Initial extract</th><td>The middle 80% of the sound.</td><td>The strongest 0.5 s on the selected channel, or the whole sound if it is shorter.</td></tr>
+<tr><th scope="row">Analysis</th><td>Hann window, automatic FFT size, linear amplitudes and frequencies. The initial view extends to 5 kHz or half the sampling rate, whichever is lower.</td><td>Adjustable settings, channel selection, period and fundamental estimates, harmonics table and CSV exports.</td></tr>
+</tbody></table>
+<p>Changing mode keeps the current sound and the existing A–B boundaries. Expert settings are restored when you return to that mode.</p>
+</section>
+
+<section id="expert">
+<h2>Fundamental and harmonics</h2>
+<p><strong>Autocorrelation</strong> compares the <strong>A–B</strong> extract with a time-shifted copy. When several cycles line up again at the same delay, that delay gives an estimate of the period. Compare it with the manual measurement Δt / <em>n</em>. For a long extract, MeVSono estimates the delay on an active block of 65,536 samples, then checks repetition at several points in A–B. Both tabs report the period of the same extract. The initial 5 kHz display limit sets how much of the spectrum is visible. If the extract has no clear period, you can still use the cursors to measure a time interval.</p>
+<p>In <strong>Frequency study</strong>, small circles mark detected peaks. MeVSono looks for a fundamental <em>f</em>₁ consistent with the peak frequencies and the repeating signal. Each peak is assigned to a single harmonic. With peaks at 200 and 500 Hz, the waveform can repeat every 10 ms. The fundamental is then 100 Hz and the table shows peaks at harmonics 2 and 5, with a dash in the first row. When the estimate is inconclusive, the panel reads <strong>No stable fundamental detected.</strong></p>
+<figure>
+  <a href="expert-en.png"><img src="expert-en.png" width="1280" height="800" alt="Expert panel showing autocorrelation, bin spacing, fundamental and the harmonics table next to the spectrum." loading="lazy"></a>
+  <figcaption>For this 0.500 s extract, the panel shows a fundamental at 440.0 Hz and detected peaks for the first six harmonics.</figcaption>
+</figure>
+<ul>
+  <li>To set <em>f</em>₁ manually, <strong>right-click</strong> near a peak and choose <strong>Use the … peak as the fundamental</strong>. <strong>Automatic detection</strong> restores the automatic estimate.</li>
+  <li>The table gives the harmonic rank, measured frequency, ratio <em>f</em> / <em>f</em>₁, amplitude level and percentage of the first harmonic’s amplitude. A dash indicates an unavailable value. In particular, relative amplitude requires a detected first harmonic.</li>
+  <li><strong>Show the n × f₁ marks</strong> places dotted lines at the expected harmonic frequencies. <strong>Copy the table</strong> copies the rows and columns for pasting into a spreadsheet or document.</li>
+</ul>
+</section>
+
+<section id="settings">
+<h2>Adjust analysis and display settings</h2>
+<p>In expert mode, open <strong>View › Settings…</strong> or the <strong>Settings…</strong> button in the left panel. Changes take effect immediately. <strong>Default values</strong> restores the analysis and display defaults. <strong>Close</strong> returns to the measurement window.</p>
+<div class="figures">
+<figure>
+  <a href="reglages-en.png"><img src="reglages-en.png" width="373" height="446" alt="Expert analysis and display settings with automatic vertical scaling selected." loading="lazy"></a>
+  <figcaption>This dialog contains the window function, FFT size, peak detection, channel and axis options.</figcaption>
+</figure>
+<figure>
+  <a href="affichage-en.png"><img src="affichage-en.png" width="218" height="229" alt="View menu with zoom, reference spectrum, decibel, logarithmic axis and settings commands." loading="lazy"></a>
+  <figcaption>The decibel scale and logarithmic frequency axis are also available directly from the menu.</figcaption>
+</figure>
+</div>
+<h3>Window function</h3>
+<p>If the ends of a segment do not line up, energy from a single tone spreads into neighbouring frequency bins. A window multiplies the samples by a known set of weights before the transform. The choice affects peak width and the side lobes that can hide a weak tone near a strong one.</p>
+<table>
+<thead><tr><th scope="col">Window</th><th scope="col">Effect on the spectrum</th></tr></thead>
+<tbody>
+<tr><th scope="row">Hann</th><td>Initial setting. A balance between peak width and side-lobe attenuation.</td></tr>
+<tr><th scope="row">Rectangular</th><td>Uniform weighting. Narrow main lobe with higher side lobes.</td></tr>
+<tr><th scope="row">Hamming</th><td>Lower side lobes near the peak, with slower decay farther away.</td></tr>
+<tr><th scope="row">Blackman, Blackman-Harris</th><td>Lower side lobes at the cost of a wider main lobe.</td></tr>
+<tr><th scope="row">Flat top</th><td>Wider peak. Its height changes little as the frequency moves between FFT bins.</td></tr>
+</tbody></table>
+<h3>FFT size and segment resolution</h3>
+<p>With <strong>automatic</strong> size, the fast Fourier transform (FFT) processes the extract in a single segment up to 262,144 samples and pads it with zeros to a power of two. For a longer extract, or when a fixed FFT size is shorter than the extract, segments overlap by at least half and their powers are averaged. Fixed sizes range from 1,024 to 262,144 points.</p>
+<p><strong>Bin spacing Δf</strong> equals <em>f</em><sub>s</sub> / <em>N</em>, where <em>f</em><sub>s</sub> is the sampling rate and <em>N</em> is the FFT size. <strong>Analysis resolution</strong> is the reciprocal of one segment’s duration. Adding zeros produces more closely spaced bins. Resolving two components depends on the duration of the sampled data, the window and their amplitudes. The Δf tooltip gives the FFT size and, when averaging is used, the number of segments.</p>
+<p><strong>Example at 48 kHz.</strong> With 4,800 sound samples and an 8,192-point FFT, the segment lasts 0.100 s. Its reciprocal duration is 10 Hz, while the bin spacing is 48,000 / 8,192 ≈ 5.86 Hz. Choosing 16,384 points for the same extract gives a bin every 2.93 Hz. Move A and B farther apart to observe more cycles of the sound.</p>
+<h3>Detection, channel and axes</h3>
+<ul>
+  <li><strong>Peak detection threshold</strong> controls which peaks are detected. At −40 dB the threshold is 1% of the maximum peak amplitude. <strong>Number of harmonics in the table</strong> sets the number of rows, from 1 to 40 (default 10).</li>
+  <li><strong>Channel analysed</strong> selects the average of the channels, left or right for a stereo sound. The signal plot, spectrum and signal extract CSV use that channel.</li>
+  <li><strong>Amplitude</strong> offers a linear scale or dBFS. A digital amplitude of 1 is 0 dBFS and 0.5 is approximately −6 dBFS. Measuring sound pressure in pascals would also require a calibrated microphone and recording chain.</li>
+  <li>The <strong>Frequency axis</strong> can be linear or logarithmic. <strong>Highest frequency shown</strong> sets the upper limit of the overview, up to <em>f</em><sub>s</sub> / 2. <a href="#vertical">Vertical scaling</a> controls the tick marks on the signal plot and the spectrum.</li>
+</ul>
+</section>
+
+<section id="export">
+<h2>Export measurements as CSV</h2>
+<p>In expert mode, <strong>File</strong> offers two CSV exports. Wait for the calculation to finish before exporting the current extract’s spectrum.</p>
+<table>
+<thead><tr><th scope="col">Command</th><th scope="col">File contents</th></tr></thead>
+<tbody>
+<tr><th scope="row">Export the spectrum (CSV)…</th><td><code>spectrum.csv</code> has one row per FFT bin from 0 to <em>f</em><sub>s</sub> / 2, even when the plot is zoomed in. The columns are <code>f (Hz)</code>, <code>A</code> and <code>A (dB)</code>. The file contains FFT bins for the current sound. The interpolated frequency shown under “Selected peak” can lie between two rows in the CSV.</td></tr>
+<tr><th scope="row">Export the signal extract (CSV)…</th><td><code>extract.csv</code> contains samples of the selected channel between A and B. The columns are <code>t (s)</code>, measured from the start of the sound, and <code>signal</code>.</td></tr>
+</tbody></table>
+<p>Choose a folder and filename. MeVSono adds <code>.csv</code> to a name without an extension and asks before replacing a file. The progress dialog lets you cancel the export.</p>
+<p>The interface language determines the format. English uses commas between columns and a decimal point. French uses semicolons between columns and a decimal comma. If the spreadsheet puts a whole row into a single cell, select the corresponding column delimiter when importing the file. For a playable audio file, use <a href="#record">Save recording as WAV…</a></p>
+</section>
+
+<section id="shortcuts">
+<h2>Mouse and keyboard</h2>
+<p>Focus the waveform to move a time cursor, or the spectrum to step through peaks. The zoom keys act on the plot that has focus.</p>
+<table>
+<thead><tr><th scope="col">Action</th><th scope="col">Gesture or shortcut</th></tr></thead>
+<tbody>
+<tr><th scope="row">Open a file</th><td><kbd>Ctrl</kbd> + <kbd>O</kbd> or drop a file onto the window.</td></tr>
+<tr><th scope="row">Switch tabs</th><td><kbd>Ctrl</kbd> + <kbd>Tab</kbd>, or <kbd>Ctrl</kbd> + <kbd>Page Down</kbd> / <kbd>Page Up</kbd>.</td></tr>
+<tr><th scope="row">Focus a plot with the keyboard</th><td>Press <kbd>Tab</kbd> until the plot border is highlighted.</td></tr>
+<tr><th scope="row">Place or move boundaries</th><td>Drag on the signal to set the pair. Drag a line or click near its new position to move one boundary.</td></tr>
+<tr><th scope="row">Fine-tune a cursor</th><td>On the signal, press <kbd>1</kbd> or <kbd>2</kbd> to select the cursor, then <kbd>←</kbd> or <kbd>→</kbd> to move one sample. Holding <kbd>Shift</kbd> moves by 1% of the visible interval, with a minimum of one sample.</td></tr>
+<tr><th scope="row">Zoom a plot</th><td>Scroll the wheel around the pointer. On the keyboard, <kbd>+</kbd> or <kbd>−</kbd> zooms around the active cursor or the selected peak.</td></tr>
+<tr><th scope="row">Pan or reset a plot</th><td>Right-drag or <kbd>Shift</kbd> + wheel to pan. Double-click or press <kbd>Home</kbd> to reset that plot. <strong>Show all</strong> resets both plots.</td></tr>
+<tr><th scope="row">Keep a peak reading</th><td>Click the spectrum or use <kbd>←</kbd> / <kbd>→</kbd>. <kbd>Esc</kbd> clears the selection.</td></tr>
+<tr><th scope="row">Play or pause</th><td><kbd>Space</kbd>.</td></tr>
+<tr><th scope="row">Change interface size</th><td><kbd>Ctrl</kbd> + <kbd>+</kbd> or <kbd>Ctrl</kbd> + <kbd>−</kbd>. <kbd>Ctrl</kbd> + <kbd>0</kbd> restores normal size, including after using a projector.</td></tr>
+<tr><th scope="row">Open this guide</th><td><kbd>F1</kbd> or <strong>Help › User guide…</strong></td></tr>
+</tbody></table>
+</section>
+
+<section id="problems">
+<h2>Troubleshooting</h2>
+<dl class="faq">
+<dt>The automatic period differs from my measurement.</dt>
+<dd>Select about five complete cycles between t₁ and t₂ and divide Δt by the number of cycles. In expert mode, use <strong>Analyse this interval</strong> to compare both methods on the same steady part of the recording.</dd>
+<dt>The average channel of a stereo recording looks almost silent.</dt>
+<dd>In expert mode, inspect the left and right channels in turn. If their oscillations are in opposite phase, their average can be small even when each contains a clear signal.</dd>
+<dt>A newly connected USB headset does not appear.</dt>
+<dd>Click <strong>Refresh</strong> on the home screen or under <strong>Audio › Audio devices…</strong> Select both the microphone input and the headset output. If a list remains empty, check that the operating system recognises the device and allows microphone access.</dd>
+<dt>“Record a sound” is greyed out, or recording stopped unexpectedly.</dt>
+<dd>Recording requires an available input. If the microphone is disconnected while recording, MeVSono opens the audio received so far when it contains samples. You can save that part as WAV before reconnecting the microphone.</dd>
+<dt>The microphone meter stays low or shows “Full scale”.</dt>
+<dd>Check the selected input and the microphone gain. For repeated full-scale peaks, reduce the gain or move the microphone farther away. During analysis, “Full-scale plateaus” indicates flat peaks consistent with clipping in the extract.</dd>
+<dt>Playback is silent or stops when the headset is unplugged.</dt>
+<dd>Select an available output, check its volume and restart playback. In the frequency tab, also check the A–B boundaries of the extract you are listening to.</dd>
+<dt>A file is rejected or only part of it opens.</dt>
+<dd>Check that it has an audio track. Files in an unrecognised format can be converted to WAV. The status bar reports an unreadable end, invalid values replaced by zero or the 30-minute reading limit.</dd>
+<dt>The waveform looks like a solid band, or the spectrum says “Extract too short”.</dt>
+<dd>Use the wheel on the signal to see its oscillations. To obtain a spectrum, move A and B farther apart on the signal. At least eight samples are needed.</dd>
+<dt>Two peaks merge, or the reference disappears.</dt>
+<dd>For nearby peaks, use a longer analysis segment. If a fixed FFT size limits the segment length, increase that size too. For a hidden reference, restore the FFT and window settings used for the <a href="#compare">comparison</a>.</dd>
+</dl>
+</section>
+
+<section id="install">
+<h2>Install and configure a workstation</h2>
+<p>MeVSono distributions are available on the <a href="https://github.com/melectronvolt/MevSuite/releases">MeVSuite releases page</a>. Once installed, the program opens files, makes measurements and displays this guide offline.</p>
+<ul>
+  <li><strong>Portable Windows version.</strong> Extract <code>MeVSono-<i>version</i>-windows-x64.zip</code> and keep its folder together. Run <code>mevsono.exe</code>. To start with an audio file, choose “Open with…” in File Explorer.</li>
+  <li><strong>Windows installer.</strong> <code>MeVSono-<i>version</i>-windows-x64-setup.exe</code> installs the program in <code>Program Files\MeVSuite\MeVSono</code> and adds a Start menu shortcut. Uninstall it from Windows Settings. For unattended deployment, the installer and uninstaller accept the options below.</li>
+  <li><strong>Linux.</strong> Install the <code>.deb</code> or <code>.rpm</code> package for your system, or mark the <code>.AppImage</code> file executable and run it. FFmpeg provides decoding for additional sound and video formats.</li>
+</ul>
+<pre><code>MeVSono-<i>version</i>-windows-x64-setup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART
+"C:\Program Files\MeVSuite\MeVSono\unins000.exe" /VERYSILENT /SUPPRESSMSGBOXES /NORESTART</code></pre>
+<h3 id="teachers">Personal and shared settings</h3>
+<p>On first launch, MeVSono uses the system theme and the system language if it is French or English (otherwise English). The personal <code>mevsono.ini</code> file stores the mode, language, theme, expert settings, interface size, last folder and window geometry. Audio devices are selected for the session.</p>
+<table>
+<thead><tr><th scope="col">System</th><th scope="col">Personal file</th><th scope="col">Shared settings</th></tr></thead>
+<tbody><tr><th scope="row">Windows</th><td><code>%APPDATA%\MeVSuite\mevsono.ini</code></td><td><code>mevsono.ini</code> beside <code>mevsono.exe</code>.</td></tr>
+<tr><th scope="row">Linux</th><td><code>~/.config/MeVSuite/mevsono.ini</code>, or the directory set by <code>XDG_CONFIG_HOME</code> followed by <code>/MeVSuite/mevsono.ini</code>.</td><td><code>/etc/MeVSuite/mevsono.ini</code> takes priority, then the file beside the executable.</td></tr></tbody></table>
+<p>At startup, a valid shared setting takes precedence over the corresponding personal choice. This lets you set the mode for a class while leaving each user free to choose a language. Changes made during a session are written to the personal file. The following shared settings start every workstation in simple mode with an English interface and a light theme.</p>
+<pre><code>mode = simple
+language = en
+theme = light</code></pre>
+<p>Use <code>language = auto</code> and <code>theme = auto</code> to follow the system. <strong>Help › About MeVSono…</strong> shows the settings paths. The pages, screenshots and seven lab recordings are available in the <code>notice</code> folder in the user’s MeVSono cache. Use the browser’s print command to print a page.</p>
+</section>
+
+<section id="about">
+<h2>Support, version and licence</h2>
+<p>After an unexpected shutdown, the error message gives the path to <code>mevsono.log</code>. The log, next to <code>mevsono.ini</code>, holds the most recent error. When reporting a measurement problem, describe the recording, A–B interval, channel, mode and what appeared on screen. Include the operating system and the version shown under <strong>Help › About MeVSono…</strong> Attach the log if available.</p>
+<p>MeVSono is free software by Rémi MEVAERE, distributed under the MIT licence. <strong>About MeVSono…</strong> lists the components, including Qt, Qt Multimedia and FFmpeg. <strong>About Qt…</strong> gives Qt’s licensing terms. On Windows, licences for the bundled libraries are in the <code>licences</code> folder beside the program.</p>
+<p>Contact the author at <a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>.</p>
+</section>
+
+<footer>Guide included with MeVSono {{version}}</footer>
+</main>
+</div>
+<script src="navigation.js"></script>
+</body>
+</html>

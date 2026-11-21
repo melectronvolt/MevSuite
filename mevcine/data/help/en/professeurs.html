@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — In the classroom</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<a class="saut-contenu" href="#contenu">Skip to content</a>
+<div class="layout">
+
+<nav class="toc" aria-label="Contents">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">User guide<!--mevcine-version--></p>
+  <div class="sommaire-large">
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="index.html">1. Overview</a></li>
+    <li><a href="demarrer.html">2. Getting started</a></li>
+    <li><a href="simplifie.html">3. Simple mode</a></li>
+    <li><a href="echelle.html">4. The scale</a></li>
+    <li><a href="expert.html">5. Expert mode</a></li>
+    <li><a href="exports.html">6. Exporting the measurements</a></li>
+    <li><a href="video.html">7. Filming a motion</a></li>
+    <li><a href="clavier.html">8. Menus and shortcuts</a></li>
+    <li><a href="faq.html">9. Frequently asked questions</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="professeurs.html" class="current" aria-current="page">10. In the classroom</a></li>
+    <li><a href="installer.html">11. Installing</a></li>
+    <li><a href="reglages.html">12. Settings</a></li>
+    <li><a href="depannage.html">13. Troubleshooting</a></li>
+  </ol>
+  </div>
+  <details class="sommaire-mobile">
+    <summary>Contents</summary>
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="index.html">1. Overview</a></li>
+    <li><a href="demarrer.html">2. Getting started</a></li>
+    <li><a href="simplifie.html">3. Simple mode</a></li>
+    <li><a href="echelle.html">4. The scale</a></li>
+    <li><a href="expert.html">5. Expert mode</a></li>
+    <li><a href="exports.html">6. Exporting the measurements</a></li>
+    <li><a href="video.html">7. Filming a motion</a></li>
+    <li><a href="clavier.html">8. Menus and shortcuts</a></li>
+    <li><a href="faq.html">9. Frequently asked questions</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="professeurs.html" class="current" aria-current="page">10. In the classroom</a></li>
+    <li><a href="installer.html">11. Installing</a></li>
+    <li><a href="reglages.html">12. Settings</a></li>
+    <li><a href="depannage.html">13. Troubleshooting</a></li>
+  </ol>
+  </details>
+  <p class="lang"><a href="../fr/professeurs.html" lang="fr" hreflang="fr">Français</a></p>
+</nav>
+
+<main id="contenu" tabindex="-1">
+<header class="title">
+<h1>In the classroom</h1>
+<p>Prepare the recording, guide the marking and discuss the results with the class</p>
+</header>
+
+<h2 id="choix">From a measurement to a model</h2>
+<p>Choose the question before choosing a graph. “Where does the ball reach the top of its flight?” can be explored with <em>y(t)</em> or <em>v<sub>y</sub>(t)</em>. “What motion would a passenger on the first cart see?” calls for tracking both carts and choosing the first as the reference frame under <em>Trajectories</em>.</p>
+<dl class="films-tp">
+  <dt>Free fall<small><code>chute_libre.mp4</code> · 60 frames/s</small></dt>
+  <dd><p><strong>With the vertical axis pointing up, what sign will the acceleration have?</strong></p><p>Compare the slope of <em>v<sub>y</sub>(t)</em> with the direction of the fall.</p></dd>
+  <dt>Projectile motion<small><code>lancer_parabolique.mp4</code> · 60 frames/s</small></dt>
+  <dd><p><strong>Which components of velocity are still visible at the highest point?</strong></p><p>Locate the maximum of <em>y(t)</em>, then read <em>v<sub>x</sub></em> and <em>v<sub>y</sub></em> around that time.</p></dd>
+  <dt>Two carts<small><code>deux_chariots_uniformes.mp4</code> · 30 frames/s</small></dt>
+  <dd><p><strong>How does the separation between the carts change?</strong></p><p>Compare <em>x₂ − x₁</em> with the position of the second cart in the first cart’s frame.</p></dd>
+  <dt>Simple pendulum<small><code>pendule_simple.mp4</code> · 30 frames/s</small></dt>
+  <dd><p><strong>Where is the pendulum moving fastest?</strong></p><p>Match the peaks in speed <em>v</em> with the corresponding frames.</p></dd>
+</dl>
+<p>The four films are in <code>mevcine/exemples/</code> in the source tree. Copy the chosen film into the folder supplied to students. The same investigation also works with <a href="video.html#filmer">footage recorded in class</a>.</p>
+
+<h2 id="seance">A marking and graph-reading lesson</h2>
+<ol class="steps">
+  <li><strong>Before marking.</strong> Identify the object, the feature to mark and the plane of the scale. Ask students to sketch the axes and predict the sign of <em>v<sub>y</sub></em> as the ball rises and falls.</li>
+  <li><strong>During measurement.</strong> Mark about ten frames around the top of a throw. Each pair records the capture rate, reference length and number of the first frame used.</li>
+  <li><strong>From table to graph.</strong> Plot <em>y(t)</em>, then <em>v<sub>y</sub>(t)</em>. Click a velocity point. At a constant frame rate, work out the vertical displacement between the two outer frames and divide it by the time between them.</li>
+  <li><strong>Discuss discrepancies.</strong> Compare two runs on the same recording. A common factor in every distance suggests checking the scale. For one surprising acceleration, inspect the three positions used to calculate it. A common factor in the velocities also warrants checking the capture rate of slow-motion footage.</li>
+  <li><strong>Lab report.</strong> Ask for a graph with labelled axes and units, one measurement checked against the film, its calculation and a conclusion addressing the original question. Keep the project with the recording so another group can review the marks.</li>
+</ol>
+<figure class="capture">
+  <a href="images/calcul-vitesse.png" aria-label="Enlarge · Frames 14 to 16 and coordinates used for velocity at 0.24 s"><img src="images/calcul-vitesse.png" width="448" height="439" loading="lazy" alt="Frames 14 to 16 and coordinates used for velocity at 0.24 s"></a>
+  <figcaption>The two outer positions have the same vertical coordinate. Over the 0.08 s between them, vertical displacement is zero. Horizontal displacement is about 0.053 m, giving a horizontal velocity component of about 0.66 m/s.</figcaption>
+</figure>
+
+<h2 id="deploiement">Deploying MeVCine in a computer room</h2>
+<ul>
+  <li><strong>On Windows, two versions</strong> (see <a href="installer.html">Installing</a>): the portable
+  version, a folder to copy onto a USB stick, a network folder or the disk of each computer, with no installation
+  and no administrator rights; or the installer, for all the users of the computer, which can be deployed with no
+  question (WAPT, GPO). Preferences and the automatic backup are stored in the student's account.</li>
+  <li><strong>A shortcut for the students</strong>: to <code>mevcine.exe --simple</code> (or
+  <code>mevcine --simple</code>), to always open simple mode; without this option, MeVCine takes the mode used last
+  time, which a student may have changed (and on the first launch of each account, it asks for the mode). A video can be added:
+  <code>mevcine.exe --simple \\server\physics\fall.mp4</code>.</li>
+  <li><strong>Shared computers</strong>: MeVCine never reopens the last video; every student starts from a clean
+  screen. The language, the theme, the mode, the unit of the reference, the window size and the last video folder
+  are remembered per account. Each session has a separate backup. On a shared account, <em>Recover previous work…</em> can list several students’ backups. Choose the session by video name and modification date.</li>
+  <li><strong>A configuration folder for each account</strong>: the <code>MEVCINE_CONF</code> variable (in a <code>.bat</code>
+  launcher, for instance) points to another folder, on the stick or the network. See
+  <a href="reglages.html">Settings</a>.</li>
+  <li>On first launch, Windows reports an unsigned program (<em>More info › Run anyway</em>): warn the students, or
+  do this first launch yourself on each computer.</li>
+</ul>
+
+<p>Before class, check that a student account can write to its project folder. On shared computers, give each student or group a separate folder for its own work and video.</p>
+
+<h2 id="contact">Contact, languages, contributing</h2>
+<p>MeVCine is written by <strong>Rémi MEVAERE</strong>:
+<a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>. A remark, a video that does not open,
+an idea for the classroom: write, attaching if possible the error log, <code>mevcine.log</code>
+(<a href="reglages.html#configuration">Settings</a>), and the video.</p>
+<p>The interface and the user guide exist in French and English. The translations are gettext files
+(<code>data/lang/*.po</code>, editable with Poedit); the user guide is made of HTML pages (<code>aide/<i>language</i>/</code>,
+assembled by <code>scripts/site-aide.py</code>). The code is in C++ with Qt; the <code>README.md</code> file explains
+how to build it and run the tests.</p>
+
+<h2 id="licence">Licence</h2>
+<p>MeVCine is <strong>free software</strong>, under the GNU GPL version 3 or later: you may copy it, hand it out to
+students and modify it freely. It includes open-source components (Qt, FFmpeg…): <em>Help › About MeVCine…</em>
+lists them, with their licences, and gives the path of the settings file; <em>Help › About Qt…</em> gives the licence
+of Qt. On Windows, the <code>licences</code> folder of the program holds the licences of the shipped libraries, and
+<code>ffmpeg/LICENSE.txt</code> that of ffmpeg.</p>
+<nav class="voisins">
+<a class="precedent" href="faq.html"><small>◀ Previous page</small>Frequently asked questions</a>
+<a class="suivant" href="installer.html"><small>Next page ▶</small>Installing</a>
+</nav>
+<footer>MeVCine · user guide · Rémi MEVAERE · free software, GPL 3 or later</footer>
+</main>
+</div>
+</body>
+</html>

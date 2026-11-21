@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/x-mevpix">
+    <comment>Séance MeVPix</comment>
+    <comment xml:lang="en">MeVPix session</comment>
+    <icon name="mevpix"/>
+    <glob pattern="*.mevpix"/>
+  </mime-type>
+</mime-info>

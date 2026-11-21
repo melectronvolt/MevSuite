@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — Menus, clavier et souris</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<a class="saut-contenu" href="#contenu">Aller au contenu</a>
+<div class="layout">
+
+<nav class="toc" aria-label="Sommaire">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">Notice d&#x27;utilisation<!--mevcine-version--></p>
+  <div class="sommaire-large">
+  <p class="group">Pour les élèves</p>
+  <ol>
+    <li><a href="index.html">1. Présentation</a></li>
+    <li><a href="demarrer.html">2. Démarrer</a></li>
+    <li><a href="simplifie.html">3. Mode simplifié</a></li>
+    <li><a href="echelle.html">4. L&#x27;échelle</a></li>
+    <li><a href="expert.html">5. Mode expert</a></li>
+    <li><a href="exports.html">6. Exporter les mesures</a></li>
+    <li><a href="video.html">7. Filmer un mouvement</a></li>
+    <li><a href="clavier.html" class="current" aria-current="page">8. Menus et raccourcis</a></li>
+    <li><a href="faq.html">9. Questions fréquentes</a></li>
+  </ol>
+  <p class="group">Pour les professeurs</p>
+  <ol>
+    <li><a href="professeurs.html">10. En classe</a></li>
+    <li><a href="installer.html">11. Installer</a></li>
+    <li><a href="reglages.html">12. Réglages</a></li>
+    <li><a href="depannage.html">13. Dépannage</a></li>
+  </ol>
+  </div>
+  <details class="sommaire-mobile">
+    <summary>Sommaire</summary>
+  <p class="group">Pour les élèves</p>
+  <ol>
+    <li><a href="index.html">1. Présentation</a></li>
+    <li><a href="demarrer.html">2. Démarrer</a></li>
+    <li><a href="simplifie.html">3. Mode simplifié</a></li>
+    <li><a href="echelle.html">4. L&#x27;échelle</a></li>
+    <li><a href="expert.html">5. Mode expert</a></li>
+    <li><a href="exports.html">6. Exporter les mesures</a></li>
+    <li><a href="video.html">7. Filmer un mouvement</a></li>
+    <li><a href="clavier.html" class="current" aria-current="page">8. Menus et raccourcis</a></li>
+    <li><a href="faq.html">9. Questions fréquentes</a></li>
+  </ol>
+  <p class="group">Pour les professeurs</p>
+  <ol>
+    <li><a href="professeurs.html">10. En classe</a></li>
+    <li><a href="installer.html">11. Installer</a></li>
+    <li><a href="reglages.html">12. Réglages</a></li>
+    <li><a href="depannage.html">13. Dépannage</a></li>
+  </ol>
+  </details>
+  <p class="lang"><a href="../en/clavier.html" lang="en" hreflang="en">English</a></p>
+</nav>
+
+<main id="contenu" tabindex="-1">
+<header class="title">
+<h1>Menus, clavier et souris</h1>
+<p>Identifier une commande, retrouver son raccourci ou son geste</p>
+</header>
+
+<h2 id="menus">Reconnaître les commandes des menus</h2>
+<p>Une commande grisée devient disponible quand son action a un sens. Par exemple, une première mesure active la copie pour Python et l’export CSV.</p>
+<figure class="capture">
+  <a href="images/menu-fichier.png" aria-label="Agrandir · Menu Fichier avec les sept commandes et leurs raccourcis"><img src="images/menu-fichier.png" width="360" height="235" loading="lazy" alt="Menu Fichier avec les sept commandes et leurs raccourcis"></a>
+  <figcaption>Fichier regroupe le film, le projet et les deux exports de données.</figcaption>
+</figure>
+<table>
+  <tr><th scope="row">Ouvrir une vidéo…</th><td>Le dossier avec un triangle de lecture ouvre un film.</td></tr>
+  <tr><th scope="row">Ouvrir un projet…</th><td>Le dossier ouvert reprend un fichier <code>.mevcine</code>.</td></tr>
+  <tr><th scope="row">Récupérer le travail précédent…</th><td>L’horloge avec une flèche ouvre le secours de la séance. Quand il en existe plusieurs, elle permet de choisir.</td></tr>
+  <tr><th scope="row">Enregistrer le projet…</th><td>La disquette garde les mesures et les réglages de la séance.</td></tr>
+  <tr><th scope="row">Copier pour Python</th><td>Les deux feuilles copient les tableaux NumPy dans le presse-papiers.</td></tr>
+  <tr><th scope="row">Enregistrer en CSV…</th><td>Le tableau avec une flèche exporte les colonnes de dates et de positions.</td></tr>
+  <tr><th scope="row">Quitter</th><td>La flèche qui sort de la porte ferme MeVCine.</td></tr>
+</table>
+<figure class="capture">
+  <a href="images/menu-edition.png" aria-label="Agrandir · Menu Édition avec les flèches annuler, rétablir et recommencer"><img src="images/menu-edition.png" width="372" height="131" loading="lazy" alt="Menu Édition avec les flèches annuler, rétablir et recommencer"></a>
+  <figcaption>Un point repris ou supprimé peut être restauré depuis Édition.</figcaption>
+</figure>
+<table>
+  <tr><th scope="row">Annuler le dernier point / Annuler la suppression</th><td>La flèche vers la gauche annule la dernière modification de pointage.</td></tr>
+  <tr><th scope="row">Rétablir le point</th><td>La flèche vers la droite réapplique l’action annulée.</td></tr>
+  <tr><th scope="row">Tout recommencer</th><td>La flèche circulaire remet le repère, l’échelle et les mesures à zéro pour la vidéo ouverte. Enregistrez votre projet si vous voulez le reprendre.</td></tr>
+</table>
+<figure class="capture">
+  <a href="images/menu-mode.png" aria-label="Agrandir · Menu Mode avec une coche après le libellé du mode simplifié"><img src="images/menu-mode.png" width="469" height="104" loading="lazy" alt="Menu Mode avec une coche après le libellé du mode simplifié"></a>
+  <figcaption>La coche indique le mode actif, même quand le pointeur survole l’autre commande.</figcaption>
+</figure>
+<table>
+  <tr><th scope="row">Mode simplifié (pas à pas)</th><td>La fenêtre avec des marches ouvre les cinq étapes guidées.</td></tr>
+  <tr><th scope="row">Mode expert (toutes les fonctions)</th><td>La fenêtre divisée ouvre les onglets de pointage et d’analyse.</td></tr>
+</table>
+<figure class="capture">
+  <a href="images/menu-aide.png" aria-label="Agrandir · Menu Aide avec le livre, le logo MeVCine et le symbole d’information"><img src="images/menu-aide.png" width="456" height="129" loading="lazy" alt="Menu Aide avec le livre, le logo MeVCine et le symbole d’information"></a>
+  <figcaption>F1 ouvre directement l’aide correspondant à l’étape ou à l’onglet affiché.</figcaption>
+</figure>
+<table>
+  <tr><th scope="row">Notice d’utilisation…</th><td>Le livre ouvert mène à cette notice.</td></tr>
+  <tr><th scope="row">À propos de MeVCine…</th><td>Le logo MeVCine ouvre la version, les licences et le chemin du fichier de réglages.</td></tr>
+  <tr><th scope="row">À propos de Qt…</th><td>La pastille d’information présente Qt, la bibliothèque de l’interface.</td></tr>
+</table>
+
+<h2 id="raccourcis">Raccourcis clavier</h2>
+<table>
+  <tr><th>Touches</th><th>Action</th></tr>
+  <tr><td><kbd>←</kbd> <kbd>→</kbd>, <kbd>Page ↑</kbd> <kbd>Page ↓</kbd></td><td>image précédente, image suivante</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd></td><td>annuler le dernier point / le rétablir</td></tr>
+  <tr><td><kbd>Échap</kbd></td><td>annuler le tracé de l'étalon, la mesure à refaire, le choix de l'origine (mode
+  expert) ; quitter le plein écran ; fermer un message</td></tr>
+  <tr><td><kbd>Entrée</kbd></td><td>valider la longueur de l'étalon ; fermer un message (mais jamais confirmer une
+  action qui ferait perdre des mesures)</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>C</kbd></td><td>copier les mesures pour Python (hors d'un champ de saisie)</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>O</kbd></td><td>ouvrir une vidéo</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>S</kbd></td><td>enregistrer le projet</td></tr>
+  <tr><td><kbd>Espace</kbd> · <kbd>Maj</kbd> + flèche</td><td>Dans l’image, valider la cible de la <a href="simplifie.html#visee">visée assistée</a> ou la déplacer d’un pixel.</td></tr>
+  <tr><td><kbd>F1</kbd></td><td>cette notice, à la page de ce que vous faites</td></tr>
+  <tr><td><kbd>F11</kbd></td><td>pointer en plein écran ; <kbd>Échap</kbd> ou <kbd>F11</kbd> revient à la
+  fenêtre</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>+</kbd> / <kbd>Ctrl</kbd>+<kbd>−</kbd></td><td>agrandir ou réduire toute
+  l'interface (de 50 à 300 %)</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>0</kbd></td><td>remettre l'interface à sa taille normale</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>Q</kbd></td><td>quitter</td></tr>
+</table>
+
+<p>Dans le tableau, utilisez les flèches pour afficher l’aperçu de la cellule active. La poubelle supprime tous les objets de la ligne. <em>Annuler la suppression</em> les rétablit. Lors d’une reprise avec <em>Rec</em>, Échap annule l’ensemble des clics de cette reprise.</p>
+
+<h2 id="souris">La souris sur l'image</h2>
+<table>
+  <tr><th>Geste</th><th>Effet</th></tr>
+  <tr><td>Clic</td><td>placer l'origine (étape 1, ou après <span class="btn">Placer l'origine</span>) ; pointer
+  l'objet (pendant le pointage) ; une extrémité de l'étalon (pendant son tracé)</td></tr>
+  <tr><td>Glisser l'origine</td><td>déplacer l'origine : aux étapes 1 et 2 du mode simplifié, et en mode expert
+  avant le pointage ou après <span class="btn">Placer l'origine</span>. Au-dessus de l'origine, le curseur
+  devient une main.</td></tr>
+  <tr><td>Glisser</td><td>tracer l'étalon d'une extrémité à l'autre ; tracer un cadre autour d'un objet (suivi
+  automatique). Pendant le pointage, un petit glissement compte comme un clic : le point est posé quand on lâche le
+  bouton.</td></tr>
+  <tr><td>Clic droit</td><td>annuler le tracé de l'étalon</td></tr>
+  <tr><td>Survol en pointage libre</td><td>La loupe grossit l’image autour de la souris et affiche les coordonnées à côté.</td></tr>
+  <tr><td>Clic dans la loupe</td><td>En visée assistée, cliquez sur le détail reconnu pour enregistrer sa position et passer à la mesure suivante.</td></tr>
+  <tr><td>Grapheur</td><td>Suivez la courbe pour lire les coordonnées des mesures. Cliquez sur un point pour voir son image.
+  Zoomez à la molette, glissez pour déplacer la vue et double-cliquez pour tout voir.</td></tr>
+</table>
+
+<h2 id="loupe">La loupe</h2>
+<p>En pointage libre, déplacez la souris sur le mobile. La loupe grossit la zone sous la croix. Son titre indique le geste attendu, par exemple placer l’origine, viser une extrémité d’étalon ou pointer l’objet 2. Le point est enregistré au relâchement du bouton.</p>
+<p>En visée assistée, la croix reste sur le détail proposé. <kbd>Espace</kbd> valide sa position. Pour corriger d’un pixel, appuyez sur <kbd>Maj</kbd> et une flèche puis sur <kbd>Espace</kbd>. Une correction peut aussi se faire en cliquant sur la position réelle dans la loupe.</p>
+<p>Les coordonnées près de la loupe suivent le repère choisi. En mode simplifié, l’unité passe du pixel au mètre après étalonnage. En mode expert, vous pouvez comparer les deux lectures. Pour revoir la mesure après le clic, retrouvez son image dans le tableau.</p>
+<nav class="voisins">
+<a class="precedent" href="video.html"><small>◀ Page précédente</small>Filmer un mouvement</a>
+<a class="suivant" href="faq.html"><small>Page suivante ▶</small>Questions fréquentes</a>
+</nav>
+<footer>MeVCine · notice du logiciel · Rémi MEVAERE · logiciel libre, licence GPL 3 ou ultérieure</footer>
+</main>
+</div>
+</body>
+</html>

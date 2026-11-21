@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — Dépannage</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<a class="saut-contenu" href="#contenu">Aller au contenu</a>
+<div class="layout">
+
+<nav class="toc" aria-label="Sommaire">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">Notice d&#x27;utilisation<!--mevcine-version--></p>
+  <div class="sommaire-large">
+  <p class="group">Pour les élèves</p>
+  <ol>
+    <li><a href="index.html">1. Présentation</a></li>
+    <li><a href="demarrer.html">2. Démarrer</a></li>
+    <li><a href="simplifie.html">3. Mode simplifié</a></li>
+    <li><a href="echelle.html">4. L&#x27;échelle</a></li>
+    <li><a href="expert.html">5. Mode expert</a></li>
+    <li><a href="exports.html">6. Exporter les mesures</a></li>
+    <li><a href="video.html">7. Filmer un mouvement</a></li>
+    <li><a href="clavier.html">8. Menus et raccourcis</a></li>
+    <li><a href="faq.html">9. Questions fréquentes</a></li>
+  </ol>
+  <p class="group">Pour les professeurs</p>
+  <ol>
+    <li><a href="professeurs.html">10. En classe</a></li>
+    <li><a href="installer.html">11. Installer</a></li>
+    <li><a href="reglages.html">12. Réglages</a></li>
+    <li><a href="depannage.html" class="current" aria-current="page">13. Dépannage</a></li>
+  </ol>
+  </div>
+  <details class="sommaire-mobile">
+    <summary>Sommaire</summary>
+  <p class="group">Pour les élèves</p>
+  <ol>
+    <li><a href="index.html">1. Présentation</a></li>
+    <li><a href="demarrer.html">2. Démarrer</a></li>
+    <li><a href="simplifie.html">3. Mode simplifié</a></li>
+    <li><a href="echelle.html">4. L&#x27;échelle</a></li>
+    <li><a href="expert.html">5. Mode expert</a></li>
+    <li><a href="exports.html">6. Exporter les mesures</a></li>
+    <li><a href="video.html">7. Filmer un mouvement</a></li>
+    <li><a href="clavier.html">8. Menus et raccourcis</a></li>
+    <li><a href="faq.html">9. Questions fréquentes</a></li>
+  </ol>
+  <p class="group">Pour les professeurs</p>
+  <ol>
+    <li><a href="professeurs.html">10. En classe</a></li>
+    <li><a href="installer.html">11. Installer</a></li>
+    <li><a href="reglages.html">12. Réglages</a></li>
+    <li><a href="depannage.html" class="current" aria-current="page">13. Dépannage</a></li>
+  </ol>
+  </details>
+  <p class="lang"><a href="../en/depannage.html" lang="en" hreflang="en">English</a></p>
+</nav>
+
+<main id="contenu" tabindex="-1">
+<header class="title">
+<h1>Dépannage</h1>
+<p>Pour les professeurs : les messages de MeVCine, et quoi faire</p>
+</header>
+<p>Les petits problèmes du TP (pointage, longueur refusée, dates, export) sont dans les
+<a href="faq.html">questions fréquentes</a>. Voici les problèmes techniques.</p>
+
+<h2 id="video">La vidéo ne s'ouvre pas</h2>
+<dl class="faq">
+  <dt>La vidéo ne s’ouvre pas, ou l’examen dépasse deux minutes.</dt>
+  <dd>Copiez le film sur le disque du poste, vérifiez que le transfert est terminé et essayez de lire le début et la fin. Un échec à l’examen peut venir du fichier, du support ou du décodeur.</dd>
+  <dt>Le message cite FFprobe ou FFmpeg.</dt>
+  <dd>Avec la version portable, vérifiez le dossier <code>ffmpeg</code> livré près du programme. Avec un paquet Linux, vérifiez l’installation des deux outils sur le poste. Voir <a href="installer.html#linux">Installer sous Linux</a>.</dd>
+  <dt>La vidéo HEVC (H.265) est reconnue mais ne se décode pas.</dt>
+  <dd>Essayez la distribution de MeVCine fournie avec FFmpeg. Si vous convertissez une copie, utilisez un autre nom et gardez la cadence d’origine dans vos notes. Un exemple pour produire une copie H.264 est <code>ffmpeg -i video.mov -c:v libx264 -pix_fmt yuv420p -an copie.mp4</code>. Contrôlez ensuite ses dates avant de mesurer.</dd>
+  <dt>La barre d’état indique « Image 57 illisible ».</dt>
+  <dd>Le suivi s’interrompt à cette image. Rétablissez l’accès au film, puis cliquez sur <em>Réessayer</em>. Les mesures précédentes restent disponibles. Quand l’image revient, vous pouvez poursuivre à la main.</dd>
+  <dt>L’aller-retour entre images est lent sur une vidéo 4K.</dt>
+  <dd>Essayez d’abord le disque local. Si vous préparez un film plus petit pour la classe, réduisez une copie avant l’étalonnage, par exemple avec <code>ffmpeg -i video.mp4 -vf scale=1920:-2 -c:v libx264 copie.mp4</code> pour un film en paysage.</dd>
+</dl>
+
+<h2 id="affichage">La fenêtre ne s'ouvre pas</h2>
+<dl class="faq">
+  <dt>« This application failed to start because no Qt platform plugin could be initialized »</dt>
+  <dd>Les bibliothèques de Qt sont incomplètes. Sous Windows, le dossier <code>plugins</code> (avec
+  <code>plugins\platforms\qwindows.dll</code>) et le fichier <code>qt.conf</code> doivent être à côté de
+  <code>mevcine.exe</code> : recopiez le dossier complet. Sous Linux, installez le paquet de MeVCine, ou prenez
+  l'AppImage (voir <a href="installer.html#linux">Installer</a>).</dd>
+  <dt>Rien ne se passe au double-clic (Windows)</dt>
+  <dd>SmartScreen a peut-être bloqué le programme : relancez-le, puis <em>Informations complémentaires › Exécuter
+  quand même</em>. Vérifiez aussi que l'antivirus ne l'a pas mis en quarantaine.</dd>
+
+</dl>
+
+<h2 id="fichiers">Les fichiers</h2>
+<dl class="faq">
+  <dt>Aucune fenêtre ne s'ouvre avec <em>Ouvrir une vidéo…</em> (Linux)</dt>
+  <dd>MeVCine utilise les dialogues du bureau, sinon ceux de Qt. En attendant, glissez la vidéo sur la fenêtre, ou
+  lancez <code>mevcine video.mp4</code>.</dd>
+  <dt>« Fichier non reconnu »</dt>
+  <dd>Le fichier n'a pas été écrit par MeVCine, ou son en-tête est abîmé : il ne peut pas être ouvert.</dd>
+  <dt>« Projet illisible »</dt>
+  <dd>MeVCine indique la ligne concernée si une paire x, y est incomplète ou contient du texte. Retrouvez le fichier d’origine ou une copie de secours. Le projet déjà affiché reste ouvert après ce refus.</dd>
+  <dt>« Vidéo introuvable »</dt>
+  <dd>Gardez la vidéo avec le projet pour le transporter. Si elle a été déplacée ou renommée, choisissez-la à l’ouverture du projet. MeVCine vérifie son empreinte. Pour un projet ancien sans empreinte, vérifiez vous-même la vidéo avant de confirmer.</dd>
+  <dt>« Erreur lors de l'enregistrement »</dt>
+  <dd>Le dossier n'est pas accessible en écriture (clé protégée ou pleine, dossier réseau plein, droits) ; le
+  message en donne la cause. Un fichier qui existait déjà reste intact. Choisissez un autre dossier, par exemple
+  <em>Documents</em>.</dd>
+  <dt>« Sauvegarde automatique impossible »</dt>
+  <dd>Le dossier de configuration n'est pas accessible en écriture (disque plein, droits). Le travail n'est plus
+  protégé : enregistrez le projet (<em>Fichier › Enregistrer le projet…</em>) ailleurs, puis libérez de la place ou
+  corrigez les droits (voir <a href="reglages.html#configuration">Réglages</a>).</dd>
+</dl>
+
+<h3>Le projet contient des modifications</h3>
+<p>Pour garder le repère, l’étalon et les points, choisissez <em>Annuler</em>, puis <em>Fichier › Enregistrer le projet…</em>. Une copie Python ou un CSV fournit les nombres pour l’analyse. Le fichier <code>.mevcine</code> permet de rouvrir la séance.</p>
+<figure class="capture">
+  <a href="images/confirmation.png" aria-label="Agrandir · Dialogue de fermeture avec les boutons Quitter sans enregistrer et Annuler"><img src="images/confirmation.png" width="285" height="175" loading="lazy" alt="Dialogue de fermeture avec les boutons Quitter sans enregistrer et Annuler"></a>
+  <figcaption>Annuler vous ramène au travail en cours pour l’enregistrer.</figcaption>
+</figure>
+
+<h2 id="interne">Une erreur interne, un plantage</h2>
+<dl class="faq">
+  <dt>« Erreur interne de MeVCine »</dt>
+  <dd>Le programme a rencontré une erreur imprévue, ou il a planté, et s'arrête. Le message dit où est le
+  journal : <code>mevcine.log</code>, dans le <a href="reglages.html#configuration">dossier de configuration</a>,
+  avec la date, la cause et, pour un plantage, la pile d'appels. Envoyez-le à
+  <a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>, avec la vidéo si possible.</dd>
+  <dt>Récupérer le travail en cours</dt>
+  <dd>Relancez MeVCine et ouvrez <em>Fichier › Récupérer le travail précédent…</em>. Si plusieurs copies sont disponibles, choisissez votre vidéo à la date de la séance. Après une fermeture imprévue, vérifiez les clics des deux dernières secondes.</dd>
+  <dt>« Erreur de lecture de la configuration »</dt>
+  <dd>Le fichier <code>mevcine.ini</code> est abîmé : MeVCine repart d'une configuration neuve. Rien de grave.</dd>
+</dl>
+<nav class="voisins">
+<a class="precedent" href="reglages.html"><small>◀ Page précédente</small>Réglages</a>
+</nav>
+<footer>MeVCine · notice du logiciel · Rémi MEVAERE · logiciel libre, licence GPL 3 ou ultérieure</footer>
+</main>
+</div>
+</body>
+</html>

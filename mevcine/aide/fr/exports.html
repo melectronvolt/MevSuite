@@ -1,0 +1,55 @@
+<header class="title">
+<h1>Exporter et enregistrer</h1>
+<p>Choisir le fichier selon le travail à poursuivre</p>
+</header>
+<table>
+  <tr><th scope="row">Reprendre le pointage</th><td>Enregistrez un projet <code>.mevcine</code> et gardez la vidéo à côté.</td></tr>
+  <tr><th scope="row">Faire des calculs</th><td>Copiez les tableaux pour Python ou enregistrez un CSV pour le tableur.</td></tr>
+  <tr><th scope="row">Illustrer un compte rendu</th><td>En mode expert, enregistrez le graphe ou la représentation de la trajectoire.</td></tr>
+</table>
+<figure class="capture">
+  <a href="images/export.png" aria-label="Agrandir · Étape Export avec commandes pour Python, CSV et projet"><img src="images/export.png" width="1280" height="800" loading="lazy" alt="Étape Export avec commandes pour Python, CSV et projet"></a>
+  <figcaption>Dans le panneau de gauche, choisissez le type de sortie. Le tableau à droite permet de contrôler les valeurs avant l’export.</figcaption>
+</figure>
+<h2 id="tableau">Comprendre les colonnes</h2>
+<p>La première image de mesure fixe <code>t = 0</code>. Les dates sont en secondes. Les coordonnées sont exprimées dans le repère choisi, en mètres après étalonnage ou en pixels avant. Avec deux mobiles, l’ordre est <code>t, x1, y1, x2, y2</code>.</p>
+<p>Supposons que le mobile 1 soit caché sur la deuxième image et que le mobile 2 reste visible. À 25 images/s, un extrait de CSV étalonné peut se lire ainsi.</p>
+<pre><code>t (s),x1 (m),y1 (m),x2 (m),y2 (m)
+0,0,0,0.30,0.12
+0.04,,,0.31,0.12</code></pre>
+<p>La deuxième ligne conserve sa date et la position du mobile 2. La première position <code>(0, 0)</code> correspond à une mesure à l’origine. Les deux champs vides du mobile caché deviennent <code>np.nan</code> en Python. Le CSV et les tableaux Python gardent chaque image entre le début et la fin de la série, y compris une image dont tous les points ont été effacés.</p>
+
+<h2 id="python">Copier pour Python</h2>
+<p><span class="btn">Copier pour Python</span> (étape 5, onglet <em>Coordonnées</em>, menu <em>Fichier</em>,
+ou <kbd>Ctrl</kbd>+<kbd>C</kbd>) copie les mesures dans trois tableaux numpy, <code>lst_t</code>, <code>lst_x</code> et
+<code>lst_y</code>. Collez le texte avec <kbd>Ctrl</kbd>+<kbd>V</kbd> au début de votre programme ou dans une
+cellule de notebook, puis écrivez vos calculs à la suite.</p>
+<p>Les nombres ont 6 chiffres significatifs. Avec plusieurs objets, les listes s'appellent <code>lst_x1</code>,
+<code>lst_y1</code>, <code>lst_x2</code>… Le message « Mesures dans le presse-papiers » disparaît si une autre copie le remplace ou si les mesures changent.</p>
+
+<h2 id="csv">Le fichier CSV</h2>
+<p><span class="btn">Enregistrer en CSV…</span> écrit un fichier standard : une virgule entre les colonnes,
+le point décimal, une ligne d'en-tête.</p>
+<p>Pour le lire en Python :</p>
+<pre>import numpy as np
+lst_t, lst_x, lst_y = np.genfromtxt("mesures.csv", delimiter=",", skip_header=1, unpack=True)</pre>
+<p>Pour deux objets, affectez les cinq colonnes à <code>t, x1, y1, x2, y2</code>. Un champ vide donne <code>np.nan</code>. Sa date reste dans le tableau.</p>
+<ul>
+  <li><strong>LibreOffice Calc</strong> : à l'ouverture, cochez la virgule comme séparateur, et choisissez
+  « Anglais (USA) » comme langue, pour que le point décimal soit compris.</li>
+  <li><strong>Excel</strong> : <em>Données › À partir d'un fichier texte/CSV</em>, délimiteur virgule,
+  paramètres régionaux « Anglais (États-Unis) ».</li>
+</ul>
+
+<h2 id="images">Enregistrer une image</h2>
+<p>En mode expert, <span class="btn">Enregistrer</span> de l'onglet <em>Trajectoires</em> écrit le dessin
+(trajectoire, chronophotographie, chronogramme) en PNG ou JPEG ; celui du <em>Grapheur</em> écrit le graphique en
+PNG : pratique pour un compte rendu.</p>
+
+<h2 id="projets">Projets</h2>
+<p>Enregistrez avec <kbd>Ctrl</kbd>+<kbd>S</kbd>. Le fichier <code>.mevcine</code> conserve le repère, l’étalon, la cadence, les positions, les absences signalées et les corrections. La vidéo reste dans son propre fichier. Copiez les deux fichiers dans le même dossier pour changer de poste.</p>
+<p>Une séance interrompue après le premier de deux objets se rouvre sur le second. Un pointage expert mené jusqu’à la dernière image se rouvre sur les coordonnées. Les anciens projets MeVCine ou CinéMev s’ouvrent aussi. S’il faut retrouver la vidéo d’un ancien projet sans empreinte, contrôlez le film avant de confirmer votre choix.</p>
+
+<h2 id="securite">Sauvegarder et récupérer</h2>
+<p><kbd>Ctrl</kbd>+<kbd>S</kbd> enregistre le projet à l’emplacement choisi. Vous pouvez enregistrer entre deux objets d’une même image. Chaque séance dispose aussi d’une copie automatique, y compris pendant le suivi automatique. Après une interruption, utilisez <em>Fichier › Récupérer le travail précédent…</em>. Si plusieurs copies sont proposées, repérez votre vidéo et la date de modification. Vérifiez le dernier point et enregistrez le projet dans votre dossier de travail.</p>
+<p>Si MeVCine signale une erreur d’écriture, choisissez un dossier accessible et utilisez <em>Enregistrer le projet…</em> avant de fermer. Le dialogue de fermeture permet de revenir au projet avec <em>Annuler</em>.</p>

@@ -1,0 +1,62 @@
+<header class="title">
+<h1>L'échelle</h1>
+<p>Un étalon tracé sur l'image, et sa longueur réelle</p>
+</header>
+
+<p>Sur l'image, MeVCine mesure des <strong>pixels</strong>. Pour avoir des <strong>mètres</strong>, il lui faut
+un étalon : un objet de longueur connue, visible sur l'image. Vous le tracez, vous donnez sa longueur, et MeVCine
+en déduit le nombre de pixels par mètre. Toutes les mesures, déjà faites ou à venir, sont alors en mètre.</p>
+
+<h2 id="choisir">Choisir un bon étalon</h2>
+<ul>
+  <li><strong>Dans le plan du mouvement</strong> : une règle posée là où l'objet se déplace, pas devant ni
+  derrière. Ce qui est plus près de la caméra paraît plus grand !</li>
+  <li><strong>Le plus long possible</strong> sur l'image : une erreur d'un pixel sur un étalon de 20 pixels, c'est
+  5 % d'erreur sur toutes les mesures ; sur un étalon de 350 pixels, moins de 0,3 %.</li>
+  <li><strong>Des extrémités faciles à viser</strong> : les deux bouts d'une règle, les bords d'une porte, deux
+  marques au sol mesurées au mètre ruban.</li>
+  <li><strong>Face à la caméra</strong>, comme le mouvement lui-même.</li>
+</ul>
+
+<h2 id="tracer">Tracer l'étalon</h2>
+<p>Mode simplifié : étape 3, <span class="btn">Sélectionner l'étalon</span>. Mode expert : en haut de l'onglet
+<em>Pointage</em>, <span class="btn">Définir l'échelle</span> (<span class="btn">Refaire l'échelle</span> une fois
+l'échelle définie). Puis, sur l'image :</p>
+<ul>
+  <li><strong>deux clics</strong>, un sur chaque extrémité (entre les deux, le trait suit la souris) ;</li>
+  <li>ou un <strong>glisser</strong> d'une extrémité à l'autre, bouton enfoncé.</li>
+</ul>
+<p>Visez avec la loupe. Clic droit ou <kbd>Échap</kbd> annule : l'échelle d'avant reste. Vous pouvez changer
+d'image avant de tracer l'étalon : il n'a pas besoin d'être sur l'image du pointage.</p>
+
+<h2 id="longueur">Écrire la longueur, et son unité</h2>
+<p>Tapez le nombre, et choisissez l'unité dans la liste : <code>mm</code>, <code>cm</code> ou <code>m</code>.
+Virgule ou point décimal, comme vous voulez ; les puissances de 10 sont permises.</p>
+<table>
+  <tr><th>Vous tapez</th><th>Unité de la liste</th><th>Longueur</th></tr>
+  <tr><td><code>85</code></td><td>cm</td><td>85 cm = 0,85 m</td></tr>
+  <tr><td><code>0,85</code> ou <code>0.85</code></td><td>m</td><td>0,85 m</td></tr>
+  <tr><td><code>850</code></td><td>mm</td><td>850 mm = 0,85 m</td></tr>
+  <tr><td><code>8,5E-1</code></td><td>m</td><td>0,85 m</td></tr>
+  <tr><td><code>2,5×10^-3</code> ou <code>2,5*10**-3</code></td><td>m</td><td>0,0025 m</td></tr>
+  <tr><td><code>85 cm</code>, <code>850mm</code>, <code>0,85 m</code></td><td>(peu importe)</td><td>l'unité écrite
+  l'emporte, et la liste la suit</td></tr>
+</table>
+<p class="warn">Une autre unité (<code>1 km</code>, <code>8 dm</code>…), une longueur nulle ou négative, ou un
+texte qui n'est pas un nombre, est refusé, avec un message qui dit pourquoi.</p>
+<p>Mode simplifié : la longueur se tape dans la consigne de l'étape 3, puis <span class="btn">Valider</span>.
+Mode expert : dans la petite fenêtre « Longueur de l'étalon », qui s'ouvre dès l'étalon tracé ;
+<span class="btn">OK</span> valide, <span class="btn">Annuler</span> ou <kbd>Échap</kbd> abandonne l'étalon.</p>
+
+<figure class="capture">
+  <a href="images/echelle.png" aria-label="Agrandir · Étalon superposé à la règle et longueur validée de 85 cm"><img src="images/echelle.png" width="1280" height="800" loading="lazy" alt="Étalon superposé à la règle et longueur validée de 85 cm"></a>
+  <figcaption>Les repères 0 et 85 cm sont séparés de 353 pixels sur l’image de la notice. Un pixel représente donc environ 2,4 mm dans ce plan.</figcaption>
+</figure>
+
+<h2 id="verifier">Vérifier, changer l'échelle</h2>
+<p>Relisez la longueur inscrite le long du trait vert. Sur la capture, 353 pixels représentent 85 cm. Un déplacement de 20 pixels dans ce plan représente donc <strong>20 × 0,85 / 353 ≈ 0,048 m</strong>. Vous pouvez vérifier le réglage sur une autre distance connue du même plan.</p>
+<p>Si les distances sont toutes cent fois trop grandes, vérifiez l’unité sélectionnée. Refaire l’étalon recalcule aussi les points déjà placés. La colonne passe de <code>x (px)</code> à <code>x (m)</code> dès que l’étalonnage est validé.</p>
+<p>Pour estimer l’effet du pointé, faites varier d’un pixel la longueur du segment de 353 pixels. La variation relative vaut environ 0,28 %. Pour apprécier la dispersion de vos propres résultats, faites étalonner la même image par plusieurs binômes.</p>
+
+
+<p>Si le déplacement horizontal de 20 pixels a lieu en 0,040 s, la composante horizontale de la vitesse moyenne vaut environ 0,048 / 0,040 = <strong>1,2 m/s</strong> dans le sens positif de l’axe. Pour comparer avec la vitesse affichée à une image précise, utilisez les <a href="expert.html#calcul">trois positions du grapheur</a>.</p>

@@ -1,0 +1,26 @@
+// Icône de l'exécutable Windows et informations de version, visibles dans l'explorateur de fichiers.
+#pragma code_page(65001)
+1 ICON "@MEVREG_ICO@"
+1 VERSIONINFO
+FILEVERSION @PROJECT_VERSION_MAJOR@,@PROJECT_VERSION_MINOR@,@PROJECT_VERSION_PATCH@,0
+PRODUCTVERSION @PROJECT_VERSION_MAJOR@,@PROJECT_VERSION_MINOR@,@PROJECT_VERSION_PATCH@,0
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040C04B0"
+    BEGIN
+      VALUE "CompanyName", "Rémi MEVAERE"
+      VALUE "FileDescription", "MeVReg : traitement de données pour les TP de physique-chimie"
+      VALUE "FileVersion", "@PROJECT_VERSION@"
+      VALUE "InternalName", "mevreg"
+      VALUE "LegalCopyright", "Copyright (C) Rémi MEVAERE ; licence MIT"
+      VALUE "OriginalFilename", "mevreg.exe"
+      VALUE "ProductName", "MeVReg"
+      VALUE "ProductVersion", "@PROJECT_VERSION@"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x040C, 1200
+  END
+END

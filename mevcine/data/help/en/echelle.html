@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — The scale</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<a class="saut-contenu" href="#contenu">Skip to content</a>
+<div class="layout">
+
+<nav class="toc" aria-label="Contents">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">User guide<!--mevcine-version--></p>
+  <div class="sommaire-large">
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="index.html">1. Overview</a></li>
+    <li><a href="demarrer.html">2. Getting started</a></li>
+    <li><a href="simplifie.html">3. Simple mode</a></li>
+    <li><a href="echelle.html" class="current" aria-current="page">4. The scale</a></li>
+    <li><a href="expert.html">5. Expert mode</a></li>
+    <li><a href="exports.html">6. Exporting the measurements</a></li>
+    <li><a href="video.html">7. Filming a motion</a></li>
+    <li><a href="clavier.html">8. Menus and shortcuts</a></li>
+    <li><a href="faq.html">9. Frequently asked questions</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="professeurs.html">10. In the classroom</a></li>
+    <li><a href="installer.html">11. Installing</a></li>
+    <li><a href="reglages.html">12. Settings</a></li>
+    <li><a href="depannage.html">13. Troubleshooting</a></li>
+  </ol>
+  </div>
+  <details class="sommaire-mobile">
+    <summary>Contents</summary>
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="index.html">1. Overview</a></li>
+    <li><a href="demarrer.html">2. Getting started</a></li>
+    <li><a href="simplifie.html">3. Simple mode</a></li>
+    <li><a href="echelle.html" class="current" aria-current="page">4. The scale</a></li>
+    <li><a href="expert.html">5. Expert mode</a></li>
+    <li><a href="exports.html">6. Exporting the measurements</a></li>
+    <li><a href="video.html">7. Filming a motion</a></li>
+    <li><a href="clavier.html">8. Menus and shortcuts</a></li>
+    <li><a href="faq.html">9. Frequently asked questions</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="professeurs.html">10. In the classroom</a></li>
+    <li><a href="installer.html">11. Installing</a></li>
+    <li><a href="reglages.html">12. Settings</a></li>
+    <li><a href="depannage.html">13. Troubleshooting</a></li>
+  </ol>
+  </details>
+  <p class="lang"><a href="../fr/echelle.html" lang="fr" hreflang="fr">Français</a></p>
+</nav>
+
+<main id="contenu" tabindex="-1">
+<header class="title">
+<h1>The scale</h1>
+<p>A reference drawn on the frame, and its real length</p>
+</header>
+
+<p>On the frame, MeVCine measures <strong>pixels</strong>. To get <strong>metres</strong>, it needs a reference: an
+object of known length, visible on the frame. You draw it, you give its length, and MeVCine deduces the number of
+pixels per metre. All the measurements, already made or to come, are then in metres.</p>
+
+<h2 id="choisir">Choosing a good reference</h2>
+<ul>
+  <li><strong>In the plane of the motion</strong>: a ruler placed where the object moves, not in front of it nor
+  behind it. What is closer to the camera looks bigger!</li>
+  <li><strong>As long as possible</strong> on the frame: a one-pixel error on a 20-pixel reference means a 5 %
+  error on every measurement; on a 350-pixel reference, less than 0.3 %.</li>
+  <li><strong>Ends that are easy to aim at</strong>: the two ends of a ruler, the edges of a door, two marks on the
+  ground measured with a tape.</li>
+  <li><strong>Facing the camera</strong>, like the motion itself.</li>
+</ul>
+
+<h2 id="tracer">Drawing the reference</h2>
+<p>Simple mode: step 3, <span class="btn">Select the reference</span>. Expert mode: at the top of the
+<em>Marking</em> tab, <span class="btn">Set the scale</span> (<span class="btn">Redo the scale</span> once the scale
+is set). Then, on the frame:</p>
+<ul>
+  <li><strong>two clicks</strong>, one on each end (in between, the line follows the mouse);</li>
+  <li>or a <strong>drag</strong> from one end to the other, with the button held down.</li>
+</ul>
+<p>Aim with the magnifier. Right-click or <kbd>Esc</kbd> cancels: the previous scale stays. You may change frame
+before drawing the reference: it does not need to be on the marked frame.</p>
+
+<h2 id="longueur">Writing the length, and its unit</h2>
+<p>Type the number, and choose the unit in the list: <code>mm</code>, <code>cm</code> or <code>m</code>. A decimal
+point or comma, as you like; powers of 10 are allowed.</p>
+<table>
+  <tr><th>You type</th><th>Unit in the list</th><th>Length</th></tr>
+  <tr><td><code>85</code></td><td>cm</td><td>85 cm = 0.85 m</td></tr>
+  <tr><td><code>0.85</code> or <code>0,85</code></td><td>m</td><td>0.85 m</td></tr>
+  <tr><td><code>850</code></td><td>mm</td><td>850 mm = 0.85 m</td></tr>
+  <tr><td><code>8.5E-1</code></td><td>m</td><td>0.85 m</td></tr>
+  <tr><td><code>2.5×10^-3</code> or <code>2.5*10**-3</code></td><td>m</td><td>0.0025 m</td></tr>
+  <tr><td><code>85 cm</code>, <code>850mm</code>, <code>0.85 m</code></td><td>(does not matter)</td><td>the written
+  unit wins, and the list follows it</td></tr>
+</table>
+<p class="warn">Another unit (<code>1 km</code>, <code>8 dm</code>…), a zero or negative length, or text that
+is not a number, is refused, with a message that says why.</p>
+<p>Simple mode: the length is typed in the instruction of step 3, then <span class="btn">Confirm</span>. Expert
+mode: in the small “Length of the reference” window, which opens as soon as the reference is drawn;
+<span class="btn">OK</span> confirms, <span class="btn">Cancel</span> or <kbd>Esc</kbd> abandons the reference.</p>
+
+<figure class="capture">
+  <a href="images/echelle.png" aria-label="Enlarge · Scale reference aligned with the ruler and a confirmed length of 85 cm"><img src="images/echelle.png" width="1280" height="800" loading="lazy" alt="Scale reference aligned with the ruler and a confirmed length of 85 cm"></a>
+  <figcaption>The 0 and 85 cm marks are 353 pixels apart in the guide recording. One pixel therefore represents about 2.4 mm in that plane.</figcaption>
+</figure>
+
+<h2 id="verifier">Checking, changing the scale</h2>
+<p>Read the length printed beside the green line. In the screenshot, 353 pixels represent 85 cm. A displacement of 20 pixels in this plane therefore represents <strong>20 × 0.85 / 353 ≈ 0.048 m</strong>. Check the calibration against another known distance in the same plane.</p>
+<p>If every distance is a hundred times too large, check the selected unit. Recalibrating also updates earlier measurements. The column changes from <code>x (px)</code> to <code>x (m)</code> when the scale is accepted.</p>
+<p>To estimate the effect of marking the endpoints, change the length of the 353-pixel segment by one pixel. The relative change is about 0.28%. Ask several pairs to calibrate the same image to see the spread in your own results.</p>
+
+
+<p>If the 20-pixel horizontal displacement takes 0.040 s, the mean horizontal velocity is about 0.048 / 0.040 = <strong>1.2 m/s</strong> along the positive axis. To compare with the velocity at a specific frame, use the <a href="expert.html#calcul">three positions in the plotter</a>.</p>
+<nav class="voisins">
+<a class="precedent" href="simplifie.html"><small>◀ Previous page</small>Simple mode</a>
+<a class="suivant" href="expert.html"><small>Next page ▶</small>Expert mode</a>
+</nav>
+<footer>MeVCine · user guide · Rémi MEVAERE · free software, GPL 3 or later</footer>
+</main>
+</div>
+</body>
+</html>

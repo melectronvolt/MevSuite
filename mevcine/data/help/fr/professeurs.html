@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — En classe</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<a class="saut-contenu" href="#contenu">Aller au contenu</a>
+<div class="layout">
+
+<nav class="toc" aria-label="Sommaire">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">Notice d&#x27;utilisation<!--mevcine-version--></p>
+  <div class="sommaire-large">
+  <p class="group">Pour les élèves</p>
+  <ol>
+    <li><a href="index.html">1. Présentation</a></li>
+    <li><a href="demarrer.html">2. Démarrer</a></li>
+    <li><a href="simplifie.html">3. Mode simplifié</a></li>
+    <li><a href="echelle.html">4. L&#x27;échelle</a></li>
+    <li><a href="expert.html">5. Mode expert</a></li>
+    <li><a href="exports.html">6. Exporter les mesures</a></li>
+    <li><a href="video.html">7. Filmer un mouvement</a></li>
+    <li><a href="clavier.html">8. Menus et raccourcis</a></li>
+    <li><a href="faq.html">9. Questions fréquentes</a></li>
+  </ol>
+  <p class="group">Pour les professeurs</p>
+  <ol>
+    <li><a href="professeurs.html" class="current" aria-current="page">10. En classe</a></li>
+    <li><a href="installer.html">11. Installer</a></li>
+    <li><a href="reglages.html">12. Réglages</a></li>
+    <li><a href="depannage.html">13. Dépannage</a></li>
+  </ol>
+  </div>
+  <details class="sommaire-mobile">
+    <summary>Sommaire</summary>
+  <p class="group">Pour les élèves</p>
+  <ol>
+    <li><a href="index.html">1. Présentation</a></li>
+    <li><a href="demarrer.html">2. Démarrer</a></li>
+    <li><a href="simplifie.html">3. Mode simplifié</a></li>
+    <li><a href="echelle.html">4. L&#x27;échelle</a></li>
+    <li><a href="expert.html">5. Mode expert</a></li>
+    <li><a href="exports.html">6. Exporter les mesures</a></li>
+    <li><a href="video.html">7. Filmer un mouvement</a></li>
+    <li><a href="clavier.html">8. Menus et raccourcis</a></li>
+    <li><a href="faq.html">9. Questions fréquentes</a></li>
+  </ol>
+  <p class="group">Pour les professeurs</p>
+  <ol>
+    <li><a href="professeurs.html" class="current" aria-current="page">10. En classe</a></li>
+    <li><a href="installer.html">11. Installer</a></li>
+    <li><a href="reglages.html">12. Réglages</a></li>
+    <li><a href="depannage.html">13. Dépannage</a></li>
+  </ol>
+  </details>
+  <p class="lang"><a href="../en/professeurs.html" lang="en" hreflang="en">English</a></p>
+</nav>
+
+<main id="contenu" tabindex="-1">
+<header class="title">
+<h1>En classe</h1>
+<p>Préparer le film, conduire le pointage et discuter les résultats avec la classe</p>
+</header>
+
+<h2 id="choix">De la mesure au modèle</h2>
+<p>Choisissez une question avant de choisir l’affichage. « Où la balle atteint-elle son sommet ? » se traite avec <em>y(t)</em> ou <em>v<sub>y</sub>(t)</em>. « Quelle trajectoire voit un passager du premier chariot ? » demande de suivre deux mobiles et de choisir le premier comme référentiel dans <em>Trajectoires</em>.</p>
+<dl class="films-tp">
+  <dt>Chute libre<small><code>chute_libre.mp4</code> · 60 images/s</small></dt>
+  <dd><p><strong>Quel signe aura l’accélération si l’axe vertical est dirigé vers le haut ?</strong></p><p>Comparer le signe de la pente de <em>v<sub>y</sub>(t)</em> à la descente visible sur la vidéo.</p></dd>
+  <dt>Lancer parabolique<small><code>lancer_parabolique.mp4</code> · 60 images/s</small></dt>
+  <dd><p><strong>Au sommet, quelles composantes de la vitesse peut-on encore observer ?</strong></p><p>Repérer le maximum de <em>y(t)</em>, puis lire <em>v<sub>x</sub></em> et <em>v<sub>y</sub></em> autour de cette date.</p></dd>
+  <dt>Deux chariots<small><code>deux_chariots_uniformes.mp4</code> · 30 images/s</small></dt>
+  <dd><p><strong>Comment évolue l’écart entre les chariots ?</strong></p><p>Comparer <em>x₂ − x₁</em> aux positions du second chariot dans le référentiel du premier.</p></dd>
+  <dt>Pendule simple<small><code>pendule_simple.mp4</code> · 30 images/s</small></dt>
+  <dd><p><strong>Où la vitesse est-elle la plus grande ?</strong></p><p>Faire correspondre les maxima de la norme <em>v</em> aux images du pendule.</p></dd>
+</dl>
+<p>Ces quatre films se trouvent dans <code>mevcine/exemples/</code> dans les sources. Copiez le film retenu dans le dossier distribué à la classe. Le même travail peut être réalisé avec un <a href="video.html#filmer">film produit en classe</a>.</p>
+
+<h2 id="seance">Une séance de pointage et de lecture graphique</h2>
+<ol class="steps">
+  <li><strong>Avant le pointage.</strong> Faites identifier le mobile, le point visé et le plan de l’étalon. Demandez un croquis du repère et une prédiction du signe de <em>v<sub>y</sub></em> pendant la montée et la descente.</li>
+  <li><strong>Pendant la mesure.</strong> Faites relever une dizaine d’images autour du sommet d’un lancer. Chaque binôme note la cadence, la longueur de l’étalon et le numéro de la première image retenue.</li>
+  <li><strong>Du tableau au graphe.</strong> Tracez <em>y(t)</em>, puis <em>v<sub>y</sub>(t)</em>. Cliquez sur un point de vitesse. À cadence constante, calculez avec la classe le déplacement vertical entre les deux images extrêmes, puis divisez-le par le temps qui les sépare.</li>
+  <li><strong>Discuter les écarts.</strong> Comparez deux pointages du même film. Un facteur commun à toutes les distances invite à vérifier l’étalon. Une seule valeur d’accélération surprenante invite à revoir les trois positions dont elle dépend. Un facteur sur toutes les vitesses invite aussi à vérifier la cadence du ralenti.</li>
+  <li><strong>Compte rendu.</strong> Demandez un graphe avec ses axes et unités, une mesure vérifiée sur l’image, le calcul associé, puis une conclusion qui répond à la question de départ. Gardez le projet avec le film pour que le pointage puisse être relu.</li>
+</ol>
+<figure class="capture">
+  <a href="images/calcul-vitesse.png" aria-label="Agrandir · Images 14 à 16 et coordonnées utilisées pour la vitesse à 0,24 s"><img src="images/calcul-vitesse.png" width="448" height="439" loading="lazy" alt="Images 14 à 16 et coordonnées utilisées pour la vitesse à 0,24 s"></a>
+  <figcaption>Les deux positions extrêmes ont la même ordonnée. Sur les 0,08 s qui les séparent, le déplacement vertical est nul. Le déplacement horizontal vaut environ 0,053 m, soit une composante horizontale de vitesse d’environ 0,66 m/s.</figcaption>
+</figure>
+
+<h2 id="deploiement">Déployer MeVCine dans une salle</h2>
+<ul>
+  <li><strong>Sous Windows, deux versions</strong> (voir <a href="installer.html">Installer</a>) : la version
+  portable, un dossier à copier sur une clé USB, un dossier réseau ou le disque de chaque poste, sans installation
+  ni droits d'administrateur ; ou l'installateur, pour tous les utilisateurs du poste, déployable sans question
+  (WAPT, GPO). Les préférences et la sauvegarde automatique sont propres au compte de l’élève.</li>
+  <li><strong>Un raccourci pour les élèves</strong> : vers <code>mevcine.exe --simple</code> (ou
+  <code>mevcine --simple</code>), pour arriver toujours en mode simplifié ; sans cette option, MeVCine reprend le
+  mode de la dernière fois, qu'un élève a pu changer (et au premier lancement de chaque compte, il demande le
+  mode). On peut y ajouter une vidéo :
+  <code>mevcine.exe --simple \\serveur\physique\chute.mp4</code>.</li>
+  <li><strong>Postes partagés</strong> : MeVCine ne rouvre jamais la dernière vidéo ; chaque élève part d'un écran
+  propre. La langue, le thème, le mode, l'unité de l'étalon, la taille de la fenêtre et le dernier dossier de
+  vidéos sont retenus par compte. Chaque séance a sa propre copie de secours. Sur un compte partagé, <em>Récupérer le travail précédent…</em> peut proposer les copies de plusieurs élèves. Le nom de la vidéo et la date de modification permettent de choisir.</li>
+  <li><strong>Un dossier de configuration par compte</strong> : la variable <code>MEVCINE_CONF</code> (dans un fichier
+  <code>.bat</code> de lancement, par exemple) désigne un autre dossier, sur la clé ou le réseau. Voir
+  <a href="reglages.html">Réglages</a>.</li>
+  <li>Au premier lancement, Windows signale un programme non signé (<em>Informations complémentaires › Exécuter
+  quand même</em>) : prévenez les élèves, ou faites ce premier lancement vous-même sur chaque poste.</li>
+</ul>
+
+<p>Pour préparer une classe, vérifiez sur un compte élève que son dossier de projet est accessible en écriture. Sur un poste partagé, donnez à chaque élève ou binôme un dossier distinct pour son travail et sa vidéo.</p>
+
+<h2 id="contact">Contact, langues, contribuer</h2>
+<p>MeVCine est écrit par <strong>Rémi MEVAERE</strong> :
+<a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>. Une remarque, une vidéo qui ne
+s'ouvre pas, une idée pour la classe : écrivez, en joignant si possible le journal des erreurs,
+<code>mevcine.log</code> (<a href="reglages.html#configuration">Réglages</a>), et la vidéo.</p>
+<p>L'interface et la notice existent en français et en anglais. Les traductions sont des fichiers gettext
+(<code>data/lang/*.po</code>, modifiables avec Poedit) ; la notice est faite de pages HTML
+(<code>aide/<i>langue</i>/</code>, assemblées par <code>scripts/site-aide.py</code>). Le code est en C++ avec Qt ;
+le fichier <code>README.md</code> explique comment le compiler et lancer les tests.</p>
+
+<h2 id="licence">Licence</h2>
+<p>MeVCine est un <strong>logiciel libre</strong>, sous licence GNU GPL version 3 ou ultérieure : vous pouvez le
+copier, le distribuer aux élèves et le modifier librement. Il intègre des composants libres (Qt, FFmpeg…) :
+<em>Aide › À propos de MeVCine…</em> en donne la liste, avec leurs licences, et le chemin du fichier de réglages ;
+<em>Aide › À propos de Qt…</em> donne la licence de Qt. Sous Windows, le dossier <code>licences</code> du
+programme contient les licences des bibliothèques livrées, et <code>ffmpeg/LICENSE.txt</code> celle de
+ffmpeg.</p>
+<nav class="voisins">
+<a class="precedent" href="faq.html"><small>◀ Page précédente</small>Questions fréquentes</a>
+<a class="suivant" href="installer.html"><small>Page suivante ▶</small>Installer</a>
+</nav>
+<footer>MeVCine · notice du logiciel · Rémi MEVAERE · logiciel libre, licence GPL 3 ou ultérieure</footer>
+</main>
+</div>
+</body>
+</html>

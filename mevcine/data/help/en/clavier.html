@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — Menus, keyboard and mouse</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<a class="saut-contenu" href="#contenu">Skip to content</a>
+<div class="layout">
+
+<nav class="toc" aria-label="Contents">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">User guide<!--mevcine-version--></p>
+  <div class="sommaire-large">
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="index.html">1. Overview</a></li>
+    <li><a href="demarrer.html">2. Getting started</a></li>
+    <li><a href="simplifie.html">3. Simple mode</a></li>
+    <li><a href="echelle.html">4. The scale</a></li>
+    <li><a href="expert.html">5. Expert mode</a></li>
+    <li><a href="exports.html">6. Exporting the measurements</a></li>
+    <li><a href="video.html">7. Filming a motion</a></li>
+    <li><a href="clavier.html" class="current" aria-current="page">8. Menus and shortcuts</a></li>
+    <li><a href="faq.html">9. Frequently asked questions</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="professeurs.html">10. In the classroom</a></li>
+    <li><a href="installer.html">11. Installing</a></li>
+    <li><a href="reglages.html">12. Settings</a></li>
+    <li><a href="depannage.html">13. Troubleshooting</a></li>
+  </ol>
+  </div>
+  <details class="sommaire-mobile">
+    <summary>Contents</summary>
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="index.html">1. Overview</a></li>
+    <li><a href="demarrer.html">2. Getting started</a></li>
+    <li><a href="simplifie.html">3. Simple mode</a></li>
+    <li><a href="echelle.html">4. The scale</a></li>
+    <li><a href="expert.html">5. Expert mode</a></li>
+    <li><a href="exports.html">6. Exporting the measurements</a></li>
+    <li><a href="video.html">7. Filming a motion</a></li>
+    <li><a href="clavier.html" class="current" aria-current="page">8. Menus and shortcuts</a></li>
+    <li><a href="faq.html">9. Frequently asked questions</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="professeurs.html">10. In the classroom</a></li>
+    <li><a href="installer.html">11. Installing</a></li>
+    <li><a href="reglages.html">12. Settings</a></li>
+    <li><a href="depannage.html">13. Troubleshooting</a></li>
+  </ol>
+  </details>
+  <p class="lang"><a href="../fr/clavier.html" lang="fr" hreflang="fr">Français</a></p>
+</nav>
+
+<main id="contenu" tabindex="-1">
+<header class="title">
+<h1>Menus, keyboard and mouse</h1>
+<p>Find a command, its shortcut or its mouse gesture</p>
+</header>
+
+<h2 id="menus">Identify menu commands</h2>
+<p>A greyed-out command becomes available when it applies. For example, marking a first position enables Copy for Python and Save as CSV.</p>
+<figure class="capture">
+  <a href="images/menu-fichier.png" aria-label="Enlarge · File menu showing its seven commands and their shortcuts"><img src="images/menu-fichier.png" width="318" height="235" loading="lazy" alt="File menu showing its seven commands and their shortcuts"></a>
+  <figcaption>File controls the recording, the project and both data exports.</figcaption>
+</figure>
+<table>
+  <tr><th scope="row">Open a video…</th><td>The folder with a play triangle opens a video.</td></tr>
+  <tr><th scope="row">Open a project…</th><td>The open folder resumes a <code>.mevcine</code> file.</td></tr>
+  <tr><th scope="row">Recover previous work…</th><td>The clock with an arrow opens a session backup. If several exist, you can choose one.</td></tr>
+  <tr><th scope="row">Save the project…</th><td>The disk saves the measurements and session settings.</td></tr>
+  <tr><th scope="row">Copy for Python</th><td>The two sheets copy the NumPy arrays to the clipboard.</td></tr>
+  <tr><th scope="row">Save as CSV…</th><td>The table with an arrow exports the time and position columns.</td></tr>
+  <tr><th scope="row">Quit</th><td>The arrow leaving a doorway closes MeVCine.</td></tr>
+</table>
+<figure class="capture">
+  <a href="images/menu-edition.png" aria-label="Enlarge · Edit menu with undo, redo and start-over arrows"><img src="images/menu-edition.png" width="337" height="131" loading="lazy" alt="Edit menu with undo, redo and start-over arrows"></a>
+  <figcaption>Use Edit to undo a correction or deletion.</figcaption>
+</figure>
+<table>
+  <tr><th scope="row">Undo the last point / Undo deletion</th><td>The left arrow undoes the last change to the marks.</td></tr>
+  <tr><th scope="row">Redo the point</th><td>The right arrow reapplies the action you just undid.</td></tr>
+  <tr><th scope="row">Start over</th><td>The circular arrow resets the axes, scale and marks for the open video. Save your project first if you want to return to it.</td></tr>
+</table>
+<figure class="capture">
+  <a href="images/menu-mode.png" aria-label="Enlarge · Mode menu with a tick after the Simple mode label"><img src="images/menu-mode.png" width="395" height="104" loading="lazy" alt="Mode menu with a tick after the Simple mode label"></a>
+  <figcaption>The tick identifies the current mode even when the other command is highlighted.</figcaption>
+</figure>
+<table>
+  <tr><th scope="row">Simple mode (step by step)</th><td>The window with steps opens the five guided steps.</td></tr>
+  <tr><th scope="row">Expert mode (all features)</th><td>The divided window opens the marking and analysis tabs.</td></tr>
+</table>
+<figure class="capture">
+  <a href="images/menu-aide.png" aria-label="Enlarge · Help menu with a book, the MeVCine logo and an information symbol"><img src="images/menu-aide.png" width="388" height="129" loading="lazy" alt="Help menu with a book, the MeVCine logo and an information symbol"></a>
+  <figcaption>F1 opens help for the current step or tab.</figcaption>
+</figure>
+<table>
+  <tr><th scope="row">User guide…</th><td>The open book opens this guide.</td></tr>
+  <tr><th scope="row">About MeVCine…</th><td>The MeVCine logo opens the version, licences and settings file location.</td></tr>
+  <tr><th scope="row">About Qt…</th><td>The information symbol identifies Qt, the library used for the interface.</td></tr>
+</table>
+
+<h2 id="raccourcis">Keyboard shortcuts</h2>
+<table>
+  <tr><th>Keys</th><th>Action</th></tr>
+  <tr><td><kbd>←</kbd> <kbd>→</kbd>, <kbd>Page ↑</kbd> <kbd>Page ↓</kbd></td><td>previous frame, next frame</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd></td><td>undo the last point / redo it</td></tr>
+  <tr><td><kbd>Esc</kbd></td><td>cancel drawing the reference, the measurement to redo, choosing the origin (expert
+  mode); leave full screen; close a message</td></tr>
+  <tr><td><kbd>Enter</kbd></td><td>confirm the length of the reference; close a message (but never confirm an action
+  that would lose measurements)</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>C</kbd></td><td>copy the measurements for Python (outside a text field)</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>O</kbd></td><td>open a video</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>S</kbd></td><td>save the project</td></tr>
+  <tr><td><kbd>Space</kbd> · <kbd>Shift</kbd> + arrow</td><td>In the video, confirm the <a href="simplifie.html#visee">assisted marking target</a> or move it by one pixel.</td></tr>
+  <tr><td><kbd>F1</kbd></td><td>this guide, at the page of what you are doing</td></tr>
+  <tr><td><kbd>F11</kbd></td><td>mark in full screen; <kbd>Esc</kbd> or <kbd>F11</kbd> goes back to the window</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>+</kbd> / <kbd>Ctrl</kbd>+<kbd>−</kbd></td><td>enlarge or shrink the whole
+  interface (from 50 to 300%)</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>0</kbd></td><td>bring the interface back to its normal size</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>Q</kbd></td><td>quit</td></tr>
+</table>
+
+<p>In the table, use the arrow keys to preview the active cell. The bin deletes all objects in that row. <em>Undo deletion</em> restores them. When redoing a row, Esc cancels all clicks made during that correction.</p>
+
+<h2 id="souris">The mouse on the frame</h2>
+<table>
+  <tr><th>Gesture</th><th>Effect</th></tr>
+  <tr><td>Click</td><td>place the origin (step 1, or after <span class="btn">Place the origin</span>); mark the
+  object (while marking); one end of the reference (while drawing it)</td></tr>
+  <tr><td>Drag the origin</td><td>move the origin: at steps 1 and 2 of simple mode, and in expert mode before
+  marking or after <span class="btn">Place the origin</span>. Over the origin, the cursor becomes a hand.</td></tr>
+  <tr><td>Drag</td><td>draw the reference from one end to the other; draw a box around an object (automatic
+  tracking). While marking, a small drag counts as a click: the point is placed when the button is
+  released.</td></tr>
+  <tr><td>Right-click</td><td>cancel drawing the reference</td></tr>
+  <tr><td>Hover during free marking</td><td>The magnifier enlarges the area under the pointer and shows its coordinates alongside.</td></tr>
+  <tr><td>Click in the magnifier</td><td>In assisted marking, click the recognised feature to record its position and move on to the next measurement.</td></tr>
+  <tr><td>Grapher</td><td>Follow the curve to read the coordinates of the measured points. Click a point to see its frame.
+  Scroll to zoom, drag to pan and double-click to show the whole graph.</td></tr>
+</table>
+
+<h2 id="loupe">The magnifier</h2>
+<p>During free marking, move the pointer over the object. The magnifier enlarges the area under the crosshair. Its title identifies the expected action, such as placing the origin, selecting a scale endpoint or marking object 2. The point is recorded when you release the button.</p>
+<p>During assisted marking, the crosshair stays on the suggested feature. Press <kbd>Space</kbd> to accept it. For a one-pixel correction, hold <kbd>Shift</kbd> and press an arrow, then press <kbd>Space</kbd>. You can also click the actual position in the magnifier.</p>
+<p>The coordinates beside the magnifier follow the chosen axes. In simple mode the unit changes from pixels to metres after calibration. In expert mode you can compare both readings. To check a recorded measurement, locate its frame in the table.</p>
+<nav class="voisins">
+<a class="precedent" href="video.html"><small>◀ Previous page</small>Filming a motion</a>
+<a class="suivant" href="faq.html"><small>Next page ▶</small>Frequently asked questions</a>
+</nav>
+<footer>MeVCine · user guide · Rémi MEVAERE · free software, GPL 3 or later</footer>
+</main>
+</div>
+</body>
+</html>

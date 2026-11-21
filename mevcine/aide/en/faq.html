@@ -1,0 +1,73 @@
+<header class="title">
+<h1>Frequently asked questions</h1>
+<p>The small problems of the lab, and how to solve them</p>
+</header>
+
+<h2 id="pointage">Find or correct a point</h2>
+<dl class="faq">
+<dt>Clicking does not advance the video.</dt><dd>In simple mode, open step 4. In expert mode choose <em>Start marking</em> or <em>Resume marking</em>. With several objects, mark them in the order shown before the next frame appears. The status bar tells you whether an origin, a scale or an object is expected.</dd>
+<dt>I clicked beside the object.</dt><dd><kbd>Ctrl</kbd>+<kbd>Z</kbd> undoes the last point. For an earlier frame, find its row and click the target in <strong>Redo</strong>. The bin in <strong>Del.</strong> removes all objects in the row.</dd>
+<dt>What does the robot mean?</dt><dd>It identifies an automatically tracked point. If a position is flagged, open <em>Next point to review</em>. Accept a correct proposal, mark the visible object or confirm the absence of an obscured object.</dd>
+<dt>Why is there a gap in the curve?</dt><dd>MeVCine connects consecutive frames with available values. Velocity and acceleration also require positions in both neighbouring frames. Hover over the last point before the gap to read its frame number, then check the following frames in the table.</dd>
+</dl>
+<figure class="capture">
+  <a href="images/suivi.png" aria-label="Enlarge · Robot symbols alongside automatically tracked points"><img src="images/suivi.png" width="1280" height="800" loading="lazy" alt="Robot symbols alongside automatically tracked points"></a>
+  <figcaption>Start with the frame number in the table when checking a detection.</figcaption>
+</figure>
+
+<h2 id="echelle">The scale</h2>
+<dl class="faq">
+  <dt>My length is refused.</dt>
+  <dd>Type a number, and choose the unit in the list: <code>mm</code>, <code>cm</code> or <code>m</code>. Another unit
+  (km, dm…) is not accepted. See <a href="echelle.html#longueur">Writing the length</a>.</dd>
+  <dt>My positions are in pixels (<code>x (px)</code>).</dt>
+  <dd>The scale is not set. Set it, even after marking: the measurements are recomputed.</dd>
+  <dt>My distances are far too large, or too small.</dt>
+  <dd>Check the unit of the reference: 85 in <code>m</code> instead of <code>cm</code> gives distances 100 times too
+  large. Correct the unit, then <span class="btn">Confirm</span> again.</dd>
+</dl>
+
+<h2 id="dates">Times</h2>
+<dl class="faq">
+  <dt>Why is the first time zero?</dt>
+  <dd>The first frame of the measurement sets time zero. If you start at frame 9, frame 9 has time zero. Set the spatial origin separately when placing the axes.</dd>
+  <dt>Two successive rows are 0.080 s apart in footage recorded at 25 frames/s.</dt>
+  <dd>First compare the frame numbers. A completely deleted frame can separate two visible rows. If the numbers are consecutive, check the variable-frame-rate indication. The plotter uses the times recorded in the video.</dd>
+  <dt>The speeds seem eight times too small.</dt>
+  <dd>Check whether the recording was captured at 240 frames/s and plays at 30 frames/s. Enter the capture rate and check the new interval in the table. See <a href="video.html#ralenti">slow-motion recordings</a>.</dd>
+</dl>
+
+<h2 id="modes">Modes, the window</h2>
+<dl class="faq">
+  <dt>How do I switch to expert mode, or back to simple mode?</dt>
+  <dd>With the <em>Mode</em> menu, at any time: <em>Expert mode (all features)</em> or <em>Simple mode (step by
+  step)</em>. The measurements are kept.</dd>
+  <dt>MeVCine starts in expert mode, and I wanted simple mode.</dt>
+  <dd>MeVCine takes the mode used last time: someone changed it on this computer. <em>Mode › Simple mode (step by
+  step)</em> menu.</dd>
+  <dt>The video does not open at once, the window no longer responds.</dt>
+  <dd>MeVCine is examining the video (the busy cursor shows it): a large video, or a video on a USB stick, takes a
+  few seconds. Please wait. After two minutes, MeVCine gives up: copy the video to the computer, then open it
+  again.</dd>
+  <dt>Can I switch modes after I start marking?</dt>
+  <dd>Yes. Both modes share the video, coordinate system, scale and measurements for every object.</dd>
+  <dt>The texts are in French. / The screen is too dark, or too light.</dt>
+  <dd>The flag, at the top right, changes the language; the sun (or the moon), next to it, changes the theme.</dd>
+  <dt>The velocity vectors are too long, or too short.</dt>
+  <dd><em>Trajectories</em> tab: type another value in <em>Velocity scale</em> (pixels for 1 m/s), or empty the box to
+  go back to the automatic scale.</dd>
+</dl>
+
+<h2 id="export">Export</h2>
+<dl class="faq">
+  <dt>The text pasted into Python gives an error.</dt>
+  <dd>Paste all the copied text, including the first line <code>import numpy as np</code>, at the beginning of the
+  program. If numpy is not installed on the computer, ask your teacher.</dd>
+  <dt>The spreadsheet shows odd numbers.</dt>
+  <dd>The CSV file uses a decimal point: see <a href="exports.html#csv">The CSV file</a>.</dd>
+  <dt>I closed MeVCine without saving.</dt>
+  <dd>Open <em>File › Recover previous work…</em> and choose the copy matching the video and session time. Make the original video available, check the last mark and save your project.</dd>
+  <dt>“Video not found” when reopening my project.</dt>
+  <dd>Keep the video with the project when moving it. If the video has been moved or renamed, select it when opening the project. MeVCine checks its fingerprint. For an older project without a fingerprint, check the video yourself before confirming.</dd>
+</dl>
+<p>Another message? See <a href="depannage.html">Troubleshooting</a>, or ask your teacher.</p>

@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — User guide</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<a class="saut-contenu" href="#contenu">Skip to content</a>
+<div class="layout">
+
+<nav class="toc" aria-label="Contents">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">User guide<!--mevcine-version--></p>
+  <div class="sommaire-large">
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="index.html" class="current" aria-current="page">1. Overview</a></li>
+    <li><a href="demarrer.html">2. Getting started</a></li>
+    <li><a href="simplifie.html">3. Simple mode</a></li>
+    <li><a href="echelle.html">4. The scale</a></li>
+    <li><a href="expert.html">5. Expert mode</a></li>
+    <li><a href="exports.html">6. Exporting the measurements</a></li>
+    <li><a href="video.html">7. Filming a motion</a></li>
+    <li><a href="clavier.html">8. Menus and shortcuts</a></li>
+    <li><a href="faq.html">9. Frequently asked questions</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="professeurs.html">10. In the classroom</a></li>
+    <li><a href="installer.html">11. Installing</a></li>
+    <li><a href="reglages.html">12. Settings</a></li>
+    <li><a href="depannage.html">13. Troubleshooting</a></li>
+  </ol>
+  </div>
+  <details class="sommaire-mobile">
+    <summary>Contents</summary>
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="index.html" class="current" aria-current="page">1. Overview</a></li>
+    <li><a href="demarrer.html">2. Getting started</a></li>
+    <li><a href="simplifie.html">3. Simple mode</a></li>
+    <li><a href="echelle.html">4. The scale</a></li>
+    <li><a href="expert.html">5. Expert mode</a></li>
+    <li><a href="exports.html">6. Exporting the measurements</a></li>
+    <li><a href="video.html">7. Filming a motion</a></li>
+    <li><a href="clavier.html">8. Menus and shortcuts</a></li>
+    <li><a href="faq.html">9. Frequently asked questions</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="professeurs.html">10. In the classroom</a></li>
+    <li><a href="installer.html">11. Installing</a></li>
+    <li><a href="reglages.html">12. Settings</a></li>
+    <li><a href="depannage.html">13. Troubleshooting</a></li>
+  </ol>
+  </details>
+  <p class="lang"><a href="../fr/index.html" lang="fr" hreflang="fr">Français</a></p>
+</nav>
+
+<main id="contenu" tabindex="-1">
+<header class="title">
+<h1>MeVCine</h1>
+<p>Measuring an object's position from video frames</p>
+</header>
+
+<p>Open a video you have recorded or received in class. MeVCine associates each point you mark on the object with a frame and a time. With a coordinate system and a known length, you can read positions in metres, examine the trajectory and analyse the data.</p>
+<h2 id="etapes">Make a first set of measurements</h2>
+<p>For a first measurement, choose a short video showing a ball and a ruler in the same shot. Open it in <em>simple mode</em>.</p>
+<ol class="steps">
+  <li>Place the origin at a fixed landmark. Choose the direction of the axis you will use to describe the motion.</li>
+  <li>Join two graduations a known distance apart. Enter the distance and its unit.</li>
+  <li>Go to the first frame of interest. Mark the centre of the ball in three consecutive frames.</li>
+  <li>Read the three times and positions in the table. Play through the frames to check the direction in which the coordinate changes.</li>
+  <li>Save your project. For a first graph, switch to expert mode and plot <em>y</em> against <em>t</em>.</li>
+</ol>
+<p>All five screens are illustrated in <a href="simplifie.html">Simple mode</a>. Teachers can use these measurements in the <a href="professeurs.html#seance">suggested practical</a>.</p>
+
+<h2 id="fenetre">Read the marking window</h2>
+<p>The instructions and magnifier are on the left, the video is in the centre and the table is on the right. The status bar at the bottom shows the current frame and the next action. Click any screenshot in this guide to enlarge it.</p>
+<figure class="capture">
+  <a href="images/pointage.png" aria-label="Enlarge · Guided marking of the ball with a magnifier and a four-frame table"><img src="images/pointage.png" width="1280" height="800" loading="lazy" alt="Guided marking of the ball with a magnifier and a four-frame table"></a>
+  <figcaption>Aim at the centre of the ball in the magnifier. Each row in the table corresponds to a marked frame.</figcaption>
+</figure>
+<h2 id="modes">Choose a working mode</h2>
+<p><a href="simplifie.html">Simple mode</a> guides you through marking. Switch to <a href="expert.html">expert mode</a> to track several objects, change reference frame or plot one quantity against another. Switching modes preserves the objects, times, coordinate system, scale and marks.</p>
+<p>The table gives times and positions. The grapher can also calculate velocity and acceleration from three successive positions. Use <a href="exports.html">Python or CSV export</a> to analyse the measurements yourself.</p>
+
+<h2 id="sommaire">The pages of this guide</h2>
+<h3>For students</h3>
+<ul class="cartes">
+  <li><a href="demarrer.html">Getting started</a><p>Starting MeVCine, opening a video or a project, changing mode,
+  theme and language.</p></li>
+  <li><a href="simplifie.html">Simple mode</a><p>The five steps in detail, marking in full screen, and how to redo a
+  measurement.</p></li>
+  <li><a href="echelle.html">The scale</a><p>Choosing a good reference, drawing it, writing its length and
+  unit.</p></li>
+  <li><a href="expert.html">Expert mode</a><p>The four tabs, several objects, automatic tracking, velocity
+  vectors.</p></li>
+  <li><a href="exports.html">Exporting the measurements</a><p>Copying for Python, the CSV file, projects, the
+  automatic backup.</p></li>
+  <li><a href="video.html">Filming a motion</a><p>Filming well with a phone, transferring the video, slow
+  motion.</p></li>
+  <li><a href="clavier.html">Menus and shortcuts</a><p>Shortcuts, and gestures on the frame.</p></li>
+  <li><a href="faq.html">Frequently asked questions</a><p>The click marks nothing, the length is refused, the times
+  look wrong…</p></li>
+</ul>
+<h3>For teachers</h3>
+<ul class="cartes">
+  <li><a href="professeurs.html">In the classroom</a><p>Deployment in a computer room, teaching choices, a typical
+  session, contact and licence.</p></li>
+  <li><a href="installer.html">Installing</a><p>Windows (portable version, installer), Linux (packages, AppImage),
+  the command line.</p></li>
+  <li><a href="reglages.html">Settings</a><p>The configuration file, the error log, the folders, the environment
+  variables.</p></li>
+  <li><a href="depannage.html">Troubleshooting</a><p>The program's messages and what to do, crashes.</p></li>
+</ul>
+<nav class="voisins">
+<a class="suivant" href="demarrer.html"><small>Next page ▶</small>Getting started</a>
+</nav>
+<footer>MeVCine · user guide · Rémi MEVAERE · free software, GPL 3 or later</footer>
+</main>
+</div>
+</body>
+</html>

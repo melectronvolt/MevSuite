@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <!-- MeVCine : une image de film, un repère et une trajectoire pointée -->
+  <rect x="8" y="8" width="240" height="240" rx="40" fill="#1d3557"/>
+  <g fill="#f1faee" opacity="0.8">
+    <rect x="20" y="30" width="16" height="22" rx="4"/>
+    <rect x="20" y="82" width="16" height="22" rx="4"/>
+    <rect x="20" y="134" width="16" height="22" rx="4"/>
+    <rect x="20" y="186" width="16" height="22" rx="4"/>
+    <rect x="220" y="30" width="16" height="22" rx="4"/>
+    <rect x="220" y="82" width="16" height="22" rx="4"/>
+    <rect x="220" y="134" width="16" height="22" rx="4"/>
+    <rect x="220" y="186" width="16" height="22" rx="4"/>
+  </g>
+  <g stroke="#a8dadc" stroke-width="8" stroke-linecap="round" fill="none">
+    <line x1="58" y1="204" x2="196" y2="204"/>
+    <line x1="58" y1="204" x2="58" y2="62"/>
+  </g>
+  <g fill="#a8dadc">
+    <polygon points="210,204 192,193 192,215"/>
+    <polygon points="58,48 47,66 69,66"/>
+  </g>
+  <g fill="#ffb703">
+    <circle cx="80" cy="180" r="9"/>
+    <circle cx="98" cy="127" r="9"/>
+    <circle cx="116" cy="96" r="9"/>
+    <circle cx="134" cy="84" r="9"/>
+    <circle cx="152" cy="93" r="9"/>
+    <circle cx="170" cy="123" r="9"/>
+    <circle cx="188" cy="173" r="9"/>
+  </g>
+</svg>

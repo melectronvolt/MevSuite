@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVPix — Notice d'utilisation</title>
+<link rel="stylesheet" href="help.css">
+<script src="navigation.js" defer></script>
+</head>
+<body>
+<a class="acces-contenu" href="#contenu">Aller à la notice</a>
+<div class="layout">
+
+<nav class="toc" aria-label="Sommaire">
+  <p class="brand">MeVPix</p>
+  <p class="version">Notice d’utilisation · version {{version}}</p>
+  <p class="group">Utilisation</p>
+  <ol>
+    <li><a href="#presentation">Ouvrir une image ou une séance</a></li>
+    <li><a href="#tp">Deux TP avec leurs images</a></li>
+    <li><a href="#fenetre">La fenêtre et le zoom</a></li>
+    <li><a href="#etapes">Étalonner et mesurer</a></li>
+    <li><a href="#profil">Lire un profil d’intensité</a></li>
+    <li><a href="#seances">Enregistrer et reprendre une séance</a></li>
+    <li><a href="#exports">Copier et exporter</a></li>
+    <li><a href="#raccourcis">Souris et clavier</a></li>
+    <li><a href="#problemes">Dépannage</a></li>
+  </ol>
+  <p class="group">Installation et réglages</p>
+  <ol>
+    <li><a href="#installer">Installer MeVPix</a></li>
+    <li><a href="#reglages">Réglages du poste</a></li>
+    <li><a href="#apropos">Notice, contact et licence</a></li>
+  </ol>
+  <p class="lang"><a href="en.html" lang="en" hreflang="en">English version</a></p>
+</nav>
+
+<main id="contenu" tabindex="-1">
+<header class="title">
+  <h1>MeVPix — Notice d’utilisation</h1>
+  <p>Mesurer des longueurs et relever un profil d’intensité sur une image · version {{version}}</p>
+</header>
+
+<section id="presentation">
+<h2>Ouvrir une image ou une séance</h2>
+<p>Pour prendre en main le logiciel avec une classe, commencez par <a href="#tp">la mesure d’une rondelle ou l’étude de franges de Young</a>.
+Pour travailler sur votre propre photo, cliquez sur <span class="btn">Ouvrir une image…</span>,
+appuyez sur <kbd>Ctrl</kbd>+<kbd>O</kbd> ou déposez un fichier sur la fenêtre. Les mêmes commandes ouvrent
+une photo et une séance <code>.mevpix</code>.</p>
+<ul>
+  <li>Une <strong>image</strong> ouvre un nouveau travail avec l’outil Étalonner. Le champ de longueur
+  réelle est vide. Vous pouvez aussi passer directement à Mesurer ou au Profil d’intensité et travailler en pixels.</li>
+  <li>Une <strong>séance</strong> rouvre l’image qu’elle contient avec l’outil, l’étalonnage,
+  les mesures et la coupe enregistrés. Le fichier <code>.mevpix</code> suffit pour reprendre sur un autre poste.</li>
+</ul>
+<details id="formats">
+  <summary>Formats d’image reconnus sur ce poste</summary>
+  <p class="formats">{{formats}}</p>
+  <p>La liste provient des lecteurs d’images installés avec Qt. La prise en charge de HEIC et HEIF
+  dépend de ces lecteurs. MeVPix applique l’orientation enregistrée dans la photo.</p>
+</details>
+<p>Cliquez sur une capture pour l’ouvrir à sa taille d’origine.</p>
+<figure>
+  <a href="accueil-fr.png"><img src="accueil-fr.png" width="1280" height="800" loading="lazy" alt="Écran d’accueil avec le bouton Ouvrir une image au centre."></a>
+  <figcaption>L’accueil au démarrage, avant l’ouverture d’un fichier.</figcaption>
+</figure>
+</section>
+
+<section id="tp">
+<h2>Deux TP avec leurs images</h2>
+<p>Les deux images ci-dessous sont fournies avec la notice. Enregistrez le PNG choisi dans votre
+dossier de TP, puis ouvrez-le dans MeVPix. Chaque élève peut conserver ses pointages dans un fichier
+<code>.mevpix</code> et les confronter à ceux d’un autre binôme.</p>
+
+<h3>Mesurer les diamètres d’une rondelle</h3>
+<p><a href="../../exemples/rondelle_diametres.png" download>Télécharger l’image de la rondelle (PNG)</a></p>
+<ol class="steps">
+  <li>Avec <strong>Étalonner</strong>, reliez les milieux des deux traits verticaux qui délimitent
+  la barre blanche en bas à gauche. Saisissez <strong>20</strong>, choisissez <strong>mm</strong> et
+  validez. La barre occupe environ 300 px, soit une échelle proche de 0,067 mm par pixel.</li>
+  <li>Avec <strong>Mesurer</strong>, tracez le diamètre extérieur en passant par le centre, puis
+  celui du trou. On attend environ <strong>30 mm</strong> et <strong>12 mm</strong>. Une corde qui
+  passe à côté du centre donne une valeur plus petite.</li>
+  <li>Refaites un pointage suivant une autre direction. Comparez les valeurs et discutez le choix du
+  bord sur le chanfrein. Utilisez <strong>Copier le tableau</strong> pour réunir les mesures de la classe.</li>
+</ol>
+
+<h3>Déterminer l’interfrange des fentes de Young</h3>
+<p><a href="../../exemples/franges_interference.png" download>Télécharger les deux poses des franges (PNG)</a></p>
+<ol class="steps">
+  <li>Étalonnez avec la barre de <strong>10 mm</strong> sous la pose de référence, à gauche.
+  Sélectionnez <strong>Profil d’intensité</strong>. Tracez une coupe horizontale passant par le centre
+  des taches de cette pose. La touche <kbd>Maj</kbd> maintient l’horizontale.</li>
+  <li>Repérez le maximum central. Placez A sur le deuxième maximum à sa gauche et B sur le deuxième
+  à sa droite. Vous couvrez <strong>quatre interfranges</strong>. Divisez Δx par quatre. Sur l’image,
+  on lit environ 6,1 mm entre ces pics, soit un interfrange proche de 1,5 mm.</li>
+  <li>Comparez à la valeur théorique dans le plan focal, <em>i</em> = λ<em>f</em>/<em>a</em>.
+  Avec λ = 632,8 nm, <em>f</em> = 1,000 m et un entraxe <em>a</em> = 400 µm, elle vaut 1,58 mm.
+  Enregistrez la séance avant de tracer une seconde coupe sur la pose longue, à droite.
+  Observez le sommet aplati des pics et le signalement de saturation.</li>
+</ol>
+</section>
+
+<section id="fenetre">
+<h2>La fenêtre et le zoom</h2>
+<p>La barre d’outils permet d’ouvrir un fichier, de choisir <strong>Étalonner</strong>, <strong>Mesurer</strong>
+ou <strong>Profil d’intensité</strong> et de lire l’échelle courante. Le panneau de gauche présente les
+commandes et les résultats de l’outil choisi. Ses tracés apparaissent sur la photo. Changer d’outil
+conserve les tracés des autres outils.</p>
+<div class="menus">
+<figure>
+  <a href="menu-fichier-fr.png"><img src="menu-fichier-fr.png" width="313" height="127" loading="lazy" alt="Menu Fichier montrant Ouvrir, Enregistrer, Enregistrer sous, Image annotée et Quitter."></a>
+  <figcaption>Fichier regroupe les commandes d’ouverture, de sauvegarde et d’export de l’image.</figcaption>
+</figure>
+<figure>
+  <a href="menu-aide-fr.png"><img src="menu-aide-fr.png" width="194" height="75" loading="lazy" alt="Menu Aide avec le livre de la notice, le logo de MeVPix et le symbole d’information sur Qt."></a>
+  <figcaption>Aide donne accès à la notice et aux informations sur le logiciel.</figcaption>
+</figure>
+</div>
+<h3 id="precision">Agrandir l’image et la déplacer</h3>
+<p>Les commandes se trouvent <strong>en bas à droite de l’image</strong>, au-dessus du graphique lorsqu’il
+est ouvert. La loupe <strong>+</strong> agrandit le centre de la vue, la loupe <strong>−</strong> le réduit.
+<span class="btn">Ajuster à la fenêtre</span> recentre l’image entière.</p>
+<figure>
+  <a href="zoom-fr.png"><img src="zoom-fr.png" width="307" height="33" loading="lazy" alt="Loupes + et −, bouton Ajuster à la fenêtre et flèches gauche, droite, haut et bas."></a>
+  <figcaption>Un clic décale la photo d’un dixième de la largeur ou de la hauteur visible.
+  Maintenez une flèche enfoncée pour poursuivre le mouvement. Si la fenêtre est étroite, les flèches se placent sous les loupes.</figcaption>
+</figure>
+<p>Pour zoomer autour d’un détail, placez le pointeur dessus et tournez la molette. Le pincement fonctionne
+sur les pavés tactiles qui transmettent ce geste. Pour déplacer l’image agrandie, faites glisser avec le
+bouton droit ou central enfoncé. Le zoom facilite le pointage. Les longueurs et le profil sont
+toujours calculés dans les coordonnées de la photo d’origine.</p>
+<p>La barre d’état indique le résultat de la dernière opération à gauche, le nom de l’image, ses dimensions
+et le zoom à droite. Le soleil ou la lune et le drapeau, à droite des menus, changent le thème et la langue.
+Pour agrandir les textes et les boutons de toute l’interface, utilisez <kbd>Ctrl</kbd>+<kbd>+</kbd>.</p>
+</section>
+
+<section id="etapes">
+<h2>Étalonner et mesurer</h2>
+<p>Sur une photographie de TP, placez une règle ou une mire dans le plan de l’objet et photographiez
+ce plan de face. MeVPix applique la même échelle à toute la photo. Une règle placée plus près de
+l’appareil ou une forte perspective fausse donc les longueurs. Choisissez deux graduations éloignées
+pour réduire l’effet d’une petite erreur de pointage sur l’étalon.</p>
+<ol class="steps">
+  <li>Avec <strong>Étalonner</strong>, maintenez le bouton gauche et tracez un segment d’un bout à
+  l’autre d’une longueur connue sur l’image. Cette référence apparaît en jaune.
+  Maintenez <kbd>Maj</kbd> pour tracer à l’horizontale ou à la verticale.</li>
+  <li>Dans <strong>Longueur réelle</strong>, saisissez un nombre positif, avec une virgule ou un point
+  décimal. Choisissez µm, mm, cm ou m dans la liste. Cliquez sur <strong>Valider l’étalonnage</strong>
+  ou appuyez sur <kbd>Entrée</kbd> dans le champ. La barre d’outils indique la longueur correspondant à un
+  pixel et MeVPix active <strong>Mesurer</strong>.</li>
+  <li>Tracez les longueurs à mesurer. Chaque segment turquoise reçoit un numéro (M1, M2…) et une ligne
+  dans le tableau. Sans étalonnage validé, les longueurs s’expriment en px. Valider une échelle
+  actualise aussi les mesures déjà tracées. Au-delà de douze mesures, faites défiler le tableau.</li>
+</ol>
+<p>Le calcul utilise le rapport des longueurs en pixels.
+Si 100 px représentent 20 mm, l’échelle vaut 20/100 = 0,20 mm par pixel et un segment de 75 px
+mesure 15 mm. Pour estimer l’incertitude, tenez compte de l’étalon, du pointage et de la prise de
+vue. Les décimales affichées résultent de l’arrondi du calcul.</p>
+<figure>
+  <a href="etalonnage-fr.png"><img src="etalonnage-fr.png" width="1280" height="800" loading="lazy" alt="Segment jaune sur le repère noir, longueur réelle de 20 mm saisie dans le panneau Étalonnage."></a>
+  <figcaption>Avant de valider, vérifiez les deux extrémités de l’étalon, la longueur et l’unité.</figcaption>
+</figure>
+<p>Un nouveau segment commence sur la photo. Si la souris sort de l’image pendant le tracé,
+l’extrémité s’arrête au bord. Si vous relâchez une poignée à moins d’un pixel de l’autre,
+le segment reprend sa position de départ.</p>
+<p>Pour corriger un tracé, reprenez l’une de ses poignées dans l’outil correspondant. Pendant le geste,
+<kbd>Échap</kbd> rétablit la position de départ ou abandonne le nouveau segment. Cliquez sur la corbeille
+d’une ligne pour supprimer sa mesure. Au clavier, placez-vous sur cette cellule puis appuyez sur
+<kbd>Espace</kbd> ou <kbd>Entrée</kbd>. <strong>Tout effacer</strong> vide le tableau.</p>
+<figure>
+  <a href="mesure-fr.png"><img src="mesure-fr.png" width="1280" height="800" loading="lazy" alt="Segment M1 tracé sur l’image et longueur affichée dans le tableau de gauche."></a>
+  <figcaption>La mesure M1 se lit à la fois sur le segment et dans le tableau.</figcaption>
+</figure>
+<p>Après le geste, <kbd>Ctrl</kbd>+<kbd>Z</kbd> annule une modification à la fois, y compris un
+déplacement, une validation d’échelle, une modification du profil ou un effacement du tableau.
+L’historique garde jusqu’à 100 modifications du travail ouvert. Rouvrir un fichier démarre un nouvel historique.</p>
+</section>
+
+<section id="profil">
+<h2>Lire un profil d’intensité</h2>
+<p>Choisissez <strong>Profil d’intensité</strong>. Le graphique apparaît sous la photo. Tracez une
+coupe avec le bouton gauche. Maintenez <kbd>Maj</kbd> pour une coupe horizontale ou verticale.
+Le début du tracé fixe l’origine des abscisses. Une nouvelle coupe remplace la
+précédente et replace A au quart de la coupe, B aux trois quarts. Un second clic sur l’outil revient à Mesurer.</p>
+<p>Si une ancienne séance s’ouvre avec les extrémités de la coupe superposées, écartez-les
+d’au moins un pixel de la photo pour retrouver le graphique et l’export CSV.</p>
+
+<h3>Placer A et B</h3>
+<p>Sur la photo, faites glisser le repère orange A ou le repère vert B le long de la coupe rose.
+Dans le graphique, un clic ou un glissement déplace le curseur le plus proche en abscisse.
+Pour régler un curseur précis, cliquez sur <strong>A</strong> ou <strong>B</strong> dans le panneau,
+puis utilisez <kbd>←</kbd> ou <kbd>→</kbd> pour atteindre l’échantillon précédent ou suivant.
+Quand le graphique a le focus, les touches <kbd>A</kbd> et <kbd>B</kbd> sélectionnent aussi le curseur.</p>
+<p>Le panneau affiche la position <em>x</em> et l’intensité <em>I</em> de chaque curseur, puis leur
+écart <strong>Δx = |x<sub>B</sub> − x<sub>A</sub>|</strong>, en pixels ou dans l’unité étalonnée.
+Au survol du graphique, le point et l’intensité indiqués suivent la courbe à l’abscisse du pointeur.</p>
+
+<figure>
+  <a href="profil-fr.png"><img src="profil-fr.png" width="1280" height="800" loading="lazy" alt="Coupe rose avec A et B sur l’image, intensité en fonction de la position sous l’image et écart Δx dans le panneau."></a>
+  <figcaption>A et B repèrent les mêmes positions sur la photo et sur la courbe. Le panneau donne ici Δx = 20,2 mm.</figcaption>
+</figure>
+
+<h3>Choisir le canal et la largeur de bande</h3>
+<p>L’ordonnée <em>I</em> est un niveau numérique entre 0 et 255. Choisissez Rouge, Vert ou Bleu pour lire
+une composante. <strong>Gris pondéré (RVB)</strong> calcule 0,299 R + 0,587 V + 0,114 B à partir des valeurs
+codées de la photo. Pour relier ces niveaux à un éclairement ou à une puissance lumineuse, il faut
+connaître la réponse de la caméra et les traitements appliqués à l’image.</p>
+<p>L’<strong>épaisseur</strong> de 1 à 50 px fixe le nombre de points moyennés perpendiculairement à
+la coupe. Sur des franges rectilignes, élargir la bande atténue le bruit si les maxima restent à la même
+abscisse sur toute sa largeur. Une bande trop large mélange des détails voisins. Le profil comprend les
+deux extrémités de la coupe et environ un échantillon par pixel, avec interpolation bilinéaire.
+Au bord, MeVPix utilise les points disponibles et signale les bandes tronquées.</p>
+<p>Si le décodeur fournit plus de 8 bits par composante, la barre d’état
+indique la conversion, par exemple <strong>16 → 8 bits</strong>. Le profil et l’image conservée dans la
+séance utilisent ces valeurs converties. Le pourcentage de saturation compte les échantillons
+auxquels contribue au moins un pixel de valeur 254 ou 255 dans le canal choisi. En gris pondéré, une seule
+composante saturée suffit. Une moyenne inférieure à 254 peut donc signaler une saturation. Pour
+comparer des hauteurs de pics, privilégiez une prise de vue où le canal étudié reste sous ce seuil.</p>
+
+<h3>Examiner une partie du graphique</h3>
+<p>La molette agrandit ou réduit l’axe horizontal autour du pointeur. <kbd>Maj</kbd>+molette déplace la
+vue horizontalement. Un double-clic rétablit la courbe entière en conservant A, B et Δx. Lorsque plusieurs
+échantillons occupent une même colonne à l’écran, le tracé conserve leurs valeurs extrêmes.</p>
+</section>
+
+<section id="seances">
+<h2>Enregistrer et reprendre une séance</h2>
+<p>Pour ramasser un TP, demandez le <code>.mevpix</code> si vous souhaitez reprendre les pointages
+des élèves. Pour distribuer votre propre séance à la classe, faites-la ouvrir puis enregistrer sous
+un nom de binôme avant de poursuivre. Pour une étude de la réponse du capteur, conservez également
+le fichier original à sa profondeur d’acquisition.</p>
+<p>Utilisez <strong>Fichier › Enregistrer la séance</strong> ou <kbd>Ctrl</kbd>+<kbd>S</kbd>. Au premier
+enregistrement d’une image, choisissez le nom et le dossier du fichier <code>.mevpix</code>. Son nom
+apparaît dans le titre de la fenêtre. Les sauvegardes suivantes écrivent dans ce fichier. Pour travailler
+sur une copie, choisissez <strong>Fichier › Enregistrer la séance sous…</strong>. La copie devient la séance courante.</p>
+<p>Vous pouvez continuer à mesurer pendant l’écriture. Une mesure tracée après le clic sur
+<strong>Enregistrer</strong> garde l’astérisque dans le titre. Appuyez de nouveau sur
+<kbd>Ctrl</kbd>+<kbd>S</kbd> pour l’inclure dans le fichier.</p>
+<p>Si une autre fenêtre a enregistré la même séance, <strong>Enregistrer une copie…</strong>
+permet de choisir un autre nom et de garder les deux versions. <strong>Annuler</strong> vous ramène
+à votre travail. Si un enregistrement est en cours, vous pouvez aussi réessayer un peu plus tard.</p>
+<p>Une séance contient l’image de travail en pleine résolution, l’étalon tracé, la longueur et l’unité saisies,
+l’échelle validée, les mesures et l’outil sélectionné. Pour le profil, elle conserve la coupe, le canal,
+l’épaisseur et les positions A et B. À la réouverture, l’image s’ajuste à la fenêtre et le graphique
+retrouve la vue complète.</p>
+<p>Un astérisque dans le titre signale les modifications à enregistrer. Zoomer, déplacer la vue ou
+simplement changer d’outil conserve l’état de sauvegarde. À la fermeture ou avant de remplacer le travail
+modifié par un autre fichier, <strong>Enregistrer la séance</strong> sauvegarde puis poursuit l’opération,
+<strong>Abandonner les modifications</strong> poursuit sans les sauvegarder et <strong>Annuler</strong>
+revient au travail courant. Une sauvegarde annulée ou échouée laisse la séance ouverte.</p>
+<figure>
+  <a href="sauvegarde-fr.png"><img src="sauvegarde-fr.png" width="429" height="101" loading="lazy" alt="Question avant fermeture avec les boutons Enregistrer la séance, Abandonner les modifications et Annuler."></a>
+  <figcaption>Les trois choix proposés quand la séance contient des modifications.</figcaption>
+</figure>
+</section>
+
+<section id="exports">
+<h2>Copier et exporter</h2>
+<table>
+  <thead><tr><th>Ce que vous voulez transmettre</th><th>Sortie à choisir</th></tr></thead>
+  <tbody>
+    <tr><td>Un travail à poursuivre au prochain cours</td><td><a href="#seances">Séance .mevpix</a> avec la photo et les tracés modifiables</td></tr>
+    <tr><td>Les longueurs de M1, M2… pour le tableur</td><td><a href="#tableau">Copier le tableau</a></td></tr>
+    <tr><td>Les valeurs de la courbe pour une exploitation numérique</td><td><a href="#csv">Profil en CSV</a></td></tr>
+    <tr><td>Une figure avec les mesures pour un compte rendu</td><td><a href="#annotation">Image annotée</a> en PNG ou dans le presse-papiers</td></tr>
+  </tbody>
+</table>
+<div class="note" id="echelle-export">
+  <p><strong>Quelle échelle sera utilisée ?</strong> Si l’étalon, la longueur ou l’unité ont changé
+  depuis la validation, le symbole ⚠ accompagne l’échelle. Avant la copie du tableau, l’export CSV
+  ou l’image annotée, MeVPix affiche l’échelle validée et la nouvelle échelle si la saisie est valable.
+  <strong>Valider la nouvelle échelle</strong> l’applique à la séance et à la sortie.
+  <strong>Garder l’échelle validée</strong> utilise la précédente et garde la saisie en attente.
+  <strong>Annuler</strong> interrompt l’opération. Une saisie invalide laisse disponible l’échelle déjà validée.</p>
+</div>
+
+<figure>
+  <a href="echelle-fr.png"><img src="echelle-fr.png" width="418" height="124" loading="lazy" alt="Échelle validée et nouvelle échelle affichées ensemble avant l’export."></a>
+  <figcaption>MeVPix affiche la longueur d’un pixel pour chacune des deux échelles.</figcaption>
+</figure>
+
+<h3 id="tableau">Coller le tableau des longueurs</h3>
+<p>Dans <strong>Mesurer</strong>, cliquez sur <strong>Copier le tableau</strong>, puis collez dans un
+tableur ou un document avec <kbd>Ctrl</kbd>+<kbd>V</kbd>. Une tabulation sépare les deux colonnes.
+La première, <strong>Mesure</strong>, contient M1, M2… La seconde donne la <strong>Longueur</strong>
+dans l’unité indiquée en en-tête, par exemple <code>Longueur (px)</code> ou <code>Longueur (mm)</code>.
+Les nombres utilisent la virgule en français et le point en anglais.</p>
+
+<h3 id="csv">Enregistrer les valeurs du profil en CSV</h3>
+<p>Dans <strong>Profil d’intensité</strong>, cliquez sur <strong>Exporter le profil (CSV)…</strong>.
+Le fichier contient tous les échantillons de la coupe, d’une extrémité à l’autre, quel que soit le
+zoom ou l’intervalle A–B. La première colonne donne la position <code>x</code> dans l’unité indiquée
+en en-tête. La seconde, <code>I</code>, donne l’intensité avec deux décimales.</p>
+<table>
+  <thead><tr><th>Langue de MeVPix</th><th>Nom proposé</th><th>Séparateur de colonnes</th><th>Séparateur décimal</th></tr></thead>
+  <tbody>
+    <tr><td>Français</td><td><code>profil.csv</code></td><td>Point-virgule</td><td>Virgule</td></tr>
+    <tr><td>Anglais</td><td><code>profile.csv</code></td><td>Virgule</td><td>Point</td></tr>
+  </tbody>
+</table>
+<p>MeVPix ajoute <code>.csv</code> à un nom saisi sans extension et demande confirmation avant de remplacer
+un fichier existant. Le CSV s’importe dans MeVReg ou dans un tableur. Ce code lit un export français avec pandas.</p>
+<pre><code>import pandas as pd
+profil = pd.read_csv("profil.csv", sep=";", decimal=",")
+profil.plot(x=profil.columns[0], y="I")</code></pre>
+
+<h3 id="annotation">Copier ou enregistrer une image annotée</h3>
+<p>Ouvrez <strong>Fichier › Image annotée…</strong>. Choisissez toutes les mesures, une mesure par son
+numéro ou aucune. La case <strong>Étalon</strong> est disponible si le segment correspond en longueur
+à la référence validée. Si une coupe existe, <strong>Coupe et curseurs A/B sur l’image</strong> permet
+de la superposer à la photo. L’option indépendante <strong>Joindre le graphique et Δx</strong> ajoute
+sous la photo le profil entier avec ses axes, ses curseurs et une légende indiquant le canal, l’épaisseur et Δx.</p>
+<p>Vérifiez l’aperçu, puis choisissez <strong>Copier</strong> pour le presse-papiers ou
+<strong>Enregistrer</strong> pour un PNG. Les deux sorties reproduisent la même composition à la
+résolution de la photo, même si vous aviez zoomé à l’écran. Elles conservent aussi son profil de
+couleur lorsqu’il est présent. Le nom proposé se termine par
+<code>-MeVPix.png</code>. Les annotations sont intégrées aux pixels
+du PNG. Gardez la séance <code>.mevpix</code> pour pouvoir encore déplacer les tracés.</p>
+<figure>
+  <a href="annotation-fr.png"><img src="annotation-fr.png" width="522" height="488" loading="lazy" alt="Aperçu d’export avec étalon, mesure M1, coupe A/B et graphique cochés."></a>
+  <figcaption>Le graphique s’ajoute sous la photo. Les boutons Enregistrer et Copier utilisent cet aperçu.</figcaption>
+</figure>
+</section>
+
+<section id="raccourcis">
+<h2>Souris et clavier</h2>
+<table>
+  <thead><tr><th>Action</th><th>Commande</th></tr></thead>
+  <tbody>
+    <tr><td>Ouvrir une image ou une séance</td><td><kbd>Ctrl</kbd>+<kbd>O</kbd> ou glisser-déposer</td></tr>
+    <tr><td>Enregistrer la séance</td><td><kbd>Ctrl</kbd>+<kbd>S</kbd></td></tr>
+    <tr><td>Enregistrer sous un autre nom</td><td>Fichier › Enregistrer la séance sous… (<kbd>Ctrl</kbd>+<kbd>Maj</kbd>+<kbd>S</kbd> si affiché dans le menu)</td></tr>
+    <tr><td>Tracer un segment ou déplacer une poignée</td><td>Glisser avec le bouton gauche. Maintenir <kbd>Maj</kbd> pour un segment horizontal ou vertical</td></tr>
+    <tr><td>Valider l’étalonnage</td><td><kbd>Entrée</kbd> dans le champ de longueur</td></tr>
+    <tr><td>Abandonner le tracé ou le déplacement en cours</td><td><kbd>Échap</kbd></td></tr>
+    <tr><td>Annuler la dernière modification</td><td><kbd>Ctrl</kbd>+<kbd>Z</kbd>. Pendant la saisie, le champ gère l’annulation du texte</td></tr>
+    <tr><td>Zoomer sur l’image ou retrouver la vue entière</td><td>Loupes + et − ou molette. Bouton Ajuster à la fenêtre pour la vue entière</td></tr>
+    <tr><td>Déplacer l’image</td><td>Cliquer sur une flèche à côté des loupes ou glisser avec le bouton droit ou central de la souris</td></tr>
+    <tr><td>Déplacer un curseur d’un échantillon</td><td>Dans le graphique, <kbd>A</kbd> ou <kbd>B</kbd>, puis <kbd>←</kbd> ou <kbd>→</kbd></td></tr>
+    <tr><td>Naviguer dans le graphique</td><td>Molette pour zoomer, <kbd>Maj</kbd>+molette pour défiler, double-clic pour tout revoir</td></tr>
+    <tr><td>Redimensionner les textes et boutons</td><td><kbd>Ctrl</kbd>+<kbd>+</kbd> ou <kbd>Ctrl</kbd>+<kbd>−</kbd>. <kbd>Ctrl</kbd>+<kbd>0</kbd> rétablit la taille normale</td></tr>
+    <tr><td>Ouvrir la notice</td><td><kbd>F1</kbd> ou Aide › Notice d’utilisation…</td></tr>
+  </tbody>
+</table>
+</section>
+
+<section id="problemes">
+<h2>Dépannage</h2>
+<dl class="faq">
+  <dt>Les mesures en mm sont toutes trop grandes d’un même facteur.</dt>
+  <dd>Vérifiez l’unité de la longueur saisie, puis pointez une deuxième longueur connue dans le même plan.
+  Un écart d’un facteur dix peut venir d’une confusion entre cm et mm. Si l’écart dépend de la position
+  sur la photo, vérifiez l’orientation de la règle et la perspective.</dd>
+  <dt>Le profil montre un plateau au sommet d’une frange.</dt>
+  <dd>Consultez l’indication de saturation pour le canal étudié. Essayez une pose plus courte et
+  reprenez la même coupe. Dans le <a href="#tp">TP sur les franges</a>, comparez les deux poses fournies.</dd>
+  <dt>Le format de l’image est inconnu.</dt>
+  <dd>Dépliez la <a href="#formats">liste des formats reconnus sur ce poste</a>. Elle apparaît aussi
+  au survol du message d’erreur. Si le format manque, ouvrez une copie convertie en PNG ou JPEG.
+  Un échec d’ouverture laisse le travail courant en place.</dd>
+  <dt>MeVPix signale un JPEG incomplet ou endommagé.</dt>
+  <dd>Recopiez la photo depuis l’appareil ou le dossier d’origine. Attendez la fin du transfert
+  avant d’ouvrir la copie. Les mesures déjà à l’écran restent disponibles.</dd>
+  <dt>« Valider l’étalonnage » est grisé, ou les mesures restent en px.</dt>
+  <dd>Tracez une référence d’au moins un pixel sur l’image. Saisissez seulement sa longueur positive
+  et choisissez l’unité dans la liste. Validez pour convertir les mesures existantes.</dd>
+  <dt>Je cherche une mesure ou une coupe après avoir changé d’outil.</dt>
+  <dd>Revenez à <strong>Mesurer</strong> pour les segments M1, M2… ou à <strong>Profil d’intensité</strong>
+  pour la coupe. Si le graphique est vide, tracez une coupe sur l’image avec cet outil.</dd>
+  <dt>La molette agrandit le graphique alors que je veux agrandir la photo.</dt>
+  <dd>Placez le pointeur sur la photo ou utilisez les deux loupes en bas à droite de l’image.
+  Pour rétablir la taille du texte de l’interface, utilisez <kbd>Ctrl</kbd>+<kbd>0</kbd>.</dd>
+  <dt>L’échelle s’affiche en orange avec le symbole ⚠.</dt>
+  <dd>La référence saisie diffère de celle qui a servi aux mesures. Revenez à <strong>Étalonner</strong>
+  pour la vérifier. Vous pouvez aussi <a href="#echelle-export">choisir l’échelle au moment de l’export</a>.</dd>
+  <dt>Tout le CSV apparaît dans une seule colonne.</dt>
+  <dd>Choisissez le séparateur correspondant à la langue utilisée au moment de l’export.
+  Les deux conventions figurent dans <a href="#csv">Enregistrer les valeurs du profil en CSV</a>.</dd>
+  <dt>L’enregistrement de ma séance a échoué.</dt>
+  <dd>Le message de la barre d’état indique le fichier concerné. Utilisez
+  <strong>Fichier › Enregistrer la séance sous…</strong> pour choisir un dossier où vous pouvez écrire.</dd>
+</dl>
+</section>
+
+<section id="installer">
+<h2 id="professeurs">Installer MeVPix</h2>
+<p>Les distributions pour Windows x64 et Linux x86_64 sont disponibles sur la
+<a href="https://github.com/melectronvolt/MevSuite/releases">page des versions de MevSuite</a>.</p>
+<ul>
+  <li><strong>Windows, version portable.</strong> Décompressez <code>MeVPix-windows-x64.zip</code>
+  et lancez <code>mevpix.exe</code>. Copiez le dossier entier pour déplacer l’application.</li>
+  <li><strong>Windows, installateur.</strong> <code>MeVPix-windows-x64-setup.exe</code> installe le
+  programme pour tous les utilisateurs, par défaut dans <code>C:\Program Files\MeVSuite\MeVPix</code>,
+  et enregistre l’association des fichiers <code>.mevpix</code>. Le raccourci se trouve dans le dossier
+  MeVSuite du menu Démarrer. La désinstallation est accessible depuis les Paramètres de Windows.</li>
+  <li><strong>Linux.</strong> Installez le paquet <code>.deb</code> pour Ubuntu ou <code>.rpm</code>
+  pour Fedora, ou rendez le fichier <code>.AppImage</code> exécutable et lancez-le. Les paquets
+  <code>.deb</code> et <code>.rpm</code> déclarent le type de fichier <code>.mevpix</code> au bureau.</li>
+</ul>
+<h3>Déploiement silencieux sous Windows</h3>
+<p>Cette commande installe MeVPix avec les droits d’administration depuis WAPT, une GPO ou un script.</p>
+<pre><code>MeVPix-windows-x64-setup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART</code></pre>
+<p>Cette commande désinstalle MeVPix du dossier par défaut.</p>
+<pre><code>"C:\Program Files\MeVSuite\MeVPix\unins000.exe" /VERYSILENT /SUPPRESSMSGBOXES /NORESTART</code></pre>
+</section>
+
+<section id="reglages">
+<h2>Réglages du poste</h2>
+<p>Au premier lancement, MeVPix utilise le thème du bureau et la première langue de préférence
+prise en charge, avec l’anglais par défaut. L’unité initiale est le mm, le canal le gris pondéré et
+l’épaisseur de bande 5 px. Le fichier <code>mevpix.ini</code> conserve les préférences entre deux lancements.</p>
+<table>
+  <thead><tr><th>Système</th><th>Réglages personnels</th><th>Réglages imposés au lancement</th></tr></thead>
+  <tbody>
+    <tr><td>Windows</td><td><code>%APPDATA%\MeVSuite\mevpix.ini</code></td><td><code>mevpix.ini</code> à côté de <code>mevpix.exe</code></td></tr>
+    <tr><td>Linux</td><td><code>$XDG_CONFIG_HOME/MeVSuite/mevpix.ini</code>, normalement <code>~/.config/MeVSuite/mevpix.ini</code></td><td><code>/etc/MeVSuite/mevpix.ini</code>, ou à défaut <code>mevpix.ini</code> à côté de l’exécutable</td></tr>
+  </tbody>
+</table>
+<p>MeVPix lit d’abord le fichier personnel, puis applique les clés du fichier imposé. Il enregistre les
+changements de préférences dans le fichier personnel. <strong>Aide › À propos de MeVPix…</strong>
+indique les chemins utilisés. Une ligne du fichier prend la forme <code>clé = valeur</code>.</p>
+<p>Par exemple, pour commencer chaque TP en français avec une référence exprimée en millimètres
+et un profil en niveaux de gris moyenné sur cinq points, placez ces lignes dans le fichier imposé du poste.</p>
+<pre><code>language = fr
+unit = mm
+channel = luminance
+band = 5</code></pre>
+<p>Ces valeurs initialisent un nouveau travail. Ouvrir une séance enregistrée rétablit son unité,
+son canal et sa largeur de bande.</p>
+<table>
+  <thead><tr><th>Clé</th><th>Valeurs</th></tr></thead>
+  <tbody>
+    <tr><td><code>language</code> et <code>theme</code></td><td><code>auto</code>, <code>fr</code>, <code>en</code> pour la langue. <code>auto</code>, <code>light</code>, <code>dark</code> pour le thème.</td></tr>
+    <tr><td><code>unit</code> et <code>channel</code></td><td><code>um</code>, <code>mm</code>, <code>cm</code>, <code>m</code> pour l’unité. <code>luminance</code>, <code>red</code>, <code>green</code>, <code>blue</code> pour le canal.</td></tr>
+    <tr><td><code>band</code> et <code>ui_zoom</code></td><td>Épaisseur de 1 à 50 px. Facteur d’interface de <code>0.5</code> à <code>3.0</code>. La largeur de la fenêtre limite l’agrandissement effectivement affiché.</td></tr>
+    <tr><td><code>last_dir</code></td><td>Dossier proposé par les boîtes de dialogue.</td></tr>
+    <tr><td><code>window_width</code>, <code>window_height</code> et <code>maximized</code></td><td>Largeur et hauteur de la fenêtre en taille normale. <code>true</code> ou <code>false</code> pour l’état maximisé.</td></tr>
+  </tbody>
+</table>
+</section>
+
+<section id="apropos">
+<h2>Notice, contact et licence</h2>
+<p><kbd>F1</kbd> ouvre la notice de la langue courante dans le navigateur. Les deux pages, les captures
+et les images des deux TP sont intégrées à MeVPix et fonctionnent hors connexion. Le programme
+les met à disposition dans <code>mevpix-help</code> dans le cache personnel, ou dans un dossier temporaire privé
+si le cache est inaccessible. La barre d’état donne le chemin de la page ouverte.</p>
+<p>En cas d’erreur fatale, le message indique le chemin de <code>mevpix.log</code> si le journal
+a pu être écrit. Ce fichier, situé à côté des réglages personnels, décrit la dernière erreur.
+Pour signaler un problème, indiquez la version, le système et l’action effectuée. Joignez le journal s’il est disponible.</p>
+<p>Vous pouvez contacter Rémi MEVAERE à <a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>.
+MeVPix est distribué sous licence MIT. <strong>Aide › À propos de MeVPix…</strong> présente les
+composants et leurs licences. <strong>À propos de Qt…</strong> indique la version et la licence de Qt.</p>
+</section>
+</main>
+</div>
+</body>
+</html>

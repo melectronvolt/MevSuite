@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — Réglages</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<a class="saut-contenu" href="#contenu">Aller au contenu</a>
+<div class="layout">
+
+<nav class="toc" aria-label="Sommaire">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">Notice d&#x27;utilisation<!--mevcine-version--></p>
+  <div class="sommaire-large">
+  <p class="group">Pour les élèves</p>
+  <ol>
+    <li><a href="index.html">1. Présentation</a></li>
+    <li><a href="demarrer.html">2. Démarrer</a></li>
+    <li><a href="simplifie.html">3. Mode simplifié</a></li>
+    <li><a href="echelle.html">4. L&#x27;échelle</a></li>
+    <li><a href="expert.html">5. Mode expert</a></li>
+    <li><a href="exports.html">6. Exporter les mesures</a></li>
+    <li><a href="video.html">7. Filmer un mouvement</a></li>
+    <li><a href="clavier.html">8. Menus et raccourcis</a></li>
+    <li><a href="faq.html">9. Questions fréquentes</a></li>
+  </ol>
+  <p class="group">Pour les professeurs</p>
+  <ol>
+    <li><a href="professeurs.html">10. En classe</a></li>
+    <li><a href="installer.html">11. Installer</a></li>
+    <li><a href="reglages.html" class="current" aria-current="page">12. Réglages</a></li>
+    <li><a href="depannage.html">13. Dépannage</a></li>
+  </ol>
+  </div>
+  <details class="sommaire-mobile">
+    <summary>Sommaire</summary>
+  <p class="group">Pour les élèves</p>
+  <ol>
+    <li><a href="index.html">1. Présentation</a></li>
+    <li><a href="demarrer.html">2. Démarrer</a></li>
+    <li><a href="simplifie.html">3. Mode simplifié</a></li>
+    <li><a href="echelle.html">4. L&#x27;échelle</a></li>
+    <li><a href="expert.html">5. Mode expert</a></li>
+    <li><a href="exports.html">6. Exporter les mesures</a></li>
+    <li><a href="video.html">7. Filmer un mouvement</a></li>
+    <li><a href="clavier.html">8. Menus et raccourcis</a></li>
+    <li><a href="faq.html">9. Questions fréquentes</a></li>
+  </ol>
+  <p class="group">Pour les professeurs</p>
+  <ol>
+    <li><a href="professeurs.html">10. En classe</a></li>
+    <li><a href="installer.html">11. Installer</a></li>
+    <li><a href="reglages.html" class="current" aria-current="page">12. Réglages</a></li>
+    <li><a href="depannage.html">13. Dépannage</a></li>
+  </ol>
+  </details>
+  <p class="lang"><a href="../en/reglages.html" lang="en" hreflang="en">English</a></p>
+</nav>
+
+<main id="contenu" tabindex="-1">
+<header class="title">
+<h1>Réglages</h1>
+<p>Pour les professeurs : la configuration, les dossiers, les variables d'environnement</p>
+</header>
+
+<p>Le drapeau et le bouton soleil/lune, en haut à droite, règlent l’affichage du poste. Les mesures, l’étalon et la cadence du film se retrouvent en ouvrant le projet de la séance.</p>
+
+<h2 id="retenu">Ce que MeVCine retient</h2>
+<table>
+  <tr><th>Langue</th><td>le drapeau, en haut à droite (français ou anglais) ; sans choix, la langue du
+  système</td></tr>
+  <tr><th>Thème</th><td>le soleil ou la lune, en haut à droite ; sans choix, le thème du bureau</td></tr>
+  <tr><th>Mode</th><td>le dernier choisi dans le menu <em>Mode</em> ; au premier lancement, celui choisi sur la page
+  d'accueil (les options <code>--simple</code> et <code>--expert</code> l'imposent)</td></tr>
+  <tr><th>Unité de l'étalon</th><td>la dernière choisie (mm, cm ou m)</td></tr>
+  <tr><th>Fenêtre</th><td>sa taille, et si elle était agrandie</td></tr>
+  <tr><th>Agrandissement</th><td>la taille des textes de l'interface, choisie avec <kbd>Ctrl</kbd>+<kbd>+</kbd> et
+  <kbd>Ctrl</kbd>+<kbd>−</kbd> (de 50 à 300 %)</td></tr>
+  <tr><th>Dossier des vidéos</th><td>le dernier utilisé, proposé par <em>Ouvrir une vidéo…</em></td></tr>
+</table>
+<p>À l'écran, les nombres suivent la langue (virgule décimale en français, point en anglais). Les exports (Python,
+CSV) gardent toujours le point décimal, et les fichiers de projet ne dépendent pas de la langue.</p>
+
+<h2 id="configuration">Le fichier de configuration</h2>
+<p>Ces réglages sont dans <code>mevcine.ini</code>, pour chaque utilisateur, dans le dossier commun aux
+logiciels de la suite (MeVPix, MeVCine, MeVReg, MeVSono) :</p>
+<table>
+  <tr><th>Windows</th><td><code>%APPDATA%\MeVSuite\</code> (en général
+  <code>C:\Users\<i>nom</i>\AppData\Roaming\MeVSuite\</code>)</td></tr>
+  <tr><th>Linux</th><td><code>~/.config/MeVSuite/</code></td></tr>
+</table>
+<p>Chaque séance conserve sa copie de secours dans ce dossier. Son nom commence par <code>mevcine-secours-</code>, suivi du nom de la vidéo et d’un identifiant. Deux fenêtres ouvertes sur le même film gardent ainsi leurs propres mesures. Le menu de récupération lit aussi le fichier <code>mevcine-secours.mevcine</code> des anciennes versions.</p>
+<p>Le journal <code>mevcine.log</code> indique la date et la cause des erreurs internes. Si les préférences sont illisibles, fermez MeVCine et renommez <code>mevcine.ini</code> pour conserver l’original. Au prochain lancement, MeVCine repart des réglages initiaux.</p>
+<p>Les réglages du poste y sont écrits en clair : <code>langue = fr</code> (ou <code>en</code>),
+<code>theme = light</code> (ou <code>dark</code> ; <code>auto</code>, ou rien, suit le bureau),
+<code>mode = simplifie</code> (ou <code>expert</code>), <code>agrandissement = 1.2</code>,
+<code>taille_fenetre = (1200,700)</code>, <code>fenetre_maximisee = False</code>. Ils ne vont jamais dans les
+fichiers de projet.</p>
+
+<figure class="capture">
+  <a href="images/menu-aide.png" aria-label="Agrandir · Menu Aide et entrée À propos de MeVCine"><img src="images/menu-aide.png" width="456" height="129" loading="lazy" alt="Menu Aide et entrée À propos de MeVCine"></a>
+  <figcaption>Ouvrez À propos de MeVCine pour lire le chemin exact de mevcine.ini sur ce poste. Le fichier de secours et le journal se trouvent dans le même dossier.</figcaption>
+</figure>
+
+<h2 id="variables">Les variables d'environnement</h2>
+<table>
+  <tr><th><code>MEVCINE_CONF</code></th><td>un dossier de configuration accessible en écriture. Utilisez un emplacement propre à chaque compte ou binôme pour séparer les sauvegardes de secours</td></tr>
+  <tr><th><code>MEVCINE_DATA</code></th><td>un autre dossier de données (la notice), à la place du
+  dossier <code>data</code> à côté du programme</td></tr>
+</table>
+
+<h2 id="dossiers">Les dossiers</h2>
+<ul>
+  <li><code>ffmpeg/</code> contient les outils de lecture fournis avec la version portable et l’AppImage. Les paquets Linux utilisent aussi les programmes disponibles sur le poste.</li>
+  <li><code>data/help/fr/index.html</code> ouvre la notice française directement dans un navigateur. <kbd>F1</kbd> ouvre la rubrique de travail depuis une copie dans le cache du compte. Les illustrations restent consultables après la fermeture de MeVCine.</li>
+  <li>Le dialogue d’ouverture propose le dernier dossier de vidéos utilisé. Au premier lancement, il cherche <em>Vidéos</em>, puis <em>Téléchargements</em>. Pour enregistrer, choisissez un dossier où l’élève peut écrire.</li>
+</ul>
+
+<h2 id="fenetre">La fenêtre</h2>
+<p>La fenêtre se redimensionne librement (au minimum 900 × 600) : l'image occupe la place disponible, les colonnes
+de commandes défilent si la fenêtre est basse, et les pointages restent justes, car ils sont gardés en pixels de
+la vidéo. En mode simplifié, la largeur du tableau des mesures se règle en tirant son bord.</p>
+<nav class="voisins">
+<a class="precedent" href="installer.html"><small>◀ Page précédente</small>Installer</a>
+<a class="suivant" href="depannage.html"><small>Page suivante ▶</small>Dépannage</a>
+</nav>
+<footer>MeVCine · notice du logiciel · Rémi MEVAERE · logiciel libre, licence GPL 3 ou ultérieure</footer>
+</main>
+</div>
+</body>
+</html>

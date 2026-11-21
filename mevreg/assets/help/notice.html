@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MeVReg · Guide de travaux pratiques</title>
+  <link rel="stylesheet" href="help.css">
+</head>
+<body>
+<a class="skip" href="#contenu">Aller au guide</a>
+<header class="mast">
+  <div><a class="brand" href="#presentation">MeVReg</a><span>Notice d’utilisation · {{version}}</span></div>
+  <nav aria-label="Pages de l’aide"><a href="notice.html" aria-current="page">Guide d’utilisation</a><a href="python.html">Python</a></nav>
+</header>
+<div class="layout">
+<nav class="toc" aria-label="Sommaire">
+  <h2>Prendre en main</h2>
+  <a href="#commencer">TP guidé · loi d’Ohm</a>
+  <a href="#fenetre">Choisir un mode</a>
+  <a href="#saisir">Saisir au tableur</a>
+  <a href="#csv">Importer un CSV</a>
+  <h2>Exploiter les mesures</h2>
+  <a href="#calculer">Formules et paramètres</a>
+  <a href="#incertitudes">Dispersion et incertitudes</a>
+  <a href="#graphe">Tracer et lire une courbe</a>
+  <a href="#modeliser">Modèles et résidus</a>
+  <a href="#analyses">Dérivée, dosage et spectre</a>
+  <h2>En classe</h2>
+  <a href="#enregistrer">Enregistrer ou rendre un travail</a>
+  <a href="#preparer">Préparer un TP</a>
+  <a href="#fenetres">Organiser les fenêtres</a>
+  <a href="#raccourcis">Raccourcis</a>
+  <a href="#problemes">Retrouver un résultat</a>
+  <a href="#installer">Installer sur un poste</a>
+  <a href="#apropos">Contact</a>
+</nav>
+<main id="contenu">
+<header class="title" id="presentation">
+  <h1>Du relevé de mesures au compte rendu</h1>
+  <p class="lead">Une ligne du tableur réunit les lectures d’un même essai. À partir de ces lignes, vous pouvez tester une loi, estimer une incertitude et conserver le raisonnement avec les données.</p>
+</header>
+
+<section id="commencer">
+  <h2>Premier TP · déterminer une résistance</h2>
+  <p>Quelle résistance rend compte de la tension mesurée aux bornes d’un conducteur ohmique&nbsp;? Voici un jeu de contrôle idéal. Il permet de vérifier les gestes avant de passer aux mesures du laboratoire.</p>
+  <div class="sample">
+    <table><caption>Mesures de contrôle</caption>
+      <thead><tr><th scope="col">Intensité I (A)</th><th scope="col">Tension U (V)</th></tr></thead>
+      <tbody><tr><td>0,00</td><td>0,0</td></tr><tr><td>0,10</td><td>4,7</td></tr>
+      <tr><td>0,20</td><td>9,4</td></tr><tr><td>0,30</td><td>14,1</td></tr></tbody>
+    </table>
+    <div><h3>Fichier de l’expérience</h3>
+      <p>Le fichier porte les symboles et les unités dans ses en-têtes. Vous pouvez l’importer directement ou saisir les quatre couples ci-contre.</p>
+      <a class="download" href="resistance.csv" download>Télécharger les mesures (CSV)</a>
+    </div>
+  </div>
+  <ol class="steps">
+    <li><h3>Mesurer</h3><p>En mode simplifié, choisissez <b>Nouveau tableur</b>. Créez deux colonnes, <code>I</code> en A et <code>U</code> en V. Remplissez chaque ligne avec les deux lectures effectuées ensemble. Si vous avez téléchargé le CSV, utilisez <b>Importer un CSV…</b>.</p></li>
+    <li><h3>Tracer</h3><p>Dans <b>Tracer</b>, placez <code>I</code> en abscisse et <code>U</code> en ordonnée. Cliquez sur <b>Tracer les mesures</b>. Vérifiez la présence des quatre points, dont celui à l’origine.</p></li>
+    <li><h3>Exploiter</h3><p>Dans <b>Exploiter</b>, sélectionnez la courbe de U en fonction de I, le modèle <b>Linéaire (proportionnel)</b> et <b>Ajuster aux mesures</b>. L’équation est U = R I. La pente vaut <strong>47 Ω</strong>. À 0,30 A, le modèle prévoit bien 14,1 V.</p></li>
+    <li><h3>Conclure</h3><p>Dans <b>Conclure</b>, indiquez la grandeur déterminée, sa valeur avec son unité et l’intervalle étudié. Enregistrez le fichier <code>.phy</code>. Pour rendre le graphe et la conclusion, ouvrez <b>Compte rendu court…</b>.</p></li>
+  </ol>
+  <h3>Comprendre ce que fait l’ajustement</h3>
+  <p>Remplacez maintenant <strong>9,4 par 9,2 V</strong> sur la ligne à 0,20 A. La pente devient environ <strong>46,71 Ω</strong>. Le modèle prévoit 9,34 V pour cette ligne. La mesure est plus basse d’environ 0,14 V.</p>
+  <figure><a href="residus.png"><img src="residus.png" width="1000" height="700" alt="Les quatre mesures et leur droite ajustée. Sous le graphe, le résidu à 0,20 A se trouve sous zéro."></a>
+    <figcaption>Dans Exploiter, cochez « Afficher les résidus (mesure − modèle) ». Le résidu de la troisième ligne vaut environ −0,14 V. Avec les quatre valeurs idéales, tous les écarts sont nuls à la précision du calcul et cette case est désactivée.</figcaption>
+  </figure>
+</section>
+
+<section id="fenetre">
+  <h2>Choisir le mode de travail</h2>
+  <p>Le premier démarrage propose le <b>mode simplifié</b>. Ses quatre onglets suivent le déroulement du TP. Dans <b>Exploiter</b>, vérifiez le nom du graphe et celui de la courbe avant chaque analyse, surtout lorsqu’une séance contient plusieurs acquisitions.</p>
+  <p>Le <b>mode expert</b> donne accès aux paramètres, aux fenêtres indépendantes, aux modèles personnels et à Python. Changez de présentation avec le menu <b>Mode</b>. Vous retrouvez les grandeurs et les graphes de la séance en cours dans les deux modes.</p>
+</section>
+
+<section id="saisir">
+  <h2>Saisir, relire et corriger au tableur</h2>
+  <p>Le nom identifie la grandeur dans les formules. L’unité figure sous le nom. Une case vide représente une mesure manquante. Saisissez <code>0</code> uniquement lorsque cette valeur a été mesurée.</p>
+  <figure><a href="tableur.png"><img loading="lazy" src="tableur.png" width="1230" height="366" alt="Tableur de position. Sur la quatrième ligne, t vaut 10 secondes et la cellule sélectionnée z vaut 1,25 mètre."></a>
+    <figcaption>La ligne 4 associe 10 s à 1,25 m. Les nombres sont centrés sous leur grandeur. Le signe + à droite permet d’ajouter une colonne.</figcaption>
+  </figure>
+  <ul>
+    <li><b>Ajouter et corriger.</b> Cliquez sur <b>Mesure</b>, nommez la grandeur et renseignez l’unité. Un double-clic sur l’en-tête ouvre ses propriétés. Dans une cellule, <kbd>Entrée</kbd> valide et descend, <kbd>Tab</kbd> passe à droite et <kbd>Échap</kbd> abandonne la saisie en cours. <code>1,25</code>, <code>1.25</code> et <code>1,25e-3</code> sont acceptés.</li>
+    <li><b>Coller des mesures.</b> Sélectionnez la cellule de départ et collez le rectangle avec <kbd>Ctrl</kbd> + <kbd>V</kbd>. Des en-têtes tels que <code>t (s)</code> permettent de reprendre les unités. Un texte illisible au milieu de données laisse la case correspondante vide. Une colonne en mV collée sur une colonne en V est signalée. Importez-la séparément pour la convertir.</li>
+    <li><b>Créer une suite.</b> Utilisez <b>Remplir…</b> pour une série régulière. Relisez le début, le pas et la dernière valeur. Lors d’un tri, vérifiez quelles lignes vont changer d’ordre afin de garder les mesures associées.</li>
+    <li><b>Projeter le tableur.</b> Dans <b>Édition › Préférences…</b>, essayez la <b>Taille du texte du tableur</b> et la <b>Hauteur minimale des lignes</b> sur l’aperçu. L’<b>Agrandissement de l’interface</b> agit aussi sur les menus et les boutons.</li>
+  </ul>
+  <p>Pour reprendre une opération validée, utilisez <kbd>Ctrl</kbd> + <kbd>Z</kbd>. Le menu de l’en-tête permet aussi de convertir une mesure en grandeur calculée. Cette conversion remplace le contenu de la colonne et conserve les liens de ses graphes.</p>
+</section>
+
+<section id="csv">
+  <h2>Importer un fichier d’acquisition</h2>
+  <p>Déposez le fichier sur la fenêtre ou utilisez <b>Fichier › Importer un fichier CSV…</b>. Lisez une ligne dans le fichier de l’appareil et retrouvez-la dans l’aperçu avant de valider.</p>
+  <ol>
+    <li>Réglez le séparateur de colonnes et le signe décimal. Avec <code>0,1;4,7</code>, le point-virgule sépare les deux lectures et la virgule appartient à chaque nombre.</li>
+    <li>Indiquez la ligne des noms, celle des unités le cas échéant et la première ligne de données. Décochez les commentaires et autres colonnes textuelles.</li>
+    <li>Examinez les cellules signalées. Si l’aperçu est cohérent, cliquez sur <b>Importer</b>. Comparez ensuite la première et la dernière mesure à l’original. <b>Réglages détectés</b> restitue la détection initiale.</li>
+  </ol>
+  <figure><a href="import-csv.png"><img loading="lazy" src="import-csv.png" width="760" height="700" alt="Aperçu de deux colonnes numériques avec une cellule rouge dans U. La colonne de remarques est décochée."></a>
+    <figcaption>Ici, « 1,8 » et « 2.1 » coexistent dans le fichier. Avec la virgule sélectionnée, la cellule rouge serait importée vide. Harmonisez les décimales du fichier pour conserver les deux mesures.</figcaption>
+  </figure>
+</section>
+
+<section id="calculer">
+  <h2>Passer d’une mesure à un calcul</h2>
+  <p>Une <strong>grandeur calculée</strong> dépend de ses entrées et se met à jour après une correction. Un <strong>paramètre</strong> représente une valeur commune à l’expérience, par exemple la masse d’un mobile. En mode expert, créez-le dans <b>Données › Nouveau paramètre…</b>.</p>
+  <table><thead><tr><th scope="col">Grandeur cherchée</th><th scope="col">Formule à saisir</th><th scope="col">Vérification</th></tr></thead><tbody>
+    <tr><th scope="row">Puissance en W</th><td><code>U*I</code></td><td>14,1 V × 0,30 A donne 4,23 W.</td></tr>
+    <tr><th scope="row">Énergie cinétique en J</th><td><code>0.5*m*v^2</code></td><td>Avec 2 kg à 3 m/s, on obtient 9 J.</td></tr>
+    <tr><th scope="row">Vitesse en m/s</th><td><code>deriv(x,t)</code></td><td>Pour x en m et t en s, un mouvement de 2 m chaque seconde donne 2 m/s.</td></tr>
+    <tr><th scope="row">Primitive</th><td><code>integ(v,t)</code></td><td>La primitive prend la valeur zéro au premier point valide. Avec v en m/s et t en s, on obtient un déplacement en m.</td></tr>
+  </tbody></table>
+  <p>Dans <b>Mesurer › Formule</b>, indiquez le nom du résultat, la formule et l’unité. Pour changer d’unité, convertissez les nombres. Par exemple, divisez une tension en mV par 1 000 avant de la multiplier par une intensité en A.</p>
+  <p><code>ln</code> donne le logarithme népérien, <code>log</code> le logarithme décimal et <code>sin</code> reçoit un angle en radians. Les parenthèses fixent l’ordre des opérations. Le panneau <b>Calculs › Fonctions disponibles</b> présente les autres fonctions.</p>
+</section>
+
+<section id="incertitudes">
+  <h2>De la dispersion à l’incertitude</h2>
+  <h3>Quatre lectures d’une même longueur</h3>
+  <p>Saisissez 9,8&nbsp;; 10,0&nbsp;; 10,2&nbsp;; 10,0 dans une colonne en cm. Cliquez dans la colonne, puis sur <b>Statistiques…</b>. L’effectif est 4 et la moyenne 10,00 cm. L’écart-type corrigé des lectures vaut environ 0,163 cm. L’incertitude-type de leur moyenne vaut <strong>0,082 cm</strong>, avant arrondi final.</p>
+  <p>Pour des répétitions indépendantes dans les mêmes conditions, la dispersion des lectures se calcule avec le diviseur <var>n</var> − 1. Pour passer à l’incertitude-type de la moyenne, divisez cet écart-type par √<var>n</var>. Une seule mesure ne permet pas cette estimation. Les quatre tensions du TP d’Ohm ont des intensités différentes et répondent à une autre question.</p>
+  <table><thead><tr><th scope="col">Information disponible</th><th scope="col">Incertitude-type à associer</th></tr></thead><tbody>
+    <tr><th scope="row">Lecture arrondie au pas Δ</th><td>Pour une erreur uniforme entre −Δ/2 et +Δ/2, utilisez Δ/√12. Une graduation de 1 mm donne environ 0,29 mm.</td></tr>
+    <tr><th scope="row">Tolérance annoncée ±a</th><td>Pour une erreur uniforme entre −a et +a, utilisez a/√3. Une tolérance de ±0,5 V donne environ 0,29 V.</td></tr>
+    <tr><th scope="row">Incertitude-type déjà connue</th><td>Entrez sa valeur ou sa formule dans l’unité de la grandeur. Une valeur différente à chaque ligne peut être portée par une grandeur associée.</td></tr>
+  </tbody></table>
+  <p>Dans le tableur, sélectionnez la grandeur et ouvrez <b>Incertitude…</b>. Précisez l’origine et relisez le résultat. Dans les réglages de la courbe, choisissez les barres verticales, les deux directions ou les rectangles. Pour un intervalle dissymétrique, donnez la demi-longueur de chaque côté, positive ou nulle.</p>
+</section>
+
+<section id="graphe">
+  <h2>Tracer une relation et lire les axes</h2>
+  <p>En mode simplifié, choisissez les grandeurs dans <b>Tracer</b>. En mode expert, utilisez <b>Graphes › Nouveau graphe y(x)</b>. Vous pouvez aussi glisser des en-têtes sur un graphe vide. Parmi plusieurs colonnes déposées ensemble, la plus à gauche fournit l’abscisse.</p>
+  <p>La molette zoome autour du pointeur. Avec <kbd>Maj</kbd>, elle agit sur les abscisses, avec <kbd>Alt</kbd>, sur les ordonnées. Un double-clic dans la zone de tracé recadre les données. Le réticule aide à lire un point. Pour comparer des ordonnées de deux unités différentes, attribuez une série à l’axe de droite et nommez les deux axes.</p>
+  <p>Le menu contextuel <b>Ajouter ici</b> permet de placer un texte ou une droite. Déplacez les poignées pour ajuster une oblique, puis verrouillez-la si le repère doit rester fixe dans le compte rendu.</p>
+</section>
+
+<section id="modeliser">
+  <h2>Tester un modèle et interpréter les résidus</h2>
+  <p>Choisissez une loi à partir de la situation physique. Dans <b>Exploiter</b>, sélectionnez la courbe et le modèle. En mode expert, ouvrez <b>Modéliser › Nouveau modèle</b> sur le graphe. Vous pouvez y choisir une expression personnelle, fixer des paramètres ou limiter les données de l’ajustement.</p>
+  <table><thead><tr><th scope="col">Situation</th><th scope="col">Modèle et signification des paramètres</th></tr></thead><tbody>
+    <tr><th scope="row">Conducteur ohmique</th><td><b>Linéaire (proportionnel)</b>, U = RI. Si U est en V et I en A, R est en Ω.</td></tr>
+    <tr><th scope="row">Étalonnage avec un décalage</th><td><b>Affine</b>, y = ax + b. Le décalage b a la même unité que y. Pour A = 0,010 C + 0,010 avec C en µmol/L, une absorbance de 0,26 donne 25 µmol/L. Vérifiez que cette valeur appartient à la gamme étalonnée.</td></tr>
+    <tr><th scope="row">Mouvement uniformément accéléré</th><td><b>Parabole</b>, x(t) = at² + bt + c. L’accélération est 2a. Si x est en m et t en s, elle est en m/s².</td></tr>
+    <tr><th scope="row">Charge d’un condensateur</th><td><b>Montée exponentielle vers un palier</b>. Pour une charge de 0 à 5 V, repérez environ 3,16 V. Le temps écoulé depuis le début de la charge donne une lecture de la constante de temps τ.</td></tr>
+  </tbody></table>
+  <p>La <strong>plage d’ajustement</strong> sélectionne les mesures utilisées. La <strong>plage de tracé</strong> fixe jusqu’où dessiner le modèle. Notez en conclusion le domaine sur lequel vous avez effectivement des mesures.</p>
+  <p>Chaque résidu est l’ordonnée mesurée diminuée de l’ordonnée prévue, dans l’unité de la mesure. Des résidus tous positifs dans un même intervalle ou une courbure persistante invitent à réexaminer la loi, même avec un R² proche de 1. L’ajustement de l’onglet <b>Exploiter</b> donne le même poids à chaque point. Les barres d’incertitude permettent une comparaison visuelle.</p>
+</section>
+
+<section id="analyses">
+  <h2>Dériver, intégrer, repérer une équivalence ou une fréquence</h2>
+  <h3>Mouvement et aire sous la courbe</h3>
+  <p>Dans <b>Exploiter</b> ou le menu expert <b>Analyse</b>, <b>Dérivée…</b> crée une grandeur d’ordre 1 ou 2. Vérifiez l’ordre des temps et la régularité des mesures. La dérivation amplifie le bruit. <b>Intégrale…</b> donne l’aire algébrique entre deux bornes ou crée une primitive. Pour une vitesse constante de 2 m/s entre 1 et 4 s, l’aire attendue est 6 m.</p>
+  <h3>Équivalence d’un dosage</h3>
+  <p>Tracez le pH en fonction du volume versé en mL. Avec <b>Exploiter › Tangentes parallèles…</b>, choisissez <b>Tracer sur le graphe</b> et placez les contacts de part et d’autre du saut. Il faut au moins cinq points et des mesures sur les deux flancs. L’intersection de la droite médiane avec la courbe donne une lecture de <var>V</var><sub>E</sub>. Avec <b>Maximum de pente…</b>, comparez-la à l’abscisse du maximum intérieur de |dpH/dV|. L’espacement des ajouts limite la précision de cette lecture.</p>
+  <h3>Fréquence d’un signal</h3>
+  <p>Dans <b>Analyse › Spectre (analyse de Fourier)…</b>, choisissez le temps et le signal. Il faut au moins quatre couples numériques et un pas régulier. Renseignez l’unité de temps, par exemple s, ms ou µs, pour exprimer les fréquences en Hz. Une acquisition de 2 000 points à 8 000 Hz dure 0,25 s au sens de la transformée. Les fréquences du spectre sans prolongement sont espacées de 4 Hz et la fréquence de Nyquist vaut 4 000 Hz.</p>
+  <p>Une sinusoïde à 440 Hz donne un pic à 440 Hz dans cet exemple. La fenêtre de Hann peut réduire les fuites spectrales lorsqu’un signal ne se raccorde pas aux bords. Ajouter des zéros densifie le tracé. Pour mieux séparer deux fréquences proches, allongez la durée d’acquisition. Une tension constante fournit une composante à 0 Hz.</p>
+</section>
+
+<section id="enregistrer">
+  <h2>Quel fichier conserver ou rendre&nbsp;?</h2>
+  <table><thead><tr><th scope="col">Besoin</th><th scope="col">Commande et contenu</th></tr></thead><tbody>
+    <tr><th scope="row">Reprendre le TP</th><td><b>Fichier › Enregistrer</b> (<kbd>Ctrl</kbd> + <kbd>S</kbd>) conserve mesures, formules, graphes, modèles, scripts et conclusion dans un <code>.phy</code>. <b>Enregistrer sous…</b> crée une copie de travail.</td></tr>
+    <tr><th scope="row">Rendre une synthèse</th><td><b>Conclure › Compte rendu court…</b> permet de choisir le tableur, le graphe et les éléments joints à la conclusion. Pour un rapport détaillé, renseignez <b>Fichier › Informations du document…</b> et choisissez <b>Compte rendu en PDF…</b>.</td></tr>
+    <tr><th scope="row">Échanger les nombres</th><td>Exportez le tableur choisi ou utilisez <b>Fichier › Exporter toutes les grandeurs en CSV…</b>. Le destinataire peut relire ces colonnes dans un autre logiciel.</td></tr>
+    <tr><th scope="row">Insérer un graphe</th><td>Dans le menu d’export du graphe, choisissez PNG pour une image, SVG pour un tracé vectoriel ou PDF pour l’impression. Vous pouvez aussi copier le graphe dans le presse-papiers.</td></tr>
+    <tr><th scope="row">Poursuivre en Python</th><td><b>Fichier › Exporter vers Python (Capytale)…</b> prépare un programme autonome pour reprendre les données et les tracés. Gardez aussi le <code>.phy</code> pour une autre séance MeVReg.</td></tr>
+  </tbody></table>
+</section>
+
+<section id="preparer">
+  <h2 id="professeurs">Préparer une séance pour une classe</h2>
+  <ol>
+    <li>Créez une séance maîtresse et renseignez le titre dans <b>Informations du document…</b>. Préparez les noms et les unités attendus, par exemple <code>t</code> en s et <code>z</code> en m.</li>
+    <li>Essayez la consigne sur une copie avec deux ou trois valeurs de contrôle. Testez une case vide, changez une mesure et vérifiez que les formules et les graphes suivent. Conservez un résultat chiffré pour la correction.</li>
+    <li>Rouvrez une copie du fichier distribué comme le ferait un élève. Si la classe rend un PDF, vérifiez le graphe, ses unités et la présence de la conclusion. Demandez aussi le <code>.phy</code> lorsque vous souhaitez revoir le traitement.</li>
+  </ol>
+  <h3 id="python">Préparer un atelier Python</h3>
+  <p>En mode expert, <b>Python › Nouveau script</b> ouvre un éditeur dans la séance. L’atelier propose une résistance, une série de longueurs et un son synthétique avec leurs résultats attendus. <a href="python.html">Ouvrir l’atelier et la référence Python</a>.</p>
+</section>
+
+<section id="fenetres">
+  <h2>Organiser les fenêtres en mode expert</h2>
+  <p>Glissez la barre de titre d’un panneau pour le juxtaposer à un autre ou les réunir en onglets. <b>Détacher</b> permet de déplacer un panneau sur le vidéoprojecteur. <b>Rattacher</b> le ramène dans la fenêtre principale.</p>
+  <p>Dans <b>Fenêtres</b>, la coche repère un panneau affiché. Cliquez sur son nom pour le cacher ou le retrouver. La croix en bout de ligne supprime l’élément du document. Pour revenir à la présentation de départ, utilisez <b>Disposition par défaut</b>.</p>
+</section>
+<section id="raccourcis">
+  <h2>Raccourcis en séance</h2>
+  <dl class="pairs">
+    <dt><kbd>Ctrl</kbd> + <kbd>O</kbd> / <kbd>Ctrl</kbd> + <kbd>S</kbd></dt><dd>Ouvrir une séance / l’enregistrer.</dd>
+    <dt><kbd>Ctrl</kbd> + <kbd>Z</kbd> / <kbd>Ctrl</kbd> + <kbd>Y</kbd></dt><dd>Annuler la dernière modification / la rétablir.</dd>
+    <dt><kbd>Entrée</kbd> / <kbd>Tab</kbd></dt><dd>Valider une cellule et descendre / avancer à droite.</dd>
+    <dt><kbd>Ctrl</kbd> + <kbd>C</kbd> / <kbd>Ctrl</kbd> + <kbd>V</kbd></dt><dd>Copier / coller les cellules sélectionnées.</dd>
+    <dt><kbd>Ctrl</kbd> + <kbd>+</kbd>, <kbd>−</kbd> ou <kbd>0</kbd></dt><dd>Agrandir, réduire ou rétablir la taille de l’interface.</dd>
+    <dt><kbd>F5</kbd> ou <kbd>Ctrl</kbd> + <kbd>Entrée</kbd></dt><dd>Exécuter le script de l’éditeur actif.</dd>
+    <dt><kbd>F1</kbd></dt><dd>Ouvrir cette notice dans le navigateur, même hors connexion.</dd>
+  </dl>
+</section>
+
+<section id="problemes">
+  <h2>Quand un résultat surprend</h2>
+  <dl class="support">
+    <dt>Le graphe reste vide.</dt><dd>Vérifiez que x et y possèdent des nombres sur la même ligne. Relisez les sélecteurs de courbe, puis double-cliquez dans le tracé pour le recadrer. Un axe logarithmique nécessite des valeurs strictement positives.</dd>
+    <dt>La pente diffère d’un facteur 1 000.</dt><dd>Vérifiez l’unité des nombres effectivement saisis. Une pente exprimée en V/mA donne des kΩ. Relisez aussi le séparateur décimal du CSV.</dd>
+    <dt>Une formule affiche une erreur.</dt><dd>Survolez l’indicateur ou lisez la barre d’état. Vérifiez le nom de chaque grandeur, les majuscules et les parenthèses. Dans les formules MeVReg, le carré s’écrit <code>x^2</code>. En Python, écrivez <code>x**2</code>.</dd>
+    <dt>La séance s’est interrompue.</dt><dd>Au redémarrage, choisissez la copie de secours d’après son nom et son heure. Enregistrez le travail récupéré. <b>Fichier › Récupérer une séance interrompue…</b> donne accès aux copies disponibles, y compris celles d’un document sans nom.</dd>
+    <dt>Un fichier .phy est refusé.</dt><dd>Lisez le détail affiché. Un fichier tronqué, une mesure illisible ou des identifiants en double peuvent empêcher l’ouverture. Gardez l’original et essayez une autre copie. Si le fichier provient d’une version plus récente, ouvrez-le avec cette version.</dd>
+    <dt>Un document reçu propose de lancer un script.</dt><dd>Choisissez <b>Ne pas lancer</b> pour consulter le code d’abord. Python peut lire et écrire les fichiers accessibles à votre compte. Le bouton <b>Arrêter</b> interrompt un calcul trop long.</dd>
+  </dl>
+</section>
+<section id="installer">
+  <h2>Installer en salle de TP ou utiliser une clé</h2>
+  <h3>Windows · copie portable</h3>
+  <p>Extrayez l’archive ZIP dans son intégralité. Déplacez le dossier <code>MeVReg-{{version}}</code> avec ses sous-dossiers, puis lancez <code>mevreg.exe</code>. Python, NumPy et l’aide sont fournis. Sur un support accessible en écriture, le sous-dossier <code>profil</code> contient les préférences et les copies de secours. Lorsque vous enregistrez la séance, choisissez le dossier de remise souhaité.</p>
+  <h3>Windows · installation sur le poste</h3>
+  <p>L’installateur <code>MeVReg-{{version}}-windows-x64-setup.exe</code> crée le raccourci <b>Démarrer › MeVSuite</b> et propose l’association des fichiers <code>.phy</code>. Le profil de l’installation, ou d’une copie portable en lecture seule, se trouve sous <code>%APPDATA%\MeVSuite</code>. Pour un déploiement administré, les options sont <code>/VERYSILENT /SUPPRESSMSGBOXES /NORESTART</code>.</p>
+  <h3>Linux</h3>
+  <p>Installez le paquet <code>.deb</code> ou <code>.rpm</code> adapté à la distribution, ou rendez l’AppImage exécutable. Les préférences se trouvent habituellement dans <code>~/.config/MeVSuite/mevreg.ini</code>. Le chemin du profil utilisé figure dans <b>Aide › À propos de MeVReg…</b>.</p>
+</section>
+<section id="apropos">
+  <h2>Signaler une difficulté</h2>
+  <p>Notez la version, le système, les opérations effectuées et le résultat attendu. Un petit fichier contenant des mesures partageables permet de reproduire le cas. Après un arrêt imprévu, le journal <code>mevreg.log</code> se trouve près des préférences.</p>
+  <p>MeVReg est distribué sous licence MIT. Les composants et leurs licences figurent dans <b>Aide › À propos de MeVReg…</b>. Contact de Rémi MEVAERE&nbsp;: <a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>.</p>
+</section>
+<footer><a href="#presentation">Retour au début du guide</a><a href="python.html">Atelier Python →</a></footer>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — Questions fréquentes</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<a class="saut-contenu" href="#contenu">Aller au contenu</a>
+<div class="layout">
+
+<nav class="toc" aria-label="Sommaire">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">Notice d&#x27;utilisation<!--mevcine-version--></p>
+  <div class="sommaire-large">
+  <p class="group">Pour les élèves</p>
+  <ol>
+    <li><a href="index.html">1. Présentation</a></li>
+    <li><a href="demarrer.html">2. Démarrer</a></li>
+    <li><a href="simplifie.html">3. Mode simplifié</a></li>
+    <li><a href="echelle.html">4. L&#x27;échelle</a></li>
+    <li><a href="expert.html">5. Mode expert</a></li>
+    <li><a href="exports.html">6. Exporter les mesures</a></li>
+    <li><a href="video.html">7. Filmer un mouvement</a></li>
+    <li><a href="clavier.html">8. Menus et raccourcis</a></li>
+    <li><a href="faq.html" class="current" aria-current="page">9. Questions fréquentes</a></li>
+  </ol>
+  <p class="group">Pour les professeurs</p>
+  <ol>
+    <li><a href="professeurs.html">10. En classe</a></li>
+    <li><a href="installer.html">11. Installer</a></li>
+    <li><a href="reglages.html">12. Réglages</a></li>
+    <li><a href="depannage.html">13. Dépannage</a></li>
+  </ol>
+  </div>
+  <details class="sommaire-mobile">
+    <summary>Sommaire</summary>
+  <p class="group">Pour les élèves</p>
+  <ol>
+    <li><a href="index.html">1. Présentation</a></li>
+    <li><a href="demarrer.html">2. Démarrer</a></li>
+    <li><a href="simplifie.html">3. Mode simplifié</a></li>
+    <li><a href="echelle.html">4. L&#x27;échelle</a></li>
+    <li><a href="expert.html">5. Mode expert</a></li>
+    <li><a href="exports.html">6. Exporter les mesures</a></li>
+    <li><a href="video.html">7. Filmer un mouvement</a></li>
+    <li><a href="clavier.html">8. Menus et raccourcis</a></li>
+    <li><a href="faq.html" class="current" aria-current="page">9. Questions fréquentes</a></li>
+  </ol>
+  <p class="group">Pour les professeurs</p>
+  <ol>
+    <li><a href="professeurs.html">10. En classe</a></li>
+    <li><a href="installer.html">11. Installer</a></li>
+    <li><a href="reglages.html">12. Réglages</a></li>
+    <li><a href="depannage.html">13. Dépannage</a></li>
+  </ol>
+  </details>
+  <p class="lang"><a href="../en/faq.html" lang="en" hreflang="en">English</a></p>
+</nav>
+
+<main id="contenu" tabindex="-1">
+<header class="title">
+<h1>Questions fréquentes</h1>
+<p>Les petits problèmes du TP, et comment les régler</p>
+</header>
+
+<h2 id="pointage">Corriger ou retrouver un point</h2>
+<dl class="faq">
+<dt>Un clic ne fait pas avancer la vidéo.</dt><dd>En mode simplifié, ouvrez l’étape 4. En mode expert, choisissez <em>Démarrer le pointage</em> ou <em>Reprendre le pointage</em>. Avec plusieurs objets, pointez-les dans l’ordre indiqué avant que l’image suivante s’affiche. La barre d’état précise si le programme attend une origine, un étalon ou un objet.</dd>
+<dt>J’ai cliqué à côté.</dt><dd><kbd>Ctrl</kbd>+<kbd>Z</kbd> annule le dernier point. Pour un point plus ancien, retrouvez son image dans le tableau et cliquez sur la cible de la colonne <strong>Rec</strong>. La poubelle de <strong>Sup.</strong> retire tous les objets de la ligne.</dd>
+<dt>À quoi correspond le robot ?</dt><dd>Il signale un point posé par le suivi automatique. Si le logiciel signale une position incertaine, ouvrez <em>Point suivant à vérifier</em>. Confirmez une proposition correcte, pointez le mobile visible ou confirmez l’absence d’un mobile masqué.</dd>
+<dt>Pourquoi y a-t-il une coupure dans la courbe ?</dt><dd>MeVCine relie les images consécutives qui ont une valeur. Pour une vitesse ou une accélération, les positions des deux images voisines sont aussi nécessaires. Survolez le dernier point avant la coupure pour lire son numéro d’image, puis vérifiez les images suivantes dans le tableau.</dd>
+</dl>
+<figure class="capture">
+  <a href="images/suivi.png" aria-label="Agrandir · Petits robots dans le tableau des points du suivi automatique"><img src="images/suivi.png" width="1280" height="800" loading="lazy" alt="Petits robots dans le tableau des points du suivi automatique"></a>
+  <figcaption>Pour vérifier une détection, partez du numéro de l’image dans le tableau.</figcaption>
+</figure>
+
+<h2 id="echelle">L'échelle</h2>
+<dl class="faq">
+  <dt>Ma longueur est refusée.</dt>
+  <dd>Tapez un nombre, et choisissez l'unité dans la liste : <code>mm</code>, <code>cm</code> ou <code>m</code>.
+  Une autre unité (km, dm…) n'est pas acceptée. Voir <a href="echelle.html#longueur">Écrire la longueur</a>.</dd>
+  <dt>Mes positions sont en pixels (<code>x (px)</code>).</dt>
+  <dd>L'échelle n'est pas définie. Définissez-la, même après le pointage : les mesures sont recalculées.</dd>
+  <dt>Mes distances sont beaucoup trop grandes, ou trop petites.</dt>
+  <dd>Vérifiez l'unité de l'étalon : 85 en <code>m</code> au lieu de <code>cm</code> donne des distances
+  100 fois trop grandes. Corrigez l'unité, puis <span class="btn">Valider</span> de nouveau.</dd>
+</dl>
+
+<h2 id="dates">Les dates</h2>
+<dl class="faq">
+  <dt>Pourquoi la première date vaut-elle zéro ?</dt>
+  <dd>Le temps du tableau part de la première image de mesure. Si vous commencez à l’image 9, l’image 9 porte la date zéro. L’origine spatiale se règle séparément en plaçant le repère.</dd>
+  <dt>Deux lignes successives sont éloignées de 0,080 s sur une vidéo à 25 images/s.</dt>
+  <dd>Comparez d’abord les numéros d’image. Une image entièrement effacée peut séparer deux lignes visibles. Si les numéros se suivent, examinez l’indication de cadence variable. Le grapheur utilise les dates de la vidéo.</dd>
+  <dt>Les vitesses semblent huit fois trop petites.</dt>
+  <dd>Vérifiez si le film a été pris à 240 images/s et lu à 30 images/s. Entrez la cadence de prise de vue et contrôlez le nouvel intervalle dans le tableau. Voir <a href="video.html#ralenti">les vidéos au ralenti</a>.</dd>
+</dl>
+
+<h2 id="modes">Les modes, la fenêtre</h2>
+<dl class="faq">
+  <dt>Comment passer en mode expert, ou revenir au mode simplifié ?</dt>
+  <dd>Avec le menu <em>Mode</em>, à tout moment : <em>Mode expert (toutes les fonctions)</em> ou <em>Mode
+  simplifié (pas à pas)</em>. Les mesures sont gardées.</dd>
+  <dt>MeVCine s'ouvre en mode expert, et je voulais le mode simplifié.</dt>
+  <dd>MeVCine reprend le mode de la dernière fois : quelqu'un l'a changé sur cet ordinateur. Menu <em>Mode ›
+  Mode simplifié (pas à pas)</em>.</dd>
+  <dt>La vidéo ne s'ouvre pas tout de suite, la fenêtre ne réagit plus.</dt>
+  <dd>MeVCine examine la vidéo (le curseur d'attente le montre) : une grande vidéo, ou une vidéo sur une clé USB,
+  demande quelques secondes. Patientez. Au bout de deux minutes, MeVCine abandonne : copiez la vidéo sur
+  l'ordinateur, puis ouvrez-la de nouveau.</dd>
+  <dt>Puis-je changer de mode après avoir commencé le pointage ?</dt>
+  <dd>Oui. Les deux modes partagent la même vidéo, le même repère, la même échelle et les mesures de tous les objets.</dd>
+  <dt>Les textes sont en anglais. / L'écran est trop sombre, ou trop clair.</dt>
+  <dd>Le drapeau, en haut à droite, change la langue ; le soleil (ou la lune), à côté, change le thème.</dd>
+  <dt>Les vecteurs vitesse sont trop longs, ou trop courts.</dt>
+  <dd>Onglet <em>Trajectoires</em> : tapez une autre valeur dans <em>Échelle de vitesses</em> (pixels pour 1 m/s),
+  ou videz la case pour revenir à l'échelle automatique.</dd>
+</dl>
+
+<h2 id="export">L'export</h2>
+<dl class="faq">
+  <dt>Le texte collé dans Python donne une erreur.</dt>
+  <dd>Collez tout le texte copié, y compris la première ligne <code>import numpy as np</code>, au début du
+  programme. Si numpy n'est pas installé sur l'ordinateur, demandez à votre professeur.</dd>
+  <dt>Le tableur affiche des nombres bizarres.</dt>
+  <dd>Le fichier CSV a un point décimal : voir <a href="exports.html#csv">Le fichier CSV</a> pour LibreOffice et
+  Excel.</dd>
+  <dt>J'ai fermé MeVCine sans enregistrer.</dt>
+  <dd>Ouvrez <em>Fichier › Récupérer le travail précédent…</em> et choisissez la copie correspondant à votre vidéo et à l’heure de la séance. Rendez le film d’origine accessible, vérifiez le dernier point et enregistrez votre projet.</dd>
+  <dt>« Vidéo introuvable » en rouvrant mon projet.</dt>
+  <dd>Gardez la vidéo avec le projet pour le transporter. Si elle a été déplacée ou renommée, choisissez-la à l’ouverture du projet. MeVCine vérifie son empreinte. Pour un projet ancien sans empreinte, vérifiez vous-même la vidéo avant de confirmer.</dd>
+</dl>
+<p>Un autre message ? Voyez le <a href="depannage.html">dépannage</a>, ou demandez à votre professeur.</p>
+<nav class="voisins">
+<a class="precedent" href="clavier.html"><small>◀ Page précédente</small>Menus et raccourcis</a>
+<a class="suivant" href="professeurs.html"><small>Page suivante ▶</small>En classe</a>
+</nav>
+<footer>MeVCine · notice du logiciel · Rémi MEVAERE · logiciel libre, licence GPL 3 ou ultérieure</footer>
+</main>
+</div>
+</body>
+</html>

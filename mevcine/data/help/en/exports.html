@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeVCine — Export and save</title>
+<link rel="stylesheet" href="../help.css">
+<link rel="stylesheet" href="../aide.css">
+<link rel="icon" href="../mevcine.svg">
+</head>
+<body>
+<a class="saut-contenu" href="#contenu">Skip to content</a>
+<div class="layout">
+
+<nav class="toc" aria-label="Contents">
+  <p class="brand"><a href="index.html">MeVCine</a></p>
+  <p class="version">User guide<!--mevcine-version--></p>
+  <div class="sommaire-large">
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="index.html">1. Overview</a></li>
+    <li><a href="demarrer.html">2. Getting started</a></li>
+    <li><a href="simplifie.html">3. Simple mode</a></li>
+    <li><a href="echelle.html">4. The scale</a></li>
+    <li><a href="expert.html">5. Expert mode</a></li>
+    <li><a href="exports.html" class="current" aria-current="page">6. Exporting the measurements</a></li>
+    <li><a href="video.html">7. Filming a motion</a></li>
+    <li><a href="clavier.html">8. Menus and shortcuts</a></li>
+    <li><a href="faq.html">9. Frequently asked questions</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="professeurs.html">10. In the classroom</a></li>
+    <li><a href="installer.html">11. Installing</a></li>
+    <li><a href="reglages.html">12. Settings</a></li>
+    <li><a href="depannage.html">13. Troubleshooting</a></li>
+  </ol>
+  </div>
+  <details class="sommaire-mobile">
+    <summary>Contents</summary>
+  <p class="group">For students</p>
+  <ol>
+    <li><a href="index.html">1. Overview</a></li>
+    <li><a href="demarrer.html">2. Getting started</a></li>
+    <li><a href="simplifie.html">3. Simple mode</a></li>
+    <li><a href="echelle.html">4. The scale</a></li>
+    <li><a href="expert.html">5. Expert mode</a></li>
+    <li><a href="exports.html" class="current" aria-current="page">6. Exporting the measurements</a></li>
+    <li><a href="video.html">7. Filming a motion</a></li>
+    <li><a href="clavier.html">8. Menus and shortcuts</a></li>
+    <li><a href="faq.html">9. Frequently asked questions</a></li>
+  </ol>
+  <p class="group">For teachers</p>
+  <ol>
+    <li><a href="professeurs.html">10. In the classroom</a></li>
+    <li><a href="installer.html">11. Installing</a></li>
+    <li><a href="reglages.html">12. Settings</a></li>
+    <li><a href="depannage.html">13. Troubleshooting</a></li>
+  </ol>
+  </details>
+  <p class="lang"><a href="../fr/exports.html" lang="fr" hreflang="fr">Français</a></p>
+</nav>
+
+<main id="contenu" tabindex="-1">
+<header class="title">
+<h1>Export and save</h1>
+<p>Choose the output for your next task</p>
+</header>
+<table>
+  <tr><th scope="row">Continue marking</th><td>Save a <code>.mevcine</code> project and keep the video alongside it.</td></tr>
+  <tr><th scope="row">Run calculations</th><td>Copy the arrays for Python or save a CSV for a spreadsheet.</td></tr>
+  <tr><th scope="row">Illustrate a report</th><td>In expert mode, save the graph or the trajectory view.</td></tr>
+</table>
+<figure class="capture">
+  <a href="images/export.png" aria-label="Enlarge · Export step with commands for Python, CSV and project files"><img src="images/export.png" width="1280" height="800" loading="lazy" alt="Export step with commands for Python, CSV and project files"></a>
+  <figcaption>Choose the output in the left panel. Use the table on the right to check the values before exporting.</figcaption>
+</figure>
+<h2 id="tableau">Understand the columns</h2>
+<p>The first measured frame sets <code>t = 0</code>. Times are in seconds. Coordinates use the chosen axes and are in metres after calibration or pixels beforehand. For two objects, the column order is <code>t, x1, y1, x2, y2</code>.</p>
+<p>Suppose object 1 is hidden in the second frame while object 2 remains visible. At 25 frames/s, part of a calibrated CSV file might read as follows.</p>
+<pre><code>t (s),x1 (m),y1 (m),x2 (m),y2 (m)
+0,0,0,0.30,0.12
+0.04,,,0.31,0.12</code></pre>
+<p>The second row keeps its time and the position of object 2. The first position <code>(0, 0)</code> is a measurement at the origin. The hidden object's two empty fields become <code>np.nan</code> in Python. Both exports retain every frame between the first and last measurement, including a frame from which all marks were deleted.</p>
+
+<h2 id="python">Copy for Python</h2>
+<p><span class="btn">Copy for Python</span> (step 5, <em>Coordinates</em> tab, <em>File</em> menu, or
+<kbd>Ctrl</kbd>+<kbd>C</kbd>) copies the measurements as three numpy arrays, <code>lst_t</code>, <code>lst_x</code> and
+<code>lst_y</code>. Paste the text with <kbd>Ctrl</kbd>+<kbd>V</kbd> at the start of your program or in a
+notebook cell, then add your calculations.</p>
+<p>Numbers have 6 significant digits. With several objects, the lists are named <code>lst_x1</code>,
+<code>lst_y1</code>, <code>lst_x2</code>… “Measurements on the clipboard” disappears when another copy replaces the data or the measurements change.</p>
+
+<h2 id="csv">The CSV file</h2>
+<p><span class="btn">Save as CSV…</span> writes a standard file: a comma between columns, a decimal point, a
+header row.</p>
+<p>To read it in Python:</p>
+<pre>import numpy as np
+lst_t, lst_x, lst_y = np.genfromtxt("measurements.csv", delimiter=",", skip_header=1, unpack=True)</pre>
+<p>For two objects, assign the five columns to <code>t, x1, y1, x2, y2</code>. An empty field gives <code>np.nan</code> and its time stays in the array.</p>
+<p>A spreadsheet set to a language that uses a decimal comma may need to be told that the file uses a decimal
+point: choose “English (USA)” as the language of the import.</p>
+
+<h2 id="images">Saving an image</h2>
+<p>In expert mode, <span class="btn">Save</span> in the <em>Trajectories</em> tab writes the drawing
+(trajectory, chronophotography, motion diagram) as PNG or JPEG; the one of the <em>Grapher</em> writes the graph as
+PNG: handy for a report.</p>
+
+<h2 id="projets">Projects</h2>
+<p>Save with <kbd>Ctrl</kbd>+<kbd>S</kbd>. The <code>.mevcine</code> file stores the axes, scale, frame rate, positions, recorded absences and corrections. The video remains a separate file. Copy both files into the same folder when moving to another computer.</p>
+<p>A session interrupted after the first of two objects resumes with the second. An automatic run completed in expert mode reopens on Coordinates. Older MeVCine and CinéMev projects also open. If you need to locate the video of an older project that has no fingerprint, check the recording before confirming.</p>
+
+<h2 id="securite">Save and recover work</h2>
+<p><kbd>Ctrl</kbd>+<kbd>S</kbd> saves the project to the location you choose. You can save between marks on the same frame. Each session also has its own automatic backup, including during automatic tracking. After an interruption, use <em>File › Recover previous work…</em>. If several backups appear, choose yours by video name and modification date. Check the last mark and save the project in your working folder.</p>
+<p>If MeVCine reports a write error, choose a writable folder and use <em>Save the project…</em> before closing. The <em>Cancel</em> button in the quit dialog returns to the project.</p>
+<nav class="voisins">
+<a class="precedent" href="expert.html"><small>◀ Previous page</small>Expert mode</a>
+<a class="suivant" href="video.html"><small>Next page ▶</small>Filming a motion</a>
+</nav>
+<footer>MeVCine · user guide · Rémi MEVAERE · free software, GPL 3 or later</footer>
+</main>
+</div>
+</body>
+</html>

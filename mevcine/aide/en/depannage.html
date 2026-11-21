@@ -1,0 +1,74 @@
+<header class="title">
+<h1>Troubleshooting</h1>
+<p>For teachers: MeVCine's messages, and what to do</p>
+</header>
+<p>The small problems of the lab (marking, refused length, times, export) are in the
+<a href="faq.html">frequently asked questions</a>. Here are the technical problems.</p>
+
+<h2 id="video">The video does not open</h2>
+<dl class="faq">
+  <dt>The video does not open or probing takes more than two minutes.</dt>
+  <dd>Copy the film to the workstation’s local disk, check that the transfer is complete and try playing its beginning and end. Probing can fail because of the recording, the storage device or the decoder.</dd>
+  <dt>The message mentions FFprobe or FFmpeg.</dt>
+  <dd>With the portable build, check for the <code>ffmpeg</code> folder supplied beside the program. With a Linux package, check that both tools are installed. See <a href="installer.html#linux">Installing on Linux</a>.</dd>
+  <dt>The HEVC (H.265) video is recognised but cannot be decoded.</dt>
+  <dd>Try the MeVCine distribution with bundled FFmpeg. If you convert a copy, give it a new name and note the original capture rate. For example, <code>ffmpeg -i video.mov -c:v libx264 -pix_fmt yuv420p -an copy.mp4</code> produces an H.264 copy. Check its frame times before taking measurements.</dd>
+  <dt>The status bar reports “Unreadable frame 57”.</dt>
+  <dd>Tracking stops on that frame. Restore access to the recording and click <em>Retry</em>. Earlier measurements remain available. Once the frame is readable you can continue by hand.</dd>
+  <dt>Moving backwards and forwards through 4K footage is slow.</dt>
+  <dd>Try the local disk first. If you prepare a smaller recording for the class, resize a copy before calibration. For example, <code>ffmpeg -i video.mp4 -vf scale=1920:-2 -c:v libx264 copy.mp4</code> resizes landscape footage.</dd>
+</dl>
+
+<h2 id="affichage">The window does not open</h2>
+<dl class="faq">
+  <dt>“This application failed to start because no Qt platform plugin could be initialized”</dt>
+  <dd>The Qt libraries are incomplete. On Windows, the <code>plugins</code> folder (with
+  <code>plugins\platforms\qwindows.dll</code>) and the <code>qt.conf</code> file must be next to
+  <code>mevcine.exe</code>: copy the complete folder again. On Linux, install the MeVCine package, or use the
+  AppImage (see <a href="installer.html#linux">Installing</a>).</dd>
+  <dt>Nothing happens on double-click (Windows)</dt>
+  <dd>SmartScreen may have blocked the program: start it again, then <em>More info › Run anyway</em>. Also check
+  that the antivirus has not quarantined it.</dd>
+
+</dl>
+
+<h2 id="fichiers">Files</h2>
+<dl class="faq">
+  <dt>No window opens with <em>Open a video…</em> (Linux)</dt>
+  <dd>MeVCine uses the desktop dialogs, otherwise Qt's. Meanwhile, drag the video onto the window, or start
+  <code>mevcine video.mp4</code>.</dd>
+  <dt>“Unrecognized file”</dt>
+  <dd>The file was not written by MeVCine, or its header is damaged: it cannot be opened.</dd>
+  <dt>“Unreadable project”</dt>
+  <dd>If a coordinate pair is incomplete or contains unexpected text, MeVCine reports its line number. Retrieve the original project or a recovery copy. The session already on screen remains open.</dd>
+  <dt>“Video not found”</dt>
+  <dd>Keep the video with the project when moving it. If the video has been moved or renamed, select it when opening the project. MeVCine checks its fingerprint. For an older project without a fingerprint, check the video yourself before confirming.</dd>
+  <dt>“Error while saving”</dt>
+  <dd>The folder cannot be written to (write-protected or full stick, full network folder, permissions); the
+  message gives the cause. A file that already existed stays intact. Choose another folder, for instance
+  <em>Documents</em>.</dd>
+  <dt>“Automatic backup impossible”</dt>
+  <dd>The configuration folder cannot be written to (full disk, permissions). The work is no longer protected: save
+  the project (<em>File › Save the project…</em>) elsewhere, then free some space or fix the permissions (see
+  <a href="reglages.html#configuration">Settings</a>).</dd>
+</dl>
+
+<h3>The project has unsaved changes</h3>
+<p>To keep the axes, scale and marks, choose <em>Cancel</em> and then <em>File › Save the project…</em>. A Python copy or CSV supplies numbers for analysis. The <code>.mevcine</code> file lets you reopen the session.</p>
+<figure class="capture">
+  <a href="images/confirmation.png" aria-label="Enlarge · Quit dialog with Quit without saving and Cancel buttons"><img src="images/confirmation.png" width="289" height="175" loading="lazy" alt="Quit dialog with Quit without saving and Cancel buttons"></a>
+  <figcaption>Cancel returns to the current work so you can save it.</figcaption>
+</figure>
+
+<h2 id="interne">An internal error, a crash</h2>
+<dl class="faq">
+  <dt>“MeVCine internal error”</dt>
+  <dd>The program met an unexpected error, or it crashed, and stops. The message says where the log is:
+  <code>mevcine.log</code>, in the <a href="reglages.html#configuration">configuration folder</a>, with the date, the
+  cause and, for a crash, the call stack. Send it to
+  <a href="mailto:suite@sciences-physiques.net">suite@sciences-physiques.net</a>, with the video if possible.</dd>
+  <dt>Recovering the work in progress</dt>
+  <dd>Restart MeVCine and choose <em>File › Recover previous work…</em>. If several backups appear, choose your video and session date. After an unexpected closure, check the marks from the last two seconds.</dd>
+  <dt>“Error reading the configuration”</dt>
+  <dd>The <code>mevcine.ini</code> file is damaged: MeVCine starts from a fresh configuration. Nothing serious.</dd>
+</dl>

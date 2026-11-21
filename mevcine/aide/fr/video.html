@@ -1,0 +1,45 @@
+<header class="title">
+<h1>Filmer un mouvement</h1>
+<p>Bien filmer avec un téléphone, transférer la vidéo, les ralentis</p>
+</header>
+
+<h2 id="filmer">Préparer le cadrage</h2>
+<ol class="steps">
+  <li>Immobilisez la caméra. Cadrez l’ensemble du mouvement avec l’axe optique perpendiculaire à son plan.</li>
+  <li>Placez dans ce même plan une règle ou deux repères dont vous connaissez la distance. Leurs extrémités doivent être visibles ensemble sur au moins une image.</li>
+  <li>Choisissez un détail contrasté sur le mobile. Éclairez la scène et regardez quelques images d’essai pour vérifier que ce détail reste net et que sa position change assez entre deux images.</li>
+  <li>Pour un mouvement rapide, augmentez la cadence de prise de vue si la lumière le permet. Notez la cadence choisie pour pouvoir contrôler les dates au moment de l’analyse.</li>
+</ol>
+<figure class="capture">
+  <a href="images/bille.png" aria-label="Agrandir · Image du pointage montrant une bille contrastée et une règle de 85 cm"><img src="images/bille.png" width="640" height="480" loading="lazy" alt="Image du pointage montrant une bille contrastée et une règle de 85 cm"></a>
+  <figcaption>La bille, le trait de départ de la règle et sa dernière graduation tiennent dans le même cadrage.</figcaption>
+</figure>
+
+<h2 id="transfert">Transférer le fichier d’origine</h2>
+<p>Copiez le fichier d’origine par câble ou via l’espace de fichiers de l’établissement. Avant de distribuer le film, ouvrez-le sur un poste élève, avancez jusqu’à la dernière image utile et notez une distance connue dans le plan du mouvement.</p>
+<p>Si vous recadrez ou réencodez le film, donnez un autre nom à la copie. Préparez tout projet destiné aux élèves avec la version exacte qu’ils recevront. Une messagerie peut supprimer les informations de ralenti lors de la recompression.</p>
+
+<h2 id="telephone">Les vidéos de téléphone</h2>
+<dl class="faq">
+  <dt>En portrait</dt>
+  <dd>MeVCine redresse tout seul une vidéo filmée en portrait. Si elle apparaît quand même couchée, tournez-la :
+  étape 1 du mode simplifié, ou boutons ⟲ ⟳ sous l'image en mode expert (avant l'échelle et le pointage).</dd>
+  <dt id="ralenti">Au ralenti</dt>
+  <dd>Un film enregistré à 240 images/s peut se lire à 30 images/s. Pour dater le mouvement, utilisez la cadence de prise de vue. MeVCine l’utilise quand le fichier la fournit. Sinon, entrez la cadence connue dans <em>Vidéo au ralenti ?</em> à l’étape 4 ou <em>Images par seconde</em> en mode expert. Vérifiez ensuite l’intervalle de temps entre deux lignes consécutives.</dd>
+  <dt id="cadence">Cadence variable</dt>
+  <dd>Beaucoup de téléphones ne filment pas à une cadence parfaitement régulière : par exemple 40 ms, puis 44 ms
+  entre deux images ; ou ils perdent des images, ou filment moins vite quand la lumière baisse. MeVCine le détecte
+  (« Cadence variable ») et utilise la <strong>date réelle</strong> de chaque image : les intervalles du tableau ne
+  sont alors pas tous égaux, et c'est normal. Les vitesses et accélérations du grapheur en tiennent compte ; faites
+  de même dans vos calculs, avec les dates du tableau.</dd>
+  <dt>HDR</dt>
+  <dd>Les vidéos HDR (iPhone récents) sont converties en couleurs ordinaires : elles ne paraissent pas délavées.</dd>
+</dl>
+
+<p>Pour une prise de vue à 240 images/s relue à 30 images/s, deux images consécutives du mouvement sont séparées d’environ <strong>4,17 ms</strong>. Un intervalle de 33,3 ms dans le tableau indique que la cadence de lecture a été conservée. Vérifiez la cadence de prise de vue dans le fichier ou dans vos notes de tournage.</p>
+
+<h2 id="formats">Les formats</h2>
+<p>MeVCine lit les formats des téléphones, des appareils photo et des webcams : MP4, MOV, AVI, MKV, WebM, 3GP, MTS…,
+en H.264, HEVC (H.265), AV1, VP9, ProRes, Motion JPEG. Les très grandes vidéos (4K) s'ouvrent, mais plus
+lentement : pour un TP, une vidéo en 1080p suffit largement. Une vidéo que MeVCine n'arrive pas à examiner en
+deux minutes (fichier abîmé, clé USB trop lente) est déclarée illisible : copiez-la d'abord sur l'ordinateur.</p>
